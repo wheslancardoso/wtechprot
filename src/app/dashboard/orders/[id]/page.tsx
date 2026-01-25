@@ -3,8 +3,10 @@ import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import type { OrderStatus } from '@/types/database'
 
+// Components
+import OrderActions from './order-actions'
+
 // UI Components
-import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
@@ -108,12 +110,7 @@ export default async function OrderDetailPage({ params }: PageProps) {
                     </div>
 
                     {/* Actions */}
-                    <div className="flex gap-2">
-                        <Button disabled>
-                            <Play className="mr-2 h-4 w-4" />
-                            Iniciar Diagnóstico
-                        </Button>
-                    </div>
+                    <OrderActions orderId={order.id} currentStatus={order.status} />
                 </div>
 
                 {/* Meta info */}

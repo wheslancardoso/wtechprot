@@ -177,3 +177,90 @@ export async function createOrder(formData: FormData): Promise<ActionResult> {
         }
     }
 }
+
+// ==================================================
+// Status válidos do sistema
+// ==================================================
+const validStatuses = [
+    'open',
+    'analyzing',
+    'waiting_approval',
+    'waiting_parts',
+    'in_progress',
+    'ready',
+    'finished',
+    'canceled',
+] as const
+
+type OrderStatus = typeof validStatuses[number]
+
+// ==================================================
+// Server Action: Atualizar Status da OS
+// ==================================================
+export async function updateOrderStatus(
+    orderId: string,
+    newStatus: string
+): Promise<ActionResult> {
+    try {
+        // 1. Validar se o status é válido
+        if (!validStatuses.includes(newStatus as OrderStatus)) {
+            return {
+                success: false,
+                message: `Status inválido: "${newStatus}". Status válidos: ${validStatuses.join(', ')}`
+            }
+        }
+
+        // 2. Validar orderId
+        if (!orderId || orderId.length < 10) {
+            return { success: false, message: 'ID da OS inválido' }
+        }
+
+        // 3. Criar cliente Supabase
+        const supabase = await createClient()
+
+        // 4. Verificar usuário autenticado
+        const { data: { user }, error: authError } = await supabase.auth.getUser()
+        if (authError || !user) {
+            return { success: false, message: 'Usuário não autenticado' }
+        }
+
+        // 5. Preparar dados de atualização
+        const updateData: { status: string; finished_at?: string } = {
+            status: newStatus
+        }
+
+        // Se finalizando, adicionar data de finalização
+        if (newStatus === 'finished') {
+            updateData.finished_at = new Date().toISOString()
+        }
+
+        // 6. Atualizar status no banco
+        const { error: updateError } = await supabase
+            .from('orders')
+            .update(updateData)
+            .eq('id', orderId)
+            .eq('user_id', user.id) // Garantir que só atualiza OS do próprio usuário
+
+        if (updateError) {
+            console.error('Erro ao atualizar status:', updateError)
+            return { success: false, message: `Erro ao atualizar: ${updateError.message}` }
+        }
+
+        // 7. Revalidar caches
+        revalidatePath('/dashboard/orders')
+        revalidatePath(`/dashboard/orders/${orderId}`)
+
+        // 8. Retornar sucesso
+        return {
+            success: true,
+            message: `Status atualizado para "${newStatus}" com sucesso!`
+        }
+
+    } catch (error) {
+        console.error('Erro inesperado ao atualizar status:', error)
+        return {
+            success: false,
+            message: `Erro inesperado: ${error instanceof Error ? error.message : 'Desconhecido'}`
+        }
+    }
+}
