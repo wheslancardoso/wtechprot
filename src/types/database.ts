@@ -13,73 +13,124 @@ export type OrderStatus =
     | 'finished'
     | 'canceled'
 
-// Interface base para Customer
+// Enum de tipo de item da ordem
+export type OrderItemType = 'service' | 'part_external'
+
+// ==================================================
+// Row Types (dados vindos do banco)
+// ==================================================
+
 export interface Customer {
     id: string
+    user_id: string
     name: string
-    email?: string | null
-    phone?: string | null
-    document?: string | null // CPF/CNPJ
-    address?: string | null
-    created_at?: string
-    updated_at?: string
+    phone: string | null
+    document_id: string | null
+    notes: string | null
+    created_at: string
+    updated_at: string
 }
 
-// Interface base para Equipment
 export interface Equipment {
     id: string
+    customer_id: string
     type: string | null
+    brand: string | null
     model: string | null
-    brand?: string | null
-    serial_number?: string | null
-    customer_id?: string | null
-    created_at?: string
-    updated_at?: string
+    serial_number: string | null
+    notes: string | null
+    created_at: string
+    updated_at: string
 }
 
-// Interface base para Order
 export interface Order {
     id: string
     display_id: number
+    user_id: string
+    customer_id: string | null
+    equipment_id: string | null
     status: OrderStatus
-    customer_id?: string | null
-    equipment_id?: string | null
-    description?: string | null
-    diagnosis?: string | null
-    estimated_value?: number | null
-    final_value?: number | null
-    notes?: string | null
-    created_at?: string
-    updated_at?: string
-    finished_at?: string | null
-
+    labor_cost: number
+    parts_cost_external: number
+    diagnosis_text: string | null
+    solution_text: string | null
+    created_at: string
+    updated_at: string
+    finished_at: string | null
     // Relacionamentos opcionais (joins)
     customer?: Pick<Customer, 'name'> | null
-    equipment?: Pick<Equipment, 'type' | 'model'> | null
+    equipment?: Pick<Equipment, 'type' | 'model' | 'serial_number'> | null
 }
 
-// Insert types (sem campos auto-gerados)
-export type CustomerInsert = Omit<Customer, 'id' | 'created_at' | 'updated_at'> & {
+export interface OrderItem {
+    id: string
+    order_id: string
+    title: string
+    type: OrderItemType
+    price: number
+    external_url: string | null
+    notes: string | null
+    created_at: string
+}
+
+// ==================================================
+// Insert Types (para criar registros)
+// ==================================================
+
+export interface CustomerInsert {
     id?: string
+    user_id: string
+    name: string
+    phone?: string | null
+    document_id?: string | null
+    notes?: string | null
 }
 
-export type EquipmentInsert = Omit<Equipment, 'id' | 'created_at' | 'updated_at'> & {
+export interface EquipmentInsert {
     id?: string
+    customer_id: string
+    type?: string | null
+    brand?: string | null
+    model?: string | null
+    serial_number?: string | null
+    notes?: string | null
 }
 
-export type OrderInsert = Omit<
-    Order,
-    'id' | 'display_id' | 'created_at' | 'updated_at' | 'customer' | 'equipment'
-> & {
+export interface OrderInsert {
     id?: string
+    user_id: string
+    customer_id?: string | null
+    equipment_id?: string | null
+    status?: OrderStatus
+    labor_cost?: number
+    parts_cost_external?: number
+    diagnosis_text?: string | null
+    solution_text?: string | null
 }
 
-// Update types (todos os campos opcionais)
-export type CustomerUpdate = Partial<CustomerInsert>
-export type EquipmentUpdate = Partial<EquipmentInsert>
-export type OrderUpdate = Partial<Omit<OrderInsert, 'id'>>
+export interface OrderItemInsert {
+    id?: string
+    order_id: string
+    title: string
+    type?: OrderItemType
+    price?: number
+    external_url?: string | null
+    notes?: string | null
+}
 
-// Database schema para Supabase client
+// ==================================================
+// Update Types (para atualizar registros)
+// ==================================================
+
+export type CustomerUpdate = Partial<Omit<CustomerInsert, 'user_id'>>
+export type EquipmentUpdate = Partial<Omit<EquipmentInsert, 'customer_id'>>
+export type OrderUpdate = Partial<Omit<OrderInsert, 'user_id'>>
+export type OrderItemUpdate = Partial<Omit<OrderItemInsert, 'order_id'>>
+
+// ==================================================
+// Database Schema (para tipagem do Supabase Client)
+// ==================================================
+
 export interface Database {
     public: {
         Tables: {
@@ -98,6 +149,11 @@ export interface Database {
                 Insert: OrderInsert
                 Update: OrderUpdate
             }
+            order_items: {
+                Row: OrderItem
+                Insert: OrderItemInsert
+                Update: OrderItemUpdate
+            }
         }
         Views: {
             [_ in never]: never
@@ -107,16 +163,19 @@ export interface Database {
         }
         Enums: {
             order_status: OrderStatus
+            order_item_type: OrderItemType
         }
     }
 }
 
-// Helper type para extrair Row de uma tabela
+// ==================================================
+// Helper Types
+// ==================================================
+
 export type TableRow<T extends keyof Database['public']['Tables']> =
     Database['public']['Tables'][T]['Row']
 
-// Helper type para queries com joins
 export type OrderWithRelations = Order & {
     customer: Pick<Customer, 'name'> | null
-    equipment: Pick<Equipment, 'type' | 'model'> | null
+    equipment: Pick<Equipment, 'type' | 'model' | 'serial_number'> | null
 }

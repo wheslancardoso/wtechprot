@@ -1,0 +1,466 @@
+'use client'
+
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+
+// Supabase
+import { createClient } from '@/lib/supabase/client'
+
+// UI Components
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select'
+
+// Icons
+import {
+    AlertTriangle,
+    Eye,
+    EyeOff,
+    User,
+    Monitor,
+    Search,
+    Loader2,
+    ArrowLeft,
+    CheckSquare,
+} from 'lucide-react'
+
+// ==================================================
+// Zod Schema
+// ==================================================
+const newOrderSchema = z.object({
+    // Cliente
+    customerCpf: z.string().min(11, 'CPF inválido'),
+    customerName: z.string().min(2, 'Nome obrigatório'),
+    customerPhone: z.string().min(10, 'WhatsApp inválido'),
+
+    // Equipamento
+    equipmentType: z.string().min(1, 'Selecione o tipo'),
+    equipmentBrand: z.string().optional(),
+    equipmentModel: z.string().optional(),
+    equipmentPassword: z.string().optional(),
+
+    // Detalhes
+    defectReport: z.string().min(10, 'Descreva o problema'),
+    hasAccessories: z.boolean(),
+    accessoriesDescription: z.string().optional(),
+})
+
+type NewOrderFormData = z.infer<typeof newOrderSchema>
+
+// ==================================================
+// Equipment Types
+// ==================================================
+const equipmentTypes = [
+    { value: 'notebook', label: 'Notebook' },
+    { value: 'desktop', label: 'PC / Desktop' },
+    { value: 'printer', label: 'Impressora' },
+    { value: 'monitor', label: 'Monitor' },
+    { value: 'smartphone', label: 'Smartphone' },
+    { value: 'other', label: 'Outro' },
+]
+
+// ==================================================
+// CPF Mask Helper
+// ==================================================
+function formatCpf(value: string): string {
+    const numbers = value.replace(/\D/g, '').slice(0, 11)
+    if (numbers.length <= 3) return numbers
+    if (numbers.length <= 6) return `${numbers.slice(0, 3)}.${numbers.slice(3)}`
+    if (numbers.length <= 9) return `${numbers.slice(0, 3)}.${numbers.slice(3, 6)}.${numbers.slice(6)}`
+    return `${numbers.slice(0, 3)}.${numbers.slice(3, 6)}.${numbers.slice(6, 9)}-${numbers.slice(9)}`
+}
+
+// ==================================================
+// Component
+// ==================================================
+export default function NewOrderPage() {
+    const router = useRouter()
+    const supabase = createClient()
+
+    const [showPassword, setShowPassword] = useState(false)
+    const [isSubmitting, setIsSubmitting] = useState(false)
+    const [isSearching, setIsSearching] = useState(false)
+
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        watch,
+        formState: { errors },
+    } = useForm<NewOrderFormData>({
+        resolver: zodResolver(newOrderSchema),
+        defaultValues: {
+            customerCpf: '',
+            customerName: '',
+            customerPhone: '',
+            equipmentType: '',
+            equipmentBrand: '',
+            equipmentModel: '',
+            equipmentPassword: '',
+            defectReport: '',
+            hasAccessories: false,
+            accessoriesDescription: '',
+        },
+    })
+
+    const hasAccessories = watch('hasAccessories')
+    const cpfValue = watch('customerCpf')
+
+    // Handle CPF input with mask
+    function handleCpfChange(e: React.ChangeEvent<HTMLInputElement>) {
+        const formatted = formatCpf(e.target.value)
+        setValue('customerCpf', formatted)
+    }
+
+    // Search customer by CPF
+    async function handleSearchCustomer() {
+        if (!cpfValue || cpfValue.length < 14) return
+
+        setIsSearching(true)
+        try {
+            const cpfClean = cpfValue.replace(/\D/g, '')
+            const { data: customer } = await supabase
+                .from('customers')
+                .select('name, phone')
+                .eq('document_id', cpfClean)
+                .single()
+
+            if (customer) {
+                setValue('customerName', customer.name)
+                setValue('customerPhone', customer.phone || '')
+            }
+        } catch {
+            // Cliente não encontrado - ok
+        } finally {
+            setIsSearching(false)
+        }
+    }
+
+    async function onSubmit(data: NewOrderFormData) {
+        setIsSubmitting(true)
+
+        try {
+            // 1. Get current user
+            const { data: { user } } = await supabase.auth.getUser()
+            if (!user) throw new Error('Usuário não autenticado')
+
+            // 2. Create or find customer
+            const cpfClean = data.customerCpf.replace(/\D/g, '')
+            let customerId: string
+
+            const { data: existingCustomer } = await supabase
+                .from('customers')
+                .select('id')
+                .eq('document_id', cpfClean)
+                .single()
+
+            if (existingCustomer) {
+                customerId = existingCustomer.id
+            } else {
+                const { data: newCustomer, error: customerError } = await supabase
+                    .from('customers')
+                    .insert({
+                        user_id: user.id,
+                        name: data.customerName,
+                        phone: data.customerPhone,
+                        document_id: cpfClean,
+                    })
+                    .select('id')
+                    .single()
+
+                if (customerError) throw customerError
+                customerId = newCustomer.id
+            }
+
+            // 3. Create equipment
+            const { data: equipment, error: equipmentError } = await supabase
+                .from('equipments')
+                .insert({
+                    customer_id: customerId,
+                    type: data.equipmentType,
+                    brand: data.equipmentBrand || null,
+                    model: data.equipmentModel || null,
+                    notes: data.equipmentPassword ? `Senha: ${data.equipmentPassword}` : null,
+                })
+                .select('id')
+                .single()
+
+            if (equipmentError) throw equipmentError
+
+            // 4. Create order
+            const accessoriesText = data.hasAccessories
+                ? `Acessórios: ${data.accessoriesDescription || 'Sim (não especificados)'}`
+                : 'Sem acessórios'
+
+            const { data: order, error: orderError } = await supabase
+                .from('orders')
+                .insert({
+                    user_id: user.id,
+                    customer_id: customerId,
+                    equipment_id: equipment.id,
+                    status: 'open',
+                    diagnosis_text: `${data.defectReport}\n\n${accessoriesText}`,
+                })
+                .select('id')
+                .single()
+
+            if (orderError) throw orderError
+
+            // 5. Redirect
+            router.push(`/dashboard/orders/${order.id}`)
+        } catch (error) {
+            console.error('Erro ao criar OS:', error)
+            alert('Erro ao criar OS. Verifique os dados.')
+        } finally {
+            setIsSubmitting(false)
+        }
+    }
+
+    return (
+        <div className="container mx-auto max-w-5xl py-8 px-4">
+            {/* Header */}
+            <div className="mb-6">
+                <Link
+                    href="/dashboard/orders"
+                    className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-4"
+                >
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Voltar
+                </Link>
+                <h1 className="text-3xl font-bold tracking-tight">Nova Ordem de Serviço</h1>
+            </div>
+
+            {/* Alert - Compra Assistida */}
+            <Alert variant="warning" className="mb-8">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle>Modelo Compra Assistida</AlertTitle>
+                <AlertDescription>
+                    Peças devem ser compradas pelo cliente via link externo. Você cobra apenas a mão de obra.
+                </AlertDescription>
+            </Alert>
+
+            {/* Form */}
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                {/* Grid: Cliente + Equipamento */}
+                <div className="grid gap-6 lg:grid-cols-2">
+                    {/* Card: Cliente */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2 text-lg">
+                                <User className="h-5 w-5" />
+                                Cliente
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            {/* CPF com busca */}
+                            <div className="space-y-2">
+                                <Label htmlFor="customerCpf">CPF *</Label>
+                                <div className="flex gap-2">
+                                    <Input
+                                        id="customerCpf"
+                                        placeholder="000.000.000-00"
+                                        value={cpfValue}
+                                        onChange={handleCpfChange}
+                                        className="flex-1"
+                                    />
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="icon"
+                                        onClick={handleSearchCustomer}
+                                        disabled={isSearching}
+                                    >
+                                        {isSearching ? (
+                                            <Loader2 className="h-4 w-4 animate-spin" />
+                                        ) : (
+                                            <Search className="h-4 w-4" />
+                                        )}
+                                    </Button>
+                                </div>
+                                {errors.customerCpf && (
+                                    <p className="text-sm text-destructive">{errors.customerCpf.message}</p>
+                                )}
+                            </div>
+
+                            {/* Nome */}
+                            <div className="space-y-2">
+                                <Label htmlFor="customerName">Nome Completo *</Label>
+                                <Input
+                                    id="customerName"
+                                    placeholder="João da Silva"
+                                    {...register('customerName')}
+                                />
+                                {errors.customerName && (
+                                    <p className="text-sm text-destructive">{errors.customerName.message}</p>
+                                )}
+                            </div>
+
+                            {/* WhatsApp */}
+                            <div className="space-y-2">
+                                <Label htmlFor="customerPhone">WhatsApp *</Label>
+                                <Input
+                                    id="customerPhone"
+                                    placeholder="(11) 99999-9999"
+                                    {...register('customerPhone')}
+                                />
+                                {errors.customerPhone && (
+                                    <p className="text-sm text-destructive">{errors.customerPhone.message}</p>
+                                )}
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* Card: Equipamento */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2 text-lg">
+                                <Monitor className="h-5 w-5" />
+                                Equipamento
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            {/* Tipo */}
+                            <div className="space-y-2">
+                                <Label>Tipo *</Label>
+                                <Select onValueChange={(value) => setValue('equipmentType', value)}>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Selecione..." />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {equipmentTypes.map((type) => (
+                                            <SelectItem key={type.value} value={type.value}>
+                                                {type.label}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                {errors.equipmentType && (
+                                    <p className="text-sm text-destructive">{errors.equipmentType.message}</p>
+                                )}
+                            </div>
+
+                            {/* Marca + Modelo */}
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="equipmentBrand">Marca</Label>
+                                    <Input
+                                        id="equipmentBrand"
+                                        placeholder="Dell, HP..."
+                                        {...register('equipmentBrand')}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="equipmentModel">Modelo</Label>
+                                    <Input
+                                        id="equipmentModel"
+                                        placeholder="Inspiron 15"
+                                        {...register('equipmentModel')}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Senha */}
+                            <div className="space-y-2">
+                                <Label htmlFor="equipmentPassword">Senha de Login</Label>
+                                <div className="relative">
+                                    <Input
+                                        id="equipmentPassword"
+                                        type={showPassword ? 'text' : 'password'}
+                                        placeholder="Senha do Windows/Mac"
+                                        className="pr-10"
+                                        {...register('equipmentPassword')}
+                                    />
+                                    <button
+                                        type="button"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                    >
+                                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                    </button>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+
+                {/* Card: Detalhes da OS */}
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2 text-lg">
+                            <CheckSquare className="h-5 w-5" />
+                            Detalhes da OS
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        {/* Relato do Defeito */}
+                        <div className="space-y-2">
+                            <Label htmlFor="defectReport">Relato do Problema / Defeito *</Label>
+                            <Textarea
+                                id="defectReport"
+                                placeholder="Descreva detalhadamente o problema relatado pelo cliente..."
+                                rows={4}
+                                {...register('defectReport')}
+                            />
+                            {errors.defectReport && (
+                                <p className="text-sm text-destructive">{errors.defectReport.message}</p>
+                            )}
+                        </div>
+
+                        {/* Acessórios */}
+                        <div className="space-y-3">
+                            <div className="flex items-center gap-2">
+                                <input
+                                    type="checkbox"
+                                    id="hasAccessories"
+                                    className="h-4 w-4 rounded border-input"
+                                    {...register('hasAccessories')}
+                                />
+                                <Label htmlFor="hasAccessories" className="cursor-pointer">
+                                    Acessórios deixados (Fonte, Cabo, Case, etc.)
+                                </Label>
+                            </div>
+
+                            {hasAccessories && (
+                                <Input
+                                    placeholder="Descreva os acessórios..."
+                                    {...register('accessoriesDescription')}
+                                />
+                            )}
+                        </div>
+                    </CardContent>
+                </Card>
+
+                {/* Actions */}
+                <div className="flex justify-end gap-4">
+                    <Button type="button" variant="ghost" asChild>
+                        <Link href="/dashboard/orders">Cancelar</Link>
+                    </Button>
+                    <Button type="submit" disabled={isSubmitting}>
+                        {isSubmitting ? (
+                            <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Criando...
+                            </>
+                        ) : (
+                            'Abrir OS'
+                        )}
+                    </Button>
+                </div>
+            </form>
+        </div>
+    )
+}
