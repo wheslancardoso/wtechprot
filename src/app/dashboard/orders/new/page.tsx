@@ -7,8 +7,8 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 
-// Supabase
-import { createClient } from '@/lib/supabase/client'
+// Server Action
+import { createOrder } from '../actions'
 
 // UI Components
 import { Button } from '@/components/ui/button'
@@ -36,24 +36,21 @@ import {
     Loader2,
     ArrowLeft,
     CheckSquare,
+    CheckCircle,
+    XCircle,
 } from 'lucide-react'
 
 // ==================================================
 // Zod Schema
 // ==================================================
 const newOrderSchema = z.object({
-    // Cliente
     customerCpf: z.string().min(11, 'CPF inválido'),
     customerName: z.string().min(2, 'Nome obrigatório'),
     customerPhone: z.string().min(10, 'WhatsApp inválido'),
-
-    // Equipamento
     equipmentType: z.string().min(1, 'Selecione o tipo'),
     equipmentBrand: z.string().optional(),
     equipmentModel: z.string().optional(),
     equipmentPassword: z.string().optional(),
-
-    // Detalhes
     defectReport: z.string().min(10, 'Descreva o problema'),
     hasAccessories: z.boolean(),
     accessoriesDescription: z.string().optional(),
@@ -89,17 +86,17 @@ function formatCpf(value: string): string {
 // ==================================================
 export default function NewOrderPage() {
     const router = useRouter()
-    const supabase = createClient()
 
     const [showPassword, setShowPassword] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
-    const [isSearching, setIsSearching] = useState(false)
+    const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
 
     const {
         register,
         handleSubmit,
         setValue,
         watch,
+        reset,
         formState: { errors },
     } = useForm<NewOrderFormData>({
         resolver: zodResolver(newOrderSchema),
@@ -126,105 +123,46 @@ export default function NewOrderPage() {
         setValue('customerCpf', formatted)
     }
 
-    // Search customer by CPF
-    async function handleSearchCustomer() {
-        if (!cpfValue || cpfValue.length < 14) return
-
-        setIsSearching(true)
-        try {
-            const cpfClean = cpfValue.replace(/\D/g, '')
-            const { data: customer } = await supabase
-                .from('customers')
-                .select('name, phone')
-                .eq('document_id', cpfClean)
-                .single()
-
-            if (customer) {
-                setValue('customerName', customer.name)
-                setValue('customerPhone', customer.phone || '')
-            }
-        } catch {
-            // Cliente não encontrado - ok
-        } finally {
-            setIsSearching(false)
-        }
-    }
-
+    // Submit handler - chama a Server Action
     async function onSubmit(data: NewOrderFormData) {
         setIsSubmitting(true)
+        setFeedback(null)
 
         try {
-            // 1. Get current user
-            const { data: { user } } = await supabase.auth.getUser()
-            if (!user) throw new Error('Usuário não autenticado')
+            // Criar FormData para a Server Action
+            const formData = new FormData()
+            formData.append('customerCpf', data.customerCpf)
+            formData.append('customerName', data.customerName)
+            formData.append('customerPhone', data.customerPhone)
+            formData.append('equipmentType', data.equipmentType)
+            formData.append('equipmentBrand', data.equipmentBrand || '')
+            formData.append('equipmentModel', data.equipmentModel || '')
+            formData.append('equipmentPassword', data.equipmentPassword || '')
+            formData.append('defectReport', data.defectReport)
+            formData.append('hasAccessories', data.hasAccessories ? 'on' : '')
+            formData.append('accessoriesDescription', data.accessoriesDescription || '')
 
-            // 2. Create or find customer
-            const cpfClean = data.customerCpf.replace(/\D/g, '')
-            let customerId: string
+            // Chamar Server Action
+            const result = await createOrder(formData)
 
-            const { data: existingCustomer } = await supabase
-                .from('customers')
-                .select('id')
-                .eq('document_id', cpfClean)
-                .single()
+            if (result.success) {
+                setFeedback({ type: 'success', message: result.message })
+                reset() // Limpar formulário
 
-            if (existingCustomer) {
-                customerId = existingCustomer.id
+                // Redirecionar após 1.5s para o usuário ver o feedback
+                if (result.orderId) {
+                    setTimeout(() => {
+                        router.push(`/dashboard/orders/${result.orderId}`)
+                    }, 1500)
+                }
             } else {
-                const { data: newCustomer, error: customerError } = await supabase
-                    .from('customers')
-                    .insert({
-                        user_id: user.id,
-                        name: data.customerName,
-                        phone: data.customerPhone,
-                        document_id: cpfClean,
-                    })
-                    .select('id')
-                    .single()
-
-                if (customerError) throw customerError
-                customerId = newCustomer.id
+                setFeedback({ type: 'error', message: result.message })
             }
-
-            // 3. Create equipment
-            const { data: equipment, error: equipmentError } = await supabase
-                .from('equipments')
-                .insert({
-                    customer_id: customerId,
-                    type: data.equipmentType,
-                    brand: data.equipmentBrand || null,
-                    model: data.equipmentModel || null,
-                    notes: data.equipmentPassword ? `Senha: ${data.equipmentPassword}` : null,
-                })
-                .select('id')
-                .single()
-
-            if (equipmentError) throw equipmentError
-
-            // 4. Create order
-            const accessoriesText = data.hasAccessories
-                ? `Acessórios: ${data.accessoriesDescription || 'Sim (não especificados)'}`
-                : 'Sem acessórios'
-
-            const { data: order, error: orderError } = await supabase
-                .from('orders')
-                .insert({
-                    user_id: user.id,
-                    customer_id: customerId,
-                    equipment_id: equipment.id,
-                    status: 'open',
-                    diagnosis_text: `${data.defectReport}\n\n${accessoriesText}`,
-                })
-                .select('id')
-                .single()
-
-            if (orderError) throw orderError
-
-            // 5. Redirect
-            router.push(`/dashboard/orders/${order.id}`)
         } catch (error) {
-            console.error('Erro ao criar OS:', error)
-            alert('Erro ao criar OS. Verifique os dados.')
+            setFeedback({
+                type: 'error',
+                message: `Erro inesperado: ${error instanceof Error ? error.message : 'Desconhecido'}`
+            })
         } finally {
             setIsSubmitting(false)
         }
@@ -245,13 +183,29 @@ export default function NewOrderPage() {
             </div>
 
             {/* Alert - Compra Assistida */}
-            <Alert variant="warning" className="mb-8">
+            <Alert variant="warning" className="mb-6">
                 <AlertTriangle className="h-4 w-4" />
                 <AlertTitle>Modelo Compra Assistida</AlertTitle>
                 <AlertDescription>
                     Peças devem ser compradas pelo cliente via link externo. Você cobra apenas a mão de obra.
                 </AlertDescription>
             </Alert>
+
+            {/* Feedback de Sucesso/Erro */}
+            {feedback && (
+                <Alert
+                    variant={feedback.type === 'success' ? 'success' : 'destructive'}
+                    className="mb-6"
+                >
+                    {feedback.type === 'success' ? (
+                        <CheckCircle className="h-4 w-4" />
+                    ) : (
+                        <XCircle className="h-4 w-4" />
+                    )}
+                    <AlertTitle>{feedback.type === 'success' ? 'Sucesso!' : 'Erro'}</AlertTitle>
+                    <AlertDescription>{feedback.message}</AlertDescription>
+                </Alert>
+            )}
 
             {/* Form */}
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -266,7 +220,7 @@ export default function NewOrderPage() {
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            {/* CPF com busca */}
+                            {/* CPF */}
                             <div className="space-y-2">
                                 <Label htmlFor="customerCpf">CPF *</Label>
                                 <div className="flex gap-2">
@@ -276,19 +230,15 @@ export default function NewOrderPage() {
                                         value={cpfValue}
                                         onChange={handleCpfChange}
                                         className="flex-1"
+                                        disabled={isSubmitting}
                                     />
                                     <Button
                                         type="button"
                                         variant="outline"
                                         size="icon"
-                                        onClick={handleSearchCustomer}
-                                        disabled={isSearching}
+                                        disabled={isSubmitting}
                                     >
-                                        {isSearching ? (
-                                            <Loader2 className="h-4 w-4 animate-spin" />
-                                        ) : (
-                                            <Search className="h-4 w-4" />
-                                        )}
+                                        <Search className="h-4 w-4" />
                                     </Button>
                                 </div>
                                 {errors.customerCpf && (
@@ -303,6 +253,7 @@ export default function NewOrderPage() {
                                     id="customerName"
                                     placeholder="João da Silva"
                                     {...register('customerName')}
+                                    disabled={isSubmitting}
                                 />
                                 {errors.customerName && (
                                     <p className="text-sm text-destructive">{errors.customerName.message}</p>
@@ -316,6 +267,7 @@ export default function NewOrderPage() {
                                     id="customerPhone"
                                     placeholder="(11) 99999-9999"
                                     {...register('customerPhone')}
+                                    disabled={isSubmitting}
                                 />
                                 {errors.customerPhone && (
                                     <p className="text-sm text-destructive">{errors.customerPhone.message}</p>
@@ -336,7 +288,10 @@ export default function NewOrderPage() {
                             {/* Tipo */}
                             <div className="space-y-2">
                                 <Label>Tipo *</Label>
-                                <Select onValueChange={(value) => setValue('equipmentType', value)}>
+                                <Select
+                                    onValueChange={(value) => setValue('equipmentType', value)}
+                                    disabled={isSubmitting}
+                                >
                                     <SelectTrigger>
                                         <SelectValue placeholder="Selecione..." />
                                     </SelectTrigger>
@@ -361,6 +316,7 @@ export default function NewOrderPage() {
                                         id="equipmentBrand"
                                         placeholder="Dell, HP..."
                                         {...register('equipmentBrand')}
+                                        disabled={isSubmitting}
                                     />
                                 </div>
                                 <div className="space-y-2">
@@ -369,6 +325,7 @@ export default function NewOrderPage() {
                                         id="equipmentModel"
                                         placeholder="Inspiron 15"
                                         {...register('equipmentModel')}
+                                        disabled={isSubmitting}
                                     />
                                 </div>
                             </div>
@@ -383,6 +340,7 @@ export default function NewOrderPage() {
                                         placeholder="Senha do Windows/Mac"
                                         className="pr-10"
                                         {...register('equipmentPassword')}
+                                        disabled={isSubmitting}
                                     />
                                     <button
                                         type="button"
@@ -414,6 +372,7 @@ export default function NewOrderPage() {
                                 placeholder="Descreva detalhadamente o problema relatado pelo cliente..."
                                 rows={4}
                                 {...register('defectReport')}
+                                disabled={isSubmitting}
                             />
                             {errors.defectReport && (
                                 <p className="text-sm text-destructive">{errors.defectReport.message}</p>
@@ -428,6 +387,7 @@ export default function NewOrderPage() {
                                     id="hasAccessories"
                                     className="h-4 w-4 rounded border-input"
                                     {...register('hasAccessories')}
+                                    disabled={isSubmitting}
                                 />
                                 <Label htmlFor="hasAccessories" className="cursor-pointer">
                                     Acessórios deixados (Fonte, Cabo, Case, etc.)
@@ -438,6 +398,7 @@ export default function NewOrderPage() {
                                 <Input
                                     placeholder="Descreva os acessórios..."
                                     {...register('accessoriesDescription')}
+                                    disabled={isSubmitting}
                                 />
                             )}
                         </div>
@@ -446,14 +407,19 @@ export default function NewOrderPage() {
 
                 {/* Actions */}
                 <div className="flex justify-end gap-4">
-                    <Button type="button" variant="ghost" asChild>
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        asChild
+                        disabled={isSubmitting}
+                    >
                         <Link href="/dashboard/orders">Cancelar</Link>
                     </Button>
                     <Button type="submit" disabled={isSubmitting}>
                         {isSubmitting ? (
                             <>
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                Criando...
+                                Criando OS...
                             </>
                         ) : (
                             'Abrir OS'

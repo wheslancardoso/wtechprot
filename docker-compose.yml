@@ -16,11 +16,14 @@ services:
       # Cache do Next.js
       - /app/.next
     environment:
+      # Variáveis de desenvolvimento
       - NODE_ENV=development
       - NEXT_TELEMETRY_DISABLED=1
       - WATCHPACK_POLLING=true
       - CHOKIDAR_USEPOLLING=true
+      # Variáveis Supabase (lidas do .env na raiz)
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
     restart: unless-stopped
-    # stdin_open e tty para debugging interativo
     stdin_open: true
     tty: true
