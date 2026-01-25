@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: wtech-saas-dev
+    ports:
+      - "3000:3000"
+    volumes:
+      # Monta o código fonte para hot-reload
+      - .:/app
+      # Preserva node_modules do container (evita conflitos host/container)
+      - /app/node_modules
+      # Cache do Next.js
+      - /app/.next
+    environment:
+      - NODE_ENV=development
+      - NEXT_TELEMETRY_DISABLED=1
+      - WATCHPACK_POLLING=true
+      - CHOKIDAR_USEPOLLING=true
+    restart: unless-stopped
+    # stdin_open e tty para debugging interativo
+    stdin_open: true
+    tty: true
