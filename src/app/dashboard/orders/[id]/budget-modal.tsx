@@ -25,7 +25,17 @@ import {
 } from '@/components/ui/dialog'
 
 // Icons
-import { Plus, Trash2, Loader2, ExternalLink, CheckCircle, AlertCircle } from 'lucide-react'
+import {
+    Plus,
+    Trash2,
+    Loader2,
+    ExternalLink,
+    CheckCircle,
+    AlertCircle,
+    Copy,
+    MessageCircle,
+    X,
+} from 'lucide-react'
 
 // ==================================================
 // Zod Schema
@@ -59,6 +69,9 @@ export default function BudgetModal({ orderId, open, onOpenChange }: BudgetModal
     const router = useRouter()
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
+    const [showSuccess, setShowSuccess] = useState(false)
+    const [publicLink, setPublicLink] = useState('')
+    const [copied, setCopied] = useState(false)
 
     const {
         register,
@@ -88,8 +101,6 @@ export default function BudgetModal({ orderId, open, onOpenChange }: BudgetModal
         setFeedback(null)
 
         try {
-            // Chamar Server Action com argumentos na ordem correta:
-            // saveBudget(orderId, diagnosisText, laborCost, parts)
             const result = await saveBudget(
                 orderId,
                 data.technicalReport,
@@ -101,17 +112,13 @@ export default function BudgetModal({ orderId, open, onOpenChange }: BudgetModal
             )
 
             if (result.success) {
-                // Sucesso: mostrar feedback, fechar modal e atualizar página
-                setFeedback({ type: 'success', message: result.message })
-                reset() // Limpar formulário
-
-                // Aguardar um pouco para mostrar o feedback, depois fechar
-                setTimeout(() => {
-                    onOpenChange(false)
-                    router.refresh()
-                }, 1500)
+                // Gerar link público
+                const link = `${window.location.origin}/os/${orderId}`
+                setPublicLink(link)
+                setShowSuccess(true)
+                reset()
+                router.refresh()
             } else {
-                // Erro: mostrar mensagem
                 setFeedback({ type: 'error', message: result.message })
             }
         } catch (error) {
@@ -125,7 +132,24 @@ export default function BudgetModal({ orderId, open, onOpenChange }: BudgetModal
         }
     }
 
-    // Formatador de moeda
+    function handleCopyLink() {
+        navigator.clipboard.writeText(publicLink)
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2000)
+    }
+
+    function handleWhatsApp() {
+        const message = encodeURIComponent(`Olá! Segue o orçamento do seu equipamento: ${publicLink}`)
+        window.open(`https://wa.me/?text=${message}`, '_blank')
+    }
+
+    function handleClose() {
+        setShowSuccess(false)
+        setPublicLink('')
+        setCopied(false)
+        onOpenChange(false)
+    }
+
     function formatCurrency(value: number): string {
         return new Intl.NumberFormat('pt-BR', {
             style: 'currency',
@@ -134,180 +158,253 @@ export default function BudgetModal({ orderId, open, onOpenChange }: BudgetModal
     }
 
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
+        <Dialog open={open} onOpenChange={showSuccess ? handleClose : onOpenChange}>
             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-                <DialogHeader>
-                    <DialogTitle>Orçamento Técnico</DialogTitle>
-                    <DialogDescription>
-                        Informe o diagnóstico, valor da mão de obra e indique onde o cliente pode comprar as peças.
-                    </DialogDescription>
-                </DialogHeader>
-
-                {/* Feedback Alert */}
-                {feedback && (
-                    <Alert variant={feedback.type === 'success' ? 'success' : 'destructive'}>
-                        {feedback.type === 'success' ? (
-                            <CheckCircle className="h-4 w-4" />
-                        ) : (
-                            <AlertCircle className="h-4 w-4" />
-                        )}
-                        <AlertDescription>{feedback.message}</AlertDescription>
-                    </Alert>
-                )}
-
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                    {/* Laudo Técnico */}
-                    <div className="space-y-2">
-                        <Label htmlFor="technicalReport">Laudo Técnico *</Label>
-                        <Textarea
-                            id="technicalReport"
-                            placeholder="Descreva detalhadamente o problema encontrado, a causa raiz e a solução proposta..."
-                            rows={5}
-                            {...register('technicalReport')}
-                            disabled={isSubmitting}
-                        />
-                        {errors.technicalReport && (
-                            <p className="text-sm text-destructive">{errors.technicalReport.message}</p>
-                        )}
-                    </div>
-
-                    {/* Mão de Obra */}
-                    <div className="space-y-2">
-                        <Label htmlFor="laborCost">Valor da Mão de Obra (R$) *</Label>
-                        <div className="relative">
-                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                                R$
-                            </span>
-                            <Input
-                                id="laborCost"
-                                type="number"
-                                step="0.01"
-                                min="0"
-                                placeholder="0,00"
-                                className="pl-10"
-                                {...register('laborCost', { valueAsNumber: true })}
-                                disabled={isSubmitting}
-                            />
+                {/* ============================================ */}
+                {/* TELA DE SUCESSO */}
+                {/* ============================================ */}
+                {showSuccess ? (
+                    <div className="py-6 text-center space-y-6">
+                        {/* Ícone de Sucesso */}
+                        <div className="mx-auto w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
+                            <CheckCircle className="w-8 h-8 text-green-600" />
                         </div>
-                        {errors.laborCost && (
-                            <p className="text-sm text-destructive">{errors.laborCost.message}</p>
-                        )}
-                    </div>
 
-                    {/* Peças Externas */}
-                    <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                            <Label>Peças Externas (Compra Assistida)</Label>
+                        {/* Título */}
+                        <div>
+                            <h2 className="text-2xl font-bold text-green-600">Orçamento Enviado!</h2>
+                            <p className="text-muted-foreground mt-2">
+                                Compartilhe o link abaixo com o cliente para ele visualizar e aprovar.
+                            </p>
+                        </div>
+
+                        {/* Link Público */}
+                        <div className="space-y-2">
+                            <Label>Link do Orçamento</Label>
+                            <div className="flex gap-2">
+                                <Input
+                                    value={publicLink}
+                                    readOnly
+                                    className="font-mono text-sm"
+                                />
+                                <Button
+                                    variant="outline"
+                                    size="icon"
+                                    onClick={handleCopyLink}
+                                    className={copied ? 'text-green-600' : ''}
+                                >
+                                    {copied ? <CheckCircle className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                                </Button>
+                            </div>
+                            {copied && (
+                                <p className="text-sm text-green-600">✓ Link copiado!</p>
+                            )}
+                        </div>
+
+                        {/* Botões de Ação */}
+                        <div className="flex flex-col sm:flex-row gap-3 pt-4">
                             <Button
-                                type="button"
                                 variant="outline"
-                                size="sm"
-                                onClick={() => append({ name: '', purchaseUrl: '' })}
-                                disabled={isSubmitting}
+                                className="flex-1"
+                                onClick={handleCopyLink}
                             >
-                                <Plus className="mr-2 h-4 w-4" />
-                                Adicionar Peça
+                                <Copy className="mr-2 h-4 w-4" />
+                                Copiar Link
+                            </Button>
+                            <Button
+                                className="flex-1 bg-green-600 hover:bg-green-700"
+                                onClick={handleWhatsApp}
+                            >
+                                <MessageCircle className="mr-2 h-4 w-4" />
+                                Enviar no WhatsApp
                             </Button>
                         </div>
 
-                        {fields.length === 0 && (
-                            <p className="text-sm text-muted-foreground italic text-center py-4 border border-dashed rounded-lg">
-                                Nenhuma peça adicionada. Clique em "Adicionar Peça" se necessário.
-                            </p>
+                        {/* Botão Fechar */}
+                        <Button variant="ghost" onClick={handleClose} className="mt-4">
+                            <X className="mr-2 h-4 w-4" />
+                            Fechar
+                        </Button>
+                    </div>
+                ) : (
+                    /* ============================================ */
+                    /* FORMULÁRIO DE ORÇAMENTO */
+                    /* ============================================ */
+                    <>
+                        <DialogHeader>
+                            <DialogTitle>Orçamento Técnico</DialogTitle>
+                            <DialogDescription>
+                                Informe o diagnóstico, valor da mão de obra e indique onde o cliente pode comprar as peças.
+                            </DialogDescription>
+                        </DialogHeader>
+
+                        {/* Feedback Alert */}
+                        {feedback && (
+                            <Alert variant={feedback.type === 'success' ? 'success' : 'destructive'}>
+                                {feedback.type === 'success' ? (
+                                    <CheckCircle className="h-4 w-4" />
+                                ) : (
+                                    <AlertCircle className="h-4 w-4" />
+                                )}
+                                <AlertDescription>{feedback.message}</AlertDescription>
+                            </Alert>
                         )}
 
-                        {fields.map((field, index) => (
-                            <div
-                                key={field.id}
-                                className="grid gap-3 p-4 border rounded-lg bg-muted/30"
-                            >
+                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                            {/* Laudo Técnico */}
+                            <div className="space-y-2">
+                                <Label htmlFor="technicalReport">Laudo Técnico *</Label>
+                                <Textarea
+                                    id="technicalReport"
+                                    placeholder="Descreva detalhadamente o problema encontrado, a causa raiz e a solução proposta..."
+                                    rows={5}
+                                    {...register('technicalReport')}
+                                    disabled={isSubmitting}
+                                />
+                                {errors.technicalReport && (
+                                    <p className="text-sm text-destructive">{errors.technicalReport.message}</p>
+                                )}
+                            </div>
+
+                            {/* Mão de Obra */}
+                            <div className="space-y-2">
+                                <Label htmlFor="laborCost">Valor da Mão de Obra (R$) *</Label>
+                                <div className="relative">
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                                        R$
+                                    </span>
+                                    <Input
+                                        id="laborCost"
+                                        type="number"
+                                        step="0.01"
+                                        min="0"
+                                        placeholder="0,00"
+                                        className="pl-10"
+                                        {...register('laborCost', { valueAsNumber: true })}
+                                        disabled={isSubmitting}
+                                    />
+                                </div>
+                                {errors.laborCost && (
+                                    <p className="text-sm text-destructive">{errors.laborCost.message}</p>
+                                )}
+                            </div>
+
+                            {/* Peças Externas */}
+                            <div className="space-y-4">
                                 <div className="flex items-center justify-between">
-                                    <span className="text-sm font-medium">Peça #{index + 1}</span>
+                                    <Label>Peças Externas (Compra Assistida)</Label>
                                     <Button
                                         type="button"
-                                        variant="ghost"
-                                        size="icon"
-                                        onClick={() => remove(index)}
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => append({ name: '', purchaseUrl: '' })}
                                         disabled={isSubmitting}
-                                        className="h-8 w-8 text-destructive hover:text-destructive"
                                     >
-                                        <Trash2 className="h-4 w-4" />
+                                        <Plus className="mr-2 h-4 w-4" />
+                                        Adicionar Peça
                                     </Button>
                                 </div>
 
-                                <div className="grid gap-3 sm:grid-cols-2">
-                                    <div className="space-y-1">
-                                        <Label htmlFor={`part-name-${index}`}>Nome da Peça</Label>
-                                        <Input
-                                            id={`part-name-${index}`}
-                                            placeholder="Ex: Bateria para Dell Inspiron"
-                                            {...register(`externalParts.${index}.name`)}
-                                            disabled={isSubmitting}
-                                        />
-                                        {errors.externalParts?.[index]?.name && (
-                                            <p className="text-xs text-destructive">
-                                                {errors.externalParts[index]?.name?.message}
-                                            </p>
-                                        )}
-                                    </div>
+                                {fields.length === 0 && (
+                                    <p className="text-sm text-muted-foreground italic text-center py-4 border border-dashed rounded-lg">
+                                        Nenhuma peça adicionada. Clique em "Adicionar Peça" se necessário.
+                                    </p>
+                                )}
 
-                                    <div className="space-y-1">
-                                        <Label htmlFor={`part-url-${index}`}>Link de Compra</Label>
-                                        <div className="relative">
-                                            <Input
-                                                id={`part-url-${index}`}
-                                                type="url"
-                                                placeholder="https://mercadolivre.com.br/..."
-                                                className="pr-10"
-                                                {...register(`externalParts.${index}.purchaseUrl`)}
+                                {fields.map((field, index) => (
+                                    <div
+                                        key={field.id}
+                                        className="grid gap-3 p-4 border rounded-lg bg-muted/30"
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-sm font-medium">Peça #{index + 1}</span>
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="icon"
+                                                onClick={() => remove(index)}
                                                 disabled={isSubmitting}
-                                            />
-                                            <ExternalLink className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                                className="h-8 w-8 text-destructive hover:text-destructive"
+                                            >
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
                                         </div>
-                                        {errors.externalParts?.[index]?.purchaseUrl && (
-                                            <p className="text-xs text-destructive">
-                                                {errors.externalParts[index]?.purchaseUrl?.message}
-                                            </p>
-                                        )}
+
+                                        <div className="grid gap-3 sm:grid-cols-2">
+                                            <div className="space-y-1">
+                                                <Label htmlFor={`part-name-${index}`}>Nome da Peça</Label>
+                                                <Input
+                                                    id={`part-name-${index}`}
+                                                    placeholder="Ex: Bateria para Dell Inspiron"
+                                                    {...register(`externalParts.${index}.name`)}
+                                                    disabled={isSubmitting}
+                                                />
+                                                {errors.externalParts?.[index]?.name && (
+                                                    <p className="text-xs text-destructive">
+                                                        {errors.externalParts[index]?.name?.message}
+                                                    </p>
+                                                )}
+                                            </div>
+
+                                            <div className="space-y-1">
+                                                <Label htmlFor={`part-url-${index}`}>Link de Compra</Label>
+                                                <div className="relative">
+                                                    <Input
+                                                        id={`part-url-${index}`}
+                                                        type="url"
+                                                        placeholder="https://mercadolivre.com.br/..."
+                                                        className="pr-10"
+                                                        {...register(`externalParts.${index}.purchaseUrl`)}
+                                                        disabled={isSubmitting}
+                                                    />
+                                                    <ExternalLink className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                                </div>
+                                                {errors.externalParts?.[index]?.purchaseUrl && (
+                                                    <p className="text-xs text-destructive">
+                                                        {errors.externalParts[index]?.purchaseUrl?.message}
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
+                                ))}
                             </div>
-                        ))}
-                    </div>
 
-                    {/* Resumo / Total */}
-                    <div className="border-t pt-4">
-                        <div className="flex items-center justify-between text-lg font-semibold">
-                            <span>Total (Mão de Obra):</span>
-                            <span className="text-primary">{formatCurrency(laborCost)}</span>
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-1">
-                            * O valor das peças será pago diretamente pelo cliente nos links indicados.
-                        </p>
-                    </div>
+                            {/* Resumo / Total */}
+                            <div className="border-t pt-4">
+                                <div className="flex items-center justify-between text-lg font-semibold">
+                                    <span>Total (Mão de Obra):</span>
+                                    <span className="text-primary">{formatCurrency(laborCost)}</span>
+                                </div>
+                                <p className="text-xs text-muted-foreground mt-1">
+                                    * O valor das peças será pago diretamente pelo cliente nos links indicados.
+                                </p>
+                            </div>
 
-                    {/* Footer */}
-                    <DialogFooter>
-                        <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() => onOpenChange(false)}
-                            disabled={isSubmitting}
-                        >
-                            Cancelar
-                        </Button>
-                        <Button type="submit" disabled={isSubmitting}>
-                            {isSubmitting ? (
-                                <>
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                    Enviando...
-                                </>
-                            ) : (
-                                'Enviar Orçamento'
-                            )}
-                        </Button>
-                    </DialogFooter>
-                </form>
+                            {/* Footer */}
+                            <DialogFooter>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={() => onOpenChange(false)}
+                                    disabled={isSubmitting}
+                                >
+                                    Cancelar
+                                </Button>
+                                <Button type="submit" disabled={isSubmitting}>
+                                    {isSubmitting ? (
+                                        <>
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                            Enviando...
+                                        </>
+                                    ) : (
+                                        'Enviar Orçamento'
+                                    )}
+                                </Button>
+                            </DialogFooter>
+                        </form>
+                    </>
+                )}
             </DialogContent>
         </Dialog>
     )

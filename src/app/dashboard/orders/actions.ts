@@ -162,10 +162,10 @@ export async function createOrder(formData: FormData): Promise<ActionResult> {
     } catch (error) {
         // Erro de validação Zod
         if (error instanceof z.ZodError) {
-            const firstError = error.errors[0]
+            const firstIssue = error.issues[0]
             return {
                 success: false,
-                message: `Validação falhou: ${firstError.path.join('.')} - ${firstError.message}`
+                message: `Validação falhou: ${firstIssue.path.join('.')} - ${firstIssue.message}`
             }
         }
 
