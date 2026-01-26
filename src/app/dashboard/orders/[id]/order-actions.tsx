@@ -11,7 +11,7 @@ import BudgetModal from './budget-modal'
 
 // UI Components
 import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 
 // Icons
 import {
@@ -21,6 +21,8 @@ import {
     Loader2,
     AlertCircle,
     FileText,
+    Clock,
+    Package,
 } from 'lucide-react'
 
 interface OrderActionsProps {
@@ -72,10 +74,13 @@ export default function OrderActions({ orderId, currentStatus }: OrderActionsPro
                     </Alert>
                 )}
 
-                {/* Botões baseados no status atual */}
-                <div className="flex flex-wrap gap-2">
-                    {/* Status: OPEN */}
-                    {currentStatus === 'open' && (
+                {/* ============================================ */}
+                {/* MÁQUINA DE ESTADOS ESTRITA */}
+                {/* ============================================ */}
+
+                {/* Status: OPEN → Iniciar Diagnóstico */}
+                {currentStatus === 'open' && (
+                    <div className="flex flex-wrap gap-2">
                         <Button
                             onClick={() => handleStatusChange('analyzing')}
                             disabled={isPending}
@@ -87,72 +92,51 @@ export default function OrderActions({ orderId, currentStatus }: OrderActionsPro
                             )}
                             Iniciar Diagnóstico
                         </Button>
-                    )}
+                    </div>
+                )}
 
-                    {/* Status: ANALYZING */}
-                    {currentStatus === 'analyzing' && (
-                        <>
-                            <Button
-                                onClick={() => setIsBudgetOpen(true)}
-                                disabled={isPending}
-                                variant="default"
-                                className="bg-green-600 hover:bg-green-700"
-                            >
-                                <FileText className="mr-2 h-4 w-4" />
-                                Finalizar Diagnóstico
-                            </Button>
-                            <Button
-                                onClick={() => handleStatusChange('canceled')}
-                                disabled={isPending}
-                                variant="destructive"
-                            >
-                                {isPending ? (
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                ) : (
-                                    <XCircle className="mr-2 h-4 w-4" />
-                                )}
-                                Cancelar OS
-                            </Button>
-                        </>
-                    )}
-
-                    {/* Status: WAITING_APPROVAL */}
-                    {currentStatus === 'waiting_approval' && (
-                        <>
-                            <Button
-                                onClick={() => handleStatusChange('waiting_parts')}
-                                disabled={isPending}
-                                variant="outline"
-                            >
-                                {isPending ? (
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                ) : null}
-                                Aguardando Peças
-                            </Button>
-                            <Button
-                                onClick={() => handleStatusChange('in_progress')}
-                                disabled={isPending}
-                            >
-                                {isPending ? (
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                ) : (
-                                    <Play className="mr-2 h-4 w-4" />
-                                )}
-                                Iniciar Reparo
-                            </Button>
-                            <Button
-                                onClick={() => handleStatusChange('canceled')}
-                                disabled={isPending}
-                                variant="destructive"
-                            >
+                {/* Status: ANALYZING → Finalizar Diagnóstico (abre modal) */}
+                {currentStatus === 'analyzing' && (
+                    <div className="flex flex-wrap gap-2">
+                        <Button
+                            onClick={() => setIsBudgetOpen(true)}
+                            disabled={isPending}
+                            className="bg-green-600 hover:bg-green-700"
+                        >
+                            <FileText className="mr-2 h-4 w-4" />
+                            Finalizar Diagnóstico
+                        </Button>
+                        <Button
+                            onClick={() => handleStatusChange('canceled')}
+                            disabled={isPending}
+                            variant="destructive"
+                        >
+                            {isPending ? (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
                                 <XCircle className="mr-2 h-4 w-4" />
-                                Cancelar
-                            </Button>
-                        </>
-                    )}
+                            )}
+                            Cancelar OS
+                        </Button>
+                    </div>
+                )}
 
-                    {/* Status: WAITING_PARTS */}
-                    {currentStatus === 'waiting_parts' && (
+                {/* Status: WAITING_APPROVAL → TRAVA! Técnico não pode avançar */}
+                {currentStatus === 'waiting_approval' && (
+                    <Alert variant="warning" className="border-yellow-500 bg-yellow-50 dark:bg-yellow-950">
+                        <Clock className="h-5 w-5 text-yellow-600" />
+                        <AlertTitle className="text-yellow-800 dark:text-yellow-200">
+                            Aguardando Aprovação do Cliente
+                        </AlertTitle>
+                        <AlertDescription className="text-yellow-700 dark:text-yellow-300">
+                            O orçamento foi enviado. Aguarde o cliente aprovar ou reprovar para continuar.
+                        </AlertDescription>
+                    </Alert>
+                )}
+
+                {/* Status: WAITING_PARTS → Peças Chegaram */}
+                {currentStatus === 'waiting_parts' && (
+                    <div className="flex flex-wrap gap-2">
                         <Button
                             onClick={() => handleStatusChange('in_progress')}
                             disabled={isPending}
@@ -160,30 +144,16 @@ export default function OrderActions({ orderId, currentStatus }: OrderActionsPro
                             {isPending ? (
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                             ) : (
-                                <Play className="mr-2 h-4 w-4" />
+                                <Package className="mr-2 h-4 w-4" />
                             )}
-                            Peças Chegaram - Iniciar Reparo
+                            Peças Chegaram / Retomar
                         </Button>
-                    )}
+                    </div>
+                )}
 
-                    {/* Status: IN_PROGRESS */}
-                    {currentStatus === 'in_progress' && (
-                        <Button
-                            onClick={() => handleStatusChange('ready')}
-                            disabled={isPending}
-                            className="bg-green-600 hover:bg-green-700"
-                        >
-                            {isPending ? (
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            ) : (
-                                <CheckCircle className="mr-2 h-4 w-4" />
-                            )}
-                            Marcar como Pronta
-                        </Button>
-                    )}
-
-                    {/* Status: READY */}
-                    {currentStatus === 'ready' && (
+                {/* Status: IN_PROGRESS → Finalizar Serviço */}
+                {currentStatus === 'in_progress' && (
+                    <div className="flex flex-wrap gap-2">
                         <Button
                             onClick={() => handleStatusChange('finished')}
                             disabled={isPending}
@@ -194,17 +164,42 @@ export default function OrderActions({ orderId, currentStatus }: OrderActionsPro
                             ) : (
                                 <CheckCircle className="mr-2 h-4 w-4" />
                             )}
-                            Finalizar e Entregar
+                            Finalizar Serviço
                         </Button>
-                    )}
+                    </div>
+                )}
 
-                    {/* Status: FINISHED ou CANCELED */}
-                    {(currentStatus === 'finished' || currentStatus === 'canceled') && (
-                        <p className="text-sm text-muted-foreground italic">
+                {/* Status: READY → Entregar ao Cliente */}
+                {currentStatus === 'ready' && (
+                    <div className="flex flex-wrap gap-2">
+                        <Button
+                            onClick={() => handleStatusChange('finished')}
+                            disabled={isPending}
+                            className="bg-green-600 hover:bg-green-700"
+                        >
+                            {isPending ? (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
+                                <CheckCircle className="mr-2 h-4 w-4" />
+                            )}
+                            Entregar ao Cliente
+                        </Button>
+                    </div>
+                )}
+
+                {/* Status: FINISHED ou CANCELED → Mensagem final */}
+                {(currentStatus === 'finished' || currentStatus === 'canceled') && (
+                    <Alert variant={currentStatus === 'finished' ? 'success' : 'destructive'}>
+                        {currentStatus === 'finished' ? (
+                            <CheckCircle className="h-4 w-4" />
+                        ) : (
+                            <XCircle className="h-4 w-4" />
+                        )}
+                        <AlertDescription>
                             Esta OS está {currentStatus === 'finished' ? 'finalizada' : 'cancelada'}.
-                        </p>
-                    )}
-                </div>
+                        </AlertDescription>
+                    </Alert>
+                )}
             </div>
 
             {/* Modal de Orçamento */}

@@ -1,13 +1,16 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/server'
 import type { OrderStatus } from '@/types/database'
+
+// Components
+import ClientActions from './client-actions'
 
 // UI Components
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 // Icons
 import {
@@ -17,8 +20,6 @@ import {
     Receipt,
     ExternalLink,
     AlertTriangle,
-    CheckCircle,
-    XCircle,
 } from 'lucide-react'
 
 // Status config
@@ -37,7 +38,7 @@ const statusDescriptions: Record<OrderStatus, string> = {
     open: 'Seu equipamento está na fila para análise.',
     analyzing: 'O técnico está avaliando o problema.',
     waiting_approval: 'Revise o orçamento abaixo e aprove para iniciarmos o reparo.',
-    waiting_parts: 'Aguardando você comprar e entregar as peças.',
+    waiting_parts: 'Aguardando você comprar e entregar as peças na assistência.',
     in_progress: 'Seu equipamento está sendo reparado.',
     ready: 'Seu equipamento está pronto! Entre em contato para retirada.',
     finished: 'Serviço concluído. Obrigado pela confiança!',
@@ -59,14 +60,17 @@ interface PageProps {
 
 export default async function ClientOrderPage({ params }: PageProps) {
     const { id } = await params
-    const supabase = await createClient()
 
-    // Buscar ordem com itens
+    // Usar cliente admin para bypass de RLS (rota pública)
+    const supabase = await createAdminClient()
+
+    // Buscar ordem com itens e cliente
     const { data: order, error } = await supabase
         .from('orders')
         .select(`
       *,
-      order_items(*)
+      order_items(*),
+      customer:customers(name, phone)
     `)
         .eq('id', id)
         .single()
@@ -80,11 +84,10 @@ export default async function ClientOrderPage({ params }: PageProps) {
         (item: { type: string }) => item.type === 'part_external'
     ) || []
 
-    const showApprovalButtons = order.status === 'waiting_approval'
-    const isFinishedOrCanceled = order.status === 'finished' || order.status === 'canceled'
+    const hasParts = externalParts.length > 0
 
     return (
-        <div className="min-h-screen bg-muted/30 pb-32">
+        <div className="min-h-screen bg-muted/30 pb-40">
             {/* Header */}
             <header className="sticky top-0 z-50 bg-background border-b">
                 <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -102,17 +105,12 @@ export default async function ClientOrderPage({ params }: PageProps) {
 
             {/* Main Content */}
             <main className="container mx-auto px-4 py-6 space-y-6 max-w-lg">
-                {/* Status Alert */}
-                <Alert variant={isFinishedOrCanceled ? (order.status === 'finished' ? 'success' : 'destructive') : 'info'}>
-                    {order.status === 'finished' ? (
-                        <CheckCircle className="h-4 w-4" />
-                    ) : order.status === 'canceled' ? (
-                        <XCircle className="h-4 w-4" />
-                    ) : (
-                        <AlertTriangle className="h-4 w-4" />
-                    )}
-                    <AlertTitle>OS #{String(order.display_id).padStart(4, '0')}</AlertTitle>
+                {/* Status Info */}
+                <Alert>
+                    <AlertTriangle className="h-4 w-4" />
                     <AlertDescription>
+                        <strong>OS #{String(order.display_id).padStart(4, '0')}</strong>
+                        <br />
                         {statusDescriptions[order.status as OrderStatus]}
                     </AlertDescription>
                 </Alert>
@@ -120,14 +118,14 @@ export default async function ClientOrderPage({ params }: PageProps) {
                 {/* Card: Diagnóstico */}
                 {order.diagnosis_text && (
                     <Card>
-                        <CardHeader>
+                        <CardHeader className="pb-3">
                             <CardTitle className="flex items-center gap-2 text-base">
                                 <FileText className="h-5 w-5 text-primary" />
                                 Diagnóstico Técnico
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <p className="text-sm whitespace-pre-wrap text-muted-foreground">
+                            <p className="text-sm whitespace-pre-wrap text-muted-foreground leading-relaxed">
                                 {order.diagnosis_text}
                             </p>
                         </CardContent>
@@ -135,9 +133,9 @@ export default async function ClientOrderPage({ params }: PageProps) {
                 )}
 
                 {/* Card: Peças Necessárias */}
-                {externalParts.length > 0 && (
+                {hasParts && (
                     <Card>
-                        <CardHeader>
+                        <CardHeader className="pb-3">
                             <CardTitle className="flex items-center gap-2 text-base">
                                 <ShoppingCart className="h-5 w-5 text-primary" />
                                 Peças Necessárias
@@ -145,10 +143,11 @@ export default async function ClientOrderPage({ params }: PageProps) {
                         </CardHeader>
                         <CardContent className="space-y-4">
                             {/* Aviso Compra Assistida */}
-                            <Alert variant="warning">
+                            <Alert variant="warning" className="py-2">
                                 <AlertTriangle className="h-4 w-4" />
                                 <AlertDescription className="text-xs">
-                                    As peças devem ser compradas por você e entregues na assistência.
+                                    <strong>Atenção:</strong> A compra das peças é responsabilidade do cliente.
+                                    Após comprar, entregue na assistência.
                                 </AlertDescription>
                             </Alert>
 
@@ -159,9 +158,9 @@ export default async function ClientOrderPage({ params }: PageProps) {
                                         key={part.id}
                                         className="flex items-center justify-between p-3 bg-muted rounded-lg"
                                     >
-                                        <span className="text-sm font-medium">{part.title}</span>
+                                        <span className="text-sm font-medium flex-1 pr-2">{part.title}</span>
                                         {part.external_url && (
-                                            <Button size="sm" variant="outline" asChild>
+                                            <Button size="sm" variant="default" asChild className="shrink-0">
                                                 <Link href={part.external_url} target="_blank" rel="noopener noreferrer">
                                                     <ExternalLink className="mr-1 h-3 w-3" />
                                                     Comprar
@@ -177,7 +176,7 @@ export default async function ClientOrderPage({ params }: PageProps) {
 
                 {/* Card: Resumo Financeiro */}
                 <Card>
-                    <CardHeader>
+                    <CardHeader className="pb-3">
                         <CardTitle className="flex items-center gap-2 text-base">
                             <Receipt className="h-5 w-5 text-primary" />
                             Resumo Financeiro
@@ -189,10 +188,10 @@ export default async function ClientOrderPage({ params }: PageProps) {
                             <span className="font-medium">{formatCurrency(order.labor_cost || 0)}</span>
                         </div>
 
-                        {externalParts.length > 0 && (
+                        {hasParts && (
                             <div className="flex justify-between text-sm">
                                 <span className="text-muted-foreground">Peças (você compra)</span>
-                                <span className="text-muted-foreground italic">Ver links acima</span>
+                                <span className="text-muted-foreground italic text-xs">Ver links acima</span>
                             </div>
                         )}
 
@@ -203,52 +202,20 @@ export default async function ClientOrderPage({ params }: PageProps) {
                             <span className="text-primary">{formatCurrency(order.labor_cost || 0)}</span>
                         </div>
 
-                        <p className="text-xs text-muted-foreground text-center">
-                            * Este é o valor da mão de obra. Peças são pagas diretamente nos links.
+                        <p className="text-xs text-muted-foreground text-center pt-2">
+                            * Este é o valor da mão de obra, pago diretamente ao técnico.
+                            {hasParts && ' As peças são pagas separadamente nos links indicados.'}
                         </p>
                     </CardContent>
                 </Card>
             </main>
 
-            {/* Footer Fixo - Botões de Aprovação */}
-            {showApprovalButtons && (
-                <footer className="fixed bottom-0 left-0 right-0 bg-background border-t p-4 safe-area-bottom">
-                    <div className="container mx-auto max-w-lg flex gap-3">
-                        <Button
-                            variant="outline"
-                            className="flex-1 h-12 text-destructive border-destructive hover:bg-destructive hover:text-destructive-foreground"
-                            asChild
-                        >
-                            <Link href={`/os/${id}/reprovar`}>
-                                <XCircle className="mr-2 h-5 w-5" />
-                                Reprovar
-                            </Link>
-                        </Button>
-                        <Button
-                            className="flex-1 h-12 bg-green-600 hover:bg-green-700"
-                            asChild
-                        >
-                            <Link href={`/os/${id}/aprovar`}>
-                                <CheckCircle className="mr-2 h-5 w-5" />
-                                Aprovar Orçamento
-                            </Link>
-                        </Button>
-                    </div>
-                </footer>
-            )}
-
-            {/* Footer para status finalizados */}
-            {isFinishedOrCanceled && (
-                <footer className="fixed bottom-0 left-0 right-0 bg-background border-t p-4">
-                    <div className="container mx-auto max-w-lg text-center">
-                        <p className="text-sm text-muted-foreground">
-                            {order.status === 'finished'
-                                ? '✅ Serviço concluído com sucesso!'
-                                : '❌ Este serviço foi cancelado.'}
-                        </p>
-                    </div>
-                </footer>
-            )}
+            {/* Footer com Ações do Cliente */}
+            <ClientActions
+                orderId={order.id}
+                hasParts={hasParts}
+                status={order.status}
+            />
         </div>
     )
 }

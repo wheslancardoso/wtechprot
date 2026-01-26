@@ -106,3 +106,28 @@ export async function createClient() {
         throw error
     }
 }
+
+/**
+ * Cria um cliente Supabase com service_role key (bypass RLS)
+ * USE APENAS para operações de leitura em rotas públicas!
+ */
+export async function createAdminClient() {
+    const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+    if (!rawUrl || !serviceRoleKey) {
+        throw new Error('SUPABASE_SERVICE_ROLE_KEY não está definida no .env')
+    }
+
+    const supabaseUrl = sanitizeSupabaseUrl(rawUrl)
+
+    // Importar createClient diretamente do @supabase/supabase-js para admin
+    const { createClient } = await import('@supabase/supabase-js')
+
+    return createClient(supabaseUrl, serviceRoleKey, {
+        auth: {
+            autoRefreshToken: false,
+            persistSession: false,
+        },
+    })
+}
