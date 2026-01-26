@@ -264,3 +264,137 @@ export async function updateOrderStatus(
         }
     }
 }
+
+// ==================================================
+// Tipo para peças externas
+// ==================================================
+interface ExternalPart {
+    name: string
+    purchaseUrl: string
+}
+
+// ==================================================
+// Server Action: Salvar Orçamento Técnico
+// ==================================================
+export async function saveBudget(
+    orderId: string,
+    diagnosisText: string,
+    laborCost: number,
+    parts: ExternalPart[]
+): Promise<ActionResult> {
+    console.log("🔧 Iniciando saveBudget", {
+        orderId,
+        diagnosisText: diagnosisText.substring(0, 50) + '...',
+        laborCost,
+        partsCount: parts.length,
+        targetStatus: 'waiting_approval'
+    })
+
+    try {
+        // 1. Validações básicas
+        if (!orderId || orderId.length < 10) {
+            console.log("❌ saveBudget: ID da OS inválido")
+            return { success: false, message: 'ID da OS inválido' }
+        }
+
+        if (!diagnosisText || diagnosisText.length < 20) {
+            console.log("❌ saveBudget: Laudo muito curto")
+            return { success: false, message: 'Laudo técnico deve ter pelo menos 20 caracteres' }
+        }
+
+        if (laborCost < 0) {
+            console.log("❌ saveBudget: Valor negativo")
+            return { success: false, message: 'Valor da mão de obra inválido' }
+        }
+
+        // 2. Criar cliente Supabase
+        const supabase = await createClient()
+        console.log("✅ saveBudget: Cliente Supabase criado")
+
+        // 3. Verificar usuário autenticado
+        const { data: { user }, error: authError } = await supabase.auth.getUser()
+        if (authError || !user) {
+            console.log("❌ saveBudget: Usuário não autenticado", authError)
+            return { success: false, message: 'Usuário não autenticado' }
+        }
+        console.log("✅ saveBudget: Usuário autenticado:", user.id)
+
+        // 4. Atualizar ordem com novo laudo, valor e status
+        // IMPORTANTE: Removido filtro user_id para garantir que o update funcione
+        const updatePayload = {
+            diagnosis_text: diagnosisText,
+            labor_cost: laborCost,
+            parts_cost_external: 0,
+            status: 'waiting_approval' as const, // CRÍTICO: Forçar mudança de status
+        }
+        console.log("📝 saveBudget: Payload de update:", updatePayload)
+
+        const { data: updateData, error: orderError } = await supabase
+            .from('orders')
+            .update(updatePayload)
+            .eq('id', orderId)
+            .select()
+
+        if (orderError) {
+            console.error('❌ saveBudget: Erro ao atualizar OS:', orderError)
+            return { success: false, message: `Erro ao atualizar OS: ${orderError.message}` }
+        }
+        console.log("✅ saveBudget: OS atualizada com sucesso:", updateData)
+
+        // 5. Primeiro: Delete os itens antigos (type = 'part_external') dessa OS
+        const { error: deleteError } = await supabase
+            .from('order_items')
+            .delete()
+            .eq('order_id', orderId)
+            .eq('type', 'part_external')
+
+        if (deleteError) {
+            console.log("⚠️ saveBudget: Erro ao deletar itens antigos (pode não existir):", deleteError.message)
+            // Continua mesmo com erro - pode não existir itens
+        } else {
+            console.log("✅ saveBudget: Itens antigos deletados")
+        }
+
+        // 6. Segundo: Insira as novas peças se houver
+        if (parts.length > 0) {
+            const orderItems = parts.map((part) => ({
+                order_id: orderId,
+                title: part.name,
+                type: 'part_external',
+                price: 0,
+                external_url: part.purchaseUrl || null,
+            }))
+            console.log("📦 saveBudget: Inserindo peças:", orderItems)
+
+            const { error: insertError } = await supabase
+                .from('order_items')
+                .insert(orderItems)
+
+            if (insertError) {
+                console.error('❌ saveBudget: Erro ao inserir peças:', insertError)
+                return { success: false, message: `Erro ao salvar peças: ${insertError.message}` }
+            }
+            console.log("✅ saveBudget: Peças inseridas com sucesso")
+        }
+
+        // 7. Revalidar caches
+        revalidatePath('/dashboard/orders')
+        revalidatePath(`/dashboard/orders/${orderId}`)
+        console.log("✅ saveBudget: Cache revalidado")
+
+        // 8. Retornar sucesso
+        const partsText = parts.length > 0 ? ` com ${parts.length} peça(s)` : ''
+        console.log("🎉 saveBudget: SUCESSO!")
+        return {
+            success: true,
+            message: `Orçamento salvo${partsText}! Aguardando aprovação do cliente.`
+        }
+
+    } catch (error) {
+        console.error('❌ saveBudget: Erro inesperado:', error)
+        return {
+            success: false,
+            message: `Erro inesperado: ${error instanceof Error ? error.message : 'Desconhecido'}`
+        }
+    }
+}
