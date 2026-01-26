@@ -1,21 +1,32 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
+import { headers } from 'next/headers'
 import { createAdminClient } from '@/lib/supabase/server'
 
 // ==================================================
-// Tipo de retorno padrão
+// Tipos
 // ==================================================
 type ActionResult = {
     success: boolean
     message: string
 }
 
+interface SignatureData {
+    userAgent: string
+    timestamp: string
+    acceptedTerms: boolean
+    hasParts: boolean
+}
+
 // ==================================================
-// Server Action: Aprovar Orçamento
+// Server Action: Aprovar Orçamento (Compra Assistida)
 // ==================================================
-export async function approveBudget(orderId: string): Promise<ActionResult> {
-    console.log('🟢 approveBudget iniciado:', { orderId })
+export async function approveBudget(
+    orderId: string,
+    signatureData?: SignatureData
+): Promise<ActionResult> {
+    console.log('🟢 approveBudget iniciado:', { orderId, signatureData })
 
     try {
         // 1. Validar orderId
@@ -23,54 +34,88 @@ export async function approveBudget(orderId: string): Promise<ActionResult> {
             return { success: false, message: 'ID da OS inválido' }
         }
 
-        // 2. Criar cliente Supabase (admin para bypass RLS)
+        // 2. Capturar IP do cliente (via headers)
+        const headersList = await headers()
+        const clientIp = headersList.get('x-forwarded-for') ||
+            headersList.get('x-real-ip') ||
+            'unknown'
+
+        // 3. Montar metadados da assinatura digital
+        const signatureMetadata = {
+            ip: clientIp,
+            userAgent: signatureData?.userAgent || 'unknown',
+            timestamp: signatureData?.timestamp || new Date().toISOString(),
+            acceptedTerms: signatureData?.acceptedTerms || false,
+            hasParts: signatureData?.hasParts || false,
+            approvedAt: new Date().toISOString(),
+        }
+        console.log('📝 Signature metadata:', signatureMetadata)
+
+        // 4. Criar cliente Supabase (admin para bypass RLS)
         const supabase = await createAdminClient()
 
-        // 3. Buscar itens da OS para verificar se tem peças externas
+        // 5. Buscar itens da OS para verificar se tem peças externas
         const { data: orderItems, error: itemsError } = await supabase
             .from('order_items')
-            .select('id, type')
+            .select('id, type, is_external_part')
             .eq('order_id', orderId)
 
         if (itemsError) {
             console.error('❌ Erro ao buscar itens:', itemsError)
-            // Continua mesmo sem itens
         }
 
-        // 4. Verificar se existe algum item do tipo 'part_external'
-        const hasExternalParts = orderItems?.some(item => item.type === 'part_external') || false
+        // 6. Verificar se existe algum item do tipo 'part_external' ou is_external_part = true
+        const hasExternalParts = orderItems?.some(
+            item => item.type === 'part_external' || item.is_external_part === true
+        ) || false
         console.log('📦 Tem peças externas?', hasExternalParts)
 
-        // 5. Definir novo status baseado na lógica de negócio
+        // 7. Definir novo status baseado na lógica de negócio
+        // PIVOT: NÃO capturamos pagamento, apenas mudamos status
         // SE TIVER PEÇAS: waiting_parts (técnico espera a peça chegar)
         // SE NÃO TIVER: in_progress (técnico pode começar direto)
         const newStatus = hasExternalParts ? 'waiting_parts' : 'in_progress'
         console.log('📝 Novo status:', newStatus)
 
-        // 6. Atualizar ordem
+        // 8. Atualizar ordem com assinatura digital
         const { error: updateError } = await supabase
             .from('orders')
             .update({
                 status: newStatus,
                 approved_at: new Date().toISOString(),
+                signature_metadata: signatureMetadata,
             })
             .eq('id', orderId)
-            .eq('status', 'waiting_approval') // Só atualiza se estiver aguardando aprovação
+            .eq('status', 'waiting_approval')
 
         if (updateError) {
             console.error('❌ Erro ao aprovar:', updateError)
             return { success: false, message: `Erro ao aprovar: ${updateError.message}` }
         }
 
-        // 7. Revalidar caches
+        // 9. Atualizar status das peças para 'ordered' se houver peças externas
+        if (hasExternalParts && orderItems) {
+            const externalPartIds = orderItems
+                .filter(item => item.type === 'part_external' || item.is_external_part)
+                .map(item => item.id)
+
+            if (externalPartIds.length > 0) {
+                await supabase
+                    .from('order_items')
+                    .update({ part_status: 'ordered' })
+                    .in('id', externalPartIds)
+            }
+        }
+
+        // 10. Revalidar caches
         revalidatePath(`/os/${orderId}`)
         revalidatePath('/dashboard/orders')
         revalidatePath(`/dashboard/orders/${orderId}`)
 
-        // 8. Mensagem de sucesso
+        // 11. Mensagem de sucesso
         const successMessage = hasExternalParts
-            ? 'Orçamento aprovado! Compre as peças nos links indicados e entregue na assistência.'
-            : 'Orçamento aprovado! O técnico já vai iniciar o reparo.'
+            ? '✅ Orçamento aprovado! Compre as peças nos links indicados e entregue na assistência.'
+            : '✅ Orçamento aprovado! O técnico já vai iniciar o reparo.'
 
         console.log('🎉 approveBudget SUCESSO!')
         return { success: true, message: successMessage }
@@ -107,7 +152,7 @@ export async function rejectBudget(orderId: string): Promise<ActionResult> {
                 canceled_at: new Date().toISOString(),
             })
             .eq('id', orderId)
-            .eq('status', 'waiting_approval') // Só atualiza se estiver aguardando aprovação
+            .eq('status', 'waiting_approval')
 
         if (updateError) {
             console.error('❌ Erro ao reprovar:', updateError)
@@ -122,7 +167,7 @@ export async function rejectBudget(orderId: string): Promise<ActionResult> {
         console.log('🎉 rejectBudget SUCESSO!')
         return {
             success: true,
-            message: 'Orçamento reprovado. A OS foi cancelada.'
+            message: '❌ Orçamento reprovado. A OS foi cancelada.'
         }
 
     } catch (error) {

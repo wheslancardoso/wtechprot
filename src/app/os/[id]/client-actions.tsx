@@ -9,6 +9,7 @@ import { approveBudget, rejectBudget } from './actions'
 // UI Components
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Label } from '@/components/ui/label'
 
 // Icons
 import {
@@ -18,6 +19,7 @@ import {
     PartyPopper,
     Clock,
     Wrench,
+    AlertTriangle,
 } from 'lucide-react'
 
 interface ClientActionsProps {
@@ -30,6 +32,7 @@ export default function ClientActions({ orderId, hasParts, status }: ClientActio
     const router = useRouter()
     const [isApproving, setIsApproving] = useState(false)
     const [isRejecting, setIsRejecting] = useState(false)
+    const [acceptedTerms, setAcceptedTerms] = useState(false)
     const [result, setResult] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
 
     // Status que indicam que já foi aprovado/processado
@@ -38,11 +41,29 @@ export default function ClientActions({ orderId, hasParts, status }: ClientActio
     const canTakeAction = status === 'waiting_approval'
 
     async function handleApprove() {
+        // Validar checkbox se tem peças
+        if (hasParts && !acceptedTerms) {
+            setResult({
+                type: 'error',
+                message: 'Você precisa aceitar os termos para continuar.'
+            })
+            return
+        }
+
         setIsApproving(true)
         setResult(null)
 
         try {
-            const response = await approveBudget(orderId)
+            // Capturar dados de assinatura
+            const signatureData = {
+                ip: 'captured-by-server', // Será capturado no backend
+                userAgent: navigator.userAgent,
+                timestamp: new Date().toISOString(),
+                acceptedTerms: acceptedTerms,
+                hasParts: hasParts,
+            }
+
+            const response = await approveBudget(orderId, signatureData)
 
             if (response.success) {
                 setResult({ type: 'success', message: response.message })
@@ -61,7 +82,6 @@ export default function ClientActions({ orderId, hasParts, status }: ClientActio
     }
 
     async function handleReject() {
-        // Pedir confirmação
         const confirmed = window.confirm(
             'Tem certeza que deseja reprovar o orçamento?\n\nEssa ação cancelará a ordem de serviço.'
         )
@@ -170,11 +190,36 @@ export default function ClientActions({ orderId, hasParts, status }: ClientActio
                         </Alert>
                     )}
 
-                    {/* Aviso sobre peças */}
+                    {/* CHECKBOX OBRIGATÓRIO - Termos de Compra Assistida */}
                     {hasParts && (
-                        <p className="text-xs text-center text-muted-foreground">
-                            ⚠️ Ao aprovar, lembre-se de comprar as peças listadas acima.
-                        </p>
+                        <div className="bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 space-y-3">
+                            <div className="flex items-start gap-2">
+                                <AlertTriangle className="h-5 w-5 text-yellow-600 shrink-0 mt-0.5" />
+                                <p className="text-sm text-yellow-800 dark:text-yellow-200 font-medium">
+                                    Termo de Responsabilidade - Compra Assistida
+                                </p>
+                            </div>
+
+                            <div className="flex items-start gap-3">
+                                <input
+                                    type="checkbox"
+                                    id="accept-terms"
+                                    checked={acceptedTerms}
+                                    onChange={(e) => setAcceptedTerms(e.target.checked)}
+                                    className="mt-1 h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                                />
+                                <Label
+                                    htmlFor="accept-terms"
+                                    className="text-xs text-muted-foreground leading-relaxed cursor-pointer"
+                                >
+                                    Declaro que sou responsável pela compra da(s) peça(s) no(s) link(s) indicado(s)
+                                    e compreendo que a <strong>garantia do componente é tratada diretamente com o
+                                        vendedor externo</strong>, isentando a WTECH de garantia sobre a peça,
+                                    conforme art. 18 do Código de Defesa do Consumidor. A WTECH oferece garantia
+                                    de <strong>90 dias apenas sobre a mão de obra</strong> do serviço prestado.
+                                </Label>
+                            </div>
+                        </div>
                     )}
 
                     {/* Botões */}
@@ -193,9 +238,9 @@ export default function ClientActions({ orderId, hasParts, status }: ClientActio
                             Reprovar
                         </Button>
                         <Button
-                            className="flex-1 h-12 bg-green-600 hover:bg-green-700"
+                            className="flex-1 h-12 bg-green-600 hover:bg-green-700 disabled:opacity-50"
                             onClick={handleApprove}
-                            disabled={isApproving || isRejecting}
+                            disabled={isApproving || isRejecting || (hasParts && !acceptedTerms)}
                         >
                             {isApproving ? (
                                 <Loader2 className="mr-2 h-5 w-5 animate-spin" />
@@ -205,11 +250,17 @@ export default function ClientActions({ orderId, hasParts, status }: ClientActio
                             Aprovar Orçamento
                         </Button>
                     </div>
+
+                    {/* Dica se não aceitou termos */}
+                    {hasParts && !acceptedTerms && (
+                        <p className="text-xs text-center text-muted-foreground">
+                            ☝️ Marque o checkbox acima para habilitar a aprovação
+                        </p>
+                    )}
                 </div>
             </div>
         )
     }
 
-    // Status desconhecido - não mostrar nada
     return null
 }

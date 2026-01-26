@@ -398,3 +398,126 @@ export async function saveBudget(
         }
     }
 }
+
+// ==================================================
+// Server Action: Confirmar Chegada da Peça
+// ==================================================
+export async function confirmPartArrival(orderId: string): Promise<ActionResult> {
+    console.log('📦 confirmPartArrival iniciado:', { orderId })
+
+    try {
+        // 1. Validar orderId
+        if (!orderId || orderId.length < 10) {
+            return { success: false, message: 'ID da OS inválido' }
+        }
+
+        // 2. Criar cliente Supabase
+        const supabase = await createClient()
+
+        // 3. Atualizar ordem
+        const { error: updateError } = await supabase
+            .from('orders')
+            .update({
+                status: 'in_progress',
+                part_arrival_date: new Date().toISOString(),
+            })
+            .eq('id', orderId)
+            .eq('status', 'waiting_parts')
+
+        if (updateError) {
+            console.error('❌ Erro ao confirmar chegada:', updateError)
+            return { success: false, message: `Erro: ${updateError.message}` }
+        }
+
+        // 4. Atualizar status das peças para 'arrived'
+        await supabase
+            .from('order_items')
+            .update({ part_status: 'arrived' })
+            .eq('order_id', orderId)
+            .or('type.eq.part_external,is_external_part.eq.true')
+
+        // 5. Revalidar caches
+        revalidatePath('/dashboard/orders')
+        revalidatePath(`/dashboard/orders/${orderId}`)
+        revalidatePath(`/os/${orderId}`)
+
+        console.log('🎉 confirmPartArrival SUCESSO!')
+        return {
+            success: true,
+            message: '✅ Chegada da peça confirmada! OS movida para "Em Reparo".'
+        }
+
+    } catch (error) {
+        console.error('❌ confirmPartArrival erro:', error)
+        return {
+            success: false,
+            message: `Erro inesperado: ${error instanceof Error ? error.message : 'Desconhecido'}`
+        }
+    }
+}
+
+// ==================================================
+// Server Action: Finalizar OS com Pagamento Manual
+// ==================================================
+export async function finishOrderWithPayment(
+    orderId: string,
+    amountReceived: number,
+    paymentMethod: 'pix' | 'cash' | 'card_machine'
+): Promise<ActionResult> {
+    console.log('💰 finishOrderWithPayment iniciado:', { orderId, amountReceived, paymentMethod })
+
+    try {
+        // 1. Validar inputs
+        if (!orderId || orderId.length < 10) {
+            return { success: false, message: 'ID da OS inválido' }
+        }
+
+        if (amountReceived < 0) {
+            return { success: false, message: 'Valor inválido' }
+        }
+
+        if (!['pix', 'cash', 'card_machine'].includes(paymentMethod)) {
+            return { success: false, message: 'Método de pagamento inválido' }
+        }
+
+        // 2. Criar cliente Supabase
+        const supabase = await createClient()
+
+        // 3. Atualizar ordem com dados do pagamento
+        const { error: updateError } = await supabase
+            .from('orders')
+            .update({
+                status: 'finished',
+                payment_method: paymentMethod,
+                amount_received: amountReceived,
+                payment_received_at: new Date().toISOString(),
+                finished_at: new Date().toISOString(),
+            })
+            .eq('id', orderId)
+            .in('status', ['in_progress', 'ready'])
+
+        if (updateError) {
+            console.error('❌ Erro ao finalizar OS:', updateError)
+            return { success: false, message: `Erro: ${updateError.message}` }
+        }
+
+        // 4. Revalidar caches
+        revalidatePath('/dashboard/orders')
+        revalidatePath(`/dashboard/orders/${orderId}`)
+        revalidatePath(`/os/${orderId}`)
+
+        console.log('🎉 finishOrderWithPayment SUCESSO!')
+        return {
+            success: true,
+            message: `✅ OS finalizada! Pagamento de R$ ${amountReceived.toFixed(2)} registrado via ${paymentMethod === 'pix' ? 'PIX' : paymentMethod === 'cash' ? 'Dinheiro' : 'Maquininha'}.`
+        }
+
+    } catch (error) {
+        console.error('❌ finishOrderWithPayment erro:', error)
+        return {
+            success: false,
+            message: `Erro inesperado: ${error instanceof Error ? error.message : 'Desconhecido'}`
+        }
+    }
+}
+

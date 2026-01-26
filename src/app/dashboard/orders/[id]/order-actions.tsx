@@ -3,11 +3,12 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-// Server Action
-import { updateOrderStatus } from '../actions'
+// Server Actions
+import { updateOrderStatus, confirmPartArrival } from '../actions'
 
 // Components
 import BudgetModal from './budget-modal'
+import FinishOrderModal from './finish-order-modal'
 
 // UI Components
 import { Button } from '@/components/ui/button'
@@ -23,6 +24,8 @@ import {
     FileText,
     Clock,
     Package,
+    PackageCheck,
+    Receipt,
 } from 'lucide-react'
 
 interface OrderActionsProps {
@@ -34,6 +37,7 @@ export default function OrderActions({ orderId, currentStatus }: OrderActionsPro
     const router = useRouter()
     const [isPending, setIsPending] = useState(false)
     const [isBudgetOpen, setIsBudgetOpen] = useState(false)
+    const [isFinishOpen, setIsFinishOpen] = useState(false)
     const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
 
     async function handleStatusChange(newStatus: string) {
@@ -42,6 +46,29 @@ export default function OrderActions({ orderId, currentStatus }: OrderActionsPro
 
         try {
             const result = await updateOrderStatus(orderId, newStatus)
+
+            if (result.success) {
+                setFeedback({ type: 'success', message: result.message })
+                router.refresh()
+            } else {
+                setFeedback({ type: 'error', message: result.message })
+            }
+        } catch (error) {
+            setFeedback({
+                type: 'error',
+                message: `Erro inesperado: ${error instanceof Error ? error.message : 'Desconhecido'}`
+            })
+        } finally {
+            setIsPending(false)
+        }
+    }
+
+    async function handleConfirmPartArrival() {
+        setIsPending(true)
+        setFeedback(null)
+
+        try {
+            const result = await confirmPartArrival(orderId)
 
             if (result.success) {
                 setFeedback({ type: 'success', message: result.message })
@@ -75,7 +102,7 @@ export default function OrderActions({ orderId, currentStatus }: OrderActionsPro
                 )}
 
                 {/* ============================================ */}
-                {/* MÁQUINA DE ESTADOS ESTRITA */}
+                {/* MÁQUINA DE ESTADOS - COMPRA ASSISTIDA */}
                 {/* ============================================ */}
 
                 {/* Status: OPEN → Iniciar Diagnóstico */}
@@ -95,7 +122,7 @@ export default function OrderActions({ orderId, currentStatus }: OrderActionsPro
                     </div>
                 )}
 
-                {/* Status: ANALYZING → Finalizar Diagnóstico (abre modal) */}
+                {/* Status: ANALYZING → Finalizar Diagnóstico (abre modal de orçamento) */}
                 {currentStatus === 'analyzing' && (
                     <div className="flex flex-wrap gap-2">
                         <Button
@@ -121,7 +148,7 @@ export default function OrderActions({ orderId, currentStatus }: OrderActionsPro
                     </div>
                 )}
 
-                {/* Status: WAITING_APPROVAL → TRAVA! Técnico não pode avançar */}
+                {/* Status: WAITING_APPROVAL → TRAVA! Técnico aguarda cliente */}
                 {currentStatus === 'waiting_approval' && (
                     <Alert variant="warning" className="border-yellow-500 bg-yellow-50 dark:bg-yellow-950">
                         <Clock className="h-5 w-5 text-yellow-600" />
@@ -134,37 +161,45 @@ export default function OrderActions({ orderId, currentStatus }: OrderActionsPro
                     </Alert>
                 )}
 
-                {/* Status: WAITING_PARTS → Peças Chegaram */}
+                {/* Status: WAITING_PARTS → Confirmar Chegada da Peça */}
                 {currentStatus === 'waiting_parts' && (
-                    <div className="flex flex-wrap gap-2">
-                        <Button
-                            onClick={() => handleStatusChange('in_progress')}
-                            disabled={isPending}
-                        >
-                            {isPending ? (
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            ) : (
-                                <Package className="mr-2 h-4 w-4" />
-                            )}
-                            Peças Chegaram / Retomar
-                        </Button>
+                    <div className="space-y-3">
+                        <Alert variant="info" className="border-blue-500 bg-blue-50 dark:bg-blue-950">
+                            <Package className="h-5 w-5 text-blue-600" />
+                            <AlertTitle className="text-blue-800 dark:text-blue-200">
+                                Aguardando Peças do Cliente
+                            </AlertTitle>
+                            <AlertDescription className="text-blue-700 dark:text-blue-300">
+                                O cliente precisa comprar e entregar as peças na assistência.
+                            </AlertDescription>
+                        </Alert>
+                        <div className="flex flex-wrap gap-2">
+                            <Button
+                                onClick={handleConfirmPartArrival}
+                                disabled={isPending}
+                                className="bg-blue-600 hover:bg-blue-700"
+                            >
+                                {isPending ? (
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                ) : (
+                                    <PackageCheck className="mr-2 h-4 w-4" />
+                                )}
+                                Confirmar Chegada da Peça
+                            </Button>
+                        </div>
                     </div>
                 )}
 
-                {/* Status: IN_PROGRESS → Finalizar Serviço */}
+                {/* Status: IN_PROGRESS → Finalizar Serviço (abre modal de pagamento) */}
                 {currentStatus === 'in_progress' && (
                     <div className="flex flex-wrap gap-2">
                         <Button
-                            onClick={() => handleStatusChange('finished')}
+                            onClick={() => setIsFinishOpen(true)}
                             disabled={isPending}
                             className="bg-green-600 hover:bg-green-700"
                         >
-                            {isPending ? (
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            ) : (
-                                <CheckCircle className="mr-2 h-4 w-4" />
-                            )}
-                            Finalizar Serviço
+                            <Receipt className="mr-2 h-4 w-4" />
+                            Finalizar e Registrar Pagamento
                         </Button>
                     </div>
                 )}
@@ -173,16 +208,12 @@ export default function OrderActions({ orderId, currentStatus }: OrderActionsPro
                 {currentStatus === 'ready' && (
                     <div className="flex flex-wrap gap-2">
                         <Button
-                            onClick={() => handleStatusChange('finished')}
+                            onClick={() => setIsFinishOpen(true)}
                             disabled={isPending}
                             className="bg-green-600 hover:bg-green-700"
                         >
-                            {isPending ? (
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            ) : (
-                                <CheckCircle className="mr-2 h-4 w-4" />
-                            )}
-                            Entregar ao Cliente
+                            <Receipt className="mr-2 h-4 w-4" />
+                            Finalizar e Registrar Pagamento
                         </Button>
                     </div>
                 )}
@@ -207,6 +238,13 @@ export default function OrderActions({ orderId, currentStatus }: OrderActionsPro
                 orderId={orderId}
                 open={isBudgetOpen}
                 onOpenChange={setIsBudgetOpen}
+            />
+
+            {/* Modal de Finalização/Pagamento */}
+            <FinishOrderModal
+                orderId={orderId}
+                open={isFinishOpen}
+                onOpenChange={setIsFinishOpen}
             />
         </>
     )
