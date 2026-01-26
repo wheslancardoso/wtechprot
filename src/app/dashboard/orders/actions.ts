@@ -521,3 +521,125 @@ export async function finishOrderWithPayment(
     }
 }
 
+// ==================================================
+// Server Action: Salvar Fotos de Evidência
+// ==================================================
+export async function saveEvidencePhotos(
+    orderId: string,
+    type: 'checkin' | 'checkout',
+    photoUrls: string[]
+): Promise<ActionResult> {
+    console.log('📸 saveEvidencePhotos:', { orderId, type, count: photoUrls.length })
+
+    try {
+        if (!orderId || orderId.length < 10) {
+            return { success: false, message: 'ID da OS inválido' }
+        }
+
+        const supabase = await createClient()
+
+        // Definir qual coluna atualizar
+        const updateData = type === 'checkin'
+            ? { photos_checkin: photoUrls }
+            : { photos_checkout: photoUrls }
+
+        const { error } = await supabase
+            .from('orders')
+            .update(updateData)
+            .eq('id', orderId)
+
+        if (error) {
+            console.error('❌ Erro ao salvar fotos:', error)
+            return { success: false, message: `Erro: ${error.message}` }
+        }
+
+        revalidatePath(`/dashboard/orders/${orderId}`)
+        revalidatePath(`/os/${orderId}`)
+
+        return {
+            success: true,
+            message: `✅ ${photoUrls.length} foto(s) de ${type === 'checkin' ? 'entrada' : 'saída'} salva(s)!`
+        }
+
+    } catch (error) {
+        console.error('❌ saveEvidencePhotos erro:', error)
+        return {
+            success: false,
+            message: `Erro inesperado: ${error instanceof Error ? error.message : 'Desconhecido'}`
+        }
+    }
+}
+
+// ==================================================
+// Server Action: Buscar Métricas Financeiras (MEI Safe)
+// ==================================================
+export async function getMonthlyMetrics(): Promise<{
+    success: boolean
+    data?: {
+        meiRevenue: number
+        clientSavings: number
+        totalReceived: number
+        ordersCount: number
+        avgTicket: number
+        meiMonthlyLimit: number
+        meiLimitPercent: number
+    }
+    message?: string
+}> {
+    console.log('📊 getMonthlyMetrics: Buscando métricas do mês')
+
+    try {
+        const supabase = await createClient()
+
+        // Buscar OS finalizadas do mês atual
+        const startOfMonth = new Date()
+        startOfMonth.setDate(1)
+        startOfMonth.setHours(0, 0, 0, 0)
+
+        const { data: orders, error } = await supabase
+            .from('orders')
+            .select('labor_cost, parts_cost_external, amount_received')
+            .eq('status', 'finished')
+            .gte('finished_at', startOfMonth.toISOString())
+
+        if (error) {
+            console.error('❌ Erro ao buscar métricas:', error)
+            return { success: false, message: `Erro: ${error.message}` }
+        }
+
+        // Calcular métricas
+        const meiRevenue = orders?.reduce((sum, o) => sum + (o.labor_cost || 0), 0) || 0
+        const clientSavings = orders?.reduce((sum, o) => sum + (o.parts_cost_external || 0), 0) || 0
+        const totalReceived = orders?.reduce((sum, o) => sum + (o.amount_received || 0), 0) || 0
+        const ordersCount = orders?.length || 0
+        const avgTicket = ordersCount > 0 ? meiRevenue / ordersCount : 0
+
+        // Limite MEI 2026 mensal (R$ 81k / 12)
+        const meiMonthlyLimit = 6750
+        const meiLimitPercent = meiMonthlyLimit > 0
+            ? Math.round((meiRevenue / meiMonthlyLimit) * 100 * 10) / 10
+            : 0
+
+        return {
+            success: true,
+            data: {
+                meiRevenue,
+                clientSavings,
+                totalReceived,
+                ordersCount,
+                avgTicket,
+                meiMonthlyLimit,
+                meiLimitPercent,
+            }
+        }
+
+    } catch (error) {
+        console.error('❌ getMonthlyMetrics erro:', error)
+        return {
+            success: false,
+            message: `Erro inesperado: ${error instanceof Error ? error.message : 'Desconhecido'}`
+        }
+    }
+}
+
+

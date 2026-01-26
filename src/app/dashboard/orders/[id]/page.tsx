@@ -5,6 +5,7 @@ import type { OrderStatus } from '@/types/database'
 
 // Components
 import OrderActions from './order-actions'
+import EvidenceSection from './evidence-section'
 
 // UI Components
 import { Badge } from '@/components/ui/badge'
@@ -17,7 +18,6 @@ import {
     Monitor,
     FileText,
     Clock,
-    Play,
     Phone,
     CreditCard,
     Key,
@@ -297,6 +297,20 @@ export default async function OrderDetailPage({ params }: PageProps) {
                         </CardContent>
                     </Card>
                 </div>
+            </div>
+
+            {/* Seção de Evidências e Comunicação */}
+            <div className="mt-6">
+                <EvidenceSection
+                    orderId={order.id}
+                    status={order.status}
+                    customerName={customer?.name || 'Cliente'}
+                    customerPhone={customer?.phone || ''}
+                    displayId={order.display_id}
+                    laborCost={order.labor_cost}
+                    photosCheckin={order.photos_checkin || []}
+                    photosCheckout={order.photos_checkout || []}
+                />
             </div>
         </div>
     )
