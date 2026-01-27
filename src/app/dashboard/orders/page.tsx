@@ -110,13 +110,13 @@ export default function OrdersPage() {
             if (q) {
                 const searchLower = q.toLowerCase()
                 filteredData = filteredData.filter((order) => {
-                    const displayId = String(order.display_id).padStart(4, '0')
+                    const displayId = String(order.display_id).toLowerCase()
                     const customerName = order.customer?.name?.toLowerCase() || ''
                     const customerCpf = order.customer?.document_id?.replace(/\D/g, '') || ''
                     const searchClean = q.replace(/\D/g, '')
 
                     return (
-                        displayId.includes(q) ||
+                        displayId.includes(searchLower) ||
                         customerName.includes(searchLower) ||
                         (searchClean && customerCpf.includes(searchClean))
                     )
@@ -248,7 +248,7 @@ function OrdersTable({ orders }: OrdersTableProps) {
                         <TableRow key={order.id}>
                             {/* ID */}
                             <TableCell className="font-mono font-medium">
-                                #{String(order.display_id).padStart(4, '0')}
+                                {order.display_id}
                             </TableCell>
 
                             {/* Cliente */}

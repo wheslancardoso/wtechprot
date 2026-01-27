@@ -240,7 +240,7 @@ export default function ClientActions({ orderId, hasParts, status, customerName 
 
             {/* MODAL DE APROVAÇÃO (WIZARD) */}
             <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-                <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-md">
+                <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-3xl transition-all duration-300">
                     <DialogHeader>
                         <DialogTitle className="flex items-center gap-2">
                             <ShieldCheck className="h-5 w-5 text-primary" />

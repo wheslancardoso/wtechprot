@@ -111,7 +111,7 @@ export default async function ClientOrderPage({ params }: PageProps) {
                 <Alert>
                     <AlertTriangle className="h-4 w-4" />
                     <AlertDescription>
-                        <strong>OS #{String(order.display_id).padStart(4, '0')}</strong>
+                        <strong>OS #{order.display_id}</strong>
                         <br />
                         {statusDescriptions[order.status as OrderStatus]}
 

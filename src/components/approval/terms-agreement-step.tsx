@@ -100,49 +100,53 @@ export default function TermsAgreementStep({
             </div>
 
             <div className={cn(
-                "space-y-3 px-1",
-                variant === 'wizard' ? "max-h-[55vh] overflow-y-auto" : "max-h-[50vh] overflow-y-auto pr-2"
+                "px-1",
+                variant === 'wizard' ? "max-h-[60vh] overflow-y-auto pr-2" : "max-h-[50vh] overflow-y-auto pr-2"
             )}>
-                {terms.map(term => {
-                    const isAccepted = acceptedIds.includes(term.id)
-                    return (
-                        <div
-                            key={term.id}
-                            onClick={() => handleToggle(term.id)}
-                            className={cn(
-                                "relative p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer group select-none flex gap-3 items-start",
-                                isAccepted
-                                    ? "bg-primary/5 border-primary shadow-sm"
-                                    : "bg-card border-muted hover:border-primary/30"
-                            )}
-                        >
-                            {/* Checkbox Visual */}
-                            <div className={cn(
-                                "mt-1 shrink-0 h-6 w-6 rounded border transition-colors flex items-center justify-center",
-                                isAccepted
-                                    ? "bg-primary border-primary"
-                                    : "border-input group-hover:border-primary"
-                            )}>
-                                {isAccepted && <Check className="h-4 w-4 text-primary-foreground" />}
-                            </div>
-
-                            <div className="space-y-1 flex-1">
-                                <div className="flex items-center gap-2">
-                                    {getIcon(term.icon)}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-2">
+                    {terms.map(term => {
+                        const isAccepted = acceptedIds.includes(term.id)
+                        return (
+                            <div
+                                key={term.id}
+                                onClick={() => handleToggle(term.id)}
+                                className={cn(
+                                    "relative p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer group select-none flex flex-col gap-3",
+                                    isAccepted
+                                        ? "bg-primary/5 border-primary shadow-sm"
+                                        : "bg-card border-muted hover:border-primary/50 hover:shadow-md"
+                                )}
+                            >
+                                <div className="flex items-center gap-3">
+                                    <div className={cn(
+                                        "shrink-0 h-10 w-10 rounded-full flex items-center justify-center transition-colors",
+                                        isAccepted ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                                    )}>
+                                        {isAccepted ? <Check className="h-6 w-6" /> : getIcon(term.icon)}
+                                    </div>
                                     <h4 className={cn(
-                                        "font-bold text-sm leading-tight",
+                                        "font-bold text-sm leading-tight flex-1",
                                         isAccepted ? "text-primary" : "text-foreground"
                                     )}>
                                         {term.title}
                                     </h4>
+                                    <div className={cn(
+                                        "shrink-0 h-6 w-6 rounded-full border-2 transition-colors flex items-center justify-center",
+                                        isAccepted
+                                            ? "bg-primary border-primary"
+                                            : "border-muted-foreground/30 group-hover:border-primary"
+                                    )}>
+                                        {isAccepted && <Check className="h-3.5 w-3.5 text-primary-foreground" />}
+                                    </div>
                                 </div>
-                                <p className="text-xs text-muted-foreground leading-relaxed text-justify">
+
+                                <p className="text-xs text-muted-foreground leading-relaxed text-justify border-t pt-3 mt-1 border-dashed border-muted-foreground/20">
                                     {term.content}
                                 </p>
                             </div>
-                        </div>
-                    )
-                })}
+                        )
+                    })}
+                </div>
             </div>
 
             {variant === 'wizard' && (
