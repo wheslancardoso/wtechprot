@@ -7,6 +7,9 @@ import type { OrderStatus } from '@/types/database'
 import OrderActions from './order-actions'
 import EvidenceSection from './evidence-section'
 import OrderTimeline from './order-timeline'
+import ShareActions from '@/components/share-actions'
+import ExecutionChecklist from '@/components/execution-checklist'
+import type { ExecutionTask } from '@/lib/execution-tasks-types'
 
 // UI Components
 import { Badge } from '@/components/ui/badge'
@@ -111,7 +114,14 @@ export default async function OrderDetailPage({ params }: PageProps) {
                     </div>
 
                     {/* Actions */}
-                    <OrderActions orderId={order.id} currentStatus={order.status} />
+                    <div className="flex items-center gap-2">
+                        <ShareActions
+                            orderId={order.id}
+                            displayId={order.display_id}
+                            customerName={customer?.name || 'Cliente'}
+                        />
+                        <OrderActions orderId={order.id} currentStatus={order.status} />
+                    </div>
                 </div>
 
                 {/* Meta info */}
@@ -244,6 +254,15 @@ export default async function OrderDetailPage({ params }: PageProps) {
 
                     {/* Card Timeline - Novo componente dinâmico */}
                     <OrderTimeline orderId={order.id} currentStatus={order.status} />
+
+                    {/* Checklist de Execução - visível quando em andamento */}
+                    {['in_progress', 'waiting_parts', 'analyzing'].includes(order.status) && (
+                        <ExecutionChecklist
+                            orderId={order.id}
+                            initialTasks={(order.execution_tasks || []) as ExecutionTask[]}
+                            isEditable={true}
+                        />
+                    )}
                 </div>
             </div>
 

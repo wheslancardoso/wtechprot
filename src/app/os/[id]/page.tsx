@@ -5,6 +5,8 @@ import type { OrderStatus } from '@/types/database'
 
 // Components
 import ClientActions from './client-actions'
+import ExecutionChecklist from '@/components/execution-checklist'
+import type { ExecutionTask } from '@/lib/execution-tasks-types'
 
 // UI Components
 import { Badge } from '@/components/ui/badge'
@@ -208,6 +210,15 @@ export default async function ClientOrderPage({ params }: PageProps) {
                         </p>
                     </CardContent>
                 </Card>
+
+                {/* Card: Progresso do Serviço (Checklist) */}
+                {order.execution_tasks && (order.execution_tasks as ExecutionTask[]).length > 0 && (
+                    <ExecutionChecklist
+                        orderId={order.id}
+                        initialTasks={(order.execution_tasks || []) as ExecutionTask[]}
+                        isEditable={false}
+                    />
+                )}
             </main>
 
             {/* Footer com Ações do Cliente */}

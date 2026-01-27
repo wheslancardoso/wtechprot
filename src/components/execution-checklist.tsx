@@ -1,28 +1,23 @@
 'use client'
 
-import { useState, useOptimistic, useTransition } from 'react'
+import { useState, useTransition } from 'react'
 import {
     toggleExecutionTask,
     addExecutionTask,
     applyTaskPreset,
     removeExecutionTask,
+} from '@/lib/execution-tasks-actions'
+import {
     TASK_PRESETS,
     type ExecutionTask,
     type PresetKey,
-} from '@/lib/execution-tasks-actions'
+} from '@/lib/execution-tasks-types'
 
 // UI Components
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Checkbox } from '@/components/ui/checkbox'
 import { Progress } from '@/components/ui/progress'
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 
 // Icons
 import {
@@ -33,6 +28,7 @@ import {
     Loader2,
     CheckCircle2,
     Circle,
+    ChevronDown,
 } from 'lucide-react'
 
 // ==================================================
@@ -55,43 +51,29 @@ export default function ExecutionChecklist({
     const [tasks, setTasks] = useState<ExecutionTask[]>(initialTasks)
     const [newTaskLabel, setNewTaskLabel] = useState('')
     const [isPending, startTransition] = useTransition()
-
-    // Optimistic updates
-    const [optimisticTasks, addOptimisticTask] = useOptimistic(
-        tasks,
-        (state, update: { taskId: string; completed: boolean }) => {
-            return state.map((task) =>
-                task.id === update.taskId
-                    ? { ...task, completed: update.completed }
-                    : task
-            )
-        }
-    )
+    const [showPresets, setShowPresets] = useState(false)
 
     // Calcular progresso
-    const completedCount = optimisticTasks.filter((t) => t.completed).length
-    const totalCount = optimisticTasks.length
+    const completedCount = tasks.filter((t) => t.completed).length
+    const totalCount = tasks.length
     const progress = totalCount > 0 ? (completedCount / totalCount) * 100 : 0
 
     // Toggle task
     async function handleToggle(taskId: string, currentCompleted: boolean) {
         const newCompleted = !currentCompleted
 
-        startTransition(() => {
-            addOptimisticTask({ taskId, completed: newCompleted })
-        })
-
-        const result = await toggleExecutionTask(orderId, taskId, newCompleted)
-
-        if (result.success) {
-            setTasks((prev) =>
-                prev.map((task) =>
-                    task.id === taskId
-                        ? { ...task, completed: newCompleted, completed_at: newCompleted ? new Date().toISOString() : null }
-                        : task
-                )
+        // Optimistic update
+        setTasks((prev) =>
+            prev.map((task) =>
+                task.id === taskId
+                    ? { ...task, completed: newCompleted, completed_at: newCompleted ? new Date().toISOString() : null }
+                    : task
             )
-        }
+        )
+
+        startTransition(async () => {
+            await toggleExecutionTask(orderId, taskId, newCompleted)
+        })
     }
 
     // Add task
@@ -114,6 +96,7 @@ export default function ExecutionChecklist({
 
     // Apply preset
     async function handleApplyPreset(presetKey: PresetKey) {
+        setShowPresets(false)
         const result = await applyTaskPreset(orderId, presetKey)
 
         if (result.success) {
@@ -146,24 +129,31 @@ export default function ExecutionChecklist({
                     </div>
 
                     {isEditable && (
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="outline" size="sm">
-                                    <Sparkles className="mr-2 h-4 w-4" />
-                                    Presets
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                                {Object.entries(TASK_PRESETS).map(([key, preset]) => (
-                                    <DropdownMenuItem
-                                        key={key}
-                                        onClick={() => handleApplyPreset(key as PresetKey)}
-                                    >
-                                        {preset.name}
-                                    </DropdownMenuItem>
-                                ))}
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                        <div className="relative">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setShowPresets(!showPresets)}
+                            >
+                                <Sparkles className="mr-2 h-4 w-4" />
+                                Presets
+                                <ChevronDown className="ml-2 h-4 w-4" />
+                            </Button>
+
+                            {showPresets && (
+                                <div className="absolute right-0 top-full mt-1 z-50 min-w-[180px] bg-popover border rounded-md shadow-lg p-1">
+                                    {Object.entries(TASK_PRESETS).map(([key, preset]) => (
+                                        <button
+                                            key={key}
+                                            className="w-full text-left px-3 py-2 text-sm rounded hover:bg-muted transition-colors"
+                                            onClick={() => handleApplyPreset(key as PresetKey)}
+                                        >
+                                            {preset.name}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
                     )}
                 </div>
 
@@ -175,27 +165,33 @@ export default function ExecutionChecklist({
 
             <CardContent className="space-y-4">
                 {/* Lista de Tarefas */}
-                {optimisticTasks.length === 0 ? (
+                {tasks.length === 0 ? (
                     <p className="text-center text-muted-foreground py-4">
                         Nenhuma etapa cadastrada.
                         {isEditable && ' Adicione uma ou selecione um preset.'}
                     </p>
                 ) : (
                     <div className="space-y-2">
-                        {optimisticTasks.map((task) => (
+                        {tasks.map((task) => (
                             <div
                                 key={task.id}
                                 className={`flex items-center gap-3 p-3 rounded-lg border transition-colors ${task.completed
-                                        ? 'bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800'
-                                        : 'bg-background border-border hover:bg-muted/50'
+                                    ? 'bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800'
+                                    : 'bg-background border-border hover:bg-muted/50'
                                     }`}
                             >
                                 {isEditable ? (
-                                    <Checkbox
-                                        checked={task.completed}
-                                        onCheckedChange={() => handleToggle(task.id, task.completed)}
+                                    <button
+                                        onClick={() => handleToggle(task.id, task.completed)}
                                         disabled={isPending}
-                                    />
+                                        className="shrink-0"
+                                    >
+                                        {task.completed ? (
+                                            <CheckCircle2 className="h-5 w-5 text-green-600" />
+                                        ) : (
+                                            <Circle className="h-5 w-5 text-muted-foreground hover:text-primary" />
+                                        )}
+                                    </button>
                                 ) : task.completed ? (
                                     <CheckCircle2 className="h-5 w-5 text-green-600" />
                                 ) : (
