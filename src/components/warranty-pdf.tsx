@@ -3,6 +3,7 @@
 import { Document, Page, Text, View, StyleSheet, PDFDownloadLink, Image } from '@react-pdf/renderer'
 import { Button } from '@/components/ui/button'
 import { FileDown, Loader2 } from 'lucide-react'
+import { formatDateToLocal } from '@/lib/date-utils'
 
 // ==================================================
 // Estilos do PDF
@@ -18,6 +19,23 @@ const styles = StyleSheet.create({
         borderBottom: '2 solid #333',
         paddingBottom: 10,
     },
+    headerWithLogo: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 20,
+        borderBottom: '2 solid #333',
+        paddingBottom: 10,
+    },
+    logo: {
+        width: 80,
+        height: 40,
+        objectFit: 'contain',
+    },
+    companyInfo: {
+        flex: 1,
+        textAlign: 'right',
+    },
     title: {
         fontSize: 18,
         fontWeight: 'bold',
@@ -28,6 +46,15 @@ const styles = StyleSheet.create({
         fontSize: 12,
         textAlign: 'center',
         color: '#666',
+    },
+    companyName: {
+        fontSize: 14,
+        fontWeight: 'bold',
+    },
+    companyDetail: {
+        fontSize: 8,
+        color: '#666',
+        marginTop: 2,
     },
     section: {
         marginBottom: 15,
@@ -111,6 +138,25 @@ const styles = StyleSheet.create({
 })
 
 // ==================================================
+// Tipo de dados da Loja (Settings)
+// ==================================================
+interface StoreSettings {
+    trade_name: string
+    legal_document?: string | null
+    phone?: string | null
+    logo_url?: string | null
+    warranty_days_labor?: number
+    address?: {
+        street?: string
+        number?: string
+        neighborhood?: string
+        city?: string
+        state?: string
+        zip?: string
+    } | null
+}
+
+// ==================================================
 // Tipo de dados da OS
 // ==================================================
 interface OrderData {
@@ -134,8 +180,8 @@ interface OrderData {
 // ==================================================
 // Função para gerar hash simples
 // ==================================================
-function generateHash(data: OrderData): string {
-    const str = `${data.displayId}-${data.customerName}-${data.laborCost}-${data.finishedAt}`
+function generateHash(data: OrderData, storeName: string): string {
+    const str = `${data.displayId}-${storeName}-${data.laborCost}-${data.finishedAt}`
     let hash = 0
     for (let i = 0; i < str.length; i++) {
         const char = str.charCodeAt(i)
@@ -156,22 +202,58 @@ function formatCurrency(value: number): string {
 }
 
 // ==================================================
+// Formatar endereço
+// ==================================================
+function formatAddress(address?: StoreSettings['address']): string {
+    if (!address) return ''
+    const parts = [
+        address.street,
+        address.number,
+        address.neighborhood,
+        address.city,
+        address.state,
+    ].filter(Boolean)
+    return parts.join(', ')
+}
+
+// ==================================================
 // Componente PDF
 // ==================================================
-function WarrantyDocument({ data }: { data: OrderData }) {
+function WarrantyDocument({ data, settings }: { data: OrderData; settings: StoreSettings }) {
     const osNumber = String(data.displayId).padStart(4, '0')
-    const hash = generateHash(data)
-    const finishedDate = new Date(data.finishedAt).toLocaleDateString('pt-BR')
-    const totalExternalParts = data.externalParts.reduce((sum, p) => sum + (p.price || 0), 0)
+    const hash = generateHash(data, settings.trade_name)
+    const finishedDate = formatDateToLocal(data.finishedAt, 'dd/MM/yyyy')
+    const warrantyDays = settings.warranty_days_labor || 90
 
     return (
         <Document>
             <Page size="A4" style={styles.page}>
-                {/* Header */}
-                <View style={styles.header}>
-                    <Text style={styles.title}>WTECH ASSISTÊNCIA TÉCNICA</Text>
-                    <Text style={styles.subtitle}>Termo de Garantia e Entrega</Text>
-                </View>
+                {/* Header com Logo */}
+                {settings.logo_url ? (
+                    <View style={styles.headerWithLogo}>
+                        <Image style={styles.logo} src={settings.logo_url} />
+                        <View style={styles.companyInfo}>
+                            <Text style={styles.companyName}>{settings.trade_name}</Text>
+                            {settings.legal_document && (
+                                <Text style={styles.companyDetail}>CNPJ/CPF: {settings.legal_document}</Text>
+                            )}
+                            {settings.phone && (
+                                <Text style={styles.companyDetail}>Tel: {settings.phone}</Text>
+                            )}
+                            {settings.address && (
+                                <Text style={styles.companyDetail}>{formatAddress(settings.address)}</Text>
+                            )}
+                        </View>
+                    </View>
+                ) : (
+                    <View style={styles.header}>
+                        <Text style={styles.title}>{settings.trade_name.toUpperCase()}</Text>
+                        <Text style={styles.subtitle}>Termo de Garantia e Entrega</Text>
+                        {settings.legal_document && (
+                            <Text style={[styles.subtitle, { fontSize: 9 }]}>CNPJ/CPF: {settings.legal_document}</Text>
+                        )}
+                    </View>
+                )}
 
                 {/* Dados da OS */}
                 <View style={styles.section}>
@@ -237,7 +319,7 @@ function WarrantyDocument({ data }: { data: OrderData }) {
                             <Text style={styles.warningText}>
                                 ⚠️ ATENÇÃO: As peças listadas acima foram adquiridas pelo CLIENTE em fornecedores externos.
                                 A garantia das peças é de responsabilidade direta do vendedor, conforme Art. 18 do CDC.
-                                A WTECH não se responsabiliza por defeitos nas peças externas.
+                                A {settings.trade_name} não se responsabiliza por defeitos nas peças externas.
                             </Text>
                         </View>
                     </View>
@@ -258,14 +340,14 @@ function WarrantyDocument({ data }: { data: OrderData }) {
                 {/* Rodapé Legal */}
                 <View style={styles.footer}>
                     <Text style={styles.footerText}>
-                        TERMO DE GARANTIA: A WTECH ASSISTÊNCIA TÉCNICA oferece garantia de 90 (noventa) dias
+                        TERMO DE GARANTIA: A {settings.trade_name.toUpperCase()} oferece garantia de {warrantyDays} ({warrantyDays === 90 ? 'noventa' : warrantyDays}) dias
                         sobre a MÃO DE OBRA do serviço prestado, contados a partir da data de entrega.
                     </Text>
                     <Text style={styles.footerText}>
                         Esta garantia não cobre defeitos causados por mau uso, quedas, líquidos, ou peças adquiridas externamente.
                     </Text>
                     <Text style={styles.hash}>
-                        ID de Verificação: WTECH-{osNumber}-{hash}
+                        ID de Verificação: {settings.trade_name.substring(0, 4).toUpperCase()}-{osNumber}-{hash}
                     </Text>
                 </View>
             </Page>
@@ -278,15 +360,17 @@ function WarrantyDocument({ data }: { data: OrderData }) {
 // ==================================================
 interface WarrantyPdfButtonProps {
     orderData: OrderData
+    storeSettings: StoreSettings
 }
 
-export default function WarrantyPdfButton({ orderData }: WarrantyPdfButtonProps) {
+export default function WarrantyPdfButton({ orderData, storeSettings }: WarrantyPdfButtonProps) {
     const osNumber = String(orderData.displayId).padStart(4, '0')
-    const fileName = `WTECH_OS_${osNumber}_Garantia.pdf`
+    const storeName = storeSettings.trade_name.replace(/\s+/g, '_').toUpperCase()
+    const fileName = `${storeName}_OS_${osNumber}_Garantia.pdf`
 
     return (
         <PDFDownloadLink
-            document={<WarrantyDocument data={orderData} />}
+            document={<WarrantyDocument data={orderData} settings={storeSettings} />}
             fileName={fileName}
         >
             {({ loading }: { loading: boolean }) => (
@@ -309,4 +393,4 @@ export default function WarrantyPdfButton({ orderData }: WarrantyPdfButtonProps)
 }
 
 // Export types
-export type { OrderData }
+export type { OrderData, StoreSettings }
