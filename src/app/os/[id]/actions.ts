@@ -15,7 +15,7 @@ type ActionResult = {
 interface SignatureData {
     userAgent: string
     timestamp: string
-    acceptedTerms: boolean
+    acceptedTermsSnapshot: any[]
     hasParts: boolean
     signedName: string
 }
@@ -41,15 +41,17 @@ export async function approveBudget(
             headersList.get('x-real-ip') ||
             'unknown'
 
-        // 3. Montar metadados da assinatura digital
+        // 3. Montar metadados da assinatura digital (Evidence Log)
         const signatureMetadata = {
             ip: clientIp,
             userAgent: signatureData?.userAgent || 'unknown',
             timestamp: signatureData?.timestamp || new Date().toISOString(),
-            acceptedTerms: signatureData?.acceptedTerms || false,
+            // Grava o snapshot completo dos termos aceitos (IDs e Versões)
+            acceptedTermsSnapshot: signatureData?.acceptedTermsSnapshot || [],
+            termsVersion: 'v1_2026', // Versão hardcoded conforme prompt
             hasParts: signatureData?.hasParts || false,
             signedName: signatureData?.signedName || 'Not Provided',
-            approvalMethod: 'type-to-sign-v1',
+            approvalMethod: 'type-to-sign-granular-wizard-v3',
             approvedAt: new Date().toISOString(),
         }
         console.log('📝 Signature metadata:', signatureMetadata)
