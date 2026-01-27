@@ -202,8 +202,8 @@ export default async function DashboardHomePage() {
                     <Progress
                         value={Math.min(meiProgress, 100)}
                         className={`h-4 ${meiProgress > 90 ? '[&>div]:bg-red-500' :
-                                meiProgress > 70 ? '[&>div]:bg-yellow-500' :
-                                    '[&>div]:bg-green-500'
+                            meiProgress > 70 ? '[&>div]:bg-yellow-500' :
+                                '[&>div]:bg-green-500'
                             }`}
                     />
                     <div className="flex justify-between text-sm">
@@ -242,7 +242,8 @@ export default async function DashboardHomePage() {
                         {waitingApproval && waitingApproval.length > 0 ? (
                             <div className="space-y-3">
                                 {waitingApproval.slice(0, 3).map((order) => {
-                                    const customer = order.customer as { name: string } | null
+                                    const customerData = order.customer as { name: string }[] | null
+                                    const customer = customerData?.[0] || null
                                     return (
                                         <div key={order.id} className="flex items-center justify-between">
                                             <div>
@@ -290,7 +291,8 @@ export default async function DashboardHomePage() {
                         {waitingParts && waitingParts.length > 0 ? (
                             <div className="space-y-3">
                                 {waitingParts.slice(0, 3).map((order) => {
-                                    const customer = order.customer as { name: string } | null
+                                    const customerData = order.customer as { name: string }[] | null
+                                    const customer = customerData?.[0] || null
                                     return (
                                         <div key={order.id} className="flex items-center justify-between">
                                             <div>

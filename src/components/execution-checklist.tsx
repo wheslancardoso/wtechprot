@@ -1,23 +1,23 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState, useTransition, useEffect } from 'react'
 import {
     toggleExecutionTask,
     addExecutionTask,
     applyTaskPreset,
     removeExecutionTask,
+    getPresets,
+    savePreset,
+    deletePreset,
 } from '@/lib/execution-tasks-actions'
-import {
-    TASK_PRESETS,
-    type ExecutionTask,
-    type PresetKey,
-} from '@/lib/execution-tasks-types'
+import type { ExecutionTask, TaskPreset } from '@/lib/execution-tasks-types'
 
 // UI Components
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Progress } from '@/components/ui/progress'
+import { useToast } from '@/hooks/use-toast'
 
 // Icons
 import {
@@ -29,6 +29,8 @@ import {
     CheckCircle2,
     Circle,
     ChevronDown,
+    Save,
+    X,
 } from 'lucide-react'
 
 // ==================================================
@@ -51,12 +53,35 @@ export default function ExecutionChecklist({
     const [tasks, setTasks] = useState<ExecutionTask[]>(initialTasks)
     const [newTaskLabel, setNewTaskLabel] = useState('')
     const [isPending, startTransition] = useTransition()
+
+    // Presets State
     const [showPresets, setShowPresets] = useState(false)
+    const [availablePresets, setAvailablePresets] = useState<TaskPreset[]>([])
+    const [presetsLoading, setPresetsLoading] = useState(false)
+
+    // Save Preset State
+    const [showSavePreset, setShowSavePreset] = useState(false)
+    const [newPresetName, setNewPresetName] = useState('')
+
+    const { toast } = useToast()
 
     // Calcular progresso
     const completedCount = tasks.filter((t) => t.completed).length
     const totalCount = tasks.length
     const progress = totalCount > 0 ? (completedCount / totalCount) * 100 : 0
+
+    // Load Presets
+    useEffect(() => {
+        if (showPresets && availablePresets.length === 0) {
+            setPresetsLoading(true)
+            getPresets().then((result) => {
+                if (result.success && result.data) {
+                    setAvailablePresets(result.data)
+                }
+                setPresetsLoading(false)
+            })
+        }
+    }, [showPresets, availablePresets.length])
 
     // Toggle task
     async function handleToggle(taskId: string, currentCompleted: boolean) {
@@ -85,7 +110,7 @@ export default function ExecutionChecklist({
         if (result.success) {
             const newTask: ExecutionTask = {
                 id: `task_${Date.now()}`,
-                label: newTaskLabel.trim(),
+                title: newTaskLabel.trim(),
                 completed: false,
                 completed_at: null,
             }
@@ -95,13 +120,39 @@ export default function ExecutionChecklist({
     }
 
     // Apply preset
-    async function handleApplyPreset(presetKey: PresetKey) {
+    async function handleApplyPreset(tasks: string[]) {
         setShowPresets(false)
-        const result = await applyTaskPreset(orderId, presetKey)
+        const result = await applyTaskPreset(orderId, tasks)
 
         if (result.success) {
             // Reload page to get new tasks
             window.location.reload()
+        }
+    }
+
+    // Save current tasks as preset
+    async function handleSavePreset() {
+        if (!newPresetName.trim() || tasks.length === 0) return
+
+        const taskTitles = tasks.map(t => t.title || (t as any).label)
+        const result = await savePreset(newPresetName.trim(), taskTitles)
+
+        if (result.success) {
+            toast({ title: 'Sucesso', description: 'Preset salvo com sucesso!' })
+            setShowSavePreset(false)
+            setNewPresetName('')
+            setAvailablePresets([]) // Force reload
+        } else {
+            toast({ title: 'Erro', description: result.message, variant: 'destructive' })
+        }
+    }
+
+    // Delete preset
+    async function handleDeletePreset(e: React.MouseEvent, id: string) {
+        e.stopPropagation()
+        const result = await deletePreset(id)
+        if (result.success) {
+            setAvailablePresets(prev => prev.filter(p => p.id !== id))
         }
     }
 
@@ -129,33 +180,93 @@ export default function ExecutionChecklist({
                     </div>
 
                     {isEditable && (
-                        <div className="relative">
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => setShowPresets(!showPresets)}
-                            >
-                                <Sparkles className="mr-2 h-4 w-4" />
-                                Presets
-                                <ChevronDown className="ml-2 h-4 w-4" />
-                            </Button>
-
-                            {showPresets && (
-                                <div className="absolute right-0 top-full mt-1 z-50 min-w-[180px] bg-popover border rounded-md shadow-lg p-1">
-                                    {Object.entries(TASK_PRESETS).map(([key, preset]) => (
-                                        <button
-                                            key={key}
-                                            className="w-full text-left px-3 py-2 text-sm rounded hover:bg-muted transition-colors"
-                                            onClick={() => handleApplyPreset(key as PresetKey)}
-                                        >
-                                            {preset.name}
-                                        </button>
-                                    ))}
-                                </div>
+                        <div className="relative flex gap-2">
+                            {/* Save Preset Button */}
+                            {tasks.length > 0 && (
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => setShowSavePreset(!showSavePreset)}
+                                >
+                                    <Save className="h-4 w-4 mr-2" />
+                                    Salvar Lista
+                                </Button>
                             )}
+
+                            {/* Load Preset Dropdown */}
+                            <div className="relative">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => setShowPresets(!showPresets)}
+                                >
+                                    <Sparkles className="mr-2 h-4 w-4" />
+                                    Carregar Preset
+                                </Button>
+
+                                {showPresets && (
+                                    <div className="absolute right-0 top-full mt-1 z-50 min-w-[240px] max-h-[300px] overflow-y-auto bg-popover border rounded-md shadow-lg p-1">
+                                        {presetsLoading ? (
+                                            <div className="p-4 text-center text-sm text-muted-foreground">
+                                                <Loader2 className="h-4 w-4 animate-spin mx-auto mb-2" />
+                                                Carregando...
+                                            </div>
+                                        ) : availablePresets.length === 0 ? (
+                                            <div className="p-4 text-center text-sm text-muted-foreground">
+                                                Nenhum preset encontrado.
+                                            </div>
+                                        ) : (
+                                            <div className="space-y-1">
+                                                {availablePresets.map((preset) => (
+                                                    <div
+                                                        key={preset.id}
+                                                        className="flex items-center justify-between w-full px-2 py-1.5 text-sm rounded hover:bg-muted group"
+                                                    >
+                                                        <button
+                                                            className="flex-1 text-left truncate"
+                                                            onClick={() => handleApplyPreset(preset.tasks)}
+                                                        >
+                                                            {preset.name}
+                                                            <span className="ml-2 text-xs text-muted-foreground">
+                                                                ({preset.tasks.length} itens)
+                                                            </span>
+                                                        </button>
+                                                        {preset.user_id !== 'system' && (
+                                                            <button
+                                                                onClick={(e) => handleDeletePreset(e, preset.id)}
+                                                                className="opacity-0 group-hover:opacity-100 p-1 text-muted-foreground hover:text-destructive transition-opacity"
+                                                            >
+                                                                <Trash2 className="h-3 w-3" />
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     )}
                 </div>
+
+                {/* Save Preset Form */}
+                {showSavePreset && (
+                    <div className="flex gap-2 items-center p-2 bg-muted rounded-md mt-2 animate-in slide-in-from-top-2">
+                        <Input
+                            placeholder="Nome do novo preset..."
+                            value={newPresetName}
+                            onChange={(e) => setNewPresetName(e.target.value)}
+                            className="h-8"
+                        />
+                        <Button size="sm" onClick={handleSavePreset} disabled={!newPresetName.trim()}>
+                            Salvar
+                        </Button>
+                        <Button variant="ghost" size="sm" onClick={() => setShowSavePreset(false)}>
+                            <X className="h-4 w-4" />
+                        </Button>
+                    </div>
+                )}
 
                 {/* Progress Bar */}
                 {totalCount > 0 && (
@@ -168,7 +279,7 @@ export default function ExecutionChecklist({
                 {tasks.length === 0 ? (
                     <p className="text-center text-muted-foreground py-4">
                         Nenhuma etapa cadastrada.
-                        {isEditable && ' Adicione uma ou selecione um preset.'}
+                        {isEditable && ' Adicione uma ou carregue um preset.'}
                     </p>
                 ) : (
                     <div className="space-y-2">
@@ -176,8 +287,8 @@ export default function ExecutionChecklist({
                             <div
                                 key={task.id}
                                 className={`flex items-center gap-3 p-3 rounded-lg border transition-colors ${task.completed
-                                    ? 'bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800'
-                                    : 'bg-background border-border hover:bg-muted/50'
+                                        ? 'bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800'
+                                        : 'bg-background border-border hover:bg-muted/50'
                                     }`}
                             >
                                 {isEditable ? (
@@ -202,7 +313,7 @@ export default function ExecutionChecklist({
                                     className={`flex-1 ${task.completed ? 'text-green-700 dark:text-green-300 line-through' : ''
                                         }`}
                                 >
-                                    {task.label}
+                                    {task.title || (task as any).label}
                                 </span>
 
                                 {isEditable && (

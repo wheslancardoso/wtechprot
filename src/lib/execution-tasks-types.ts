@@ -3,15 +3,23 @@
 // ==================================================
 export interface ExecutionTask {
     id: string
-    label: string
+    title: string // Mudado de label para title conforme solicitado
     completed: boolean
     completed_at: string | null
 }
 
+export interface TaskPreset {
+    id: string
+    user_id: string
+    name: string
+    tasks: string[] // Armazenamos apenas os títulos das tarefas no preset
+    created_at: string
+}
+
 // ==================================================
-// Presets de Tarefas
+// Presets Padrão (Fallback estático)
 // ==================================================
-export const TASK_PRESETS = {
+export const DEFAULT_TASK_PRESETS = {
     formatacao: {
         name: 'Formatação',
         tasks: [
@@ -67,5 +75,3 @@ export const TASK_PRESETS = {
         ],
     },
 } as const
-
-export type PresetKey = keyof typeof TASK_PRESETS

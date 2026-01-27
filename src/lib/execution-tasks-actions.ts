@@ -2,11 +2,108 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
-import { TASK_PRESETS, type ExecutionTask, type PresetKey } from './execution-tasks-types'
+import { DEFAULT_TASK_PRESETS, type ExecutionTask, type TaskPreset } from './execution-tasks-types'
 
 // ==================================================
-// Buscar Tarefas de Execução
+// PRESENTS ACTIONS (CRUD)
 // ==================================================
+
+// Listar Presets (Padrão + Salvos)
+export async function getPresets(): Promise<{
+    success: boolean
+    data?: TaskPreset[]
+    message?: string
+}> {
+    try {
+        const supabase = await createClient()
+
+        // Buscar presets salvos no banco
+        const { data: savedPresets, error } = await supabase
+            .from('task_presets')
+            .select('*')
+            .order('created_at', { ascending: false })
+
+        if (error) {
+            console.error('Erro ao buscar presets:', error)
+            return { success: false, message: error.message }
+        }
+
+        // Converter presets padrão para o formato TaskPreset
+        const defaultPresets: TaskPreset[] = Object.entries(DEFAULT_TASK_PRESETS).map(([key, value]) => ({
+            id: `default_${key}`,
+            user_id: 'system',
+            name: value.name,
+            tasks: [...value.tasks], // Spread para criar cópia mutável
+            created_at: new Date().toISOString(),
+        }))
+
+        // Combinar (Salvos primeiro)
+        const allPresets = [...(savedPresets || []), ...defaultPresets]
+
+        return { success: true, data: allPresets }
+    } catch (error) {
+        return {
+            success: false,
+            message: `Erro: ${error instanceof Error ? error.message : 'Desconhecido'}`,
+        }
+    }
+}
+
+// Salvar Novo Preset
+export async function savePreset(
+    name: string,
+    tasks: string[]
+): Promise<{ success: boolean; message: string }> {
+    try {
+        const supabase = await createClient()
+
+        const { error } = await supabase.from('task_presets').insert({
+            name,
+            tasks,
+        })
+
+        if (error) {
+            return { success: false, message: error.message }
+        }
+
+        revalidatePath('/dashboard/orders/[id]', 'page')
+        return { success: true, message: 'Preset salvo com sucesso!' }
+    } catch (error) {
+        return {
+            success: false,
+            message: `Erro: ${error instanceof Error ? error.message : 'Desconhecido'}`,
+        }
+    }
+}
+
+// Deletar Preset
+export async function deletePreset(id: string): Promise<{ success: boolean; message: string }> {
+    try {
+        const supabase = await createClient()
+
+        const { error } = await supabase
+            .from('task_presets')
+            .delete()
+            .eq('id', id)
+
+        if (error) {
+            return { success: false, message: error.message }
+        }
+
+        revalidatePath('/dashboard/orders/[id]', 'page')
+        return { success: true, message: 'Preset removido!' }
+    } catch (error) {
+        return {
+            success: false,
+            message: `Erro: ${error instanceof Error ? error.message : 'Desconhecido'}`,
+        }
+    }
+}
+
+// ==================================================
+// EXECUTION TASKS ACTIONS
+// ==================================================
+
 export async function getExecutionTasks(orderId: string): Promise<{
     success: boolean
     data?: ExecutionTask[]
@@ -35,12 +132,9 @@ export async function getExecutionTasks(orderId: string): Promise<{
     }
 }
 
-// ==================================================
-// Adicionar Tarefa Individual
-// ==================================================
 export async function addExecutionTask(
     orderId: string,
-    label: string
+    title: string
 ): Promise<{ success: boolean; message: string }> {
     try {
         const supabase = await createClient()
@@ -61,7 +155,7 @@ export async function addExecutionTask(
         // Criar nova tarefa
         const newTask: ExecutionTask = {
             id: `task_${Date.now()}`,
-            label,
+            title, // Usando title
             completed: false,
             completed_at: null,
         }
@@ -89,20 +183,12 @@ export async function addExecutionTask(
     }
 }
 
-// ==================================================
-// Aplicar Preset de Tarefas
-// ==================================================
 export async function applyTaskPreset(
     orderId: string,
-    presetKey: PresetKey
+    tasks: string[] // Recebe lista de strings direto agora
 ): Promise<{ success: boolean; message: string }> {
     try {
         const supabase = await createClient()
-        const preset = TASK_PRESETS[presetKey]
-
-        if (!preset) {
-            return { success: false, message: 'Preset não encontrado' }
-        }
 
         // Buscar tarefas atuais
         const { data: order, error: fetchError } = await supabase
@@ -118,9 +204,9 @@ export async function applyTaskPreset(
         const currentTasks = (order?.execution_tasks || []) as ExecutionTask[]
 
         // Criar tarefas do preset
-        const newTasks: ExecutionTask[] = preset.tasks.map((label, index) => ({
-            id: `preset_${presetKey}_${index}_${Date.now()}`,
-            label,
+        const newTasks: ExecutionTask[] = tasks.map((title, index) => ({
+            id: `preset_${index}_${Date.now()}`,
+            title,
             completed: false,
             completed_at: null,
         }))
@@ -139,7 +225,7 @@ export async function applyTaskPreset(
         }
 
         revalidatePath(`/dashboard/orders/${orderId}`)
-        return { success: true, message: `Preset "${preset.name}" aplicado!` }
+        return { success: true, message: 'Preset aplicado!' }
     } catch (error) {
         return {
             success: false,
@@ -148,9 +234,6 @@ export async function applyTaskPreset(
     }
 }
 
-// ==================================================
-// Marcar/Desmarcar Tarefa
-// ==================================================
 export async function toggleExecutionTask(
     orderId: string,
     taskId: string,
@@ -179,8 +262,11 @@ export async function toggleExecutionTask(
         }
 
         const task = currentTasks[taskIndex]
-        const updatedTasks = [...currentTasks]
 
+        // Fallback de compatibilidade se task.title não existir (migração smooth)
+        const taskLabel = task.title || (task as any).label || 'Tarefa'
+
+        const updatedTasks = [...currentTasks]
         updatedTasks[taskIndex] = {
             ...task,
             completed,
@@ -206,7 +292,7 @@ export async function toggleExecutionTask(
                 order_id: orderId,
                 previous_status: 'in_progress',
                 new_status: 'in_progress',
-                notes: `Etapa concluída: ${task.label}`,
+                notes: `Execução: ${taskLabel}`,
             })
         }
 
@@ -215,7 +301,7 @@ export async function toggleExecutionTask(
 
         return {
             success: true,
-            message: completed ? `"${task.label}" concluída!` : `"${task.label}" reaberta`,
+            message: completed ? `"${taskLabel}" concluída!` : `"${taskLabel}" reaberta`,
         }
     } catch (error) {
         return {
@@ -225,9 +311,6 @@ export async function toggleExecutionTask(
     }
 }
 
-// ==================================================
-// Remover Tarefa
-// ==================================================
 export async function removeExecutionTask(
     orderId: string,
     taskId: string
@@ -235,7 +318,6 @@ export async function removeExecutionTask(
     try {
         const supabase = await createClient()
 
-        // Buscar tarefas atuais
         const { data: order, error: fetchError } = await supabase
             .from('orders')
             .select('execution_tasks')
@@ -249,7 +331,6 @@ export async function removeExecutionTask(
         const currentTasks = (order?.execution_tasks || []) as ExecutionTask[]
         const updatedTasks = currentTasks.filter((t) => t.id !== taskId)
 
-        // Atualizar
         const { error: updateError } = await supabase
             .from('orders')
             .update({
