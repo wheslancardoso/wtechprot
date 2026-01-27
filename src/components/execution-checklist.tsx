@@ -107,15 +107,15 @@ export default function ExecutionChecklist({
 
         const result = await addExecutionTask(orderId, newTaskLabel.trim())
 
-        if (result.success) {
-            const newTask: ExecutionTask = {
-                id: `task_${Date.now()}`,
-                title: newTaskLabel.trim(),
-                completed: false,
-                completed_at: null,
-            }
-            setTasks((prev) => [...prev, newTask])
+        if (result.success && result.task) {
+            setTasks((prev) => [...prev, result.task!])
             setNewTaskLabel('')
+        } else {
+            toast({
+                title: 'Erro',
+                description: result.message || 'Falha ao adicionar tarefa',
+                variant: 'destructive'
+            })
         }
     }
 
@@ -287,8 +287,8 @@ export default function ExecutionChecklist({
                             <div
                                 key={task.id}
                                 className={`flex items-center gap-3 p-3 rounded-lg border transition-colors ${task.completed
-                                        ? 'bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800'
-                                        : 'bg-background border-border hover:bg-muted/50'
+                                    ? 'bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800'
+                                    : 'bg-background border-border hover:bg-muted/50'
                                     }`}
                             >
                                 {isEditable ? (

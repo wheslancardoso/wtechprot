@@ -114,6 +114,17 @@ export default async function ClientOrderPage({ params }: PageProps) {
                         <strong>OS #{String(order.display_id).padStart(4, '0')}</strong>
                         <br />
                         {statusDescriptions[order.status as OrderStatus]}
+
+                        {/* Botão de Rastreamento (Pós Aprovação) */}
+                        {['in_progress', 'waiting_parts', 'ready', 'finished'].includes(order.status) && (
+                            <div className="mt-3 pt-3 border-t border-primary/20">
+                                <Button className="w-full bg-primary font-bold shadow-lg animate-in fade-in" size="lg" asChild>
+                                    <Link href={`/os/${id}/track`}>
+                                        ACOMPANHAR EM TEMPO REAL
+                                    </Link>
+                                </Button>
+                            </div>
+                        )}
                     </AlertDescription>
                 </Alert>
 
@@ -211,14 +222,7 @@ export default async function ClientOrderPage({ params }: PageProps) {
                     </CardContent>
                 </Card>
 
-                {/* Card: Progresso do Serviço (Checklist) */}
-                {order.execution_tasks && (order.execution_tasks as ExecutionTask[]).length > 0 && (
-                    <ExecutionChecklist
-                        orderId={order.id}
-                        initialTasks={(order.execution_tasks || []) as ExecutionTask[]}
-                        isEditable={false}
-                    />
-                )}
+                {/* Card: Progresso movido para /track */}
             </main>
 
             {/* Footer com Ações do Cliente */}

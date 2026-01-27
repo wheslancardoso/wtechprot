@@ -8,7 +8,6 @@ import { DEFAULT_TASK_PRESETS, type ExecutionTask, type TaskPreset } from './exe
 // PRESENTS ACTIONS (CRUD)
 // ==================================================
 
-// Listar Presets (Padrão + Salvos)
 export async function getPresets(): Promise<{
     success: boolean
     data?: TaskPreset[]
@@ -16,8 +15,6 @@ export async function getPresets(): Promise<{
 }> {
     try {
         const supabase = await createClient()
-
-        // Buscar presets salvos no banco
         const { data: savedPresets, error } = await supabase
             .from('task_presets')
             .select('*')
@@ -28,18 +25,15 @@ export async function getPresets(): Promise<{
             return { success: false, message: error.message }
         }
 
-        // Converter presets padrão para o formato TaskPreset
         const defaultPresets: TaskPreset[] = Object.entries(DEFAULT_TASK_PRESETS).map(([key, value]) => ({
             id: `default_${key}`,
             user_id: 'system',
             name: value.name,
-            tasks: [...value.tasks], // Spread para criar cópia mutável
+            tasks: [...value.tasks],
             created_at: new Date().toISOString(),
         }))
 
-        // Combinar (Salvos primeiro)
         const allPresets = [...(savedPresets || []), ...defaultPresets]
-
         return { success: true, data: allPresets }
     } catch (error) {
         return {
@@ -49,22 +43,18 @@ export async function getPresets(): Promise<{
     }
 }
 
-// Salvar Novo Preset
 export async function savePreset(
     name: string,
     tasks: string[]
 ): Promise<{ success: boolean; message: string }> {
     try {
         const supabase = await createClient()
-
         const { error } = await supabase.from('task_presets').insert({
             name,
             tasks,
         })
 
-        if (error) {
-            return { success: false, message: error.message }
-        }
+        if (error) return { success: false, message: error.message }
 
         revalidatePath('/dashboard/orders/[id]', 'page')
         return { success: true, message: 'Preset salvo com sucesso!' }
@@ -76,19 +66,15 @@ export async function savePreset(
     }
 }
 
-// Deletar Preset
 export async function deletePreset(id: string): Promise<{ success: boolean; message: string }> {
     try {
         const supabase = await createClient()
-
         const { error } = await supabase
             .from('task_presets')
             .delete()
             .eq('id', id)
 
-        if (error) {
-            return { success: false, message: error.message }
-        }
+        if (error) return { success: false, message: error.message }
 
         revalidatePath('/dashboard/orders/[id]', 'page')
         return { success: true, message: 'Preset removido!' }
@@ -111,16 +97,13 @@ export async function getExecutionTasks(orderId: string): Promise<{
 }> {
     try {
         const supabase = await createClient()
-
         const { data, error } = await supabase
             .from('orders')
             .select('execution_tasks')
             .eq('id', orderId)
             .single()
 
-        if (error) {
-            return { success: false, message: error.message }
-        }
+        if (error) return { success: false, message: error.message }
 
         const tasks = (data?.execution_tasks || []) as ExecutionTask[]
         return { success: true, data: tasks }
@@ -135,32 +118,28 @@ export async function getExecutionTasks(orderId: string): Promise<{
 export async function addExecutionTask(
     orderId: string,
     title: string
-): Promise<{ success: boolean; message: string }> {
+): Promise<{ success: boolean; message: string; task?: ExecutionTask }> {
     try {
         const supabase = await createClient()
 
-        // Buscar tarefas atuais
         const { data: order, error: fetchError } = await supabase
             .from('orders')
             .select('execution_tasks')
             .eq('id', orderId)
             .single()
 
-        if (fetchError) {
-            return { success: false, message: fetchError.message }
-        }
+        if (fetchError) return { success: false, message: fetchError.message }
 
         const currentTasks = (order?.execution_tasks || []) as ExecutionTask[]
 
-        // Criar nova tarefa
+        // Server-side ID generation
         const newTask: ExecutionTask = {
             id: `task_${Date.now()}`,
-            title, // Usando title
+            title,
             completed: false,
             completed_at: null,
         }
 
-        // Atualizar
         const { error: updateError } = await supabase
             .from('orders')
             .update({
@@ -169,12 +148,11 @@ export async function addExecutionTask(
             })
             .eq('id', orderId)
 
-        if (updateError) {
-            return { success: false, message: updateError.message }
-        }
+        if (updateError) return { success: false, message: updateError.message }
 
         revalidatePath(`/dashboard/orders/${orderId}`)
-        return { success: true, message: 'Tarefa adicionada!' }
+        // Retornamos a task com o ID gerado pelo servidor para o cliente usar
+        return { success: true, message: 'Tarefa adicionada!', task: newTask }
     } catch (error) {
         return {
             success: false,
@@ -185,25 +163,21 @@ export async function addExecutionTask(
 
 export async function applyTaskPreset(
     orderId: string,
-    tasks: string[] // Recebe lista de strings direto agora
+    tasks: string[]
 ): Promise<{ success: boolean; message: string }> {
     try {
         const supabase = await createClient()
 
-        // Buscar tarefas atuais
         const { data: order, error: fetchError } = await supabase
             .from('orders')
             .select('execution_tasks')
             .eq('id', orderId)
             .single()
 
-        if (fetchError) {
-            return { success: false, message: fetchError.message }
-        }
+        if (fetchError) return { success: false, message: fetchError.message }
 
         const currentTasks = (order?.execution_tasks || []) as ExecutionTask[]
 
-        // Criar tarefas do preset
         const newTasks: ExecutionTask[] = tasks.map((title, index) => ({
             id: `preset_${index}_${Date.now()}`,
             title,
@@ -211,7 +185,6 @@ export async function applyTaskPreset(
             completed_at: null,
         }))
 
-        // Atualizar (adiciona ao existente)
         const { error: updateError } = await supabase
             .from('orders')
             .update({
@@ -220,9 +193,7 @@ export async function applyTaskPreset(
             })
             .eq('id', orderId)
 
-        if (updateError) {
-            return { success: false, message: updateError.message }
-        }
+        if (updateError) return { success: false, message: updateError.message }
 
         revalidatePath(`/dashboard/orders/${orderId}`)
         return { success: true, message: 'Preset aplicado!' }
@@ -240,9 +211,9 @@ export async function toggleExecutionTask(
     completed: boolean
 ): Promise<{ success: boolean; message: string }> {
     try {
+        console.log(`[Toggle] Iniciando toggle para task ${taskId} na ordem ${orderId}. Completed: ${completed}`)
         const supabase = await createClient()
 
-        // Buscar tarefas atuais
         const { data: order, error: fetchError } = await supabase
             .from('orders')
             .select('execution_tasks, display_id')
@@ -250,20 +221,19 @@ export async function toggleExecutionTask(
             .single()
 
         if (fetchError) {
+            console.error('[Toggle] Erro fetch:', fetchError)
             return { success: false, message: fetchError.message }
         }
 
         const currentTasks = (order?.execution_tasks || []) as ExecutionTask[]
 
-        // Encontrar e atualizar a tarefa
         const taskIndex = currentTasks.findIndex((t) => t.id === taskId)
         if (taskIndex === -1) {
+            console.error(`[Toggle] Tarefa ${taskId} não encontrada no array do servidor`)
             return { success: false, message: 'Tarefa não encontrada' }
         }
 
         const task = currentTasks[taskIndex]
-
-        // Fallback de compatibilidade se task.title não existir (migração smooth)
         const taskLabel = task.title || (task as any).label || 'Tarefa'
 
         const updatedTasks = [...currentTasks]
@@ -273,7 +243,6 @@ export async function toggleExecutionTask(
             completed_at: completed ? new Date().toISOString() : null,
         }
 
-        // Atualizar ordem
         const { error: updateError } = await supabase
             .from('orders')
             .update({
@@ -283,10 +252,10 @@ export async function toggleExecutionTask(
             .eq('id', orderId)
 
         if (updateError) {
+            console.error('[Toggle] Erro update:', updateError)
             return { success: false, message: updateError.message }
         }
 
-        // Registrar no log se completou
         if (completed) {
             await supabase.from('order_logs').insert({
                 order_id: orderId,
@@ -299,11 +268,13 @@ export async function toggleExecutionTask(
         revalidatePath(`/dashboard/orders/${orderId}`)
         revalidatePath(`/os/${orderId}`)
 
+        console.log('[Toggle] Sucesso!')
         return {
             success: true,
             message: completed ? `"${taskLabel}" concluída!` : `"${taskLabel}" reaberta`,
         }
     } catch (error) {
+        console.error('[Toggle] Crash:', error)
         return {
             success: false,
             message: `Erro: ${error instanceof Error ? error.message : 'Desconhecido'}`,
@@ -316,6 +287,7 @@ export async function removeExecutionTask(
     taskId: string
 ): Promise<{ success: boolean; message: string }> {
     try {
+        console.log(`[Remove] Iniciando remoção para task ${taskId} na ordem ${orderId}`)
         const supabase = await createClient()
 
         const { data: order, error: fetchError } = await supabase
@@ -324,12 +296,14 @@ export async function removeExecutionTask(
             .eq('id', orderId)
             .single()
 
-        if (fetchError) {
-            return { success: false, message: fetchError.message }
-        }
+        if (fetchError) return { success: false, message: fetchError.message }
 
         const currentTasks = (order?.execution_tasks || []) as ExecutionTask[]
         const updatedTasks = currentTasks.filter((t) => t.id !== taskId)
+
+        if (updatedTasks.length === currentTasks.length) {
+            console.warn(`[Remove] ID ${taskId} não encontrado para remover.`)
+        }
 
         const { error: updateError } = await supabase
             .from('orders')
@@ -339,9 +313,7 @@ export async function removeExecutionTask(
             })
             .eq('id', orderId)
 
-        if (updateError) {
-            return { success: false, message: updateError.message }
-        }
+        if (updateError) return { success: false, message: updateError.message }
 
         revalidatePath(`/dashboard/orders/${orderId}`)
         return { success: true, message: 'Tarefa removida!' }
