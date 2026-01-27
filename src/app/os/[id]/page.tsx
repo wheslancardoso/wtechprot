@@ -230,6 +230,7 @@ export default async function ClientOrderPage({ params }: PageProps) {
                 orderId={order.id}
                 hasParts={hasParts}
                 status={order.status}
+                customerName={order.customer?.name || 'Cliente'}
             />
         </div>
     )

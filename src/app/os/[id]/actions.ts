@@ -17,6 +17,7 @@ interface SignatureData {
     timestamp: string
     acceptedTerms: boolean
     hasParts: boolean
+    signedName: string
 }
 
 // ==================================================
@@ -47,6 +48,8 @@ export async function approveBudget(
             timestamp: signatureData?.timestamp || new Date().toISOString(),
             acceptedTerms: signatureData?.acceptedTerms || false,
             hasParts: signatureData?.hasParts || false,
+            signedName: signatureData?.signedName || 'Not Provided',
+            approvalMethod: 'type-to-sign-v1',
             approvedAt: new Date().toISOString(),
         }
         console.log('📝 Signature metadata:', signatureMetadata)
