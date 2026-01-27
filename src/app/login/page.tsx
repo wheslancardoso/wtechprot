@@ -33,7 +33,7 @@ export default function LoginPage() {
             const result = await login(formData)
 
             if (result.success) {
-                router.push('/dashboard/orders')
+                router.push('/dashboard')
                 router.refresh()
             } else {
                 setError(result.message)
@@ -120,13 +120,22 @@ export default function LoginPage() {
                     </form>
                 </CardContent>
 
-                <CardFooter className="flex justify-center">
+                <CardFooter className="flex flex-col gap-4">
                     <Link
                         href="#"
                         className="text-sm text-muted-foreground hover:text-primary transition-colors"
                     >
                         Esqueceu sua senha?
                     </Link>
+                    <p className="text-sm text-muted-foreground">
+                        Ainda não tem conta?{' '}
+                        <Link
+                            href="/signup"
+                            className="font-medium text-primary hover:underline"
+                        >
+                            Cadastre-se
+                        </Link>
+                    </p>
                 </CardFooter>
             </Card>
 
