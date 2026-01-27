@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { getOrderTimeline } from './timeline-actions'
 import type { OrderLog } from './timeline-actions'
+import { formatDateToLocal } from '@/lib/date-utils'
 
 // UI Components
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'

@@ -1,9 +1,14 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
+import { formatDateToLocal, getDaysAgo, getStartOfMonth } from '@/lib/date-utils'
 import type { OrderStatus, Order, Customer, Equipment } from '@/types/database'
+
+// Components
+import OrderFilters from './order-filters'
 
 // UI Components
 import {
@@ -30,7 +35,7 @@ import {
 
 // Type for order with joined relations
 interface OrderWithRelations extends Order {
-    customer: Pick<Customer, 'name'> | null
+    customer: Pick<Customer, 'name' | 'document_id'> | null
     equipment: Pick<Equipment, 'type' | 'model' | 'serial_number'> | null
 }
 
@@ -51,64 +56,89 @@ export default function OrdersPage() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
 
+    const searchParams = useSearchParams()
     const supabase = createClient()
 
-    async function fetchOrders() {
+    // Buscar ordens com filtros
+    const fetchOrders = useCallback(async () => {
         setLoading(true)
         setError(null)
 
         try {
-            const { data, error: fetchError } = await supabase
+            // Pegar parâmetros da URL
+            const q = searchParams.get('q') || ''
+            const status = searchParams.get('status')
+            const period = searchParams.get('period')
+
+            // Query base
+            let query = supabase
                 .from('orders')
                 .select(`
           *,
-          customer:customers(name),
+          customer:customers(name, document_id),
           equipment:equipments(type, model, serial_number)
         `)
                 .order('created_at', { ascending: false })
 
+            // Filtro de status
+            if (status && status !== 'all') {
+                query = query.eq('status', status)
+            }
+
+            // Filtro de período
+            if (period) {
+                switch (period) {
+                    case '7d':
+                        query = query.gte('created_at', getDaysAgo(7))
+                        break
+                    case '30d':
+                        query = query.gte('created_at', getDaysAgo(30))
+                        break
+                    case 'month':
+                        query = query.gte('created_at', getStartOfMonth())
+                        break
+                }
+            }
+
+            const { data, error: fetchError } = await query
+
             if (fetchError) throw fetchError
 
-            setOrders((data as OrderWithRelations[]) || [])
+            // Filtro textual (client-side por ora - ideal seria fazer no Supabase com Full Text Search)
+            let filteredData = (data as OrderWithRelations[]) || []
+
+            if (q) {
+                const searchLower = q.toLowerCase()
+                filteredData = filteredData.filter((order) => {
+                    const displayId = String(order.display_id).padStart(4, '0')
+                    const customerName = order.customer?.name?.toLowerCase() || ''
+                    const customerCpf = order.customer?.document_id?.replace(/\D/g, '') || ''
+                    const searchClean = q.replace(/\D/g, '')
+
+                    return (
+                        displayId.includes(q) ||
+                        customerName.includes(searchLower) ||
+                        (searchClean && customerCpf.includes(searchClean))
+                    )
+                })
+            }
+
+            setOrders(filteredData)
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Erro ao carregar ordens')
         } finally {
             setLoading(false)
         }
-    }
+    }, [searchParams, supabase])
 
     useEffect(() => {
         fetchOrders()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
-    // Loading State
-    if (loading) {
-        return (
-            <div className="flex h-[50vh] items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-            </div>
-        )
-    }
-
-    // Error State
-    if (error) {
-        return (
-            <div className="flex h-[50vh] flex-col items-center justify-center gap-4">
-                <AlertCircle className="h-12 w-12 text-destructive" />
-                <p className="text-lg font-medium text-destructive">{error}</p>
-                <Button variant="outline" onClick={fetchOrders}>
-                    <RefreshCw className="mr-2 h-4 w-4" />
-                    Tentar novamente
-                </Button>
-            </div>
-        )
-    }
+    }, [fetchOrders])
 
     return (
-        <div className="container mx-auto py-8 px-4">
+        <div className="container mx-auto py-8 px-4 space-y-6">
             {/* Header */}
-            <div className="mb-8 flex items-center justify-between">
+            <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-3xl font-bold tracking-tight">
                         Ordens de Serviço
@@ -125,11 +155,43 @@ export default function OrdersPage() {
                 </Button>
             </div>
 
-            {/* Content - Conditional rendering based on data */}
-            {orders.length === 0 ? (
-                <EmptyState />
-            ) : (
-                <OrdersTable orders={orders} />
+            {/* Filters */}
+            <OrderFilters />
+
+            {/* Loading State */}
+            {loading && (
+                <div className="flex h-[30vh] items-center justify-center">
+                    <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                </div>
+            )}
+
+            {/* Error State */}
+            {error && (
+                <div className="flex h-[30vh] flex-col items-center justify-center gap-4">
+                    <AlertCircle className="h-12 w-12 text-destructive" />
+                    <p className="text-lg font-medium text-destructive">{error}</p>
+                    <Button variant="outline" onClick={fetchOrders}>
+                        <RefreshCw className="mr-2 h-4 w-4" />
+                        Tentar novamente
+                    </Button>
+                </div>
+            )}
+
+            {/* Content */}
+            {!loading && !error && (
+                <>
+                    {orders.length === 0 ? (
+                        <EmptyState />
+                    ) : (
+                        <>
+                            {/* Results count */}
+                            <p className="text-sm text-muted-foreground">
+                                {orders.length} ordem(ns) encontrada(s)
+                            </p>
+                            <OrdersTable orders={orders} />
+                        </>
+                    )}
+                </>
             )}
         </div>
     )
@@ -140,26 +202,19 @@ export default function OrdersPage() {
 // ==================================================
 function EmptyState() {
     return (
-        <Card className="border-dashed">
-            <CardContent className="flex flex-col items-center justify-center py-16 text-center">
-                {/* Icon */}
-                <div className="mb-6 rounded-full bg-muted p-6">
-                    <ClipboardList className="h-12 w-12 text-muted-foreground" />
-                </div>
-
-                {/* Text */}
-                <h3 className="mb-2 text-xl font-semibold">
-                    Nenhuma ordem de serviço encontrada
+        <Card>
+            <CardContent className="flex flex-col items-center justify-center py-16">
+                <ClipboardList className="h-16 w-16 text-muted-foreground mb-4" />
+                <h3 className="text-xl font-semibold mb-2">
+                    Nenhuma ordem encontrada
                 </h3>
-                <p className="mb-6 max-w-sm text-muted-foreground">
-                    Você ainda não registrou atendimentos. Comece criando uma nova OS.
+                <p className="text-muted-foreground text-center mb-6">
+                    Tente ajustar os filtros ou crie uma nova OS.
                 </p>
-
-                {/* CTA Button */}
-                <Button asChild size="lg">
+                <Button asChild>
                     <Link href="/dashboard/orders/new">
-                        <Plus className="mr-2 h-5 w-5" />
-                        Nova Ordem de Serviço
+                        <Plus className="mr-2 h-4 w-4" />
+                        Criar Nova OS
                     </Link>
                 </Button>
             </CardContent>
@@ -170,17 +225,22 @@ function EmptyState() {
 // ==================================================
 // Orders Table Component
 // ==================================================
-function OrdersTable({ orders }: { orders: OrderWithRelations[] }) {
+interface OrdersTableProps {
+    orders: OrderWithRelations[]
+}
+
+function OrdersTable({ orders }: OrdersTableProps) {
     return (
-        <div className="rounded-lg border bg-card">
+        <div className="rounded-md border">
             <Table>
                 <TableHeader>
                     <TableRow>
-                        <TableHead className="w-[100px]">ID</TableHead>
+                        <TableHead className="w-[80px]">ID</TableHead>
                         <TableHead>Cliente</TableHead>
                         <TableHead>Equipamento</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead className="text-right">Ações</TableHead>
+                        <TableHead className="w-[160px]">Status</TableHead>
+                        <TableHead className="w-[140px]">Data</TableHead>
+                        <TableHead className="w-[80px] text-right">Ações</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -195,7 +255,7 @@ function OrdersTable({ orders }: { orders: OrderWithRelations[] }) {
                             <TableCell>
                                 {order.customer?.name || (
                                     <span className="text-muted-foreground italic">
-                                        Sem cliente
+                                        Não informado
                                     </span>
                                 )}
                             </TableCell>
@@ -203,31 +263,28 @@ function OrdersTable({ orders }: { orders: OrderWithRelations[] }) {
                             {/* Equipamento */}
                             <TableCell>
                                 {order.equipment ? (
-                                    <div className="flex flex-col">
-                                        <span className="font-medium">
-                                            {order.equipment.type} {order.equipment.model}
-                                        </span>
-                                        {order.equipment.serial_number && (
-                                            <span className="text-xs text-muted-foreground">
-                                                S/N: {order.equipment.serial_number}
-                                            </span>
-                                        )}
-                                    </div>
-                                ) : (
-                                    <span className="text-muted-foreground italic">
-                                        Sem equipamento
+                                    <span className="text-sm">
+                                        {order.equipment.type}
+                                        {order.equipment.model && ` - ${order.equipment.model}`}
                                     </span>
+                                ) : (
+                                    <span className="text-muted-foreground italic">—</span>
                                 )}
                             </TableCell>
 
-                            {/* Status Badge */}
+                            {/* Status */}
                             <TableCell>
                                 <Badge variant={order.status as OrderStatus}>
-                                    {statusLabels[order.status] || order.status}
+                                    {statusLabels[order.status as OrderStatus] || order.status}
                                 </Badge>
                             </TableCell>
 
-                            {/* Actions */}
+                            {/* Data */}
+                            <TableCell className="text-sm text-muted-foreground">
+                                {formatDateToLocal(order.created_at, 'dd/MM/yy HH:mm')}
+                            </TableCell>
+
+                            {/* Ações */}
                             <TableCell className="text-right">
                                 <Button variant="ghost" size="icon" asChild>
                                     <Link href={`/dashboard/orders/${order.id}`}>
