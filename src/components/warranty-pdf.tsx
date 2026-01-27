@@ -160,7 +160,7 @@ interface StoreSettings {
 // Tipo de dados da OS
 // ==================================================
 interface OrderData {
-    displayId: number
+    displayId: string | number
     customerName: string
     customerPhone: string
     equipmentType: string

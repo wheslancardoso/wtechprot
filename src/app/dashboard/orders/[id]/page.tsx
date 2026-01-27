@@ -10,6 +10,7 @@ import OrderTimeline from './order-timeline'
 import ShareActions from '@/components/share-actions'
 import ExecutionChecklist from '@/components/execution-checklist'
 import type { ExecutionTask } from '@/lib/execution-tasks-types'
+import type { OrderData, StoreSettings } from '@/components/warranty-pdf'
 
 // UI Components
 import { Badge } from '@/components/ui/badge'
@@ -79,12 +80,51 @@ export default async function OrderDetailPage({ params }: PageProps) {
         .eq('id', id)
         .single()
 
+    // Fetch tenant settings for PDF
+    const { data: tenant } = await supabase
+        .from('tenants')
+        .select('*')
+        .eq('id', (await supabase.auth.getUser()).data.user?.id)
+        .single()
+
     if (error || !order) {
         notFound()
     }
 
     const customer = order.customer
     const equipment = order.equipment
+
+    // Preparar dados para PDF de Garantia (Com dados reais do Tenant)
+    const orderData: OrderData = {
+        displayId: String(order.display_id),
+        customerName: customer?.name || 'Cliente',
+        customerPhone: customer?.phone || '',
+        equipmentType: equipment?.type || 'Equipamento',
+        equipmentBrand: equipment?.brand || '',
+        equipmentModel: equipment?.model || '',
+        diagnosisText: order.diagnosis_text || '',
+        laborCost: order.labor_cost || 0,
+        photosCheckout: order.photos_checkout || [],
+        finishedAt: order.finished_at || new Date().toISOString(),
+        externalParts: [], // TODO: Buscar external parts se houver tabela
+    }
+
+    // Configurações da Loja (Do Banco de Dados)
+    const storeSettings: StoreSettings = {
+        trade_name: tenant?.trade_name || 'Minha Assistência',
+        legal_document: tenant?.legal_document || '',
+        phone: tenant?.phone || '',
+        logo_url: tenant?.logo_url || null,
+        warranty_days_labor: tenant?.warranty_days || 90,
+        address: tenant?.address ? {
+            street: tenant.address.street,
+            number: tenant.address.number,
+            neighborhood: tenant.address.neighborhood,
+            city: tenant.address.city,
+            state: tenant.address.state,
+            zip: tenant.address.zip,
+        } : null
+    }
 
     return (
         <div className="container mx-auto max-w-7xl py-8 px-4">
@@ -120,7 +160,12 @@ export default async function OrderDetailPage({ params }: PageProps) {
                             displayId={order.display_id}
                             customerName={customer?.name || 'Cliente'}
                         />
-                        <OrderActions orderId={order.id} currentStatus={order.status} />
+                        <OrderActions
+                            orderId={order.id}
+                            currentStatus={order.status}
+                            orderData={orderData}
+                            storeSettings={storeSettings}
+                        />
                     </div>
                 </div>
 

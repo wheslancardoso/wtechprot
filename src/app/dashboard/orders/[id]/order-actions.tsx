@@ -9,6 +9,10 @@ import { updateOrderStatus, confirmPartArrival } from '../actions'
 // Components
 import BudgetModal from './budget-modal'
 import FinishOrderModal from './finish-order-modal'
+import PdfButtonWrapper from './pdf-button-wrapper'
+
+// Types
+import type { OrderData, StoreSettings } from '@/components/warranty-pdf'
 
 // UI Components
 import { Button } from '@/components/ui/button'
@@ -31,9 +35,11 @@ import {
 interface OrderActionsProps {
     orderId: string
     currentStatus: string
+    orderData?: OrderData
+    storeSettings?: StoreSettings
 }
 
-export default function OrderActions({ orderId, currentStatus }: OrderActionsProps) {
+export default function OrderActions({ orderId, currentStatus, orderData, storeSettings }: OrderActionsProps) {
     const router = useRouter()
     const [isPending, setIsPending] = useState(false)
     const [isBudgetOpen, setIsBudgetOpen] = useState(false)
@@ -215,21 +221,32 @@ export default function OrderActions({ orderId, currentStatus }: OrderActionsPro
                             <Receipt className="mr-2 h-4 w-4" />
                             Finalizar e Registrar Pagamento
                         </Button>
+
+                        {/* Botão de PDF */}
+                        <PdfButtonWrapper orderData={orderData!} storeSettings={storeSettings!} />
                     </div>
                 )}
 
                 {/* Status: FINISHED ou CANCELED → Mensagem final */}
                 {(currentStatus === 'finished' || currentStatus === 'canceled') && (
-                    <Alert variant={currentStatus === 'finished' ? 'success' : 'destructive'}>
-                        {currentStatus === 'finished' ? (
-                            <CheckCircle className="h-4 w-4" />
-                        ) : (
-                            <XCircle className="h-4 w-4" />
+                    <div className="space-y-4">
+                        <Alert variant={currentStatus === 'finished' ? 'success' : 'destructive'}>
+                            {currentStatus === 'finished' ? (
+                                <CheckCircle className="h-4 w-4" />
+                            ) : (
+                                <XCircle className="h-4 w-4" />
+                            )}
+                            <AlertDescription>
+                                Esta OS está {currentStatus === 'finished' ? 'finalizada' : 'cancelada'}.
+                            </AlertDescription>
+                        </Alert>
+
+                        {currentStatus === 'finished' && (
+                            <div className="flex justify-end">
+                                <PdfButtonWrapper orderData={orderData!} storeSettings={storeSettings!} />
+                            </div>
                         )}
-                        <AlertDescription>
-                            Esta OS está {currentStatus === 'finished' ? 'finalizada' : 'cancelada'}.
-                        </AlertDescription>
-                    </Alert>
+                    </div>
                 )}
             </div>
 
