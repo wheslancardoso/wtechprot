@@ -6,6 +6,7 @@ import type { OrderStatus } from '@/types/database'
 // Components
 import OrderActions from './order-actions'
 import EvidenceSection from './evidence-section'
+import OrderTimeline from './order-timeline'
 
 // UI Components
 import { Badge } from '@/components/ui/badge'
@@ -241,61 +242,8 @@ export default async function OrderDetailPage({ params }: PageProps) {
                         </CardContent>
                     </Card>
 
-                    {/* Card Timeline */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-lg">
-                                <Clock className="h-5 w-5" />
-                                Timeline
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="relative">
-                                {/* Linha vertical */}
-                                <div className="absolute left-2 top-2 bottom-2 w-px bg-border" />
-
-                                {/* Eventos */}
-                                <div className="space-y-4">
-                                    {/* Evento: Abertura */}
-                                    <div className="relative pl-8">
-                                        <div className="absolute left-0 top-1 h-4 w-4 rounded-full bg-primary" />
-                                        <div>
-                                            <p className="font-medium">OS Aberta</p>
-                                            <p className="text-sm text-muted-foreground">
-                                                {formatDate(order.created_at)}
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    {/* Evento: Atualização (se houver) */}
-                                    {order.updated_at !== order.created_at && (
-                                        <div className="relative pl-8">
-                                            <div className="absolute left-0 top-1 h-4 w-4 rounded-full bg-muted border-2 border-primary" />
-                                            <div>
-                                                <p className="font-medium">Última Atualização</p>
-                                                <p className="text-sm text-muted-foreground">
-                                                    {formatDate(order.updated_at)}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {/* Evento: Finalização (se houver) */}
-                                    {order.finished_at && (
-                                        <div className="relative pl-8">
-                                            <div className="absolute left-0 top-1 h-4 w-4 rounded-full bg-green-500" />
-                                            <div>
-                                                <p className="font-medium text-green-600">OS Finalizada</p>
-                                                <p className="text-sm text-muted-foreground">
-                                                    {formatDate(order.finished_at)}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
+                    {/* Card Timeline - Novo componente dinâmico */}
+                    <OrderTimeline orderId={order.id} currentStatus={order.status} />
                 </div>
             </div>
 
