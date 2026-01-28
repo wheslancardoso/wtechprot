@@ -108,6 +108,7 @@ export default async function OrderDetailPage({ params }: PageProps) {
         photosCheckout: order.photos_checkout || [],
         finishedAt: order.finished_at || new Date().toISOString(),
         externalParts: [], // TODO: Buscar external parts se houver tabela
+        signatureEvidence: order.signature_evidence || null,
     }
 
     // Configurações da Loja (Do Banco de Dados)

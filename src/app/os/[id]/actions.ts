@@ -37,24 +37,32 @@ export async function approveBudget(
 
         // 2. Capturar IP do cliente (via headers)
         const headersList = await headers()
-        const clientIp = headersList.get('x-forwarded-for') ||
+        let clientIp = headersList.get('x-forwarded-for')?.split(',')[0].trim() ||
             headersList.get('x-real-ip') ||
+            headersList.get('cf-connecting-ip') || // Cloudflare
             'unknown'
 
-        // 3. Montar metadados da assinatura digital (Evidence Log)
-        const signatureMetadata = {
-            ip: clientIp,
-            userAgent: signatureData?.userAgent || 'unknown',
-            timestamp: signatureData?.timestamp || new Date().toISOString(),
-            // Grava o snapshot completo dos termos aceitos (IDs e Versões)
-            acceptedTermsSnapshot: signatureData?.acceptedTermsSnapshot || [],
-            termsVersion: 'v1_2026', // Versão hardcoded conforme prompt
-            hasParts: signatureData?.hasParts || false,
-            signedName: signatureData?.signedName || 'Not Provided',
-            approvalMethod: 'type-to-sign-granular-wizard-v3',
-            approvedAt: new Date().toISOString(),
+        // Limpar prefixo IPv6 mapped se existir
+        if (clientIp.startsWith('::ffff:')) {
+            clientIp = clientIp.replace('::ffff:', '')
         }
-        console.log('📝 Signature metadata:', signatureMetadata)
+
+        // 3. Montar metadados da assinatura digital (Evidence Log - Click Agreement)
+        const signatureEvidence = {
+            method: "CLICK_WRAP_V1",
+            accepted_at: new Date().toISOString(),
+            ip_address: clientIp,
+            device_fingerprint: signatureData?.userAgent || 'unknown',
+            geolocation: null, // Pode ser adicionado se o front enviar
+            terms_version: "2026.1",
+            integrity_hash: "generated-on-server", // TODO: Implementar hash real
+            metadata: {
+                hasParts: signatureData?.hasParts || false,
+                signedName: "Click Agreement (No Name)",
+                acceptedTermsSnapshot: signatureData?.acceptedTermsSnapshot || [],
+            }
+        }
+        console.log('📝 Signature evidence:', signatureEvidence)
 
         // 4. Criar cliente Supabase (admin para bypass RLS)
         const supabase = await createAdminClient()
@@ -88,7 +96,7 @@ export async function approveBudget(
             .update({
                 status: newStatus,
                 approved_at: new Date().toISOString(),
-                signature_metadata: signatureMetadata,
+                signature_evidence: signatureEvidence,
             })
             .eq('id', orderId)
             .eq('status', 'waiting_approval')

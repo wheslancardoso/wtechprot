@@ -47,7 +47,7 @@ interface ClientActionsProps {
     customerName: string
 }
 
-type WizardStep = 'TERMS' | 'SIGN' | 'PROCESSING' | 'SUCCESS'
+type WizardStep = 'TERMS' | 'PROCESSING' | 'SUCCESS'
 
 export default function ClientActions({ orderId, hasParts, status, customerName }: ClientActionsProps) {
     const router = useRouter()
@@ -60,30 +60,15 @@ export default function ClientActions({ orderId, hasParts, status, customerName 
     const [isRejecting, setIsRejecting] = useState(false)
     const [acceptedTerms, setAcceptedTerms] = useState(false)
     const [acceptedTermsSnapshot, setAcceptedTermsSnapshot] = useState<any[]>([])
-    const [signedName, setSignedName] = useState('')
     const [result, setResult] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
 
     // Status do Pedido
     const alreadyApproved = ['waiting_parts', 'in_progress', 'ready', 'finished'].includes(status)
     const isCanceled = status === 'canceled'
-    const canTakeAction = status === 'waiting_approval'
-
-    // Lógica de Validação de Assinatura
-    const isNameValid = () => {
-        if (!signedName || signedName.length < 3) return false
-
-        const input = signedName.toLowerCase().trim()
-        const target = customerName.toLowerCase().trim()
-        const inputParts = input.split(' ')
-        const targetParts = target.split(' ')
-
-        if (inputParts[0] === targetParts[0]) return true
-        return target.includes(input)
-    }
 
     async function handleFinalApprove() {
-        if (!isNameValid()) {
-            setResult({ type: 'error', message: 'Assinatura incorreta. Digite seu nome conforme cadastro.' })
+        if (!acceptedTerms) {
+            setResult({ type: 'error', message: 'Você precisa aceitar todos os termos para continuar.' })
             return
         }
 
@@ -91,13 +76,14 @@ export default function ClientActions({ orderId, hasParts, status, customerName 
         setResult(null)
 
         try {
+            // Captura metadados para Click-Agreement
             const signatureData = {
                 userAgent: navigator.userAgent,
                 timestamp: new Date().toISOString(),
                 acceptedTerms: acceptedTerms,
                 acceptedTermsSnapshot: acceptedTermsSnapshot,
                 hasParts: hasParts,
-                signedName: signedName,
+                signedName: "Click Agreement", // Placeholder não usado
             }
 
             const response = await approveBudget(orderId, signatureData)
@@ -113,14 +99,14 @@ export default function ClientActions({ orderId, hasParts, status, customerName 
                 }, 3000)
             } else {
                 setResult({ type: 'error', message: response.message })
-                setStep('SIGN')
+                setStep('TERMS')
             }
         } catch (error) {
             setResult({
                 type: 'error',
                 message: `Erro inesperado: ${error instanceof Error ? error.message : 'Desconhecido'}`
             })
-            setStep('SIGN')
+            setStep('TERMS')
         }
     }
 
@@ -238,7 +224,7 @@ export default function ClientActions({ orderId, hasParts, status, customerName 
                 </div>
             </div>
 
-            {/* MODAL DE APROVAÇÃO (WIZARD) */}
+            {/* MODAL DE APROVAÇÃO (CLICK-AGREEMENT) */}
             <Dialog open={isOpen} onOpenChange={handleOpenChange}>
                 <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-3xl transition-all duration-300">
                     <DialogHeader>
@@ -247,58 +233,47 @@ export default function ClientActions({ orderId, hasParts, status, customerName 
                             Aprovação Digital
                         </DialogTitle>
                         <DialogDescription>
-                            {step === 'TERMS' && 'Por favor, revise e aceite os termos para continuar.'}
-                            {step === 'SIGN' && 'Confirme sua identidade para assinar o contrato.'}
+                            {step === 'TERMS' && 'Revise os termos e confirme sua aprovação.'}
                             {step === 'SUCCESS' && 'Tudo pronto!'}
                         </DialogDescription>
                     </DialogHeader>
 
                     {/* CONTEÚDO DINÂMICO DO MODAL */}
                     <div className="py-2">
-                        {/* PASSO 1: TERMOS */}
+                        {/* PASSO 1: TERMOS + CLICK SIGN */}
                         {step === 'TERMS' && (
-                            <TermsAgreementStep
-                                hasParts={hasParts}
-                                entryChecklist={{}}
-                                variant="inline" // Usando inline visual (compacto)
-                                onChange={(isValid, snapshot) => {
-                                    setAcceptedTerms(isValid)
-                                    setAcceptedTermsSnapshot(snapshot)
-                                }}
-                                onComplete={() => { }} // Não usado
-                            />
-                        )}
+                            <div className="space-y-6">
+                                <TermsAgreementStep
+                                    hasParts={hasParts}
+                                    entryChecklist={{}}
+                                    variant="inline"
+                                    onChange={(isValid, snapshot) => {
+                                        setAcceptedTerms(isValid)
+                                        setAcceptedTermsSnapshot(snapshot)
+                                    }}
+                                    onComplete={() => { }}
+                                />
 
-                        {/* PASSO 2: ASSINATURA */}
-                        {step === 'SIGN' && (
-                            <div className="space-y-6 animate-in slide-in-from-right-4">
-                                <Alert className="bg-muted">
-                                    <FileText className="h-4 w-4" />
-                                    <AlertDescription className="text-xs">
-                                        Ao assinar, você concorda com todos os termos revisados anteriormente.
-                                    </AlertDescription>
-                                </Alert>
-
-                                <div className="space-y-2">
-                                    <Label htmlFor="signature" className="text-sm font-medium">
-                                        Digite seu NOME COMPLETO para assinar:
-                                    </Label>
-                                    <Input
-                                        id="signature"
-                                        value={signedName}
-                                        onChange={(e) => setSignedName(e.target.value)}
-                                        placeholder={`Ex: ${customerName}`}
-                                        className={cn(
-                                            "h-12 text-lg font-medium",
-                                            !isNameValid() && signedName.length > 3 ? "border-destructive focus-visible:ring-destructive" : "border-primary focus-visible:ring-primary"
-                                        )}
-                                        autoComplete="off"
-                                    />
-                                    {!isNameValid() && signedName.length > 2 && (
-                                        <p className="text-xs text-destructive">
-                                            Digite o nome igual ao cadastro: <strong>{customerName}</strong>
+                                <div className="space-y-4 pt-4 border-t">
+                                    <div className="bg-muted p-4 rounded-lg text-xs text-muted-foreground flex gap-3">
+                                        <ShieldCheck className="h-5 w-5 shrink-0 text-primary" />
+                                        <p>
+                                            Ao clicar em "Confirmar Aprovação", você aceita eletronicamente o orçamento e os termos acima.
+                                            Seu IP, navegador e horário serão registrados como evidência de validade jurídica.
                                         </p>
-                                    )}
+                                    </div>
+
+                                    <Button
+                                        className="w-full h-12 text-lg font-bold bg-green-600 hover:bg-green-700 shadow-md"
+                                        onClick={handleFinalApprove}
+                                        disabled={!acceptedTerms}
+                                    >
+                                        <CheckCircle className="mr-2 h-5 w-5" />
+                                        CONFIRMAR APROVAÇÃO E ACEITAR TERMOS
+                                    </Button>
+                                    <p className="text-center text-xs text-muted-foreground">
+                                        Esta ação é definitiva e inicia o processo de reparo.
+                                    </p>
                                 </div>
                             </div>
                         )}
@@ -309,7 +284,8 @@ export default function ClientActions({ orderId, hasParts, status, customerName 
                                 {step === 'PROCESSING' ? (
                                     <>
                                         <Loader2 className="h-12 w-12 animate-spin text-primary" />
-                                        <p className="text-sm text-muted-foreground">Gerando contrato digital...</p>
+                                        <p className="text-sm text-muted-foreground">Registrando assinatura eletrônica...</p>
+                                        <p className="text-xs text-muted-foreground">Capturando metadados de segurança...</p>
                                     </>
                                 ) : (
                                     <>
@@ -317,8 +293,8 @@ export default function ClientActions({ orderId, hasParts, status, customerName 
                                             <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400" />
                                         </div>
                                         <div>
-                                            <h3 className="font-bold text-xl text-green-700">Aprovado!</h3>
-                                            <p className="text-sm text-muted-foreground mt-2">Redirecionando...</p>
+                                            <h3 className="font-bold text-xl text-green-700">Aprovado com Sucesso!</h3>
+                                            <p className="text-sm text-muted-foreground mt-2">Redirecionando para rastreamento...</p>
                                         </div>
                                     </>
                                 )}
@@ -333,35 +309,6 @@ export default function ClientActions({ orderId, hasParts, status, customerName 
                             </Alert>
                         )}
                     </div>
-
-                    {/* ACTIONS FOOTER */}
-                    {['TERMS', 'SIGN'].includes(step) && (
-                        <DialogFooter className="gap-2 sm:gap-0">
-                            {step === 'TERMS' ? (
-                                <Button
-                                    className="w-full"
-                                    onClick={() => setStep('SIGN')}
-                                    disabled={!acceptedTerms}
-                                >
-                                    Concordar e Continuar <ArrowRight className="ml-2 h-4 w-4" />
-                                </Button>
-                            ) : (
-                                <div className="flex gap-2 w-full">
-                                    <Button variant="outline" className="flex-1" onClick={() => setStep('TERMS')}>
-                                        Voltar
-                                    </Button>
-                                    <Button
-                                        className="flex-[2] bg-green-600 hover:bg-green-700"
-                                        onClick={handleFinalApprove}
-                                        disabled={!isNameValid()}
-                                    >
-                                        <PenTool className="mr-2 h-4 w-4" />
-                                        Assinar Contrato
-                                    </Button>
-                                </div>
-                            )}
-                        </DialogFooter>
-                    )}
                 </DialogContent>
             </Dialog>
         </>

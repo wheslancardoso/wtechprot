@@ -1,5 +1,7 @@
 import { SettingsProvider } from '@/components/settings-provider'
 import Link from 'next/link'
+import { Metadata } from 'next'
+import { getSettings } from '@/app/dashboard/settings/actions'
 import {
     ClipboardList,
     Users,
@@ -7,6 +9,26 @@ import {
     Settings,
     Home,
 } from 'lucide-react'
+
+// ==================================================
+// Metadata Dinâmico (Nome da Loja)
+// ==================================================
+export async function generateMetadata(): Promise<Metadata> {
+    const settings = await getSettings()
+
+    if (settings.success && settings.data?.trade_name) {
+        return {
+            title: {
+                template: `%s | ${settings.data.trade_name}`,
+                default: settings.data.trade_name,
+            },
+        }
+    }
+
+    return {
+        title: 'Dashboard',
+    }
+}
 
 // ==================================================
 // Menu Items

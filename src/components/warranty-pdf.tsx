@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { Document, Page, Text, View, StyleSheet, PDFDownloadLink, Image } from '@react-pdf/renderer'
 import { Button } from '@/components/ui/button'
 import { FileDown, Loader2 } from 'lucide-react'
@@ -135,6 +136,14 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
         marginTop: 10,
     },
+    digitalSignatureText: {
+        fontSize: 7,
+        color: '#666',
+        textAlign: 'center',
+        marginTop: 2,
+        marginBottom: 8,
+        fontFamily: 'Courier',
+    }
 })
 
 // ==================================================
@@ -175,6 +184,13 @@ interface OrderData {
     }>
     photosCheckout: string[]
     finishedAt: string
+    signatureEvidence?: {
+        ip_address: string
+        accepted_at: string
+        device_fingerprint: string
+        terms_version: string
+        method: string
+    } | null
 }
 
 // ==================================================
@@ -189,6 +205,14 @@ function generateHash(data: OrderData, storeName: string): string {
         hash = hash & hash
     }
     return Math.abs(hash).toString(16).toUpperCase().padStart(8, '0')
+}
+
+// ==================================================
+// Função auxiliar para limpar IP e formatar
+// ==================================================
+function cleanIp(ip?: string) {
+    if (!ip) return 'N/A'
+    return ip.replace('::ffff:', '')
 }
 
 // ==================================================
@@ -219,6 +243,7 @@ function formatAddress(address?: StoreSettings['address']): string {
 // ==================================================
 // Componente PDF
 // ==================================================
+// Componente PDF
 function WarrantyDocument({ data, settings }: { data: OrderData; settings: StoreSettings }) {
     const osNumber = String(data.displayId).padStart(4, '0')
     const hash = generateHash(data, settings.trade_name)
@@ -339,6 +364,13 @@ function WarrantyDocument({ data, settings }: { data: OrderData; settings: Store
 
                 {/* Rodapé Legal */}
                 <View style={styles.footer}>
+                    {/* Data da Assinatura Digital (se houver) */}
+                    {data.signatureEvidence && (
+                        <Text style={styles.digitalSignatureText}>
+                            Assinado Digitalmente em {formatDateToLocal(data.signatureEvidence.accepted_at, 'dd/MM/yyyy HH:mm')} | IP: {cleanIp(data.signatureEvidence.ip_address)} | Aceite de Termos v1
+                        </Text>
+                    )}
+
                     <Text style={styles.footerText}>
                         TERMO DE GARANTIA: A {settings.trade_name.toUpperCase()} oferece garantia de {warrantyDays} ({warrantyDays === 90 ? 'noventa' : warrantyDays}) dias
                         sobre a MÃO DE OBRA do serviço prestado, contados a partir da data de entrega.
@@ -391,6 +423,4 @@ export default function WarrantyPdfButton({ orderData, storeSettings }: Warranty
         </PDFDownloadLink>
     )
 }
-
-// Export types
 export type { OrderData, StoreSettings }
