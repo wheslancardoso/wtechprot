@@ -689,3 +689,44 @@ export async function getCustomerByCpf(cpf: string): Promise<{
         return { success: false, message: 'Erro ao buscar cliente' }
     }
 }
+// ==================================================
+// Server Action: Excluir Ordem de Serviço
+// ==================================================
+export async function deleteOrder(orderId: string): Promise<ActionResult> {
+    try {
+        if (!orderId || orderId.length < 10) {
+            return { success: false, message: 'ID inválido' }
+        }
+
+        const supabase = await createClient()
+        const { data: { user } } = await supabase.auth.getUser()
+
+        if (!user) return { success: false, message: 'Não autorizado' }
+
+        // Deletar itens relacionados em cascade (se configurado no banco)
+        // Se não tiver cascade, precisaríamos deletar order_items e order_logs manualmente.
+        // Supabase geralmente requer deleção explícita se a FK não for ON DELETE CASCADE.
+        // Vamos tentar deletar a ordem primeiro.
+
+        // 1. Deletar itens (just in case)
+        await supabase.from('order_items').delete().eq('order_id', orderId)
+        await supabase.from('order_logs').delete().eq('order_id', orderId)
+
+        // 2. Deletar a ordem
+        const { error } = await supabase
+            .from('orders')
+            .delete()
+            .eq('id', orderId)
+            .eq('user_id', user.id)
+
+        if (error) {
+            console.error('Erro ao excluir:', error)
+            return { success: false, message: `Erro ao excluir: ${error.message}` }
+        }
+
+        revalidatePath('/dashboard/orders')
+        return { success: true, message: 'OS excluída com sucesso!' }
+    } catch (error) {
+        return { success: false, message: 'Erro inesperado ao excluir' }
+    }
+}

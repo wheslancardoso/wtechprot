@@ -7,7 +7,6 @@ import type { OrderStatus } from '@/types/database'
 import OrderActions from './order-actions'
 import EvidenceSection from './evidence-section'
 import OrderTimeline from './order-timeline'
-import ShareActions from '@/components/share-actions'
 import ExecutionChecklist from '@/components/execution-checklist'
 import type { ExecutionTask } from '@/lib/execution-tasks-types'
 import type { OrderData, StoreSettings } from '@/components/warranty-pdf'
@@ -157,16 +156,13 @@ export default async function OrderDetailPage({ params }: PageProps) {
 
                     {/* Actions */}
                     <div className="flex items-center gap-2">
-                        <ShareActions
-                            orderId={order.id}
-                            displayId={order.display_id}
-                            customerName={customer?.name || 'Cliente'}
-                        />
                         <OrderActions
                             orderId={order.id}
                             currentStatus={order.status}
                             orderData={orderData}
                             storeSettings={storeSettings}
+                            customerName={customer?.name || 'Cliente'}
+                            displayId={order.display_id}
                         />
                     </div>
                 </div>

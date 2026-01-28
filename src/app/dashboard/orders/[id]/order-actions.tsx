@@ -4,12 +4,13 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 // Server Actions
-import { updateOrderStatus, confirmPartArrival } from '../actions'
+import { updateOrderStatus, confirmPartArrival, deleteOrder } from '../actions'
 
 // Components
 import BudgetModal from './budget-modal'
 import FinishOrderModal from './finish-order-modal'
 import PdfButtonWrapper from './pdf-button-wrapper'
+import ShareActions from '@/components/share-actions'
 
 // Types
 import type { OrderData, StoreSettings } from '@/components/warranty-pdf'
@@ -30,6 +31,8 @@ import {
     Package,
     PackageCheck,
     Receipt,
+    Trash2,
+    RefreshCcw,
 } from 'lucide-react'
 
 interface OrderActionsProps {
@@ -37,9 +40,18 @@ interface OrderActionsProps {
     currentStatus: string
     orderData?: OrderData
     storeSettings?: StoreSettings
+    customerName: string
+    displayId: number
 }
 
-export default function OrderActions({ orderId, currentStatus, orderData, storeSettings }: OrderActionsProps) {
+export default function OrderActions({
+    orderId,
+    currentStatus,
+    orderData,
+    storeSettings,
+    customerName,
+    displayId
+}: OrderActionsProps) {
     const router = useRouter()
     const [isPending, setIsPending] = useState(false)
     const [isBudgetOpen, setIsBudgetOpen] = useState(false)
@@ -92,9 +104,47 @@ export default function OrderActions({ orderId, currentStatus, orderData, storeS
         }
     }
 
+    async function handleDelete() {
+        if (!window.confirm('TEM CERTEZA? Essa ação é IRREVERSÍVEL e apagará todo o histórico dessa OS.')) {
+            return
+        }
+
+        setIsPending(true)
+        try {
+            const result = await deleteOrder(orderId)
+            if (result.success) {
+                router.push('/dashboard/orders')
+            } else {
+                setFeedback({ type: 'error', message: result.message })
+            }
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setIsPending(false)
+        }
+    }
+
+    async function handleReopen() {
+        if (!window.confirm('Deseja reabrir esta OS? Ela voltará para o status "Em Andamento".')) {
+            return
+        }
+        await handleStatusChange('in_progress')
+    }
+
     return (
         <>
             <div className="space-y-4">
+                {/* TOOLBAR: Compartilhar e Ações Principais */}
+                <div className="flex justify-end mb-2">
+                    <ShareActions
+                        orderId={orderId}
+                        displayId={displayId}
+                        customerName={customerName}
+                        storeName={storeSettings?.trade_name}
+                    />
+                </div>
+
+                {/* Feedback Alert */}
                 {/* Feedback Alert */}
                 {feedback && (
                     <Alert variant={feedback.type === 'success' ? 'success' : 'destructive'}>
@@ -241,13 +291,42 @@ export default function OrderActions({ orderId, currentStatus, orderData, storeS
                             </AlertDescription>
                         </Alert>
 
-                        {currentStatus === 'finished' && (
-                            <div className="flex justify-end">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                            {/* Reabrir */}
+                            <Button variant="outline" onClick={handleReopen} disabled={isPending}>
+                                <RefreshCcw className="mr-2 h-4 w-4" />
+                                Reabrir OS
+                            </Button>
+
+                            {currentStatus === 'finished' && (
                                 <PdfButtonWrapper orderData={orderData!} storeSettings={storeSettings!} />
-                            </div>
-                        )}
+                            )}
+                        </div>
                     </div>
                 )}
+
+                {/* ZONA DE PERIGO */}
+                <div className="pt-8 mt-8 border-t">
+                    <div className="bg-red-50 dark:bg-red-950/20 p-4 rounded-lg border border-red-100 dark:border-red-900/50">
+                        <h4 className="text-sm font-semibold text-red-800 dark:text-red-400 mb-2 flex items-center gap-2">
+                            <AlertCircle className="h-4 w-4" />
+                            Zona de Perigo
+                        </h4>
+                        <p className="text-xs text-red-600 dark:text-red-400 mb-4">
+                            Ações destrutivas que não podem ser desfeitas.
+                        </p>
+                        <Button
+                            variant="destructive"
+                            size="sm"
+                            className="w-full bg-red-600 hover:bg-red-700"
+                            onClick={handleDelete}
+                            disabled={isPending}
+                        >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Excluir esta OS Definitivamente
+                        </Button>
+                    </div>
+                </div>
             </div>
 
             {/* Modal de Orçamento */}
