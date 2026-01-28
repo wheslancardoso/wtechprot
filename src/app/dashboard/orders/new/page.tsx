@@ -8,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 
 // Server Action
-import { createOrder } from '../actions'
+import { createOrder, getCustomerByCpf } from '../actions'
 
 // UI Components
 import { Button } from '@/components/ui/button'
@@ -89,6 +89,7 @@ export default function NewOrderPage() {
 
     const [showPassword, setShowPassword] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [isSearchingCustomer, setIsSearchingCustomer] = useState(false)
     const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
 
     const {
@@ -117,10 +118,41 @@ export default function NewOrderPage() {
     const hasAccessories = watch('hasAccessories')
     const cpfValue = watch('customerCpf')
 
-    // Handle CPF input with mask
-    function handleCpfChange(e: React.ChangeEvent<HTMLInputElement>) {
-        const formatted = formatCpf(e.target.value)
-        setValue('customerCpf', formatted)
+    // Handle CPF input with mask + Auto search
+    async function handleCpfChange(e: React.ChangeEvent<HTMLInputElement>) {
+        const raw = e.target.value
+        // Formatar apenas números iniciais para máscara
+        const formatted = formatCpf(raw)
+
+        // Verifica se mudou a quantidade de caracteres para evitar loop
+        if (formatted !== cpfValue) {
+            setValue('customerCpf', formatted)
+
+            // Se tiver 14 caracteres (formato completo 000.000.000-00), buscar
+            const clean = formatted.replace(/\D/g, '')
+            if (clean.length === 11) {
+                await searchCustomer(clean)
+            }
+        }
+    }
+
+    async function searchCustomer(cpfClean: string) {
+        setIsSearchingCustomer(true)
+        try {
+            const result = await getCustomerByCpf(cpfClean)
+            if (result.success && result.data) {
+                setValue('customerName', result.data.name)
+                setValue('customerPhone', result.data.phone)
+
+                // Opcional: Mostrar feedback visual discreto
+                // setFeedback({ type: 'success', message: 'Cliente encontrado!' })
+                // Ou apenas focar no próximo campo
+            }
+        } catch (error) {
+            console.error('Erro ao buscar cliente', error)
+        } finally {
+            setIsSearchingCustomer(false)
+        }
     }
 
     // Submit handler - chama a Server Action
@@ -236,9 +268,17 @@ export default function NewOrderPage() {
                                         type="button"
                                         variant="outline"
                                         size="icon"
-                                        disabled={isSubmitting}
+                                        disabled={isSubmitting || isSearchingCustomer}
+                                        onClick={() => {
+                                            const clean = cpfValue.replace(/\D/g, '')
+                                            if (clean.length === 11) searchCustomer(clean)
+                                        }}
                                     >
-                                        <Search className="h-4 w-4" />
+                                        {isSearchingCustomer ? (
+                                            <Loader2 className="h-4 w-4 animate-spin" />
+                                        ) : (
+                                            <Search className="h-4 w-4" />
+                                        )}
                                     </Button>
                                 </div>
                                 {errors.customerCpf && (

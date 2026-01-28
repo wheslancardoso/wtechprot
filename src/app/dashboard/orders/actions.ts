@@ -642,4 +642,50 @@ export async function getMonthlyMetrics(): Promise<{
     }
 }
 
+// ==================================================
+// Server Action: Buscar Cliente por CPF
+// ==================================================
+export async function getCustomerByCpf(cpf: string): Promise<{
+    success: boolean
+    data?: {
+        name: string
+        phone: string
+        id: string
+    }
+    message?: string
+}> {
+    try {
+        const cpfClean = cpf.replace(/\D/g, '')
+        if (cpfClean.length < 11) {
+            return { success: false, message: 'CPF incompleto' }
+        }
 
+        const supabase = await createClient()
+        const { data: { user } } = await supabase.auth.getUser()
+
+        if (!user) return { success: false, message: 'Usuário não autenticado' }
+
+        const { data: customer, error } = await supabase
+            .from('customers')
+            .select('id, name, phone')
+            .eq('document_id', cpfClean)
+            .eq('user_id', user.id)
+            .single()
+
+        if (error || !customer) {
+            return { success: false, message: 'Cliente não encontrado' }
+        }
+
+        return {
+            success: true,
+            data: {
+                id: customer.id,
+                name: customer.name,
+                phone: customer.phone,
+            }
+        }
+    } catch (error) {
+        console.error('Erro ao buscar cliente:', error)
+        return { success: false, message: 'Erro ao buscar cliente' }
+    }
+}
