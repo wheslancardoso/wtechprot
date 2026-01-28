@@ -62,12 +62,14 @@ type NewOrderFormData = z.infer<typeof newOrderSchema>
 // Equipment Types
 // ==================================================
 const equipmentTypes = [
-    { value: 'notebook', label: 'Notebook' },
-    { value: 'desktop', label: 'PC / Desktop' },
-    { value: 'printer', label: 'Impressora' },
-    { value: 'monitor', label: 'Monitor' },
-    { value: 'smartphone', label: 'Smartphone' },
-    { value: 'other', label: 'Outro' },
+    { value: 'Notebook', label: 'Notebook' },
+    { value: 'Desktop', label: 'Desktop' },
+    { value: 'Impressora', label: 'Impressora' },
+    { value: 'All in One', label: 'All in One' },
+    { value: 'Monitor', label: 'Monitor' },
+    { value: 'Smartphone', label: 'Smartphone' },
+    { value: 'Tablet', label: 'Tablet' },
+    { value: 'Outro', label: 'Outro' },
 ]
 
 // ==================================================
