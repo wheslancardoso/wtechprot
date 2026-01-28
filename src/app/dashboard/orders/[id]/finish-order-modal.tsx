@@ -38,7 +38,11 @@ import {
     Receipt,
     Printer,
     Copy,
+    FileDown,
 } from 'lucide-react'
+
+import PdfButtonWrapper from './pdf-button-wrapper'
+import type { OrderData, StoreSettings } from '@/components/warranty-pdf'
 
 // ==================================================
 // Zod Schema
@@ -57,12 +61,14 @@ interface FinishOrderModalProps {
     orderId: string
     open: boolean
     onOpenChange: (open: boolean) => void
+    orderData?: OrderData
+    storeSettings?: StoreSettings
 }
 
 // ==================================================
 // Component
 // ==================================================
-export default function FinishOrderModal({ orderId, open, onOpenChange }: FinishOrderModalProps) {
+export default function FinishOrderModal({ orderId, open, onOpenChange, orderData, storeSettings }: FinishOrderModalProps) {
     const router = useRouter()
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [showSuccess, setShowSuccess] = useState(false)
@@ -237,10 +243,15 @@ conforme CDC.
 
                         {/* Botões */}
                         <div className="flex flex-col gap-2">
-                            <Button onClick={handlePrintReceipt} variant="outline">
-                                <Printer className="mr-2 h-4 w-4" />
-                                Imprimir Recibo
-                            </Button>
+                            {orderData && storeSettings ? (
+                                <PdfButtonWrapper orderData={orderData} storeSettings={storeSettings} />
+                            ) : (
+                                <Button onClick={handlePrintReceipt} variant="outline">
+                                    <Printer className="mr-2 h-4 w-4" />
+                                    Imprimir Recibo
+                                </Button>
+                            )}
+
                             <Button onClick={copyReceiptText} variant="outline">
                                 <Copy className="mr-2 h-4 w-4" />
                                 Copiar Texto do Recibo

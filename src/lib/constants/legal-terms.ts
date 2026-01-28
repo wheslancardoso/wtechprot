@@ -35,3 +35,10 @@ export const APPROVAL_TERMS = [
         icon: 'file-text'
     }
 ] as const;
+
+export type LegalTermType = typeof APPROVAL_TERMS[number]['id'];
+
+export const LEGAL_TERMS = APPROVAL_TERMS.reduce((acc, term) => {
+    acc[term.id] = term;
+    return acc;
+}, {} as Record<LegalTermType, typeof APPROVAL_TERMS[number]>);

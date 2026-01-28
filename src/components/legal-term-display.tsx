@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { LEGAL_TERMS, type LegalTermType } from '@/lib/legal-terms'
+import { LEGAL_TERMS, type LegalTermType } from '@/lib/constants/legal-terms'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
@@ -107,7 +107,7 @@ interface LegalTermsGroupProps {
 }
 
 export function LegalTermsGroup({ types, onAllAccepted }: LegalTermsGroupProps) {
-    const [acceptedTerms, setAcceptedTerms] = useState<Record<string, boolean>>({})
+    const [acceptedTerms, setAcceptedTerms] = useState<Partial<Record<LegalTermType, boolean>>>({})
 
     function handleAccept(type: LegalTermType, accepted: boolean) {
         const newAccepted = { ...acceptedTerms, [type]: accepted }

@@ -13,6 +13,7 @@ import {
     type TenantSettings,
 } from './actions'
 import { createClient } from '@/lib/supabase/client'
+import { useSettings } from '@/components/settings-provider'
 
 // UI Components
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -99,6 +100,7 @@ export default function SettingsPage() {
     const [uploadingLogo, setUploadingLogo] = useState(false)
 
     const supabase = createClient()
+    const { refresh } = useSettings()
 
     // Store Form
     const storeForm = useForm({
@@ -192,6 +194,10 @@ export default function SettingsPage() {
             type: result.success ? 'success' : 'error',
             message: result.message,
         })
+
+        if (result.success) {
+            await refresh()
+        }
     }
 
     // Save financial
@@ -482,8 +488,8 @@ export default function SettingsPage() {
                                                 type="button"
                                                 onClick={() => financialForm.setValue('mei_limit_annual', preset.value)}
                                                 className={`p-4 border rounded-lg text-left transition hover:border-primary ${financialForm.watch('mei_limit_annual') === preset.value
-                                                        ? 'border-primary bg-primary/10'
-                                                        : ''
+                                                    ? 'border-primary bg-primary/10'
+                                                    : ''
                                                     }`}
                                             >
                                                 <p className="font-medium">{preset.label}</p>

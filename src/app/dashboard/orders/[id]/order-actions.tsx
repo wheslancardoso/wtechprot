@@ -262,6 +262,8 @@ export default function OrderActions({ orderId, currentStatus, orderData, storeS
                 orderId={orderId}
                 open={isFinishOpen}
                 onOpenChange={setIsFinishOpen}
+                orderData={orderData}
+                storeSettings={storeSettings}
             />
         </>
     )
