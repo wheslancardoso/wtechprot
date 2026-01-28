@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { getCustomersWithStats, type CustomerWithStats } from './actions'
+import { EditCustomerDialog } from './edit-customer-dialog'
 import { formatDateToLocal, formatRelativeDate } from '@/lib/date-utils'
 
 // UI Components
@@ -228,11 +229,17 @@ export default function CustomersPage() {
                                                     : '—'}
                                             </TableCell>
                                             <TableCell>
-                                                <Button variant="ghost" size="icon" asChild>
-                                                    <Link href={`/dashboard/customers/${customer.id}`}>
-                                                        <Eye className="h-4 w-4" />
-                                                    </Link>
-                                                </Button>
+                                                <div className="flex items-center justify-end gap-1">
+                                                    <EditCustomerDialog
+                                                        customer={customer}
+                                                        onUpdate={() => fetchCustomers(search)}
+                                                    />
+                                                    <Button variant="ghost" size="icon" asChild>
+                                                        <Link href={`/dashboard/customers/${customer.id}`}>
+                                                            <Eye className="h-4 w-4" />
+                                                        </Link>
+                                                    </Button>
+                                                </div>
                                             </TableCell>
                                         </TableRow>
                                     ))}
