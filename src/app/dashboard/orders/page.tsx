@@ -36,7 +36,7 @@ import {
 // Type for order with joined relations
 interface OrderWithRelations extends Order {
     customer: Pick<Customer, 'name' | 'document_id'> | null
-    equipment: Pick<Equipment, 'type' | 'model' | 'serial_number'> | null
+    equipment: Pick<Equipment, 'type' | 'model' | 'serial_number' | 'brand'> | null
 }
 
 // Status label mapping
@@ -76,7 +76,7 @@ export default function OrdersPage() {
                 .select(`
           *,
           customer:customers(name, document_id),
-          equipment:equipments(type, model, serial_number)
+          equipment:equipments(type, model, serial_number, brand)
         `)
                 .order('created_at', { ascending: false })
 
@@ -188,7 +188,12 @@ export default function OrdersPage() {
                             <p className="text-sm text-muted-foreground">
                                 {orders.length} ordem(ns) encontrada(s)
                             </p>
-                            <OrdersTable orders={orders} />
+                            <div className="hidden md:block">
+                                <OrdersTable orders={orders} />
+                            </div>
+                            <div className="md:hidden">
+                                <MobileOrdersList orders={orders} />
+                            </div>
                         </>
                     )}
                 </>
@@ -297,6 +302,66 @@ function OrdersTable({ orders }: OrdersTableProps) {
                     ))}
                 </TableBody>
             </Table>
+        </div>
+    )
+}
+
+// ==================================================
+// Mobile List Component
+// ==================================================
+function MobileOrdersList({ orders }: OrdersTableProps) {
+    return (
+        <div className="space-y-4">
+            {orders.map((order) => (
+                <Card key={order.id} className="overflow-hidden">
+                    <CardContent className="p-0">
+                        <div className="p-4 space-y-3">
+                            {/* Header: ID + Status */}
+                            <div className="flex items-center justify-between">
+                                <span className="font-mono font-bold text-lg">
+                                    #{order.display_id}
+                                </span>
+                                <Badge variant={order.status as OrderStatus}>
+                                    {statusLabels[order.status as OrderStatus] || order.status}
+                                </Badge>
+                            </div>
+
+                            {/* Cliente */}
+                            <div className="flex items-center gap-2 text-sm">
+                                <span className="text-muted-foreground">Cliente:</span>
+                                <span className="font-medium">
+                                    {order.customer?.name || <span className="italic text-muted-foreground">Não informado</span>}
+                                </span>
+                            </div>
+
+                            {/* Equipamento */}
+                            <div className="text-sm text-muted-foreground bg-muted/50 p-3 rounded-md">
+                                {order.equipment ? (
+                                    <div className="flex flex-col">
+                                        <span className="font-medium text-foreground">{order.equipment.type}</span>
+                                        <span>{order.equipment.brand} {order.equipment.model}</span>
+                                    </div>
+                                ) : (
+                                    <span className="italic">Sem equipamento vinculado</span>
+                                )}
+                            </div>
+
+                            {/* Footer: Data + Ação */}
+                            <div className="flex items-center justify-between pt-3 border-t mt-1">
+                                <span className="text-xs text-muted-foreground flex items-center gap-1">
+                                    <ClipboardList className="h-3 w-3" />
+                                    {formatDateToLocal(order.created_at, 'dd/MM/yy HH:mm')}
+                                </span>
+                                <Button size="sm" variant="outline" asChild>
+                                    <Link href={`/dashboard/orders/${order.id}`}>
+                                        Ver Detalhes
+                                    </Link>
+                                </Button>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+            ))}
         </div>
     )
 }
