@@ -48,19 +48,29 @@ export async function approveBudget(
         }
 
         // 3. Montar metadados da assinatura digital (Evidence Log - Click Agreement)
-        const signatureEvidence = {
+        const evidencePayload = {
             method: "CLICK_WRAP_V1",
             accepted_at: new Date().toISOString(),
             ip_address: clientIp,
             device_fingerprint: signatureData?.userAgent || 'unknown',
-            geolocation: null, // Pode ser adicionado se o front enviar
             terms_version: "2026.1",
-            integrity_hash: "generated-on-server", // TODO: Implementar hash real
             metadata: {
                 hasParts: signatureData?.hasParts || false,
                 signedName: "Click Agreement (No Name)",
                 acceptedTermsSnapshot: signatureData?.acceptedTermsSnapshot || [],
             }
+        }
+
+        // Gerar Hash de Integridade (SHA-256)
+        // Isso cria uma "digital" única baseada nos dados exatos do momento
+        const crypto = require('crypto')
+        const integrityString = JSON.stringify(evidencePayload)
+        const integrityHash = crypto.createHash('sha256').update(integrityString).digest('hex')
+
+        const signatureEvidence = {
+            ...evidencePayload,
+            integrity_hash: integrityHash,
+            geolocation: null,
         }
         console.log('📝 Signature evidence:', signatureEvidence)
 
