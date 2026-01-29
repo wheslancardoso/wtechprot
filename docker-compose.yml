@@ -5,9 +5,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      network: host
     container_name: wtech-saas-dev
-    ports:
-      - "3000:3000"
+    network_mode: host
     volumes:
       # Monta o código fonte para hot-reload
       - .:/app
@@ -24,6 +24,7 @@ services:
       # Variáveis Supabase (lidas do .env na raiz)
       - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
       - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
     restart: unless-stopped
     stdin_open: true
     tty: true

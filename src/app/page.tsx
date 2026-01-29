@@ -4,20 +4,42 @@ import { Button } from '@/components/ui/button'
 import OrderTrackerInput from '@/components/landing/order-tracker-input'
 import { createAdminClient } from '@/lib/supabase/server'
 
-export default async function Home() {
-  // Buscar dados dinamicamente
+async function getTenantData() {
   let whatsappNumber = '5561999999999' // Fallback
   let formattedPhone = '(61) 99999-9999'
   let brandName = 'LAN.TECH' // Fallback Brand
 
   try {
     const supabase = await createAdminClient()
-    const { data: tenant } = await supabase
-      .from('tenants')
-      .select('phone, trade_name')
-      .order('updated_at', { ascending: false })
-      .limit(1)
-      .single()
+
+    // Lógica para pegar o tenant do último usuário logado
+    const { data: { users }, error: usersError } = await supabase.auth.admin.listUsers()
+
+    let tenantEmail = null
+
+    if (!usersError && users?.length > 0) {
+      // Ordenar por último login (mais recente primeiro)
+      const lastUser = users.sort((a, b) => {
+        const dateA = new Date(a.last_sign_in_at || 0).getTime()
+        const dateB = new Date(b.last_sign_in_at || 0).getTime()
+        return dateB - dateA
+      })[0]
+
+      if (lastUser && lastUser.email) {
+        tenantEmail = lastUser.email
+      }
+    }
+
+    let query = supabase.from('tenants').select('phone, trade_name')
+
+    if (tenantEmail) {
+      query = query.eq('email', tenantEmail)
+    } else {
+      // Fallback: mais recente atualizado
+      query = query.order('updated_at', { ascending: false }).limit(1)
+    }
+
+    const { data: tenant } = await query.single()
 
     if (tenant) {
       if (tenant.phone) {
@@ -32,6 +54,19 @@ export default async function Home() {
   } catch (error) {
     console.error('Erro ao buscar dados da home:', error)
   }
+
+  return { whatsappNumber, formattedPhone, brandName }
+}
+
+export async function generateMetadata() {
+  const { brandName } = await getTenantData()
+  return {
+    title: brandName,
+  }
+}
+
+export default async function Home() {
+  const { whatsappNumber, formattedPhone, brandName } = await getTenantData()
 
   const whatsappLink = `https://wa.me/${whatsappNumber}`
 
