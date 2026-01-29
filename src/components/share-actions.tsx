@@ -36,7 +36,8 @@ export default function ShareActions({
     const { toast } = useToast()
 
     const osNumber = String(displayId).padStart(4, '0')
-    const trackingUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/os/${orderId}`
+    // Usar displayId na URL para ser "amigável" (agora suportado pelo page.tsx)
+    const trackingUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/os/${displayId}`
 
     // Copiar link
     async function handleCopyLink() {
@@ -112,7 +113,8 @@ export function ShareActionsInline({
     const { toast } = useToast()
 
     const osNumber = String(displayId).padStart(4, '0')
-    const trackingUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/os/${orderId}`
+    // Usar displayId na URL para ser "amigável" (agora suportado pelo page.tsx)
+    const trackingUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/os/${displayId}`
 
     async function handleCopyLink() {
         try {
