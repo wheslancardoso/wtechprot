@@ -135,7 +135,7 @@ export default function OrderActions({
         <>
             <div className="space-y-4">
                 {/* TOOLBAR: Ações Principais + Compartilhar */}
-                <div className="flex flex-wrap items-center justify-end gap-2">
+                <div className="flex flex-wrap items-center justify-end gap-2 [&>button]:w-full sm:[&>button]:w-auto">
 
                     {/* Botões de Ação por Status */}
 

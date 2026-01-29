@@ -437,7 +437,7 @@ export default function SettingsPage() {
                                         </div>
                                     </div>
 
-                                    <Button type="submit" disabled={storeForm.formState.isSubmitting}>
+                                    <Button type="submit" disabled={storeForm.formState.isSubmitting} className="w-full sm:w-auto">
                                         {storeForm.formState.isSubmitting ? (
                                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                         ) : (
@@ -530,7 +530,7 @@ export default function SettingsPage() {
                                     </div>
                                 </div>
 
-                                <Button type="submit" disabled={financialForm.formState.isSubmitting}>
+                                <Button type="submit" disabled={financialForm.formState.isSubmitting} className="w-full sm:w-auto">
                                     {financialForm.formState.isSubmitting ? (
                                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                     ) : (

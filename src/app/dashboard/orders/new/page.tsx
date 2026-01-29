@@ -448,7 +448,7 @@ export default function NewOrderPage() {
                 </Card>
 
                 {/* Actions */}
-                <div className="flex justify-end gap-4">
+                <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-4">
                     <Button
                         type="button"
                         variant="ghost"
