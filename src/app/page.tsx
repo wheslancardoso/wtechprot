@@ -75,12 +75,12 @@ export default async function Home() {
             </div>
 
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 bg-gradient-to-br from-white via-white to-slate-500 bg-clip-text text-transparent animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
-              Suporte Técnico <br />
-              Pessoal & Transparente
+              Seu PC, Notebook ou <br />
+              Impressora travou?
             </h1>
 
             <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200">
-              Esqueça a assistência técnica tradicional. Tenha um especialista de confiança indo até você ou retirando seu equipamento. Acompanhe tudo em tempo real.
+              Esqueça a assistência técnica genérica. Tenha um especialista focado em <b>Desktops, Notebooks e Impressoras</b> cuidando do seu equipamento.
             </p>
 
             <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
@@ -95,6 +95,35 @@ export default async function Home() {
                   <MessageCircle className="w-4 h-4" />
                   Agendar Visita / Retirada
                 </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ESPECIALIDADES */}
+        <section className="py-12 border-y border-white/5 bg-white/[0.02]">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-white/5">
+              <div className="p-4">
+                <div className="mx-auto w-12 h-12 bg-blue-500/10 rounded-full flex items-center justify-center text-blue-400 mb-4">
+                  <Laptop className="w-6 h-6" />
+                </div>
+                <h3 className="font-bold text-lg text-slate-200 mb-2">Computadores & PC Gamer</h3>
+                <p className="text-sm text-slate-400">Diagnóstico avançado (sem vídeo, BIOS), formatação, limpeza e montagem de setups.</p>
+              </div>
+              <div className="p-4">
+                <div className="mx-auto w-12 h-12 bg-purple-500/10 rounded-full flex items-center justify-center text-purple-400 mb-4">
+                  <Smartphone className="w-6 h-6" />
+                </div>
+                <h3 className="font-bold text-lg text-slate-200 mb-2">Notebooks</h3>
+                <p className="text-sm text-slate-400">Troca de tela, teclado, bateria e upgrades de performance (SSD e Memória).</p>
+              </div>
+              <div className="p-4">
+                <div className="mx-auto w-12 h-12 bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-400 mb-4">
+                  <FileSearch className="w-6 h-6" />
+                </div>
+                <h3 className="font-bold text-lg text-slate-200 mb-2">Impressoras</h3>
+                <p className="text-sm text-slate-400">Manutenção preventiva, limpeza interna, desentupimento e reset.</p>
               </div>
             </div>
           </div>
@@ -212,9 +241,9 @@ export default async function Home() {
             <div>
               <h4 className="font-bold text-white mb-4">Serviços</h4>
               <ul className="space-y-2">
-                <li><a href="#" className="hover:text-primary">Manutenção de PCs</a></li>
-                <li><a href="#" className="hover:text-primary">Limpeza e Otimização</a></li>
-                <li><a href="#" className="hover:text-primary">Instalação de Redes</a></li>
+                <li><a href="#" className="hover:text-primary">Montagem de PC Gamer</a></li>
+                <li><a href="#" className="hover:text-primary">Manutenção de Notebooks</a></li>
+                <li><a href="#" className="hover:text-primary">Configuração de Impressoras</a></li>
               </ul>
             </div>
 
