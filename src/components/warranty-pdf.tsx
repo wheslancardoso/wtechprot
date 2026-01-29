@@ -12,6 +12,7 @@ import { formatDateToLocal } from '@/lib/date-utils'
 const styles = StyleSheet.create({
     page: {
         padding: 40,
+        paddingBottom: 120, // Aumentado para não sobrepor o footer fixo
         fontSize: 10,
         fontFamily: 'Helvetica',
     },
@@ -98,16 +99,16 @@ const styles = StyleSheet.create({
     footer: {
         position: 'absolute',
         bottom: 30,
-        left: 40,
-        right: 40,
-        borderTop: '1 solid #333',
+        left: 30,
+        right: 30,
         paddingTop: 10,
     },
     footerText: {
         fontSize: 8,
-        color: '#666',
+        color: '#6B7280', // Cinza escuro técnico
         textAlign: 'center',
-        marginBottom: 3,
+        marginBottom: 2,
+        fontFamily: 'Courier',
     },
     warning: {
         backgroundColor: '#fff3cd',
@@ -138,11 +139,10 @@ const styles = StyleSheet.create({
     },
     digitalSignatureText: {
         fontSize: 7,
-        color: '#666',
+        color: '#6B7280',
         textAlign: 'center',
-        marginTop: 2,
-        marginBottom: 8,
         fontFamily: 'Courier',
+        marginBottom: 1,
     }
 })
 
@@ -318,7 +318,7 @@ function WarrantyDocument({ data, settings }: { data: OrderData; settings: Store
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>SERVIÇO REALIZADO</Text>
                     <Text>{data.diagnosisText || 'Manutenção técnica realizada conforme diagnóstico.'}</Text>
-                    <View style={[styles.row, { marginTop: 10 }]}>
+                    <View style={[styles.row, { marginTop: 25, paddingVertical: 5 }]}>
                         <Text style={styles.label}>Mão de Obra:</Text>
                         <Text style={[styles.value, { fontWeight: 'bold' }]}>{formatCurrency(data.laborCost)}</Text>
                     </View>
@@ -362,13 +362,20 @@ function WarrantyDocument({ data, settings }: { data: OrderData; settings: Store
                     </View>
                 )}
 
-                {/* Rodapé Legal */}
-                <View style={styles.footer}>
-                    {/* Data da Assinatura Digital (se houver) */}
+                <View style={[styles.footer, { borderTopWidth: 1, borderColor: '#E5E7EB' }]}>
+                    {/* Audit Trail - Assinatura Digital */}
                     {data.signatureEvidence && (
-                        <Text style={styles.digitalSignatureText}>
-                            Assinado Digitalmente em {formatDateToLocal(data.signatureEvidence.accepted_at, 'dd/MM/yyyy HH:mm')} | IP: {cleanIp(data.signatureEvidence.ip_address)} | Aceite de Termos v1
-                        </Text>
+                        <View style={{ marginBottom: 5 }}>
+                            <Text style={styles.digitalSignatureText}>
+                                DOCUMENTO ASSINADO DIGITALMENTE VIA WTECH
+                            </Text>
+                            <Text style={styles.digitalSignatureText}>
+                                Assinado por: {data.customerName} | Data/Hora: {formatDateToLocal(data.signatureEvidence.accepted_at, 'dd/MM/yyyy HH:mm:ss')} | IP: {cleanIp(data.signatureEvidence.ip_address)}
+                            </Text>
+                            <Text style={styles.digitalSignatureText}>
+                                Hash de Integridade: {hash}
+                            </Text>
+                        </View>
                     )}
 
                     <Text style={styles.footerText}>
@@ -378,8 +385,8 @@ function WarrantyDocument({ data, settings }: { data: OrderData; settings: Store
                     <Text style={styles.footerText}>
                         Esta garantia não cobre defeitos causados por mau uso, quedas, líquidos, ou peças adquiridas externamente.
                     </Text>
-                    <Text style={styles.hash}>
-                        ID de Verificação: {settings.trade_name.substring(0, 4).toUpperCase()}-{osNumber}-{hash}
+                    <Text style={[styles.footerText, { marginTop: 2 }]}>
+                        Em conformidade com a MP 2.200-2/2001 e Lei 14.063/2020 (Assinatura Eletrônica).
                     </Text>
                 </View>
             </Page>

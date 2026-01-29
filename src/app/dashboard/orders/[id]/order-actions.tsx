@@ -134,8 +134,111 @@ export default function OrderActions({
     return (
         <>
             <div className="space-y-4">
-                {/* TOOLBAR: Compartilhar e Ações Principais */}
-                <div className="flex justify-end mb-2">
+                {/* TOOLBAR: Ações Principais + Compartilhar */}
+                <div className="flex flex-wrap items-center justify-end gap-2">
+
+                    {/* Botões de Ação por Status */}
+
+                    {/* Status: OPEN → Iniciar Diagnóstico */}
+                    {currentStatus === 'open' && (
+                        <Button
+                            onClick={() => handleStatusChange('analyzing')}
+                            disabled={isPending}
+                        >
+                            {isPending ? (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
+                                <Play className="mr-2 h-4 w-4" />
+                            )}
+                            Iniciar Diagnóstico
+                        </Button>
+                    )}
+
+                    {/* Status: ANALYZING → Finalizar Diagnóstico (abre modal de orçamento) */}
+                    {currentStatus === 'analyzing' && (
+                        <>
+                            <Button
+                                onClick={() => setIsBudgetOpen(true)}
+                                disabled={isPending}
+                                className="bg-green-600 hover:bg-green-700"
+                            >
+                                <FileText className="mr-2 h-4 w-4" />
+                                Finalizar Diagnóstico
+                            </Button>
+                            <Button
+                                onClick={() => handleStatusChange('canceled')}
+                                disabled={isPending}
+                                variant="destructive"
+                                size="icon"
+                                title="Cancelar OS"
+                            >
+                                {isPending ? (
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                ) : (
+                                    <XCircle className="h-4 w-4" />
+                                )}
+                            </Button>
+                        </>
+                    )}
+
+                    {/* Status: WAITING_PARTS → Confirmar Chegada da Peça */}
+                    {currentStatus === 'waiting_parts' && (
+                        <Button
+                            onClick={handleConfirmPartArrival}
+                            disabled={isPending}
+                            className="bg-blue-600 hover:bg-blue-700"
+                        >
+                            {isPending ? (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
+                                <PackageCheck className="mr-2 h-4 w-4" />
+                            )}
+                            Confirmar Chegada da Peça
+                        </Button>
+                    )}
+
+                    {/* Status: IN_PROGRESS → Finalizar Serviço */}
+                    {currentStatus === 'in_progress' && (
+                        <Button
+                            onClick={() => setIsFinishOpen(true)}
+                            disabled={isPending}
+                            className="bg-green-600 hover:bg-green-700"
+                        >
+                            <Receipt className="mr-2 h-4 w-4" />
+                            Finalizar
+                        </Button>
+                    )}
+
+                    {/* Status: READY → Entregar ao Cliente */}
+                    {currentStatus === 'ready' && (
+                        <>
+                            <Button
+                                onClick={() => setIsFinishOpen(true)}
+                                disabled={isPending}
+                                className="bg-green-600 hover:bg-green-700"
+                            >
+                                <Receipt className="mr-2 h-4 w-4" />
+                                Finalizar
+                            </Button>
+                            <PdfButtonWrapper orderData={orderData!} storeSettings={storeSettings!} />
+                        </>
+                    )}
+
+                    {/* Status: FINISHED ou CANCELED -> Ações Finais */}
+                    {(currentStatus === 'finished' || currentStatus === 'canceled') && (
+                        <>
+                            <Button variant="outline" onClick={handleReopen} disabled={isPending}>
+                                <RefreshCcw className="mr-2 h-4 w-4" />
+                                Reabrir
+                            </Button>
+
+                            {currentStatus === 'finished' && (
+                                <PdfButtonWrapper orderData={orderData!} storeSettings={storeSettings!} />
+                            )}
+                        </>
+                    )}
+
+                    {/* Compartilhar (Sempre visível e alinhado) */}
                     <ShareActions
                         orderId={orderId}
                         displayId={displayId}
@@ -144,7 +247,6 @@ export default function OrderActions({
                     />
                 </div>
 
-                {/* Feedback Alert */}
                 {/* Feedback Alert */}
                 {feedback && (
                     <Alert variant={feedback.type === 'success' ? 'success' : 'destructive'}>
@@ -157,52 +259,7 @@ export default function OrderActions({
                     </Alert>
                 )}
 
-                {/* ============================================ */}
-                {/* MÁQUINA DE ESTADOS - COMPRA ASSISTIDA */}
-                {/* ============================================ */}
-
-                {/* Status: OPEN → Iniciar Diagnóstico */}
-                {currentStatus === 'open' && (
-                    <div className="flex flex-wrap gap-2">
-                        <Button
-                            onClick={() => handleStatusChange('analyzing')}
-                            disabled={isPending}
-                        >
-                            {isPending ? (
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            ) : (
-                                <Play className="mr-2 h-4 w-4" />
-                            )}
-                            Iniciar Diagnóstico
-                        </Button>
-                    </div>
-                )}
-
-                {/* Status: ANALYZING → Finalizar Diagnóstico (abre modal de orçamento) */}
-                {currentStatus === 'analyzing' && (
-                    <div className="flex flex-wrap gap-2">
-                        <Button
-                            onClick={() => setIsBudgetOpen(true)}
-                            disabled={isPending}
-                            className="bg-green-600 hover:bg-green-700"
-                        >
-                            <FileText className="mr-2 h-4 w-4" />
-                            Finalizar Diagnóstico
-                        </Button>
-                        <Button
-                            onClick={() => handleStatusChange('canceled')}
-                            disabled={isPending}
-                            variant="destructive"
-                        >
-                            {isPending ? (
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            ) : (
-                                <XCircle className="mr-2 h-4 w-4" />
-                            )}
-                            Cancelar OS
-                        </Button>
-                    </div>
-                )}
+                {/* STATUS ALERTS (Aparecem abaixo da toolbar) */}
 
                 {/* Status: WAITING_APPROVAL → TRAVA! Técnico aguarda cliente */}
                 {currentStatus === 'waiting_approval' && (
@@ -217,92 +274,31 @@ export default function OrderActions({
                     </Alert>
                 )}
 
-                {/* Status: WAITING_PARTS → Confirmar Chegada da Peça */}
+                {/* Status: WAITING_PARTS → Alert info */}
                 {currentStatus === 'waiting_parts' && (
-                    <div className="space-y-3">
-                        <Alert variant="info" className="border-blue-500 bg-blue-50 dark:bg-blue-950">
-                            <Package className="h-5 w-5 text-blue-600" />
-                            <AlertTitle className="text-blue-800 dark:text-blue-200">
-                                Aguardando Peças do Cliente
-                            </AlertTitle>
-                            <AlertDescription className="text-blue-700 dark:text-blue-300">
-                                O cliente precisa comprar e entregar as peças na assistência.
-                            </AlertDescription>
-                        </Alert>
-                        <div className="flex flex-wrap gap-2">
-                            <Button
-                                onClick={handleConfirmPartArrival}
-                                disabled={isPending}
-                                className="bg-blue-600 hover:bg-blue-700"
-                            >
-                                {isPending ? (
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                ) : (
-                                    <PackageCheck className="mr-2 h-4 w-4" />
-                                )}
-                                Confirmar Chegada da Peça
-                            </Button>
-                        </div>
-                    </div>
-                )}
-
-                {/* Status: IN_PROGRESS → Finalizar Serviço (abre modal de pagamento) */}
-                {currentStatus === 'in_progress' && (
-                    <div className="flex flex-wrap gap-2">
-                        <Button
-                            onClick={() => setIsFinishOpen(true)}
-                            disabled={isPending}
-                            className="bg-green-600 hover:bg-green-700"
-                        >
-                            <Receipt className="mr-2 h-4 w-4" />
-                            Finalizar e Registrar Pagamento
-                        </Button>
-                    </div>
-                )}
-
-                {/* Status: READY → Entregar ao Cliente */}
-                {currentStatus === 'ready' && (
-                    <div className="flex flex-wrap gap-2">
-                        <Button
-                            onClick={() => setIsFinishOpen(true)}
-                            disabled={isPending}
-                            className="bg-green-600 hover:bg-green-700"
-                        >
-                            <Receipt className="mr-2 h-4 w-4" />
-                            Finalizar e Registrar Pagamento
-                        </Button>
-
-                        {/* Botão de PDF */}
-                        <PdfButtonWrapper orderData={orderData!} storeSettings={storeSettings!} />
-                    </div>
+                    <Alert variant="info" className="border-blue-500 bg-blue-50 dark:bg-blue-950">
+                        <Package className="h-5 w-5 text-blue-600" />
+                        <AlertTitle className="text-blue-800 dark:text-blue-200">
+                            Aguardando Peças do Cliente
+                        </AlertTitle>
+                        <AlertDescription className="text-blue-700 dark:text-blue-300">
+                            O cliente precisa comprar e entregar as peças na assistência.
+                        </AlertDescription>
+                    </Alert>
                 )}
 
                 {/* Status: FINISHED ou CANCELED → Mensagem final */}
                 {(currentStatus === 'finished' || currentStatus === 'canceled') && (
-                    <div className="space-y-4">
-                        <Alert variant={currentStatus === 'finished' ? 'success' : 'destructive'}>
-                            {currentStatus === 'finished' ? (
-                                <CheckCircle className="h-4 w-4" />
-                            ) : (
-                                <XCircle className="h-4 w-4" />
-                            )}
-                            <AlertDescription>
-                                Esta OS está {currentStatus === 'finished' ? 'finalizada' : 'cancelada'}.
-                            </AlertDescription>
-                        </Alert>
-
-                        <div className="flex flex-wrap items-center justify-between gap-2">
-                            {/* Reabrir */}
-                            <Button variant="outline" onClick={handleReopen} disabled={isPending}>
-                                <RefreshCcw className="mr-2 h-4 w-4" />
-                                Reabrir OS
-                            </Button>
-
-                            {currentStatus === 'finished' && (
-                                <PdfButtonWrapper orderData={orderData!} storeSettings={storeSettings!} />
-                            )}
-                        </div>
-                    </div>
+                    <Alert variant={currentStatus === 'finished' ? 'success' : 'destructive'}>
+                        {currentStatus === 'finished' ? (
+                            <CheckCircle className="h-4 w-4" />
+                        ) : (
+                            <XCircle className="h-4 w-4" />
+                        )}
+                        <AlertDescription>
+                            Esta OS está {currentStatus === 'finished' ? 'finalizada' : 'cancelada'}.
+                        </AlertDescription>
+                    </Alert>
                 )}
 
                 {/* ZONA DE PERIGO */}
@@ -327,23 +323,21 @@ export default function OrderActions({
                         </Button>
                     </div>
                 </div>
+
+                <BudgetModal
+                    orderId={orderId}
+                    open={isBudgetOpen}
+                    onOpenChange={setIsBudgetOpen}
+                />
+
+                <FinishOrderModal
+                    orderId={orderId}
+                    open={isFinishOpen}
+                    onOpenChange={setIsFinishOpen}
+                    orderData={orderData}
+                    storeSettings={storeSettings}
+                />
             </div>
-
-            {/* Modal de Orçamento */}
-            <BudgetModal
-                orderId={orderId}
-                open={isBudgetOpen}
-                onOpenChange={setIsBudgetOpen}
-            />
-
-            {/* Modal de Finalização/Pagamento */}
-            <FinishOrderModal
-                orderId={orderId}
-                open={isFinishOpen}
-                onOpenChange={setIsFinishOpen}
-                orderData={orderData}
-                storeSettings={storeSettings}
-            />
         </>
     )
 }
