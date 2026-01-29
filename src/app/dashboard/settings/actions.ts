@@ -29,6 +29,7 @@ export interface TenantSettings {
     mei_limit_monthly: number
     warranty_days_labor: number
     warranty_days_parts: number
+    os_prefix: string
     created_at: string
     updated_at: string
 }
@@ -117,6 +118,7 @@ export async function updateStoreInfo(data: {
     phone?: string
     email?: string
     address?: TenantSettings['address']
+    os_prefix?: string
 }): Promise<{ success: boolean; message: string }> {
     try {
         const supabase = await createClient()
@@ -134,11 +136,15 @@ export async function updateStoreInfo(data: {
                 phone: data.phone,
                 email: data.email,
                 address: data.address,
+                os_prefix: data.os_prefix ? data.os_prefix.toUpperCase() : undefined,
                 updated_at: new Date().toISOString(),
             })
             .eq('id', user.id)
 
         if (error) {
+            if (error.code === '23505' && error.message.includes('os_prefix')) {
+                return { success: false, message: 'Este prefixo já está em uso por outra loja.' }
+            }
             return { success: false, message: error.message }
         }
 

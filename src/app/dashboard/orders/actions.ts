@@ -483,7 +483,23 @@ export async function finishOrderWithPayment(
         // 2. Criar cliente Supabase
         const supabase = await createClient()
 
-        // 3. Atualizar ordem com dados do pagamento
+        // 3. Buscar dados atuais da loja para Snapshot (Imutabilidade)
+        const { data: tenant } = await supabase
+            .from('tenants')
+            .select('*')
+            .eq('id', (await supabase.auth.getUser()).data.user?.id)
+            .single()
+
+        const storeSnapshot = tenant ? {
+            trade_name: tenant.trade_name,
+            legal_document: tenant.legal_document,
+            phone: tenant.phone,
+            logo_url: tenant.logo_url,
+            warranty_days_labor: tenant.warranty_days,
+            address: tenant.address
+        } : null
+
+        // 4. Atualizar ordem com dados do pagamento e SNAPSHOT
         const { error: updateError } = await supabase
             .from('orders')
             .update({
@@ -492,6 +508,7 @@ export async function finishOrderWithPayment(
                 amount_received: amountReceived,
                 payment_received_at: new Date().toISOString(),
                 finished_at: new Date().toISOString(),
+                store_snapshot: storeSnapshot, // SALVA O SNAPSHOT
             })
             .eq('id', orderId)
             .in('status', ['in_progress', 'ready'])

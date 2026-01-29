@@ -111,21 +111,25 @@ export default async function OrderDetailPage({ params }: PageProps) {
     }
 
     // Configurações da Loja (Do Banco de Dados)
-    const storeSettings: StoreSettings = {
-        trade_name: tenant?.trade_name || 'Minha Assistência',
-        legal_document: tenant?.legal_document || '',
-        phone: tenant?.phone || '',
-        logo_url: tenant?.logo_url || null,
-        warranty_days_labor: tenant?.warranty_days || 90,
-        address: tenant?.address ? {
-            street: tenant.address.street,
-            number: tenant.address.number,
-            neighborhood: tenant.address.neighborhood,
-            city: tenant.address.city,
-            state: tenant.address.state,
-            zip: tenant.address.zip,
-        } : null
-    }
+    // Configurações da Loja (Snapshot ou Atual no Banco)
+    const snapshot = order.store_snapshot as StoreSettings | null
+    const currentSettings = tenant ? {
+        trade_name: tenant.trade_name,
+        legal_document: tenant.legal_document,
+        phone: tenant.phone,
+        logo_url: tenant.logo_url,
+        warranty_days_labor: tenant.warranty_days || 90,
+        address: tenant.address
+    } : null
+
+    // Priorizar Snapshot -> Settings Atuais -> Default
+    const storeSettings: StoreSettings = snapshot || (currentSettings ? {
+        ...currentSettings,
+        warranty_days_labor: currentSettings.warranty_days_labor || 90,
+    } : {
+        trade_name: 'Minha Assistência',
+        warranty_days_labor: 90
+    })
 
     return (
         <div className="container mx-auto max-w-7xl py-8 px-4">

@@ -58,6 +58,7 @@ import {
 const storeSchema = z.object({
     trade_name: z.string().min(2, 'Nome obrigatório'),
     legal_document: z.string().optional(),
+    os_prefix: z.string().min(2, 'Mínimo 2 caracteres').max(3, 'Máximo 3 caracteres').regex(/^[A-Z0-9]+$/, 'Apenas letras maiúsculas e números').optional(),
     phone: z.string().optional(),
     email: z.string().email('E-mail inválido').or(z.literal('')).optional(),
     address_street: z.string().optional(),
@@ -108,6 +109,7 @@ export default function SettingsPage() {
         defaultValues: {
             trade_name: '',
             legal_document: '',
+            os_prefix: 'WT',
             phone: '',
             email: '',
             address_street: '',
@@ -142,6 +144,7 @@ export default function SettingsPage() {
                 storeForm.reset({
                     trade_name: result.data.trade_name,
                     legal_document: result.data.legal_document || '',
+                    os_prefix: result.data.os_prefix || 'WT',
                     phone: result.data.phone || '',
                     email: result.data.email || '',
                     address_street: result.data.address?.street || '',
@@ -178,6 +181,7 @@ export default function SettingsPage() {
         const result = await updateStoreInfo({
             trade_name: data.trade_name,
             legal_document: data.legal_document,
+            os_prefix: data.os_prefix,
             phone: data.phone,
             email: data.email,
             address: {
@@ -372,6 +376,23 @@ export default function SettingsPage() {
                                                 id="legal_document"
                                                 {...storeForm.register('legal_document')}
                                             />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label htmlFor="os_prefix">Prefixo da OS (Ex: WT)</Label>
+                                            <Input
+                                                id="os_prefix"
+                                                {...storeForm.register('os_prefix')}
+                                                maxLength={3}
+                                                placeholder="WT"
+                                                className="uppercase"
+                                                onChange={(e) => {
+                                                    e.target.value = e.target.value.toUpperCase()
+                                                    storeForm.setValue('os_prefix', e.target.value)
+                                                }}
+                                            />
+                                            <p className="text-xs text-muted-foreground">
+                                                Prefixo único (Ex: 2026<b>WT</b>-001).
+                                            </p>
                                         </div>
                                         <div className="space-y-2">
                                             <Label htmlFor="phone">Telefone/WhatsApp</Label>
