@@ -139,7 +139,7 @@ export default function CustomersPage() {
             </div>
 
             {/* Search */}
-            <form onSubmit={handleSearch} className="flex gap-2 max-w-md">
+            <form onSubmit={handleSearch} className="flex gap-2 w-full sm:max-w-md">
                 <div className="relative flex-1">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
@@ -190,65 +190,130 @@ export default function CustomersPage() {
                             </CardContent>
                         </Card>
                     ) : (
-                        <div className="rounded-md border">
-                            <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>Nome</TableHead>
-                                        <TableHead>CPF</TableHead>
-                                        <TableHead>WhatsApp</TableHead>
-                                        <TableHead className="text-center">OS</TableHead>
-                                        <TableHead className="text-right">LTV</TableHead>
-                                        <TableHead>Última Visita</TableHead>
-                                        <TableHead className="w-[80px]"></TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {customers.map((customer) => (
-                                        <TableRow key={customer.id}>
-                                            <TableCell className="font-medium">
-                                                {customer.name}
-                                            </TableCell>
-                                            <TableCell className="font-mono text-sm">
-                                                {formatCpf(customer.document_id)}
-                                            </TableCell>
-                                            <TableCell>
-                                                {customer.phone || '—'}
-                                            </TableCell>
-                                            <TableCell className="text-center">
-                                                <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-200 font-medium">
-                                                    {customer.orders_count}
-                                                </span>
-                                            </TableCell>
-                                            <TableCell className="text-right font-medium text-green-600">
-                                                {formatCurrency(customer.total_ltv)}
-                                            </TableCell>
-                                            <TableCell className="text-sm text-muted-foreground">
-                                                {customer.last_order_date
-                                                    ? formatRelativeDate(customer.last_order_date)
-                                                    : '—'}
-                                            </TableCell>
-                                            <TableCell>
-                                                <div className="flex items-center justify-end gap-1">
-                                                    <EditCustomerDialog
-                                                        customer={customer}
-                                                        onUpdate={() => fetchCustomers(search)}
-                                                    />
-                                                    <Button variant="ghost" size="icon" asChild>
-                                                        <Link href={`/dashboard/customers/${customer.id}`}>
-                                                            <Eye className="h-4 w-4" />
-                                                        </Link>
-                                                    </Button>
-                                                </div>
-                                            </TableCell>
+                        <>
+                            <div className="rounded-md border hidden md:block">
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead>Nome</TableHead>
+                                            <TableHead>CPF</TableHead>
+                                            <TableHead>WhatsApp</TableHead>
+                                            <TableHead className="text-center">OS</TableHead>
+                                            <TableHead className="text-right">LTV</TableHead>
+                                            <TableHead>Última Visita</TableHead>
+                                            <TableHead className="w-[80px]"></TableHead>
                                         </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </div>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {customers.map((customer) => (
+                                            <TableRow key={customer.id}>
+                                                <TableCell className="font-medium">
+                                                    {customer.name}
+                                                </TableCell>
+                                                <TableCell className="font-mono text-sm">
+                                                    {formatCpf(customer.document_id)}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {customer.phone || '—'}
+                                                </TableCell>
+                                                <TableCell className="text-center">
+                                                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-200 font-medium">
+                                                        {customer.orders_count}
+                                                    </span>
+                                                </TableCell>
+                                                <TableCell className="text-right font-medium text-green-600">
+                                                    {formatCurrency(customer.total_ltv)}
+                                                </TableCell>
+                                                <TableCell className="text-sm text-muted-foreground">
+                                                    {customer.last_order_date
+                                                        ? formatRelativeDate(customer.last_order_date)
+                                                        : '—'}
+                                                </TableCell>
+                                                <TableCell>
+                                                    <div className="flex items-center justify-end gap-1">
+                                                        <EditCustomerDialog
+                                                            customer={customer}
+                                                            onUpdate={() => fetchCustomers(search)}
+                                                        />
+                                                        <Button variant="ghost" size="icon" asChild>
+                                                            <Link href={`/dashboard/customers/${customer.id}`}>
+                                                                <Eye className="h-4 w-4" />
+                                                            </Link>
+                                                        </Button>
+                                                    </div>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </div>
+                            <div className="md:hidden">
+                                <MobileCustomersList customers={customers} onUpdate={() => fetchCustomers(search)} />
+                            </div>
+                        </>
                     )}
                 </>
             )}
+        </div>
+    )
+}
+
+// ==================================================
+// Mobile List Component
+// ==================================================
+function MobileCustomersList({ customers, onUpdate }: { customers: CustomerWithStats[], onUpdate: () => void }) {
+    return (
+        <div className="space-y-4">
+            {customers.map((customer) => (
+                <Card key={customer.id} className="overflow-hidden">
+                    <CardContent className="p-0">
+                        <div className="p-4 space-y-3">
+                            {/* Header: Name + Badge */}
+                            <div className="flex items-center justify-between">
+                                <span className="font-medium text-lg truncate">
+                                    {customer.name}
+                                </span>
+                                <span className="inline-flex items-center justify-center min-w-[2rem] h-8 rounded-full bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-200 font-medium px-2 text-xs">
+                                    {customer.orders_count} OS
+                                </span>
+                            </div>
+
+                            {/* Info */}
+                            <div className="grid grid-cols-2 gap-2 text-sm">
+                                <div>
+                                    <p className="text-xs text-muted-foreground">CPF</p>
+                                    <p className="font-mono">{formatCpf(customer.document_id)}</p>
+                                </div>
+                                <div>
+                                    <p className="text-xs text-muted-foreground">WhatsApp</p>
+                                    <p>{customer.phone || '—'}</p>
+                                </div>
+                                <div>
+                                    <p className="text-xs text-muted-foreground">LTV</p>
+                                    <p className="font-medium text-green-600">{formatCurrency(customer.total_ltv)}</p>
+                                </div>
+                                <div>
+                                    <p className="text-xs text-muted-foreground">Última Visita</p>
+                                    <p>{customer.last_order_date ? formatRelativeDate(customer.last_order_date) : '—'}</p>
+                                </div>
+                            </div>
+
+                            {/* Actions */}
+                            <div className="flex items-center justify-end gap-2 pt-2 border-t mt-2">
+                                <EditCustomerDialog
+                                    customer={customer}
+                                    onUpdate={onUpdate}
+                                />
+                                <Button size="sm" variant="outline" asChild>
+                                    <Link href={`/dashboard/customers/${customer.id}`}>
+                                        Ver Detalhes
+                                    </Link>
+                                </Button>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+            ))}
         </div>
     )
 }
