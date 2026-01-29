@@ -66,16 +66,27 @@ export default async function ClientOrderPage({ params }: PageProps) {
     // Usar cliente admin para bypass de RLS (rota pública)
     const supabase = await createAdminClient()
 
-    // Buscar ordem com itens e cliente
-    const { data: order, error } = await supabase
+    // Validar se é UUID
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+
+    // Construir query inicial
+    let query = supabase
         .from('orders')
         .select(`
       *,
       order_items(*),
       customer:customers(name, phone)
     `)
-        .eq('id', id)
-        .single()
+
+    // Aplicar filtro adequado
+    if (isUuid) {
+        query = query.eq('id', id)
+    } else {
+        query = query.eq('display_id', id)
+    }
+
+    // Executar query
+    const { data: order, error } = await query.single()
 
     if (error || !order) {
         notFound()
