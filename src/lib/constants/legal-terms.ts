@@ -6,13 +6,7 @@ export const APPROVAL_TERMS = [
         required: true,
         icon: 'wrench'
     },
-    {
-        id: 'risks_opening',
-        title: '2. Riscos de Abertura e Vedação',
-        content: 'Estou ciente que a abertura do equipamento rompe a vedação original de fábrica (IP67/IP68), perdendo a resistência à água. Em aparelhos com telas já trincadas ou carcaças amassadas, reconheço o risco iminente de quebra total ou danos estéticos durante a desmontagem necessária para o reparo.',
-        required: true,
-        icon: 'alert'
-    },
+
     {
         id: 'data_backup',
         title: '3. Dados e Backup (LGPD)',
