@@ -416,23 +416,23 @@ export default function SettingsPage() {
                                         <div className="grid gap-4 md:grid-cols-3">
                                             <div className="md:col-span-2 space-y-2">
                                                 <Label htmlFor="address_street">Rua</Label>
-                                                <Input {...storeForm.register('address_street')} />
+                                                <Input id="address_street" {...storeForm.register('address_street')} />
                                             </div>
                                             <div className="space-y-2">
                                                 <Label htmlFor="address_number">Número</Label>
-                                                <Input {...storeForm.register('address_number')} />
+                                                <Input id="address_number" {...storeForm.register('address_number')} />
                                             </div>
                                             <div className="space-y-2">
                                                 <Label htmlFor="address_neighborhood">Bairro</Label>
-                                                <Input {...storeForm.register('address_neighborhood')} />
+                                                <Input id="address_neighborhood" {...storeForm.register('address_neighborhood')} />
                                             </div>
                                             <div className="space-y-2">
                                                 <Label htmlFor="address_city">Cidade</Label>
-                                                <Input {...storeForm.register('address_city')} />
+                                                <Input id="address_city" {...storeForm.register('address_city')} />
                                             </div>
                                             <div className="space-y-2">
                                                 <Label htmlFor="address_state">Estado</Label>
-                                                <Input {...storeForm.register('address_state')} />
+                                                <Input id="address_state" {...storeForm.register('address_state')} />
                                             </div>
                                         </div>
                                     </div>
@@ -472,7 +472,7 @@ export default function SettingsPage() {
                                                 value={financialForm.watch('pix_key_type')}
                                                 onValueChange={(v) => financialForm.setValue('pix_key_type', v as 'cpf' | 'cnpj' | 'email' | 'phone' | 'random')}
                                             >
-                                                <SelectTrigger>
+                                                <SelectTrigger id="pix_key_type">
                                                     <SelectValue placeholder="Selecione o tipo" />
                                                 </SelectTrigger>
                                                 <SelectContent>

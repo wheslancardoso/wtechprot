@@ -315,13 +315,13 @@ conforme CDC.
 
                             {/* Método de Pagamento */}
                             <div className="space-y-2">
-                                <Label>Forma de Pagamento *</Label>
+                                <Label htmlFor="paymentMethod">Forma de Pagamento *</Label>
                                 <Select
                                     value={paymentMethod}
                                     onValueChange={(value) => setValue('paymentMethod', value as 'pix' | 'cash' | 'card_machine')}
                                     disabled={isSubmitting}
                                 >
-                                    <SelectTrigger>
+                                    <SelectTrigger id="paymentMethod">
                                         <SelectValue placeholder="Selecione..." />
                                     </SelectTrigger>
                                     <SelectContent>
