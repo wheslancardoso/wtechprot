@@ -15,6 +15,7 @@ export default async function Home() {
     const { data: tenant } = await supabase
       .from('tenants')
       .select('phone, trade_name')
+      .order('updated_at', { ascending: false })
       .limit(1)
       .single()
 
