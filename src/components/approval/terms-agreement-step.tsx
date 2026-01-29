@@ -99,10 +99,7 @@ export default function TermsAgreementStep({
                 </div>
             </div>
 
-            <div className={cn(
-                "px-1",
-                variant === 'wizard' ? "max-h-[60vh] overflow-y-auto pr-2" : "max-h-[50vh] overflow-y-auto pr-2"
-            )}>
+            <div className="px-1">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-2">
                     {terms.map(term => {
                         const isAccepted = acceptedIds.includes(term.id)

@@ -226,8 +226,8 @@ export default function ClientActions({ orderId, hasParts, status, customerName 
 
             {/* MODAL DE APROVAÇÃO (CLICK-AGREEMENT) */}
             <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-                <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-3xl transition-all duration-300">
-                    <DialogHeader>
+                <DialogContent className="max-h-[95vh] h-[95vh] sm:h-auto w-[95vw] sm:w-full sm:max-w-3xl p-0 gap-0 overflow-hidden flex flex-col rounded-xl">
+                    <DialogHeader className="p-4 sm:p-6 border-b shrink-0">
                         <DialogTitle className="flex items-center gap-2">
                             <ShieldCheck className="h-5 w-5 text-primary" />
                             Aprovação Digital
@@ -239,7 +239,7 @@ export default function ClientActions({ orderId, hasParts, status, customerName 
                     </DialogHeader>
 
                     {/* CONTEÚDO DINÂMICO DO MODAL */}
-                    <div className="py-2">
+                    <div className="flex-1 overflow-y-auto p-4 sm:p-6">
                         {/* PASSO 1: TERMOS + CLICK SIGN */}
                         {step === 'TERMS' && (
                             <div className="space-y-6">
