@@ -138,7 +138,7 @@ export default function OrdersPage() {
     return (
         <div className="container mx-auto py-8 px-4 space-y-6">
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-bold tracking-tight">
                         Ordens de Serviço
@@ -147,7 +147,7 @@ export default function OrdersPage() {
                         Gerencie todos os atendimentos da sua assistência
                     </p>
                 </div>
-                <Button asChild>
+                <Button asChild className="w-full sm:w-auto">
                     <Link href="/dashboard/orders/new">
                         <Plus className="mr-2 h-4 w-4" />
                         Nova OS

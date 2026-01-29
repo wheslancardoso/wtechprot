@@ -121,7 +121,7 @@ export default function OrderFilters() {
             </form>
 
             {/* Filters Row */}
-            <div className="flex flex-wrap gap-3 items-center">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 items-stretch sm:items-center">
                 <div className="flex items-center gap-2">
                     <Filter className="h-4 w-4 text-muted-foreground" />
                     <span className="text-sm text-muted-foreground">Filtros:</span>
@@ -129,7 +129,7 @@ export default function OrderFilters() {
 
                 {/* Status Filter */}
                 <Select value={status} onValueChange={handleStatusChange}>
-                    <SelectTrigger className="w-[180px]">
+                    <SelectTrigger className="w-full sm:w-[180px]">
                         <SelectValue placeholder="Status" />
                     </SelectTrigger>
                     <SelectContent>
@@ -143,7 +143,7 @@ export default function OrderFilters() {
 
                 {/* Period Filter */}
                 <Select value={period} onValueChange={handlePeriodChange}>
-                    <SelectTrigger className="w-[160px]">
+                    <SelectTrigger className="w-full sm:w-[160px]">
                         <SelectValue placeholder="Período" />
                     </SelectTrigger>
                     <SelectContent>
