@@ -46,11 +46,16 @@ const menuItems = [
 // ==================================================
 // Layout
 // ==================================================
-export default function DashboardLayout({
+export default async function DashboardLayout({
     children,
 }: {
     children: React.ReactNode
 }) {
+    const settings = await getSettings()
+    const brandName = settings.success && settings.data?.trade_name
+        ? settings.data.trade_name.toUpperCase()
+        : 'WTECH'
+
     return (
         <SettingsProvider>
             <div className="min-h-screen bg-background">
@@ -58,8 +63,8 @@ export default function DashboardLayout({
                 <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
                     <div className="container mx-auto flex h-14 items-center px-4">
                         {/* Logo */}
-                        <Link href="/dashboard" className="font-bold text-lg mr-8">
-                            WTECH
+                        <Link href="/dashboard" className="font-bold text-lg mr-8 truncate max-w-[200px]">
+                            {brandName}
                         </Link>
 
                         {/* Navigation */}
