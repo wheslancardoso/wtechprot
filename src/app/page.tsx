@@ -109,21 +109,21 @@ export default async function Home() {
                   <Laptop className="w-6 h-6" />
                 </div>
                 <h3 className="font-bold text-lg text-slate-200 mb-2">Computadores & PC Gamer</h3>
-                <p className="text-sm text-slate-400">Diagnóstico avançado (sem vídeo, BIOS), formatação, limpeza e montagem de setups.</p>
+                <p className="text-sm text-slate-400">Diagnóstico Avançado de Hardware (BIOS, Vídeo), Montagem de Setup com Cable Management e Otimização Térmica.</p>
               </div>
               <div className="p-4">
                 <div className="mx-auto w-12 h-12 bg-purple-500/10 rounded-full flex items-center justify-center text-purple-400 mb-4">
                   <Smartphone className="w-6 h-6" />
                 </div>
                 <h3 className="font-bold text-lg text-slate-200 mb-2">Notebooks</h3>
-                <p className="text-sm text-slate-400">Troca de tela, teclado, bateria e upgrades de performance (SSD e Memória).</p>
+                <p className="text-sm text-slate-400">Substituição Técnica de telas, teclados e baterias, Reparo de Carcaças/Dobradiças e Upgrade de performance (SSD/RAM).</p>
               </div>
               <div className="p-4">
                 <div className="mx-auto w-12 h-12 bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-400 mb-4">
                   <FileSearch className="w-6 h-6" />
                 </div>
                 <h3 className="font-bold text-lg text-slate-200 mb-2">Impressoras</h3>
-                <p className="text-sm text-slate-400">Manutenção preventiva, limpeza interna, desentupimento e reset.</p>
+                <p className="text-sm text-slate-400">Desobstrução do Sistema de Tinta (falhas de impressão), Reset de Almofadas/Erros Lógicos e Manutenção Preventiva de tracionadores.</p>
               </div>
             </div>
           </div>
