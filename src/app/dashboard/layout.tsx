@@ -10,6 +10,8 @@ import {
     Home,
 } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
 // ==================================================
 // Metadata Dinâmico (Nome da Loja)
 // ==================================================

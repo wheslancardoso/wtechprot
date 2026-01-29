@@ -59,6 +59,13 @@ export default async function TrackingPage({ params }: PageProps) {
         notFound()
     }
 
+    // Buscar configurações da loja
+    const { data: settings } = await supabase
+        .from('tenants')
+        .select('trade_name')
+        .eq('id', order.user_id) // tenants.id is the user_id
+        .single()
+
     const equipment = order.equipment
 
     return (
@@ -77,7 +84,9 @@ export default async function TrackingPage({ params }: PageProps) {
                         <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                             <Wrench className="w-4 h-4 text-primary-foreground" />
                         </div>
-                        <span className="font-bold text-sm hidden sm:inline-block">WTECH Rastreamento</span>
+                        <span className="font-bold text-sm hidden sm:inline-block">
+                            {settings?.trade_name || 'Minha Assistência'}
+                        </span>
                     </div>
                 </div>
             </header>
@@ -139,11 +148,12 @@ export default async function TrackingPage({ params }: PageProps) {
                 <div className="text-center text-xs text-muted-foreground pt-8 space-y-1">
                     <p className="flex items-center justify-center gap-1">
                         <MapPin className="h-3 w-3" />
-                        WTECH Assistência Técnica
+                        {settings?.trade_name || 'Minha Assistência'}
                     </p>
                     <p>Atualizado em tempo real • ID: {order.display_id}</p>
                 </div>
             </main>
+
         </div>
     )
 }

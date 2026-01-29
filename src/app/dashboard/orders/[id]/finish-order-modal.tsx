@@ -151,7 +151,7 @@ export default function FinishOrderModal({ orderId, open, onOpenChange, orderDat
 
         const text = `
 ═══════════════════════════════════
-        WTECH ASSISTÊNCIA TÉCNICA
+        ${storeSettings?.trade_name?.toUpperCase() || 'WTECH ASSISTÊNCIA TÉCNICA'}
 ═══════════════════════════════════
 RECIBO DE PAGAMENTO
 
@@ -163,7 +163,7 @@ Forma: ${receiptData.method}
 ───────────────────────────────────
 TERMO DE GARANTIA
 
-A WTECH ASSISTÊNCIA TÉCNICA oferece
+A ${storeSettings?.trade_name?.toUpperCase() || 'WTECH ASSISTÊNCIA TÉCNICA'} oferece
 garantia de 90 (noventa) dias sobre
 a MÃO DE OBRA do serviço prestado.
 
@@ -207,7 +207,7 @@ conforme CDC.
                         {/* Recibo Visual */}
                         <div className="bg-muted p-4 rounded-lg font-mono text-sm space-y-2 print:bg-white">
                             <div className="text-center border-b pb-2 mb-2">
-                                <p className="font-bold">WTECH ASSISTÊNCIA</p>
+                                <p className="font-bold">{storeSettings?.trade_name || 'WTECH ASSISTÊNCIA'}</p>
                                 <p className="text-xs text-muted-foreground">Recibo de Pagamento</p>
                             </div>
 
