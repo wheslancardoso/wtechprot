@@ -125,7 +125,13 @@ export default function ClientActions({ orderId, hasParts, status, customerName,
                 // Fechar modal e redirect após sucesso
                 setTimeout(() => {
                     setIsOpen(false)
-                    router.push(`/os/${orderId}/track`)
+                    // Se tiver peças, recarrega a página para mostrar o status "Aguardando Peças"
+                    // Se não tiver, vai para a tela de rastreamento
+                    if (hasParts) {
+                        router.refresh()
+                    } else {
+                        router.push(`/os/${orderId}/track`)
+                    }
                 }, 3000)
             } else {
                 setResult({ type: 'error', message: response.message })
