@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 // Server Actions
 import { updateOrderStatus, confirmPartArrival, deleteOrder } from '../actions'
@@ -130,10 +131,10 @@ export default function OrderActions({
     }
 
     async function handleReopen() {
-        if (!window.confirm('Deseja reabrir esta OS? Ela voltará para o status "Em Andamento".')) {
+        if (!window.confirm('Deseja reabrir esta OS? Ela voltará para o status "Aberta".')) {
             return
         }
-        await handleStatusChange('in_progress')
+        await handleStatusChange('open')
     }
 
     return (
@@ -145,18 +146,27 @@ export default function OrderActions({
                     {/* Botões de Ação por Status */}
 
                     {/* Status: OPEN → Iniciar Diagnóstico */}
+                    {/* Status: OPEN → Iniciar Diagnóstico */}
                     {currentStatus === 'open' && (
-                        <Button
-                            onClick={() => handleStatusChange('analyzing')}
-                            disabled={isPending}
-                        >
-                            {isPending ? (
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            ) : (
-                                <Play className="mr-2 h-4 w-4" />
-                            )}
-                            Iniciar Diagnóstico
-                        </Button>
+                        <>
+                            <Link href={`/os/${displayId}/checkin`} passHref>
+                                <Button className="w-full sm:w-auto" variant="outline">
+                                    <Package className="mr-2 h-4 w-4" />
+                                    Retirar Equipamento
+                                </Button>
+                            </Link>
+                            <Button
+                                onClick={() => handleStatusChange('analyzing')}
+                                disabled={isPending}
+                            >
+                                {isPending ? (
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                ) : (
+                                    <Play className="mr-2 h-4 w-4" />
+                                )}
+                                Iniciar Diagnóstico
+                            </Button>
+                        </>
                     )}
 
                     {/* Status: ANALYZING → Finalizar Diagnóstico (abre modal de orçamento) */}
