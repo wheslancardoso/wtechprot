@@ -267,7 +267,7 @@ export default function ClientActions({ orderId, hasParts, status, customerName,
     // 3. Footer de Ação (Abre Dialog)
     return (
         <>
-            <div className="fixed bottom-0 left-0 right-0 bg-background border-t p-4 safe-area-bottom z-40 shadow-[0_-5px_20px_rgba(0,0,0,0.1)]">
+            <div className="fixed bottom-0 left-0 right-0 bg-background border-t p-4 pb-safe safe-area-bottom z-40 shadow-[0_-5px_20px_rgba(0,0,0,0.1)]">
                 <div className="container mx-auto max-w-lg">
                     {/* Mensagem de erro global (se houver erro fora do modal) */}
                     {result && !isOpen && (

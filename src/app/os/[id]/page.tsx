@@ -107,7 +107,7 @@ export default async function ClientOrderPage({ params }: PageProps) {
         .single()
 
     return (
-        <div className="min-h-screen bg-muted/30 pb-40">
+        <div className="min-h-screen bg-muted/30 pb-32 sm:pb-40">
             {/* Header */}
             <header className="sticky top-0 z-50 bg-background border-b">
                 <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -137,7 +137,7 @@ export default async function ClientOrderPage({ params }: PageProps) {
                         {['in_progress', 'ready', 'finished'].includes(order.status) && (
                             <div className="mt-3 pt-3 border-t border-primary/20">
                                 <Button className="w-full bg-primary font-bold shadow-lg animate-in fade-in" size="lg" asChild>
-                                    <Link href={`/os/${id}/track`}>
+                                    <Link href={`/os/${order.id}/track`}>
                                         ACOMPANHAR EM TEMPO REAL
                                     </Link>
                                 </Button>
