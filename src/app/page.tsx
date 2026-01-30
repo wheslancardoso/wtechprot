@@ -175,7 +175,7 @@ export default async function Home() {
 
                 <ul className="space-y-3 text-slate-300 max-w-sm mx-auto lg:mx-0 text-left">
                   {[
-                    "Receba atualizações automáticas no WhatsApp",
+                    "Acompanhe tudo por um Link Exclusivo",
                     "Veja fotos das peças trocadas",
                     "Aprove orçamentos com um clique",
                     "Histórico completo do serviço"
