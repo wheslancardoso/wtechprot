@@ -120,17 +120,18 @@ export default function CheckinPage({ params }: CheckinPageProps) {
     }
 
     const validateStep = () => {
-        if (step === 'photos') {
-            const missingPhotos = photos.filter(p => !p.url)
-            if (missingPhotos.length > 0) {
-                toast({
-                    title: 'Fotos obrigatórias',
-                    description: `Faltam: ${missingPhotos.map(p => p.label).join(', ')}`,
-                    variant: 'destructive'
-                })
-                return false
-            }
-        }
+        // PHOTOS OPTIONAL FOR TESTING
+        // if (step === 'photos') {
+        //     const missingPhotos = photos.filter(p => !p.url)
+        //     if (missingPhotos.length > 0) {
+        //         toast({
+        //             title: 'Fotos obrigatórias',
+        //             description: `Faltam: ${missingPhotos.map(p => p.label).join(', ')}`,
+        //             variant: 'destructive'
+        //         })
+        //         return false
+        //     }
+        // }
         if (step === 'signature' && !signatureUrl) {
             toast({ title: 'Assinatura necessária', description: 'O cliente precisa assinar para continuar.', variant: 'destructive' })
             return false
