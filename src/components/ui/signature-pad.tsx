@@ -3,6 +3,7 @@
 import { useRef, useState, useImperativeHandle, forwardRef, useEffect } from 'react'
 import SignatureCanvas from 'react-signature-canvas'
 import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
 import { Eraser } from 'lucide-react'
 
 interface SignaturePadProps {
@@ -69,38 +70,42 @@ const SignaturePad = forwardRef<SignaturePadRef, SignaturePadProps>(({ onChange,
     }
 
     return (
-        <div className="space-y-2">
-            <div
-                ref={containerRef}
-                className="border-2 border-dashed border-gray-300 rounded-lg p-1 bg-white touch-none"
-                style={{ height: 200 }}
-            >
-                <SignatureCanvas
-                    ref={sigCanvas}
-                    penColor="black"
-                    canvasProps={{
-                        width: canvasWidth,
-                        height: 190,
-                        className: 'cursor-crosshair w-full h-full'
-                    }}
-                    onEnd={handleEnd}
-                    backgroundColor="rgba(255,255,255,0)"
-                />
-            </div>
-
-            <div className="flex justify-between items-center text-xs text-muted-foreground">
-                <p>Assine no espaço acima</p>
+        <div className="space-y-3">
+            <div className="flex justify-between items-center mb-1">
+                <Label className="text-sm font-medium text-gray-700">Assinatura do Cliente</Label>
                 <Button
                     variant="ghost"
                     size="sm"
                     onClick={handleClear}
                     type="button"
                     disabled={isEmpty}
+                    className="h-8 px-2 text-xs text-red-600 hover:text-red-700 hover:bg-red-50"
                 >
                     <Eraser className="mr-1 h-3 w-3" />
                     Limpar
                 </Button>
             </div>
+
+            <div
+                ref={containerRef}
+                className="border-2 border-dashed border-gray-300 rounded-xl bg-white touch-none hover:border-blue-400 transition-colors shadow-sm"
+                style={{ height: 220 }}
+            >
+                <SignatureCanvas
+                    ref={sigCanvas}
+                    penColor="black"
+                    canvasProps={{
+                        width: canvasWidth,
+                        height: 216,
+                        className: 'cursor-crosshair w-full h-full rounded-xl'
+                    }}
+                    onEnd={handleEnd}
+                    backgroundColor="rgba(255,255,255,0)"
+                />
+            </div>
+            <p className="text-xs text-center text-muted-foreground mt-2">
+                Use o dedo ou mouse para assinar dentro da área pontilhada.
+            </p>
         </div>
     )
 })

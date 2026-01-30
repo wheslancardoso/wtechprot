@@ -394,7 +394,7 @@ export default function CheckinPage({ params }: CheckinPageProps) {
                         </div>
 
                         <div className="space-y-2">
-                            <Label>Assinatura do Cliente</Label>
+                            {/* Label handled inside component now */}
                             <SignaturePad ref={sigPadRef} onEnd={handleSignatureEnd} />
                         </div>
                     </div>
