@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { createAdminClient } from '@/lib/supabase/server'
 import type { OrderStatus } from '@/types/database'
@@ -58,6 +59,42 @@ function formatCurrency(value: number): string {
 // Page Props
 interface PageProps {
     params: Promise<{ id: string }>
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+    const { id } = await params
+    const supabase = await createAdminClient()
+
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+
+    let query = supabase.from('orders').select('display_id, user_id, status').single()
+
+    if (isUuid) {
+        query = supabase.from('orders').select('display_id, user_id, status').eq('id', id).single()
+    } else {
+        query = supabase.from('orders').select('display_id, user_id, status').eq('display_id', id).single()
+    }
+
+    const { data: order } = await query
+
+    if (!order) {
+        return {
+            title: 'Ordem de Serviço não encontrada',
+        }
+    }
+
+    const { data: tenant } = await supabase
+        .from('tenants')
+        .select('trade_name')
+        .eq('id', order.user_id)
+        .single()
+
+    const tradeName = tenant?.trade_name || 'Assistência Técnica'
+
+    return {
+        title: `OS #${order.display_id} | ${tradeName}`,
+        description: `Acompanhe o status da sua ordem de serviço #${order.display_id} no ${tradeName}.`,
+    }
 }
 
 export default async function ClientOrderPage({ params }: PageProps) {
