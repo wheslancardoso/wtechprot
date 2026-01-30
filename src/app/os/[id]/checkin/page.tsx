@@ -273,98 +273,116 @@ export default function CheckinPage({ params }: CheckinPageProps) {
                     </div>
 
                     <div className="space-y-1">
-                        <h1 className="text-xl font-bold">Check-in Registrado!</h1>
-                        <p className="text-sm text-muted-foreground">O cliente precisa assinar para finalizar.</p>
+                        <h1 className="text-xl font-bold">
+                            {auditData?.custody_signed_at ? 'Termo Assinado!' : 'Check-in Registrado!'}
+                        </h1>
+                        <p className="text-sm text-muted-foreground">
+                            {auditData?.custody_signed_at
+                                ? 'O equipamento está sob custódia oficial.'
+                                : 'O cliente precisa assinar para finalizar.'}
+                        </p>
                     </div>
 
                     <Card className="border-border shadow-md overflow-hidden">
                         <CardHeader className="bg-muted/50 pb-3 border-b border-border/60">
                             <CardTitle className="text-sm font-medium uppercase text-muted-foreground tracking-wider flex items-center justify-center gap-2">
                                 <Smartphone className="h-4 w-4" />
-                                Assinatura no Dispositivo do Cliente
+                                {auditData?.custody_signed_at ? 'Documento Digital' : 'Assinatura no Dispositivo do Cliente'}
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="pt-6 space-y-6">
 
-                            {/* Link Actions (Primary) */}
-                            <div className="space-y-3">
-                                {/* PDF Button (If signed) */}
-                                {auditData?.custody_signed_at && storeSettings && (
-                                    <div className="mb-4 animate-in fade-in slide-in-from-top-2">
-                                        <WithdrawalTermButton
-                                            className="w-full"
-                                            settings={storeSettings}
-                                            data={{
-                                                orderDisplayId: auditData.display_id,
-                                                customerName: auditData.customer?.name || 'Cliente',
-                                                equipmentType: auditData.equipment?.type || '',
-                                                equipmentBrand: auditData.equipment?.brand || '',
-                                                equipmentModel: auditData.equipment?.model || '',
-                                                equipmentSerial: auditData.equipment?.serial_number,
-                                                accessories: auditData.accessories_received || [],
-                                                conditionNotes: auditData.custody_conditions || '',
-                                                signatureUrl: auditData.custody_signature_url,
-                                                signedAt: auditData.custody_signed_at,
-                                                integrityHash: auditData.custody_integrity_hash,
-                                                geolocation: auditData.metadata?.geolocation
-                                            }}
-                                        />
-                                        <p className="text-xs text-center text-muted-foreground mt-2">
-                                            Termo assinado em {new Date(auditData.custody_signed_at).toLocaleString()}
+                            {/* --- SCENARIO 1: SIGNED (PDF ONLY) --- */}
+                            {auditData?.custody_signed_at ? (
+                                <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
+                                    <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-xl border border-green-100 dark:border-green-800 text-center">
+                                        <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-green-100 dark:bg-green-800 text-green-600 dark:text-green-300 mb-2">
+                                            <FileText className="h-6 w-6" />
+                                        </div>
+                                        <h3 className="font-semibold text-green-900 dark:text-green-100">Termo de Retirada Oficial</h3>
+                                        <p className="text-xs text-green-700 dark:text-green-300 mb-4">
+                                            Assinado em {new Date(auditData.custody_signed_at).toLocaleString()}
                                         </p>
+
+                                        {storeSettings && (
+                                            <WithdrawalTermButton
+                                                className="w-full"
+                                                settings={storeSettings}
+                                                data={{
+                                                    orderDisplayId: auditData.display_id,
+                                                    customerName: auditData.customer?.name || 'Cliente',
+                                                    equipmentType: auditData.equipment?.type || '',
+                                                    equipmentBrand: auditData.equipment?.brand || '',
+                                                    equipmentModel: auditData.equipment?.model || '',
+                                                    equipmentSerial: auditData.equipment?.serial_number,
+                                                    accessories: auditData.accessories_received || [],
+                                                    conditionNotes: auditData.custody_conditions || '',
+                                                    signatureUrl: auditData.custody_signature_url,
+                                                    signedAt: auditData.custody_signed_at,
+                                                    integrityHash: auditData.custody_integrity_hash,
+                                                    geolocation: auditData.metadata?.geolocation
+                                                }}
+                                            />
+                                        )}
                                     </div>
-                                )}
-
-                                <Button
-                                    className="w-full h-12 text-base bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-900/10"
-                                    onClick={() => {
-                                        const text = `Olá! Clique aqui para assinar o termo de retirada do seu equipamento: ${publicSignUrl}`
-                                        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank')
-                                    }}
-                                >
-                                    <Share2 className="mr-2 h-5 w-5" />
-                                    Enviar no WhatsApp
-                                </Button>
-
-                                <Button
-                                    variant="outline"
-                                    className="w-full"
-                                    onClick={() => {
-                                        navigator.clipboard.writeText(publicSignUrl)
-                                        toast({ title: 'Copiado!', description: 'Link copiado para a área de transferência.' })
-                                    }}
-                                >
-                                    <LinkIcon className="mr-2 h-4 w-4" />
-                                    Copiar Link de Assinatura
-                                </Button>
-                            </div>
-
-                            <div className="relative py-2">
-                                <div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div>
-                                <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground">Presencial?</span></div>
-                            </div>
-
-                            {/* QR Section (Secondary) */}
-                            <div className="flex flex-col items-center gap-4 bg-muted/30 p-4 rounded-xl border border-dashed">
-                                <p className="text-xs text-muted-foreground font-medium flex items-center gap-2">
-                                    <QrCodeIcon className="h-4 w-4" />
-                                    Opção QR Code
-                                </p>
-                                <div className="p-2 bg-white rounded-lg border shadow-sm w-32 h-32 flex items-center justify-center">
-                                    {qrCodeDataUrl ? (
-                                        <Image
-                                            src={qrCodeDataUrl}
-                                            alt="QR Code Assinatura"
-                                            width={120}
-                                            height={120}
-                                            className="mix-blend-multiply"
-                                        />
-                                    ) : (
-                                        <div className="w-24 h-24 bg-muted animate-pulse rounded" />
-                                    )}
+                                    <p className="text-xs text-center text-muted-foreground">
+                                        O cliente também pode solicitar uma cópia deste PDF.
+                                    </p>
                                 </div>
-                            </div>
+                            ) : (
+                                /* --- SCENARIO 2: WAITING SIGNATURE (SHARE LINKS) --- */
+                                <>
+                                    <div className="space-y-3">
+                                        <Button
+                                            className="w-full h-12 text-base bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-900/10"
+                                            onClick={() => {
+                                                const text = `Olá! Clique aqui para assinar o termo de retirada do seu equipamento: ${publicSignUrl}`
+                                                window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank')
+                                            }}
+                                        >
+                                            <Share2 className="mr-2 h-5 w-5" />
+                                            Enviar no WhatsApp
+                                        </Button>
 
+                                        <Button
+                                            variant="outline"
+                                            className="w-full"
+                                            onClick={() => {
+                                                navigator.clipboard.writeText(publicSignUrl)
+                                                toast({ title: 'Copiado!', description: 'Link copiado para a área de transferência.' })
+                                            }}
+                                        >
+                                            <LinkIcon className="mr-2 h-4 w-4" />
+                                            Copiar Link de Assinatura
+                                        </Button>
+                                    </div>
+
+                                    <div className="relative py-2">
+                                        <div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div>
+                                        <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground">Presencial?</span></div>
+                                    </div>
+
+                                    <div className="flex flex-col items-center gap-4 bg-muted/30 p-4 rounded-xl border border-dashed">
+                                        <p className="text-xs text-muted-foreground font-medium flex items-center gap-2">
+                                            <QrCodeIcon className="h-4 w-4" />
+                                            Opção QR Code
+                                        </p>
+                                        <div className="p-2 bg-white rounded-lg border shadow-sm w-32 h-32 flex items-center justify-center">
+                                            {qrCodeDataUrl ? (
+                                                <Image
+                                                    src={qrCodeDataUrl}
+                                                    alt="QR Code Assinatura"
+                                                    width={120}
+                                                    height={120}
+                                                    className="mix-blend-multiply"
+                                                />
+                                            ) : (
+                                                <div className="w-24 h-24 bg-muted animate-pulse rounded" />
+                                            )}
+                                        </div>
+                                    </div>
+                                </>
+                            )}
                         </CardContent>
                     </Card>
 
