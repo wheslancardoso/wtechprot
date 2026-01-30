@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import dynamic from 'next/dynamic'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -27,8 +28,15 @@ import {
     Share2,
     QrCode as QrCodeIcon,
     Smartphone,
-    Link as LinkIcon
+    Link as LinkIcon,
+    FileText
 } from 'lucide-react'
+
+// Dynamic Import for PDF Button (Client-side only)
+const WithdrawalTermButton = dynamic(
+    () => import('@/components/home-care/withdrawal-term-pdf'),
+    { ssr: false, loading: () => <Button variant="outline" disabled><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Carregando PDF...</Button> }
+)
 
 // --- Types ---
 type Step = 'accessories' | 'photos' | 'conditions' | 'review'
@@ -52,6 +60,10 @@ export default function CheckinPage({ params }: CheckinPageProps) {
     const [publicSignUrl, setPublicSignUrl] = useState('')
     const [qrCodeDataUrl, setQrCodeDataUrl] = useState('')
 
+    // Signed Data State
+    const [auditData, setAuditData] = useState<any>(null)
+    const [storeSettings, setStoreSettings] = useState<any>(null)
+
     const router = useRouter()
     const { toast } = useToast()
     const supabase = createClient()
@@ -67,6 +79,56 @@ export default function CheckinPage({ params }: CheckinPageProps) {
         { label: 'Laterais', url: '' },
         { label: 'Tela Ligada', url: '' }
     ])
+
+    // --- Initial Fetch (Check if already signed) ---
+    useEffect(() => {
+        async function fetchInitialData() {
+            try {
+                const resolvedParams = await params
+                const { id } = resolvedParams
+
+                // 1. Fetch Order & Tenant
+                const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+                let query = supabase.from('orders').select(`
+                    *,
+                    customer:customers(name, document_id),
+                    equipment:equipments(type, brand, model, serial_number)
+                `)
+
+                if (isUuid) query = query.eq('id', id)
+                else query = query.eq('display_id', id)
+
+                const { data: order, error } = await query.single()
+
+                if (error || !order) return // Let the form handle new checkin logic or error later
+
+                // Fetch Tenant Settings (Mock or Real)
+                // Assuming we can get trade_name from a 'tenants' table or simply hardcode/context if not available public
+                // For now, let's try to fetch if possible, otherwise use defaults
+                const { data: tenant } = await supabase.from('tenants').select('*').limit(1).single()
+
+                setStoreSettings(tenant || { trade_name: 'Minha Assistência' })
+
+                // If signed, populate state
+                if (order.custody_signed_at) {
+                    setAuditData(order)
+                    setCompleted(true)
+
+                    // Reconstruct Sign URL for sharing even if signed
+                    const origin = window.location.origin
+                    setPublicSignUrl(`${origin}/public/sign/${order.display_id}`)
+                }
+
+                // If checkin data exists but not signed, pre-fill form
+                if (order.accessories_received?.length) setAccessories(order.accessories_received)
+                if (order.custody_conditions) setConditions(order.custody_conditions)
+
+            } catch (err) {
+                console.error(err)
+            }
+        }
+        fetchInitialData()
+    }, [params, supabase])
 
     // --- Generate QR Code ---
     useEffect(() => {
@@ -226,6 +288,33 @@ export default function CheckinPage({ params }: CheckinPageProps) {
 
                             {/* Link Actions (Primary) */}
                             <div className="space-y-3">
+                                {/* PDF Button (If signed) */}
+                                {auditData?.custody_signed_at && storeSettings && (
+                                    <div className="mb-4 animate-in fade-in slide-in-from-top-2">
+                                        <WithdrawalTermButton
+                                            className="w-full"
+                                            settings={storeSettings}
+                                            data={{
+                                                orderDisplayId: auditData.display_id,
+                                                customerName: auditData.customer?.name || 'Cliente',
+                                                equipmentType: auditData.equipment?.type || '',
+                                                equipmentBrand: auditData.equipment?.brand || '',
+                                                equipmentModel: auditData.equipment?.model || '',
+                                                equipmentSerial: auditData.equipment?.serial_number,
+                                                accessories: auditData.accessories_received || [],
+                                                conditionNotes: auditData.custody_conditions || '',
+                                                signatureUrl: auditData.custody_signature_url,
+                                                signedAt: auditData.custody_signed_at,
+                                                integrityHash: auditData.custody_integrity_hash,
+                                                geolocation: auditData.metadata?.geolocation
+                                            }}
+                                        />
+                                        <p className="text-xs text-center text-muted-foreground mt-2">
+                                            Termo assinado em {new Date(auditData.custody_signed_at).toLocaleString()}
+                                        </p>
+                                    </div>
+                                )}
+
                                 <Button
                                     className="w-full h-12 text-base bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-900/10"
                                     onClick={() => {
