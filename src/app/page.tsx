@@ -78,8 +78,8 @@ export default async function Home() {
       <header className="fixed top-0 w-full z-50 bg-slate-950/80 backdrop-blur-md border-b border-white/5">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2 font-bold text-xl tracking-tight">
-            <div className="w-8 h-8 relative flex items-center justify-center">
-              <Image src="/logo.svg" alt="Logo" width={32} height={32} className="object-contain" />
+            <div className="w-12 h-12 relative flex items-center justify-center">
+              <Image src="/logo.svg" alt="Logo" width={48} height={48} className="object-contain" />
             </div>
             <span>{brandName}</span>
           </div>
@@ -190,7 +190,7 @@ export default async function Home() {
 
               {/* Visual UI Mockup */}
               <div className="flex-1 w-full max-w-md lg:max-w-full perspective-1000">
-                <div className="relative bg-slate-900 border border-white/10 rounded-2xl p-6 shadow-2xl shadow-black/50 overflow-hidden transform rotate-y-12 rotate-x-6 hover:rotate-0 transition-all duration-700 ease-out group">
+                <div className="relative bg-slate-900 border border-white/10 rounded-2xl p-6 shadow-2xl shadow-black/50 overflow-hidden transform lg:rotate-y-12 lg:rotate-x-6 lg:hover:rotate-0 transition-all duration-700 ease-out group">
                   {/* Floating status badges */}
                   <div className="absolute top-6 right-6 flex flex-col gap-2">
                     <div className="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-xs font-bold border border-green-500/20 animate-bounce">
@@ -369,8 +369,8 @@ export default async function Home() {
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div className="space-y-4">
               <div className="flex items-center gap-2 font-bold text-base text-white">
-                <div className="w-6 h-6 rounded bg-primary/20 flex items-center justify-center">
-                  <Laptop className="w-3 h-3 text-primary" />
+                <div className="w-6 h-6 relative flex items-center justify-center">
+                  <Image src="/logo.svg" alt="Logo" width={24} height={24} className="object-contain" />
                 </div>
                 {brandName}
               </div>
