@@ -235,7 +235,7 @@ export default function ClientActions({ orderId, displayId, hasParts, status, cu
                                 <Wrench className="h-5 w-5" />
                             )}
                             <span className="font-bold text-lg">
-                                {status === 'in_progress' && 'Mão na Massa!'}
+                                {status === 'in_progress' && 'Reparo em Andamento'}
                                 {status === 'ready' && 'Pronto para Retirada!'}
                                 {status === 'finished' && 'Serviço Finalizado!'}
                                 {!['in_progress', 'ready', 'finished'].includes(status) && 'Orçamento Aprovado!'}
