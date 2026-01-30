@@ -68,6 +68,7 @@ export interface Order {
     custody_geo_lat: number | null
     custody_geo_lng: number | null
     custody_integrity_hash: string | null
+    custody_photos: { label: string; url: string }[] | null // New field
     collected_by: string | null // UUID of the technician
     // Relacionamentos opcionais (joins)
     customer?: Pick<Customer, 'name'> | null

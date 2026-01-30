@@ -167,6 +167,7 @@ interface CustodyData {
     integrityHash?: string
     geolocation?: { lat: number, lng: number }
     custodyIp?: string
+    photos?: { label: string; url: string }[]
 }
 
 interface StoreSettings {
@@ -250,6 +251,23 @@ function WithdrawalTermDocument({ data, settings }: { data: CustodyData; setting
                         {data.conditionNotes || 'Sem avarias visíveis relatadas no momento da coleta.'}
                     </Text>
                 </View>
+
+                {/* Photos */}
+                {data.photos && data.photos.length > 0 && (
+                    <View style={styles.section}>
+                        <Text style={styles.sectionTitle}>REGISTRO FOTOGRÁFICO</Text>
+                        <View style={styles.photosContainer}>
+                            {data.photos.map((photo, idx) => (
+                                <View key={idx} style={{ alignItems: 'center', width: 130, marginBottom: 10 }}>
+                                    {photo.url ? (
+                                        <Image style={styles.photo} src={photo.url} />
+                                    ) : null}
+                                    <Text style={{ fontSize: 8, color: '#666', marginTop: 2 }}>{photo.label}</Text>
+                                </View>
+                            ))}
+                        </View>
+                    </View>
+                )}
 
                 {/* Termo Legal */}
                 <View style={styles.legalTerm}>

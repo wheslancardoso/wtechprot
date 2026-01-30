@@ -399,6 +399,7 @@ export async function signCustodyTerm(
 interface CheckinData {
     accessories: string[]
     conditions: string
+    photos: { label: string; url: string }[]
 }
 
 export async function saveCheckinData(
@@ -418,7 +419,7 @@ export async function saveCheckinData(
             .update({
                 accessories_received: data.accessories,
                 custody_conditions: data.conditions,
-                // Não muda status ainda
+                custody_photos: data.photos, // Save photos JSON
             })
             .eq('id', orderId)
 

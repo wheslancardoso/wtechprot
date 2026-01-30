@@ -246,6 +246,7 @@ function CheckinPageContent({ params }: { params: Promise<{ id: string }> }) {
             const result = await saveCheckinData(targetUuid, {
                 accessories,
                 conditions,
+                photos: photos.filter(p => p.url) as { label: string; url: string }[]
             })
 
             if (!result.success) throw new Error(result.message)
@@ -340,7 +341,8 @@ function CheckinPageContent({ params }: { params: Promise<{ id: string }> }) {
                                                     integrityHash: auditData.custody_integrity_hash,
                                                     geolocation: auditData.metadata?.geolocation,
                                                     customerDocument: auditData.customer?.document_id,
-                                                    custodyIp: auditData.custody_ip
+                                                    custodyIp: auditData.custody_ip,
+                                                    photos: (auditData.custody_photos as { label: string; url: string }[] | null) || []
                                                 }}
                                             />
                                         )}
