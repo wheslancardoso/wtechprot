@@ -351,6 +351,7 @@ export async function signCustodyTerm(
                 custody_conditions: data.conditions,
                 custody_signature_url: data.signatureUrl,
                 custody_signed_at: evidencePayload.signed_at,
+                custody_ip: clientIp, // Save IP explicitly
                 custody_geo_lat: data.geolocation.lat,
                 custody_geo_lng: data.geolocation.lng,
                 custody_integrity_hash: integrityHash,

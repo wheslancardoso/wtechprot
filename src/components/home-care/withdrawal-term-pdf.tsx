@@ -166,6 +166,7 @@ interface CustodyData {
     technicianName?: string
     integrityHash?: string
     geolocation?: { lat: number, lng: number }
+    custodyIp?: string
 }
 
 interface StoreSettings {
@@ -265,7 +266,6 @@ function WithdrawalTermDocument({ data, settings }: { data: CustodyData; setting
                 </View>
 
                 {/* Assinatura */}
-                {/* Assinatura */}
                 <View style={styles.signatureSection}>
                     {data.signatureUrl ? (
                         <Image style={styles.signatureImage} src={data.signatureUrl} />
@@ -287,7 +287,12 @@ function WithdrawalTermDocument({ data, settings }: { data: CustodyData; setting
 
                 {/* Footer */}
                 <View style={styles.footer}>
-                    <Text>Documento gerado eletronicamente pelo sistema WFIX Tech - {settings.trade_name}</Text>
+                    <Text style={{ marginBottom: 2 }}>
+                        DOCUMENTO ASSINADO DIGITALMENTE VIA {settings.trade_name.toUpperCase()}
+                    </Text>
+                    <Text style={{ marginBottom: 2 }}>
+                        Assinado por: {data.customerName} | Data/Hora: {signedDate} | IP: {data.custodyIp || 'N/A'}
+                    </Text>
                     <Text>Hash de Integridade: {data.integrityHash || 'PENDENTE'}</Text>
                 </View>
             </Page>

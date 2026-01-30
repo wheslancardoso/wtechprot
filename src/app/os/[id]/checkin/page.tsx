@@ -339,7 +339,8 @@ function CheckinPageContent({ params }: { params: Promise<{ id: string }> }) {
                                                     signedAt: auditData.custody_signed_at,
                                                     integrityHash: auditData.custody_integrity_hash,
                                                     geolocation: auditData.metadata?.geolocation,
-                                                    customerDocument: auditData.customer?.document_id
+                                                    customerDocument: auditData.customer?.document_id,
+                                                    custodyIp: auditData.custody_ip
                                                 }}
                                             />
                                         )}
