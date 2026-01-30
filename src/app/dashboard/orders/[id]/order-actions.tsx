@@ -82,11 +82,16 @@ export default function OrderActions({
     }
 
     async function handleConfirmPartArrival() {
+        // Confirmação extra para ação manual
+        if (!window.confirm('Confirma que as peças chegaram? Isso moverá a OS para "Em Reparo".')) {
+            return
+        }
+
         setIsPending(true)
         setFeedback(null)
 
         try {
-            const result = await confirmPartArrival(orderId)
+            const result = await confirmPartArrival(orderId, 'admin')
 
             if (result.success) {
                 setFeedback({ type: 'success', message: result.message })
@@ -185,14 +190,15 @@ export default function OrderActions({
                         <Button
                             onClick={handleConfirmPartArrival}
                             disabled={isPending}
-                            className="bg-blue-600 hover:bg-blue-700"
+                            variant="secondary"
+                            className="border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800 border"
                         >
                             {isPending ? (
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                             ) : (
                                 <PackageCheck className="mr-2 h-4 w-4" />
                             )}
-                            Confirmar Chegada da Peça
+                            🔓 Confirmar Chegada Manualmente
                         </Button>
                     )}
 

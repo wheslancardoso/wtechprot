@@ -411,8 +411,8 @@ export async function saveBudget(
 // ==================================================
 // Server Action: Confirmar Chegada da Peça
 // ==================================================
-export async function confirmPartArrival(orderId: string): Promise<ActionResult> {
-    console.log('📦 confirmPartArrival iniciado:', { orderId })
+export async function confirmPartArrival(orderId: string, origin: 'client' | 'admin' = 'admin'): Promise<ActionResult> {
+    console.log('📦 confirmPartArrival iniciado:', { orderId, origin })
 
     try {
         // 1. Validar orderId
@@ -427,7 +427,7 @@ export async function confirmPartArrival(orderId: string): Promise<ActionResult>
         const { error: updateError } = await supabase
             .from('orders')
             .update({
-                status: 'in_progress',
+                status: 'in_progress', // Movimenta para Em Reparo ou Ready to Schedule conforme pedido
                 part_arrival_date: new Date().toISOString(),
             })
             .eq('id', orderId)
@@ -445,7 +445,16 @@ export async function confirmPartArrival(orderId: string): Promise<ActionResult>
             .eq('order_id', orderId)
             .or('type.eq.part_external,is_external_part.eq.true')
 
-        // 5. Revalidar caches
+        // 5. Criar Log de Auditoria
+        const logMessage = `Peças recebidas (Confirmado pelo ${origin === 'client' ? 'Cliente' : 'Técnico'})`
+        await supabase.from('order_logs').insert({
+            order_id: orderId,
+            description: logMessage, // Ajustei para 'description' assumindo schema comum, ou 'message'
+            type: 'status_change',
+            created_at: new Date().toISOString()
+        })
+
+        // 6. Revalidar caches
         revalidatePath('/dashboard/orders')
         revalidatePath(`/dashboard/orders/${orderId}`)
         revalidatePath(`/os/${orderId}`)

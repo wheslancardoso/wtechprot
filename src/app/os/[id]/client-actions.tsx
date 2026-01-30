@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 
 // Server Actions
 import { approveBudget, rejectBudget } from './actions'
+import { confirmPartArrival } from './actions'
 
 // UI Components
 import { Button } from '@/components/ui/button'
@@ -35,6 +36,7 @@ import {
     ArrowRight,
     ArrowLeft,
     FileText,
+    PackageCheck, // New Icon
 } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
@@ -45,16 +47,18 @@ interface ClientActionsProps {
     hasParts: boolean
     status: string
     customerName: string
+    techPhone?: string
 }
 
 type WizardStep = 'TERMS' | 'PROCESSING' | 'SUCCESS'
 
-export default function ClientActions({ orderId, hasParts, status, customerName }: ClientActionsProps) {
+export default function ClientActions({ orderId, hasParts, status, customerName, techPhone }: ClientActionsProps) {
     const router = useRouter()
 
     // Estados do Modal
     const [isOpen, setIsOpen] = useState(false)
     const [step, setStep] = useState<WizardStep>('TERMS')
+    const [isConfirmingArrival, setIsConfirmingArrival] = useState(false) // New State
 
     // Dados do Formulário
     const [isRejecting, setIsRejecting] = useState(false)
@@ -63,8 +67,34 @@ export default function ClientActions({ orderId, hasParts, status, customerName 
     const [result, setResult] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
 
     // Status do Pedido
-    const alreadyApproved = ['waiting_parts', 'in_progress', 'ready', 'finished'].includes(status)
+    const alreadyApproved = ['in_progress', 'ready', 'finished'].includes(status)
+    // REMOVED 'waiting_parts' from alreadyApproved group to handle it separately
+    const isWaitingParts = status === 'waiting_parts'
     const isCanceled = status === 'canceled'
+
+    async function handlePartArrival() {
+        setIsConfirmingArrival(true)
+        try {
+            const result = await confirmPartArrival(orderId)
+
+            if (result.success) {
+                // Redirecionar para WhatsApp
+                if (techPhone) {
+                    const message = encodeURIComponent(`Olá! Confirmo que as peças da OS #${orderId.slice(0, 8).toUpperCase()} já chegaram no meu endereço. Podemos agendar a visita técnica para instalação?`)
+                    const whatsappUrl = `https://wa.me/55${techPhone.replace(/\D/g, '')}?text=${message}`
+                    window.location.href = whatsappUrl
+                } else {
+                    router.refresh()
+                }
+            } else {
+                alert(result.message) // Fallback simples
+            }
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setIsConfirmingArrival(false)
+        }
+    }
 
     async function handleFinalApprove() {
         if (!acceptedTerms) {
@@ -151,7 +181,38 @@ export default function ClientActions({ orderId, hasParts, status, customerName 
     // RENDERS
     // ============================================
 
-    // 1. Já Aprovado (Banner Fixo)
+    // 1. Aguardando Peças (Ação do Cliente)
+    if (isWaitingParts) {
+        return (
+            <div className="fixed bottom-0 left-0 right-0 bg-yellow-50 dark:bg-yellow-950/30 border-t border-yellow-200 dark:border-yellow-800 p-4 safe-area-bottom z-50">
+                <div className="container mx-auto max-w-lg space-y-3">
+                    <div className="flex items-center gap-3 text-yellow-800 dark:text-yellow-200">
+                        <PackageCheck className="h-6 w-6 shrink-0" />
+                        <div>
+                            <h4 className="font-semibold text-sm">Estamos aguardando suas peças</h4>
+                            <p className="text-xs opacity-90">Assim que chegarem, nos avise para instalar.</p>
+                        </div>
+                    </div>
+
+                    <Button
+                        size="lg"
+                        className="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-bold shadow-md"
+                        onClick={handlePartArrival}
+                        disabled={isConfirmingArrival}
+                    >
+                        {isConfirmingArrival ? (
+                            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                        ) : (
+                            <CheckCircle className="mr-2 h-5 w-5" />
+                        )}
+                        📦 Já recebi a peça - Agendar Visita
+                    </Button>
+                </div>
+            </div>
+        )
+    }
+
+    // 2. Já Aprovado (Banner Fixo) - Now excludes waiting_parts
     if (alreadyApproved) {
         return (
             <div className="fixed bottom-0 left-0 right-0 bg-green-50 dark:bg-green-950 border-t border-green-200 dark:border-green-800 p-4 safe-area-bottom z-50">
@@ -162,7 +223,6 @@ export default function ClientActions({ orderId, hasParts, status, customerName 
                             <div className="flex items-center gap-2">
                                 <span className="font-semibold text-green-900 dark:text-green-100">Orçamento Aprovado!</span>
                             </div>
-                            {status === 'waiting_parts' && <span className="text-sm">Aguardando entrega de peças.</span>}
                             {status === 'in_progress' && <span className="text-sm">Reparo em andamento.</span>}
 
                             <Button size="sm" variant="outline" className="mt-2 w-full bg-white/50" onClick={() => router.push(`/os/${orderId}/track`)}>
@@ -175,7 +235,7 @@ export default function ClientActions({ orderId, hasParts, status, customerName 
         )
     }
 
-    // 2. Cancelado
+    // 3. Cancelado
     if (isCanceled) {
         return (
             <div className="fixed bottom-0 left-0 right-0 bg-red-50 dark:bg-red-950 border-t border-red-200 dark:border-red-800 p-4 safe-area-bottom z-50">

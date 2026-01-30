@@ -99,6 +99,13 @@ export default async function ClientOrderPage({ params }: PageProps) {
 
     const hasParts = externalParts.length > 0
 
+    // Buscar telefone do técnico (Tenant)
+    const { data: tenant } = await supabase
+        .from('tenants')
+        .select('phone')
+        .eq('id', order.user_id)
+        .single()
+
     return (
         <div className="min-h-screen bg-muted/30 pb-40">
             {/* Header */}
@@ -242,6 +249,7 @@ export default async function ClientOrderPage({ params }: PageProps) {
                 hasParts={hasParts}
                 status={order.status}
                 customerName={order.customer?.name || 'Cliente'}
+                techPhone={tenant?.phone}
             />
         </div>
     )

@@ -201,3 +201,69 @@ export async function rejectBudget(orderId: string): Promise<ActionResult> {
         }
     }
 }
+// ==================================================
+// Server Action: Confirmar Chegada da Peça (Cliente)
+// ==================================================
+export async function confirmPartArrival(orderId: string): Promise<ActionResult> {
+    console.log('📦 confirmPartArrival (public) iniciado:', { orderId })
+
+    try {
+        if (!orderId || orderId.length < 10) {
+            return { success: false, message: 'ID da OS inválido' }
+        }
+
+        // 1. Criar cliente Supabase Admin (Bypass RLS)
+        const supabase = await createAdminClient()
+
+        // 2. Atualizar ordem
+        const { error: updateError } = await supabase
+            .from('orders')
+            .update({
+                status: 'in_progress', // Move para Em Reparo
+                part_arrival_date: new Date().toISOString(),
+            })
+            .eq('id', orderId)
+            .eq('status', 'waiting_parts')
+
+        if (updateError) {
+            console.error('❌ Erro ao confirmar chegada:', updateError)
+            return { success: false, message: `Erro ao confirmar: ${updateError.message}` }
+        }
+
+        // 3. Atualizar status das peças para 'arrived'
+        await supabase
+            .from('order_items')
+            .update({ part_status: 'arrived' })
+            .eq('order_id', orderId)
+            .or('type.eq.part_external,is_external_part.eq.true')
+
+        // 4. Capturar IP (Audit)
+        const headersList = await headers()
+        const clientIp = headersList.get('x-forwarded-for')?.split(',')[0] || 'unknown'
+
+        // 5. Log de Auditoria
+        await supabase.from('order_logs').insert({
+            order_id: orderId,
+            description: `Peças recebidas (Confirmado pelo Cliente via Link Público - IP: ${clientIp})`,
+            type: 'status_change',
+            created_at: new Date().toISOString()
+        })
+
+        // 6. Revalidar caches
+        revalidatePath(`/os/${orderId}`)
+        revalidatePath('/dashboard/orders')
+        revalidatePath(`/dashboard/orders/${orderId}`)
+
+        return {
+            success: true,
+            message: '✅ Recebimento confirmado! Redirecionando para agendamento...'
+        }
+
+    } catch (error) {
+        console.error('❌ confirmPartArrival erro:', error)
+        return {
+            success: false,
+            message: `Erro: ${error instanceof Error ? error.message : 'Desconhecido'}`
+        }
+    }
+}
