@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowRight, CheckCircle2, ShieldCheck, FileSearch, Smartphone, MessageCircle, Wrench, CreditCard, Laptop, Home as HomeIcon, UserCheck } from 'lucide-react'
+import { ArrowRight, CheckCircle2, ShieldCheck, FileSearch, Smartphone, MessageCircle, Wrench, CreditCard, Laptop, Home as HomeIcon, UserCheck, Printer, Monitor } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 // import OrderTrackerInput from '@/components/landing/order-tracker-input'
 import { createAdminClient } from '@/lib/supabase/server'
@@ -158,21 +158,21 @@ export default async function Home() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-white/5">
               <div className="p-4 animate-in fade-in zoom-in duration-700 delay-100 hover:scale-105 transition-transform cursor-default">
                 <div className="mx-auto w-12 h-12 bg-blue-500/10 rounded-full flex items-center justify-center text-blue-400 mb-4 shadow-lg shadow-blue-500/20">
-                  <Laptop className="w-6 h-6 animate-pulse" />
+                  <Monitor className="w-6 h-6 animate-pulse" />
                 </div>
                 <h3 className="font-bold text-lg text-slate-200 mb-2">Computadores & PC Gamer</h3>
                 <p className="text-sm text-slate-400">Diagnóstico Avançado de Hardware (BIOS, Vídeo), Montagem de Setup com Cable Management e Otimização Térmica.</p>
               </div>
               <div className="p-4 animate-in fade-in zoom-in duration-700 delay-200 hover:scale-105 transition-transform cursor-default">
                 <div className="mx-auto w-12 h-12 bg-purple-500/10 rounded-full flex items-center justify-center text-purple-400 mb-4 shadow-lg shadow-purple-500/20">
-                  <Smartphone className="w-6 h-6 animate-pulse" />
+                  <Laptop className="w-6 h-6 animate-pulse" />
                 </div>
                 <h3 className="font-bold text-lg text-slate-200 mb-2">Notebooks</h3>
                 <p className="text-sm text-slate-400">Substituição Técnica de telas, teclados e baterias, Reparo de Carcaças/Dobradiças e Upgrade de performance (SSD/RAM).</p>
               </div>
               <div className="p-4 animate-in fade-in zoom-in duration-700 delay-300 hover:scale-105 transition-transform cursor-default">
                 <div className="mx-auto w-12 h-12 bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-400 mb-4 shadow-lg shadow-emerald-500/20">
-                  <FileSearch className="w-6 h-6 animate-pulse" />
+                  <Printer className="w-6 h-6 animate-pulse" />
                 </div>
                 <h3 className="font-bold text-lg text-slate-200 mb-2">Impressoras</h3>
                 <p className="text-sm text-slate-400">Desobstrução do Sistema de Tinta (falhas de impressão), Reset de Almofadas/Erros Lógicos e Manutenção Preventiva de tracionadores.</p>
