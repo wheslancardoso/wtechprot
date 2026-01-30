@@ -164,6 +164,8 @@ interface CustodyData {
     signatureUrl: string
     signedAt: string
     technicianName?: string
+    integrityHash?: string
+    geolocation?: { lat: number, lng: number }
 }
 
 interface StoreSettings {
@@ -263,17 +265,30 @@ function WithdrawalTermDocument({ data, settings }: { data: CustodyData; setting
                 </View>
 
                 {/* Assinatura */}
+                {/* Assinatura */}
                 <View style={styles.signatureSection}>
-                    {data.signatureUrl && <Image style={styles.signatureImage} src={data.signatureUrl} />}
+                    {data.signatureUrl ? (
+                        <Image style={styles.signatureImage} src={data.signatureUrl} />
+                    ) : (
+                        <View style={{ borderWidth: 1, borderColor: '#ccc', borderStyle: 'dashed', padding: 8, borderRadius: 4, alignItems: 'center', width: 200, height: 60, justifyContent: 'center' }}>
+                            <Text style={{ fontSize: 9, fontWeight: 'bold', color: '#555', textTransform: 'uppercase' }}>Assinado Digitalmente (Click-Wrap)</Text>
+                            <Text style={{ fontSize: 7, color: '#888', marginTop: 2 }}>{data.integrityHash ? `Hash: ${data.integrityHash.substring(0, 10)}...` : 'Autenticado'}</Text>
+                        </View>
+                    )}
                     <View style={styles.signatureLine} />
                     <Text style={styles.signatureLabel}>Assinado digitalmente por {data.customerName}</Text>
                     <Text style={{ fontSize: 8, color: '#999', marginTop: 2 }}>{signedDate}</Text>
+                    {data.geolocation && (
+                        <Text style={{ fontSize: 7, color: '#aaa', marginTop: 2 }}>
+                            Local da Coleta: {data.geolocation.lat.toFixed(6)}, {data.geolocation.lng.toFixed(6)}
+                        </Text>
+                    )}
                 </View>
 
                 {/* Footer */}
                 <View style={styles.footer}>
                     <Text>Documento gerado eletronicamente pelo sistema WFIX Tech - {settings.trade_name}</Text>
-                    <Text>Hash de Integridade: {Math.random().toString(36).substring(2, 15).toUpperCase()}</Text>
+                    <Text>Hash de Integridade: {data.integrityHash || 'PENDENTE'}</Text>
                 </View>
             </Page>
         </Document>

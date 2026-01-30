@@ -244,8 +244,12 @@ export async function confirmPartArrival(orderId: string): Promise<ActionResult>
         // 5. Log de Auditoria
         await supabase.from('order_logs').insert({
             order_id: orderId,
-            description: `Peças recebidas (Confirmado pelo Cliente via Link Público - IP: ${clientIp})`,
-            type: 'status_change',
+            previous_status: 'waiting_parts',
+            new_status: 'in_progress',
+            changed_by_type: 'customer',
+            metadata: {
+                reason: `Peças recebidas (Confirmado pelo Cliente via Link Público - IP: ${clientIp})`
+            },
             created_at: new Date().toISOString()
         })
 
@@ -274,7 +278,7 @@ export async function confirmPartArrival(orderId: string): Promise<ActionResult>
 interface CustodySignatureData {
     accessories: string[]
     conditions: string
-    signatureUrl: string // URL do Supabase Storage
+    signatureUrl: string | null // URL do Supabase Storage ou Null (Click-Wrap)
     geolocation: {
         lat: number
         lng: number
@@ -301,7 +305,7 @@ export async function signCustodyTerm(
         // 2. Montar Payload de Evidência para Hash
         // IMPORTANTE: A ordem dos campos deve ser consistente para validar o hash depois
         const evidencePayload = {
-            method: "HYBRID_CUSTODY_V1", // Hybrid = Physicial Signature + Digital Meta
+            method: "DIGITAL_BADGE_V1", // Digital Badge = Geolocation + IP + Consent Check
             signed_at: new Date().toISOString(),
             order_id: orderId,
             ip_address: clientIp,
@@ -313,7 +317,7 @@ export async function signCustodyTerm(
             content_summary: {
                 accessories: data.accessories.sort(), // Ordenar para consistência
                 conditions_hash: require('crypto').createHash('md5').update(data.conditions || '').digest('hex'),
-                signature_image_url: data.signatureUrl
+                signature_image_url: data.signatureUrl || 'DIGITAL_ACK'
             }
         }
 
@@ -349,8 +353,12 @@ export async function signCustodyTerm(
         // 5. Log de Auditoria
         await supabase.from('order_logs').insert({
             order_id: orderId,
-            description: `Equipamento retirado. Custódia assinada digitalmente. (Hash: ${integrityHash.substring(0, 8)}...)`,
-            type: 'status_change',
+            previous_status: 'open',
+            new_status: 'analyzing',
+            changed_by_type: 'customer',
+            metadata: {
+                reason: `Custódia assinada (Click-Wrap). Hash: ${integrityHash.substring(0, 8)}...`
+            },
             created_at: new Date().toISOString()
         })
 
@@ -364,6 +372,55 @@ export async function signCustodyTerm(
 
     } catch (error) {
         console.error('❌ signCustodyTerm erro:', error)
+        return {
+            success: false,
+            message: `Erro inesperado: ${error instanceof Error ? error.message : 'Desconhecido'}`
+        }
+    }
+}
+
+// ==================================================
+// Server Action: Salvar Dados do Check-in (Pré-Assinatura)
+// ==================================================
+interface CheckinData {
+    accessories: string[]
+    conditions: string
+}
+
+export async function saveCheckinData(
+    orderId: string,
+    data: CheckinData
+): Promise<ActionResult> {
+    console.log('💾 saveCheckinData iniciado:', { orderId })
+
+    try {
+        if (!orderId) return { success: false, message: 'ID da OS inválido' }
+
+        const supabase = await createAdminClient()
+
+        // Salvar apenas os dados de custódia preliminares
+        const { error: updateError } = await supabase
+            .from('orders')
+            .update({
+                accessories_received: data.accessories,
+                custody_conditions: data.conditions,
+                // Não muda status ainda
+            })
+            .eq('id', orderId)
+
+        if (updateError) {
+            console.error('❌ Erro ao salvar check-in:', updateError)
+            return { success: false, message: `Erro ao salvar: ${updateError.message}` }
+        }
+
+        revalidatePath(`/dashboard/orders/${orderId}`)
+
+        return {
+            success: true,
+            message: 'Dados salvos! Redirecionando para assinatura...'
+        }
+    } catch (error) {
+        console.error('❌ saveCheckinData erro:', error)
         return {
             success: false,
             message: `Erro inesperado: ${error instanceof Error ? error.message : 'Desconhecido'}`
