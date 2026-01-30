@@ -50,7 +50,10 @@ const newOrderSchema = z.object({
     equipmentType: z.string().min(1, 'Selecione o tipo'),
     equipmentBrand: z.string().optional(),
     equipmentModel: z.string().optional(),
+    equipmentSerialNumber: z.string().optional(),
     equipmentPassword: z.string().optional(),
+    remoteAccessId: z.string().optional(),
+    remoteAccessPassword: z.string().optional(),
     defectReport: z.string().min(10, 'Descreva o problema'),
     hasAccessories: z.boolean(),
     accessoriesDescription: z.string().optional(),
@@ -90,6 +93,7 @@ export default function NewOrderPage() {
     const router = useRouter()
 
     const [showPassword, setShowPassword] = useState(false)
+    const [showRemotePassword, setShowRemotePassword] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [isSearchingCustomer, setIsSearchingCustomer] = useState(false)
     const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
@@ -110,7 +114,10 @@ export default function NewOrderPage() {
             equipmentType: '',
             equipmentBrand: '',
             equipmentModel: '',
+            equipmentSerialNumber: '',
             equipmentPassword: '',
+            remoteAccessId: '',
+            remoteAccessPassword: '',
             defectReport: '',
             hasAccessories: false,
             accessoriesDescription: '',
@@ -171,7 +178,10 @@ export default function NewOrderPage() {
             formData.append('equipmentType', data.equipmentType)
             formData.append('equipmentBrand', data.equipmentBrand || '')
             formData.append('equipmentModel', data.equipmentModel || '')
+            formData.append('equipmentSerialNumber', data.equipmentSerialNumber || '')
             formData.append('equipmentPassword', data.equipmentPassword || '')
+            formData.append('remoteAccessId', data.remoteAccessId || '')
+            formData.append('remoteAccessPassword', data.remoteAccessPassword || '')
             formData.append('defectReport', data.defectReport)
             formData.append('hasAccessories', data.hasAccessories ? 'on' : '')
             formData.append('accessoriesDescription', data.accessoriesDescription || '')
@@ -327,31 +337,45 @@ export default function NewOrderPage() {
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            {/* Tipo */}
-                            <div className="space-y-2">
-                                <Label>Tipo *</Label>
-                                <Select
-                                    onValueChange={(value) => setValue('equipmentType', value)}
-                                    disabled={isSubmitting}
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Selecione..." />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {equipmentTypes.map((type) => (
-                                            <SelectItem key={type.value} value={type.value}>
-                                                {type.label}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                {errors.equipmentType && (
-                                    <p className="text-sm text-destructive">{errors.equipmentType.message}</p>
-                                )}
+                            {/* Tipo + Número de Série */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {/* Tipo */}
+                                <div className="space-y-2">
+                                    <Label>Tipo *</Label>
+                                    <Select
+                                        onValueChange={(value) => setValue('equipmentType', value)}
+                                        disabled={isSubmitting}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Selecione..." />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {equipmentTypes.map((type) => (
+                                                <SelectItem key={type.value} value={type.value}>
+                                                    {type.label}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    {errors.equipmentType && (
+                                        <p className="text-sm text-destructive">{errors.equipmentType.message}</p>
+                                    )}
+                                </div>
+
+                                {/* Número de Série */}
+                                <div className="space-y-2">
+                                    <Label htmlFor="equipmentSerialNumber">Número de Série (S/N)</Label>
+                                    <Input
+                                        id="equipmentSerialNumber"
+                                        placeholder="XYZ123..."
+                                        {...register('equipmentSerialNumber')}
+                                        disabled={isSubmitting}
+                                    />
+                                </div>
                             </div>
 
                             {/* Marca + Modelo */}
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="equipmentBrand">Marca</Label>
                                     <Input
@@ -391,6 +415,46 @@ export default function NewOrderPage() {
                                     >
                                         {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                                     </button>
+                                </div>
+                            </div>
+
+                            {/* Acesso Remoto */}
+                            <div className="pt-4 border-t">
+                                <Label className="text-base font-semibold mb-2 block">Acesso Remoto (AnyDesk / TeamViewer)</Label>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="remoteAccessId">ID de Acesso</Label>
+                                        <Input
+                                            id="remoteAccessId"
+                                            placeholder="Ex: 123 456 789"
+                                            {...register('remoteAccessId')}
+                                            disabled={isSubmitting}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="remoteAccessPassword">Senha de Acesso</Label>
+                                        <div className="relative">
+                                            <Input
+                                                id="remoteAccessPassword"
+                                                type={showRemotePassword ? 'text' : 'password'}
+                                                placeholder="Senha de acesso remoto"
+                                                className="pr-10"
+                                                {...register('remoteAccessPassword')}
+                                                disabled={isSubmitting}
+                                            />
+                                            <button
+                                                type="button"
+                                                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                                onClick={() => setShowRemotePassword(!showRemotePassword)}
+                                            >
+                                                {showRemotePassword ? (
+                                                    <EyeOff className="h-4 w-4" />
+                                                ) : (
+                                                    <Eye className="h-4 w-4" />
+                                                )}
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </CardContent>

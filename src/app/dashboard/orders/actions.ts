@@ -17,7 +17,10 @@ const createOrderSchema = z.object({
     equipmentType: z.string().min(1, 'Tipo obrigatório'),
     equipmentBrand: z.string().optional(),
     equipmentModel: z.string().optional(),
+    equipmentSerialNumber: z.string().optional(),
     equipmentPassword: z.string().optional(),
+    remoteAccessId: z.string().optional(),
+    remoteAccessPassword: z.string().optional(),
 
     // Detalhes
     defectReport: z.string().min(10, 'Descreva o problema'),
@@ -47,7 +50,10 @@ export async function createOrder(formData: FormData): Promise<ActionResult> {
             equipmentType: formData.get('equipmentType') as string,
             equipmentBrand: formData.get('equipmentBrand') as string,
             equipmentModel: formData.get('equipmentModel') as string,
+            equipmentSerialNumber: formData.get('equipmentSerialNumber') as string,
             equipmentPassword: formData.get('equipmentPassword') as string,
+            remoteAccessId: formData.get('remoteAccessId') as string,
+            remoteAccessPassword: formData.get('remoteAccessPassword') as string,
             defectReport: formData.get('defectReport') as string,
             hasAccessories: formData.get('hasAccessories') as string,
             accessoriesDescription: formData.get('accessoriesDescription') as string,
@@ -109,6 +115,9 @@ export async function createOrder(formData: FormData): Promise<ActionResult> {
                 type: validatedData.equipmentType,
                 brand: validatedData.equipmentBrand || null,
                 model: validatedData.equipmentModel || null,
+                serial_number: validatedData.equipmentSerialNumber || null,
+                remote_access_id: validatedData.remoteAccessId || null,
+                remote_access_password: validatedData.remoteAccessPassword || null,
                 notes: validatedData.equipmentPassword
                     ? `Senha: ${validatedData.equipmentPassword}`
                     : null,

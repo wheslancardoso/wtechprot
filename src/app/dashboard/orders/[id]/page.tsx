@@ -245,11 +245,34 @@ export default async function OrderDetailPage({ params }: PageProps) {
                                             <p className="font-mono text-sm">{equipment.serial_number || '—'}</p>
                                         </div>
                                     </div>
+
+                                    {/* Acesso Remoto (Visível Apenas para Técnicos) */}
+                                    {(equipment.remote_access_id || equipment.remote_access_password) && (
+                                        <div className="border-t border-border pt-2 mt-2 space-y-2">
+                                            <div className="flex items-center gap-2 text-primary font-medium">
+                                                <Monitor className="h-4 w-4" />
+                                                <span className="text-sm">Acesso Remoto</span>
+                                            </div>
+                                            {equipment.remote_access_id && (
+                                                <div className="grid grid-cols-3 gap-2 text-sm">
+                                                    <span className="text-muted-foreground">ID:</span>
+                                                    <span className="font-mono col-span-2 select-all">{equipment.remote_access_id}</span>
+                                                </div>
+                                            )}
+                                            {equipment.remote_access_password && (
+                                                <div className="grid grid-cols-3 gap-2 text-sm">
+                                                    <span className="text-muted-foreground">Senha:</span>
+                                                    <span className="font-mono col-span-2 select-all text-red-400">{equipment.remote_access_password}</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+
                                     {equipment.notes && equipment.notes.includes('Senha:') && (
                                         <div className="flex items-center gap-2">
                                             <Key className="h-4 w-4 text-muted-foreground" />
                                             <div>
-                                                <p className="text-sm text-muted-foreground">Senha de Acesso</p>
+                                                <p className="text-sm text-muted-foreground">Senha de Acesso (Device)</p>
                                                 <p className="font-mono text-sm">
                                                     {equipment.notes.replace('Senha: ', '')}
                                                 </p>
