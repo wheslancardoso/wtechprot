@@ -144,8 +144,8 @@ export default async function TrackingPage({ params }: PageProps) {
                         initialTasks={(order.execution_tasks || []) as ExecutionTask[]}
                     />
 
-                    {/* Listener de Status (Polling para Public) */}
-                    <OrderRealtimeListener orderId={order.id} strategy="polling" />
+                    {/* Listener de Status (Polling para Public - Otimizado) */}
+                    <OrderRealtimeListener orderId={order.id} strategy="polling" pollingInterval={15000} />
                 </div>
 
                 {/* Footer Info */}

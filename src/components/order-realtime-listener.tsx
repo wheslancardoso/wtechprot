@@ -14,7 +14,7 @@ interface OrderRealtimeListenerProps {
 export default function OrderRealtimeListener({
     orderId,
     strategy = 'realtime',
-    pollingInterval = 5000
+    pollingInterval = 15000 // Aumentado para 15s (Otimização Vercel)
 }: OrderRealtimeListenerProps) {
     const router = useRouter()
     const { toast } = useToast()
@@ -23,7 +23,10 @@ export default function OrderRealtimeListener({
     useEffect(() => {
         if (strategy === 'polling') {
             const interval = setInterval(() => {
-                router.refresh()
+                // Só atualiza se a aba estiver visível para economizar recursos (Vercel Cotas)
+                if (document.visibilityState === 'visible') {
+                    router.refresh()
+                }
             }, pollingInterval)
             return () => clearInterval(interval)
         }
