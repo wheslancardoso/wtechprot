@@ -195,7 +195,7 @@ export default function ClientActions({ orderId, displayId, hasParts, status, cu
     if (isWaitingParts) {
         return (
             <div className="fixed bottom-0 left-0 right-0 bg-yellow-50 dark:bg-yellow-950/30 border-t border-yellow-200 dark:border-yellow-800 p-4 safe-area-bottom z-50">
-                <div className="container mx-auto max-w-lg space-y-3">
+                <div className="container mx-auto max-w-lg md:max-w-5xl space-y-3">
                     <div className="flex items-center gap-3 text-yellow-800 dark:text-yellow-200">
                         <PackageCheck className="h-6 w-6 shrink-0" />
                         <div>
@@ -226,7 +226,7 @@ export default function ClientActions({ orderId, displayId, hasParts, status, cu
     if (alreadyApproved) {
         return (
             <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 p-4 safe-area-bottom z-50 shadow-[0_-5px_20px_rgba(0,0,0,0.1)]">
-                <div className="container mx-auto max-w-lg space-y-3">
+                <div className="container mx-auto max-w-lg md:max-w-5xl space-y-3">
                     <div className="flex items-center justify-between text-green-700 dark:text-green-400">
                         <div className="flex items-center gap-2">
                             {status === 'ready' || status === 'finished' ? (
@@ -267,7 +267,7 @@ export default function ClientActions({ orderId, displayId, hasParts, status, cu
     if (isCanceled) {
         return (
             <div className="fixed bottom-0 left-0 right-0 bg-red-50 dark:bg-red-950 border-t border-red-200 dark:border-red-800 p-4 safe-area-bottom z-50">
-                <div className="container mx-auto max-w-lg">
+                <div className="container mx-auto max-w-lg md:max-w-5xl">
                     <Alert variant="destructive">
                         <XCircle className="h-5 w-5" />
                         <AlertTitle>Serviço Cancelado</AlertTitle>
@@ -282,7 +282,7 @@ export default function ClientActions({ orderId, displayId, hasParts, status, cu
     return (
         <>
             <div className="fixed bottom-0 left-0 right-0 bg-background border-t p-4 pb-safe safe-area-bottom z-40 shadow-[0_-5px_20px_rgba(0,0,0,0.1)]">
-                <div className="container mx-auto max-w-lg">
+                <div className="container mx-auto max-w-lg md:max-w-5xl">
                     {/* Mensagem de erro global (se houver erro fora do modal) */}
                     {result && !isOpen && (
                         <Alert variant={result.type === 'success' ? 'success' : 'destructive'} className="mb-2">

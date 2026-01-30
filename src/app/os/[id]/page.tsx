@@ -161,115 +161,123 @@ export default async function ClientOrderPage({ params }: PageProps) {
             </header>
 
             {/* Main Content */}
-            <main className="container mx-auto px-4 py-6 space-y-6 max-w-lg">
-                {/* Status Info */}
-                <Alert>
-                    <AlertTriangle className="h-4 w-4" />
-                    <AlertDescription>
-                        <strong>OS #{order.display_id}</strong>
-                        <br />
-                        {statusDescriptions[order.status as OrderStatus]}
+            <main className="container mx-auto px-4 py-6 space-y-6 max-w-lg md:max-w-5xl">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="md:col-span-2 space-y-6">
+                        {/* Status Info */}
+                        <Alert>
+                            <AlertTriangle className="h-4 w-4" />
+                            <AlertDescription>
+                                <strong>OS #{order.display_id}</strong>
+                                <br />
+                                {statusDescriptions[order.status as OrderStatus]}
 
-                        {/* Botão de Rastreamento (Pós Aprovação) */}
+                                {/* Botão de Rastreamento (Pós Aprovação) */}
 
-                    </AlertDescription>
-                </Alert>
+                            </AlertDescription>
+                        </Alert>
 
-                {/* Card: Diagnóstico */}
-                {order.diagnosis_text && (
-                    <Card>
-                        <CardHeader className="pb-3">
-                            <CardTitle className="flex items-center gap-2 text-base">
-                                <FileText className="h-5 w-5 text-primary" />
-                                Diagnóstico Técnico
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-sm whitespace-pre-wrap text-muted-foreground leading-relaxed">
-                                {order.diagnosis_text}
-                            </p>
-                        </CardContent>
-                    </Card>
-                )}
-
-                {/* Card: Peças Necessárias */}
-                {hasParts && (
-                    <Card>
-                        <CardHeader className="pb-3">
-                            <CardTitle className="flex items-center gap-2 text-base">
-                                <ShoppingCart className="h-5 w-5 text-primary" />
-                                Peças Necessárias
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            {/* Aviso Compra Assistida */}
-                            <Alert variant="warning" className="py-2">
-                                <AlertTriangle className="h-4 w-4" />
-                                <AlertDescription className="text-xs">
-                                    <strong>Atenção:</strong> A compra das peças é responsabilidade do cliente.
-                                    Após comprar, entre em contato para combinar a entrega.
-                                </AlertDescription>
-                            </Alert>
-
-                            {/* Lista de Peças */}
-                            <div className="space-y-3">
-                                {externalParts.map((part: { id: string; title: string; external_url: string | null }) => (
-                                    <div
-                                        key={part.id}
-                                        className="flex items-center justify-between p-3 bg-muted rounded-lg"
-                                    >
-                                        <span className="text-sm font-medium flex-1 pr-2">{part.title}</span>
-                                        {part.external_url && (
-                                            <Button size="sm" variant="default" asChild className="shrink-0">
-                                                <Link href={part.external_url} target="_blank" rel="noopener noreferrer">
-                                                    <ExternalLink className="mr-1 h-3 w-3" />
-                                                    Comprar
-                                                </Link>
-                                            </Button>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-                        </CardContent>
-                    </Card>
-                )}
-
-                {/* Card: Resumo Financeiro */}
-                <Card>
-                    <CardHeader className="pb-3">
-                        <CardTitle className="flex items-center gap-2 text-base">
-                            <Receipt className="h-5 w-5 text-primary" />
-                            Resumo Financeiro
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                        <div className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">Mão de Obra</span>
-                            <span className="font-medium">{formatCurrency(order.labor_cost || 0)}</span>
-                        </div>
-
-                        {hasParts && (
-                            <div className="flex justify-between text-sm">
-                                <span className="text-muted-foreground">Peças (você compra)</span>
-                                <span className="text-muted-foreground italic text-xs">Ver links acima</span>
-                            </div>
+                        {/* Card: Diagnóstico */}
+                        {order.diagnosis_text && (
+                            <Card>
+                                <CardHeader className="pb-3">
+                                    <CardTitle className="flex items-center gap-2 text-base">
+                                        <FileText className="h-5 w-5 text-primary" />
+                                        Diagnóstico Técnico
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <p className="text-sm whitespace-pre-wrap text-muted-foreground leading-relaxed">
+                                        {order.diagnosis_text}
+                                    </p>
+                                </CardContent>
+                            </Card>
                         )}
 
-                        <hr className="my-2" />
+                        {/* Card: Peças Necessárias */}
+                        {hasParts && (
+                            <Card>
+                                <CardHeader className="pb-3">
+                                    <CardTitle className="flex items-center gap-2 text-base">
+                                        <ShoppingCart className="h-5 w-5 text-primary" />
+                                        Peças Necessárias
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                    {/* Aviso Compra Assistida */}
+                                    <Alert variant="warning" className="py-2">
+                                        <AlertTriangle className="h-4 w-4" />
+                                        <AlertDescription className="text-xs">
+                                            <strong>Atenção:</strong> A compra das peças é responsabilidade do cliente.
+                                            Após comprar, entre em contato para combinar a entrega.
+                                        </AlertDescription>
+                                    </Alert>
 
-                        <div className="flex justify-between text-lg font-bold">
-                            <span>Total a Pagar</span>
-                            <span className="text-primary">{formatCurrency(order.labor_cost || 0)}</span>
-                        </div>
+                                    {/* Lista de Peças */}
+                                    <div className="space-y-3">
+                                        {externalParts.map((part: { id: string; title: string; external_url: string | null }) => (
+                                            <div
+                                                key={part.id}
+                                                className="flex items-center justify-between p-3 bg-muted rounded-lg"
+                                            >
+                                                <span className="text-sm font-medium flex-1 pr-2">{part.title}</span>
+                                                {part.external_url && (
+                                                    <Button size="sm" variant="default" asChild className="shrink-0">
+                                                        <Link href={part.external_url} target="_blank" rel="noopener noreferrer">
+                                                            <ExternalLink className="mr-1 h-3 w-3" />
+                                                            Comprar
+                                                        </Link>
+                                                    </Button>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        )}
 
-                        <p className="text-xs text-muted-foreground text-center pt-2">
-                            * Este é o valor da mão de obra, pago diretamente ao técnico.
-                            {hasParts && ' As peças são pagas separadamente nos links indicados.'}
-                        </p>
-                    </CardContent>
-                </Card>
 
-                {/* Card: Progresso movido para /track */}
+
+                        {/* Card: Progresso movido para /track */}
+                    </div>
+
+                    <div className="space-y-6">
+                        {/* Card: Resumo Financeiro (Moved to Sidebar) */}
+                        <Card>
+                            <CardHeader className="pb-3">
+                                <CardTitle className="flex items-center gap-2 text-base">
+                                    <Receipt className="h-5 w-5 text-primary" />
+                                    Resumo Financeiro
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-3">
+                                <div className="flex justify-between text-sm">
+                                    <span className="text-muted-foreground">Mão de Obra</span>
+                                    <span className="font-medium">{formatCurrency(order.labor_cost || 0)}</span>
+                                </div>
+
+                                {hasParts && (
+                                    <div className="flex justify-between text-sm">
+                                        <span className="text-muted-foreground">Peças (você compra)</span>
+                                        <span className="text-muted-foreground italic text-xs">Ver links acima</span>
+                                    </div>
+                                )}
+
+                                <hr className="my-2" />
+
+                                <div className="flex justify-between text-lg font-bold">
+                                    <span>Total a Pagar</span>
+                                    <span className="text-primary">{formatCurrency(order.labor_cost || 0)}</span>
+                                </div>
+
+                                <p className="text-xs text-muted-foreground text-center pt-2">
+                                    * Este é o valor da mão de obra, pago diretamente ao técnico.
+                                    {hasParts && ' As peças são pagas separadamente nos links indicados.'}
+                                </p>
+                            </CardContent>
+                        </Card>
+                    </div>
+                </div>
             </main>
 
             {/* Footer com Ações do Cliente */}

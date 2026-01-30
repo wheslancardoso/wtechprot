@@ -451,7 +451,7 @@ function CheckinPageContent({ params }: { params: Promise<{ id: string }> }) {
                 />
             </div>
 
-            <main className="p-4 max-w-lg mx-auto space-y-6 mt-4">
+            <main className="p-4 max-w-lg md:max-w-3xl mx-auto space-y-6 mt-4 pb-32">
 
                 <div className="text-center mb-8">
                     <div className={cn(
@@ -471,7 +471,7 @@ function CheckinPageContent({ params }: { params: Promise<{ id: string }> }) {
                 {step === 'accessories' && (
                     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                         <Label className="text-muted-foreground ml-1">Selecione o que está sendo coletado:</Label>
-                        <div className="grid grid-cols-1 gap-3">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                             {COMMON_ACCESSORIES.map(item => {
                                 const isSelected = accessories.includes(item)
                                 return (
@@ -528,7 +528,7 @@ function CheckinPageContent({ params }: { params: Promise<{ id: string }> }) {
                                 <p className="opacity-90">Fotos são obrigatórias para proteger a loja e o cliente contra reclamações futuras de danos.</p>
                             </div>
                         </div>
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                             {photos.map((photo, index) => (
                                 <Card key={index} className="overflow-hidden border-border/60 hover:border-primary/50 transition-colors">
                                     <div className="aspect-square relative flex items-center justify-center bg-muted/50">
@@ -605,7 +605,7 @@ function CheckinPageContent({ params }: { params: Promise<{ id: string }> }) {
                                         </div>
                                     ) : <span className="text-muted-foreground italic">Nenhum acessório</span>}
                                 </div>
-                                <div className="grid grid-cols-2 gap-3">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     {photos.slice(0, 2).map((p, i) => p.url && (
                                         <div key={i} className="aspect-video relative rounded-lg overflow-hidden bg-muted border">
                                             <Image src={p.url} alt="Evidencia" fill className="object-cover" />
@@ -632,23 +632,25 @@ function CheckinPageContent({ params }: { params: Promise<{ id: string }> }) {
             </main>
 
             {/* Bottom Actions */}
-            <div className="fixed bottom-0 left-0 right-0 p-4 bg-background/80 backdrop-blur-lg border-t border-border/60 flex justify-between items-center gap-4 z-50 supports-[backdrop-filter]:bg-background/60">
-                {step !== 'accessories' && (
-                    <Button variant="secondary" size="lg" onClick={handleBack} disabled={actionLoading} className="w-1/3">
-                        Voltar
-                    </Button>
-                )}
+            <div className="fixed bottom-0 left-0 right-0 p-4 bg-background/80 backdrop-blur-lg border-t border-border/60 flex justify-center z-50 supports-[backdrop-filter]:bg-background/60">
+                <div className="w-full max-w-lg md:max-w-3xl flex justify-between items-center gap-4">
+                    {step !== 'accessories' && (
+                        <Button variant="secondary" size="lg" onClick={handleBack} disabled={actionLoading} className="w-1/3">
+                            Voltar
+                        </Button>
+                    )}
 
-                {step === 'review' ? (
-                    <Button size="lg" className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-blue-900/20 shadow-lg" onClick={handleSubmit} disabled={actionLoading}>
-                        {actionLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
-                        Gerar Link de Assinatura
-                    </Button>
-                ) : (
-                    <Button size="lg" className={cn("w-full shadow-lg", step === 'accessories' ? "w-full" : "w-2/3")} onClick={handleNext} disabled={actionLoading}>
-                        Próximo <ArrowRight className="ml-2 h-5 w-5" />
-                    </Button>
-                )}
+                    {step === 'review' ? (
+                        <Button size="lg" className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-blue-900/20 shadow-lg" onClick={handleSubmit} disabled={actionLoading}>
+                            {actionLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
+                            Gerar Link de Assinatura
+                        </Button>
+                    ) : (
+                        <Button size="lg" className={cn("w-full shadow-lg", step === 'accessories' ? "w-full" : "w-2/3")} onClick={handleNext} disabled={actionLoading}>
+                            Próximo <ArrowRight className="ml-2 h-5 w-5" />
+                        </Button>
+                    )}
+                </div>
             </div>
         </div>
     )
