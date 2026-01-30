@@ -324,6 +324,24 @@ function WarrantyDocument({ data, settings }: { data: OrderData; settings: Store
                     </View>
                 </View>
 
+                {/* Bônus: Suporte Remoto */}
+                <View style={[styles.section, { backgroundColor: '#F9FAFB', padding: 8, borderRadius: 4, border: '1 dashed #E5E7EB' }]}>
+                    <Text style={[styles.sectionTitle, { backgroundColor: 'transparent', marginBottom: 4, color: '#059669' }]}>
+                        🎁 BÔNUS: SUPORTE TÉCNICO REMOTO
+                    </Text>
+                    <Text style={{ fontSize: 8, color: '#374151', lineHeight: 1.4 }}>
+                        Como cortesia, esta Ordem de Serviço concede ao cliente o direito a <Text style={{ fontWeight: 'bold' }}>02 (dois) Tickets de Suporte Remoto</Text> (via WhatsApp ou Acesso Remoto) para dúvidas de configuração ou ajustes finos relacionados ao serviço executado.
+                    </Text>
+                    <View style={{ flexDirection: 'row', marginTop: 4, gap: 10 }}>
+                        <Text style={{ fontSize: 8, color: '#374151' }}>
+                            <Text style={{ fontWeight: 'bold' }}>Validade:</Text> 30 dias corridos.
+                        </Text>
+                        <Text style={{ fontSize: 8, color: '#374151' }}>
+                            <Text style={{ fontWeight: 'bold' }}>Regra:</Text> Cada ticket cobre 1 incidente de até 30min. Suportes adicionais serão cobrados à parte.
+                        </Text>
+                    </View>
+                </View>
+
                 {/* Peças Externas */}
                 {data.externalParts.length > 0 && (
                     <View style={styles.section}>
