@@ -116,7 +116,13 @@ function CheckinPageContent({ params }: { params: Promise<{ id: string }> }) {
                 // For now, let's try to fetch if possible, otherwise use defaults
                 const { data: tenant } = await supabase.from('tenants').select('*').limit(1).single()
 
-                setStoreSettings(tenant || { trade_name: 'Minha Assistência' })
+                setStoreSettings(tenant ? {
+                    ...tenant,
+                    logo_url: tenant.logo_url || `${window.location.origin}/logo.png`
+                } : {
+                    trade_name: 'Minha Assistência',
+                    logo_url: `${window.location.origin}/logo.png`
+                })
 
                 // If signed, populate state
                 if (order.custody_signed_at) {

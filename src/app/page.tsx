@@ -1,6 +1,7 @@
 import Link from 'next/link'
-import { ArrowRight, CheckCircle2, ShieldCheck, FileSearch, Smartphone, MessageCircle, Wrench, CreditCard, Laptop, Home as HomeIcon, UserCheck, Printer, Monitor } from 'lucide-react'
+import { ArrowRight, CheckCircle2, ShieldCheck, FileSearch, Smartphone, MessageCircle, Wrench, CreditCard, Laptop, Home as HomeIcon, UserCheck, Printer, Monitor, Clock, FileText } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import Image from 'next/image'
 // import OrderTrackerInput from '@/components/landing/order-tracker-input'
 import { createAdminClient } from '@/lib/supabase/server'
 
@@ -77,8 +78,8 @@ export default async function Home() {
       <header className="fixed top-0 w-full z-50 bg-slate-950/80 backdrop-blur-md border-b border-white/5">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2 font-bold text-xl tracking-tight">
-            <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center border border-primary/20">
-              <Laptop className="w-5 h-5 text-primary" />
+            <div className="w-8 h-8 relative flex items-center justify-center">
+              <Image src="/logo.svg" alt="Logo" width={32} height={32} className="object-contain" />
             </div>
             <span>{brandName}</span>
           </div>
@@ -151,6 +152,92 @@ export default async function Home() {
             </div>
           </div>
         </section>
+        {/* TRACKING SPOTLIGHT SECTION */}
+        <section className="py-24 bg-gradient-to-b from-slate-950 to-primary/5 border-b border-white/5 relative overflow-hidden">
+          {/* Decorative blob */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[120px] pointer-events-none" />
+
+          <div className="container relative mx-auto px-4">
+            <div className="flex flex-col lg:flex-row items-center gap-16">
+              {/* Text Content */}
+              <div className="flex-1 space-y-6 text-center lg:text-left">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs font-medium text-blue-400 mb-2">
+                  <Clock className="w-3 h-3" />
+                  Inovação Exclusiva
+                </div>
+                <h2 className="text-3xl md:text-5xl font-bold leading-tight">
+                  Chega de ligar para <br />
+                  saber se está pronto.
+                </h2>
+                <p className="text-lg text-slate-400 leading-relaxed max-w-xl mx-auto lg:mx-0">
+                  Nosso sistema de <b>Rastreamento em Tempo Real</b> permite que você acompanhe cada etapa do conserto pelo seu celular. Fotos do diagnóstico, aprovação de orçamento e aviso de conclusão.
+                </p>
+
+                <ul className="space-y-3 text-slate-300 max-w-sm mx-auto lg:mx-0 text-left">
+                  {[
+                    "Receba atualizações automáticas no WhatsApp",
+                    "Veja fotos das peças trocadas",
+                    "Aprove orçamentos com um clique",
+                    "Histórico completo do serviço"
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-center gap-3">
+                      <CheckCircle2 className="w-5 h-5 text-primary shrink-0" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Visual UI Mockup */}
+              <div className="flex-1 w-full max-w-md lg:max-w-full perspective-1000">
+                <div className="relative bg-slate-900 border border-white/10 rounded-2xl p-6 shadow-2xl shadow-black/50 overflow-hidden transform rotate-y-12 rotate-x-6 hover:rotate-0 transition-all duration-700 ease-out group">
+                  {/* Floating status badges */}
+                  <div className="absolute top-6 right-6 flex flex-col gap-2">
+                    <div className="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-xs font-bold border border-green-500/20 animate-bounce">
+                      Pronto para retirada
+                    </div>
+                  </div>
+
+                  {/* Header Mock */}
+                  <div className="flex items-center gap-4 mb-8 border-b border-white/5 pb-6">
+                    <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
+                      <Wrench className="w-6 h-6 text-primary" />
+                    </div>
+                    <div>
+                      <div className="h-4 w-32 bg-white/10 rounded mb-2" />
+                      <div className="h-3 w-20 bg-white/5 rounded" />
+                    </div>
+                  </div>
+
+                  {/* Timeline Mock */}
+                  <div className="space-y-6 relative pl-4 border-l border-white/10 ml-2">
+                    {[
+                      { title: "Diagnóstico Concluído", time: "10:30", active: true },
+                      { title: "Orçamento Aprovado", time: "10:45", active: true },
+                      { title: "Peças Trocadas", time: "14:20", active: true },
+                      { title: "Disponível para Retirada", time: "16:00", active: true }
+                    ].map((step, i) => (
+                      <div key={i} className={`relative pl-6 ${step.active ? 'opacity-100' : 'opacity-40'}`}>
+                        <div className="absolute -left-[21px] top-1 w-3 h-3 rounded-full bg-primary ring-4 ring-slate-900" />
+                        <p className="text-sm font-bold text-white mb-1">{step.title}</p>
+                        <p className="text-xs text-slate-500">{step.time}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Bottom Action */}
+                  <div className="mt-8 pt-6 border-t border-white/5">
+                    <div className="w-full h-10 bg-primary/20 rounded border border-primary/20 flex items-center justify-center text-primary text-sm font-bold">
+                      Ver Termo de Garantia (PDF)
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
 
         {/* ESPECIALIDADES */}
         <section className="py-12 border-y border-white/5 bg-white/[0.02]">
