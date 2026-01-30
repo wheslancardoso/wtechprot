@@ -123,7 +123,7 @@ export default async function TrackingPage({ params }: PageProps) {
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-sm font-medium leading-relaxed">
+                        <p className="text-sm font-medium leading-relaxed whitespace-pre-wrap">
                             {order.diagnosis_text || 'Diagnóstico em andamento...'}
                         </p>
                     </CardContent>
