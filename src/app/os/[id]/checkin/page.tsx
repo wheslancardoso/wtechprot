@@ -54,8 +54,16 @@ interface CheckinPageProps {
 }
 
 export default function CheckinPage({ params }: CheckinPageProps) {
+    return (
+        <CheckinPageContent params={params} />
+    )
+}
+
+function CheckinPageContent({ params }: { params: Promise<{ id: string }> }) {
+    const [initializing, setInitializing] = useState(true)
+    const [actionLoading, setActionLoading] = useState(false) // For uploads/submits
+
     const [step, setStep] = useState<Step>('accessories')
-    const [loading, setLoading] = useState(false)
     const [completed, setCompleted] = useState(false)
     const [publicSignUrl, setPublicSignUrl] = useState('')
     const [qrCodeDataUrl, setQrCodeDataUrl] = useState('')
@@ -100,7 +108,7 @@ export default function CheckinPage({ params }: CheckinPageProps) {
 
                 const { data: order, error } = await query.single()
 
-                if (error || !order) return // Let the form handle new checkin logic or error later
+                if (error || !order) return
 
                 // Fetch Tenant Settings (Mock or Real)
                 // Assuming we can get trade_name from a 'tenants' table or simply hardcode/context if not available public
@@ -125,6 +133,8 @@ export default function CheckinPage({ params }: CheckinPageProps) {
 
             } catch (err) {
                 console.error(err)
+            } finally {
+                setInitializing(false)
             }
         }
         fetchInitialData()
@@ -158,7 +168,7 @@ export default function CheckinPage({ params }: CheckinPageProps) {
 
     const handlePhotoUpload = async (index: number, file: File) => {
         try {
-            setLoading(true)
+            setActionLoading(true)
             const fileExt = file.name.split('.').pop()
             const fileName = `home-care-${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
             const filePath = `checkin/${fileName}`
@@ -184,7 +194,7 @@ export default function CheckinPage({ params }: CheckinPageProps) {
             console.error(error)
             toast({ title: 'Erro no upload', description: 'Não foi possível enviar a foto.', variant: 'destructive' })
         } finally {
-            setLoading(false)
+            setActionLoading(false)
         }
     }
 
@@ -206,7 +216,7 @@ export default function CheckinPage({ params }: CheckinPageProps) {
 
     const handleSubmit = async () => {
         try {
-            setLoading(true)
+            setActionLoading(true)
             const resolvedParams = await params
             const { id } = resolvedParams
 
@@ -259,8 +269,16 @@ export default function CheckinPage({ params }: CheckinPageProps) {
                 variant: 'destructive'
             })
         } finally {
-            setLoading(false)
+            setActionLoading(false)
         }
+    }
+
+    if (initializing) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-background">
+                <Loader2 className="h-10 w-10 animate-spin text-primary" />
+            </div>
+        )
     }
 
     // --- Success View (QR & Link) ---
@@ -320,7 +338,8 @@ export default function CheckinPage({ params }: CheckinPageProps) {
                                                     signatureUrl: auditData.custody_signature_url,
                                                     signedAt: auditData.custody_signed_at,
                                                     integrityHash: auditData.custody_integrity_hash,
-                                                    geolocation: auditData.metadata?.geolocation
+                                                    geolocation: auditData.metadata?.geolocation,
+                                                    customerDocument: auditData.customer?.document_id
                                                 }}
                                             />
                                         )}
@@ -522,7 +541,7 @@ export default function CheckinPage({ params }: CheckinPageProps) {
                                         ) : (
                                             <Upload className="h-10 w-10 text-muted-foreground/40" />
                                         )}
-                                        {loading && <div className="absolute inset-0 bg-background/80 flex items-center justify-center"><Loader2 className="animate-spin text-primary" /></div>}
+                                        {actionLoading && <div className="absolute inset-0 bg-background/80 flex items-center justify-center"><Loader2 className="animate-spin text-primary" /></div>}
                                     </div>
                                     <div className="p-3 border-t bg-card">
                                         <p className="text-xs font-semibold mb-3 text-center">{photo.label}</p>
@@ -614,18 +633,18 @@ export default function CheckinPage({ params }: CheckinPageProps) {
             {/* Bottom Actions */}
             <div className="fixed bottom-0 left-0 right-0 p-4 bg-background/80 backdrop-blur-lg border-t border-border/60 flex justify-between items-center gap-4 z-50 supports-[backdrop-filter]:bg-background/60">
                 {step !== 'accessories' && (
-                    <Button variant="secondary" size="lg" onClick={handleBack} disabled={loading} className="w-1/3">
+                    <Button variant="secondary" size="lg" onClick={handleBack} disabled={actionLoading} className="w-1/3">
                         Voltar
                     </Button>
                 )}
 
                 {step === 'review' ? (
-                    <Button size="lg" className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-blue-900/20 shadow-lg" onClick={handleSubmit} disabled={loading}>
-                        {loading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
+                    <Button size="lg" className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-blue-900/20 shadow-lg" onClick={handleSubmit} disabled={actionLoading}>
+                        {actionLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
                         Gerar Link de Assinatura
                     </Button>
                 ) : (
-                    <Button size="lg" className={cn("w-full shadow-lg", step === 'accessories' ? "w-full" : "w-2/3")} onClick={handleNext} disabled={loading}>
+                    <Button size="lg" className={cn("w-full shadow-lg", step === 'accessories' ? "w-full" : "w-2/3")} onClick={handleNext} disabled={actionLoading}>
                         Próximo <ArrowRight className="ml-2 h-5 w-5" />
                     </Button>
                 )}
