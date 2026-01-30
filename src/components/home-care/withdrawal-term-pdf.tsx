@@ -169,7 +169,7 @@ interface CustodyData {
 interface StoreSettings {
     trade_name: string
     logo_url?: string | null
-    phone?: string
+    phone?: string | null
     address?: any
 }
 
