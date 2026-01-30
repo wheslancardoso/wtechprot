@@ -264,12 +264,12 @@ export default function ClientActions({ orderId, hasParts, status, customerName 
                                     </div>
 
                                     <Button
-                                        className="w-full h-12 text-lg font-bold bg-green-600 hover:bg-green-700 shadow-md"
+                                        className="w-full h-auto py-4 text-base sm:text-lg font-bold bg-green-600 hover:bg-green-700 shadow-md whitespace-normal"
                                         onClick={handleFinalApprove}
                                         disabled={!acceptedTerms}
                                     >
-                                        <CheckCircle className="mr-2 h-5 w-5" />
-                                        CONFIRMAR APROVAÇÃO E ACEITAR TERMOS
+                                        <CheckCircle className="mr-2 h-5 w-5 shrink-0" />
+                                        <span className="text-center">CONFIRMAR APROVAÇÃO E ACEITAR TERMOS</span>
                                     </Button>
                                     <p className="text-center text-xs text-muted-foreground">
                                         Esta ação é definitiva e inicia o processo de reparo.

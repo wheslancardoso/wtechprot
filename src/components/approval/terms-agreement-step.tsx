@@ -108,7 +108,7 @@ export default function TermsAgreementStep({
                                 key={term.id}
                                 onClick={() => handleToggle(term.id)}
                                 className={cn(
-                                    "relative p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer group select-none flex flex-col gap-3",
+                                    "relative p-3 sm:p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer group select-none flex flex-col gap-2 sm:gap-3",
                                     isAccepted
                                         ? "bg-primary/5 border-primary shadow-sm"
                                         : "bg-card border-muted hover:border-primary/50 hover:shadow-md"

@@ -169,14 +169,13 @@ export default function OrderActions({
                                 onClick={() => handleStatusChange('canceled')}
                                 disabled={isPending}
                                 variant="destructive"
-                                size="icon"
-                                title="Cancelar OS"
                             >
                                 {isPending ? (
-                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                 ) : (
-                                    <XCircle className="h-4 w-4" />
+                                    <XCircle className="mr-2 h-4 w-4" />
                                 )}
+                                Cancelar
                             </Button>
                         </>
                     )}
@@ -282,7 +281,7 @@ export default function OrderActions({
                             Aguardando Peças do Cliente
                         </AlertTitle>
                         <AlertDescription className="text-blue-700 dark:text-blue-300">
-                            O cliente precisa comprar e entregar as peças na assistência.
+                            O cliente precisa comprar e entregar as peças.
                         </AlertDescription>
                     </Alert>
                 )}

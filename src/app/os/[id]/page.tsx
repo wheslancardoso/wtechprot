@@ -40,7 +40,7 @@ const statusDescriptions: Record<OrderStatus, string> = {
     open: 'Seu equipamento está na fila para análise.',
     analyzing: 'O técnico está avaliando o problema.',
     waiting_approval: 'Revise o orçamento abaixo e aprove para iniciarmos o reparo.',
-    waiting_parts: 'Aguardando você comprar e entregar as peças na assistência.',
+    waiting_parts: 'Aguardando você comprar e entregar as peças.',
     in_progress: 'Seu equipamento está sendo reparado.',
     ready: 'Seu equipamento está pronto! Entre em contato para retirada.',
     finished: 'Serviço concluído. Obrigado pela confiança!',
@@ -171,7 +171,7 @@ export default async function ClientOrderPage({ params }: PageProps) {
                                 <AlertTriangle className="h-4 w-4" />
                                 <AlertDescription className="text-xs">
                                     <strong>Atenção:</strong> A compra das peças é responsabilidade do cliente.
-                                    Após comprar, entregue na assistência.
+                                    Após comprar, entre em contato para combinar a entrega.
                                 </AlertDescription>
                             </Alert>
 
