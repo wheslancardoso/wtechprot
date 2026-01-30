@@ -221,21 +221,29 @@ export default function ClientActions({ orderId, hasParts, status, customerName,
     // 2. Já Aprovado (Banner Fixo) - Now excludes waiting_parts
     if (alreadyApproved) {
         return (
-            <div className="fixed bottom-0 left-0 right-0 bg-green-50 dark:bg-green-950 border-t border-green-200 dark:border-green-800 p-4 safe-area-bottom z-50">
-                <div className="container mx-auto max-w-lg">
-                    <Alert variant="success" className="border-green-300">
-                        <PartyPopper className="h-5 w-5" />
-                        <AlertDescription className="flex flex-col gap-2">
-                            <div className="flex items-center gap-2">
-                                <span className="font-semibold text-green-900 dark:text-green-100">Orçamento Aprovado!</span>
-                            </div>
-                            {status === 'in_progress' && <span className="text-sm">Reparo em andamento.</span>}
+            <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 p-4 safe-area-bottom z-50 shadow-[0_-5px_20px_rgba(0,0,0,0.1)]">
+                <div className="container mx-auto max-w-lg space-y-3">
+                    <div className="flex items-center justify-between text-green-700 dark:text-green-400">
+                        <div className="flex items-center gap-2">
+                            <PartyPopper className="h-5 w-5" />
+                            <span className="font-bold text-lg">Orçamento Aprovado!</span>
+                        </div>
+                    </div>
 
-                            <Button size="sm" variant="outline" className="mt-2 w-full bg-white/50" onClick={() => router.push(`/os/${orderId}/track`)}>
-                                Acompanhar Serviço
-                            </Button>
-                        </AlertDescription>
-                    </Alert>
+                    <p className="text-sm text-muted-foreground">
+                        {status === 'in_progress'
+                            ? 'O técnico já recebeu sua confirmação. Acompanhe a visita:'
+                            : 'Serviço finalizado ou pronto.'}
+                    </p>
+
+                    <Button
+                        size="lg"
+                        className="w-full h-14 text-lg font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all animate-pulse-slow"
+                        onClick={() => router.push(`/os/${orderId}/track`)}
+                    >
+                        <Wrench className="mr-2 h-5 w-5" />
+                        ACOMPANHAR EM TEMPO REAL
+                    </Button>
                 </div>
             </div>
         )
