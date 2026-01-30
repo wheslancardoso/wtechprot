@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { ArrowRight, CheckCircle2, ShieldCheck, FileSearch, Smartphone, MessageCircle, Wrench, CreditCard, Laptop, Home as HomeIcon, UserCheck } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import OrderTrackerInput from '@/components/landing/order-tracker-input'
+// import OrderTrackerInput from '@/components/landing/order-tracker-input'
 import { createAdminClient } from '@/lib/supabase/server'
 
 async function getTenantData() {
@@ -120,17 +120,33 @@ export default async function Home() {
             </p>
 
             <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
-              <OrderTrackerInput />
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Button size="lg" className="h-14 px-8 text-lg rounded-full w-full sm:w-auto shadow-xl shadow-primary/20 bg-primary hover:bg-primary/90 text-primary-foreground transition-all transform hover:scale-105" asChild>
+                  <Link href={whatsappLink} target="_blank">
+                    <MessageCircle className="mr-2 h-5 w-5" />
+                    Falar com Técnico no WhatsApp
+                  </Link>
+                </Button>
 
-              <div className="mt-8 flex items-center justify-center gap-4 text-sm text-slate-500">
-                <Link
-                  href={whatsappLink}
-                  target="_blank"
-                  className="flex items-center gap-2 hover:text-white transition-colors"
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  Agendar Visita / Retirada
-                </Link>
+                <Button variant="outline" size="lg" className="h-14 px-8 text-lg rounded-full w-full sm:w-auto border-white/10 hover:bg-white/5 hover:text-white transition-all backdrop-blur-sm" asChild>
+                  <Link href="#como-funciona">
+                    Ver como funciona
+                  </Link>
+                </Button>
+              </div>
+
+              <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                {[
+                  { label: "Orçamento com fotos", icon: Smartphone },
+                  { label: "Aprovação online", icon: CheckCircle2 },
+                  { label: "Garantia estendida", icon: ShieldCheck },
+                  { label: "Pagamento facilitado", icon: CreditCard },
+                ].map((feat, i) => (
+                  <div key={i} className="flex flex-col items-center gap-2 p-3 rounded-lg bg-white/5 border border-white/5 backdrop-blur-sm">
+                    <feat.icon className="h-5 w-5 text-primary/80" />
+                    <span className="text-xs font-medium text-slate-300">{feat.label}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -140,23 +156,23 @@ export default async function Home() {
         <section className="py-12 border-y border-white/5 bg-white/[0.02]">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-white/5">
-              <div className="p-4">
-                <div className="mx-auto w-12 h-12 bg-blue-500/10 rounded-full flex items-center justify-center text-blue-400 mb-4">
-                  <Laptop className="w-6 h-6" />
+              <div className="p-4 animate-in fade-in zoom-in duration-700 delay-100 hover:scale-105 transition-transform cursor-default">
+                <div className="mx-auto w-12 h-12 bg-blue-500/10 rounded-full flex items-center justify-center text-blue-400 mb-4 shadow-lg shadow-blue-500/20">
+                  <Laptop className="w-6 h-6 animate-pulse" />
                 </div>
                 <h3 className="font-bold text-lg text-slate-200 mb-2">Computadores & PC Gamer</h3>
                 <p className="text-sm text-slate-400">Diagnóstico Avançado de Hardware (BIOS, Vídeo), Montagem de Setup com Cable Management e Otimização Térmica.</p>
               </div>
-              <div className="p-4">
-                <div className="mx-auto w-12 h-12 bg-purple-500/10 rounded-full flex items-center justify-center text-purple-400 mb-4">
-                  <Smartphone className="w-6 h-6" />
+              <div className="p-4 animate-in fade-in zoom-in duration-700 delay-200 hover:scale-105 transition-transform cursor-default">
+                <div className="mx-auto w-12 h-12 bg-purple-500/10 rounded-full flex items-center justify-center text-purple-400 mb-4 shadow-lg shadow-purple-500/20">
+                  <Smartphone className="w-6 h-6 animate-pulse" />
                 </div>
                 <h3 className="font-bold text-lg text-slate-200 mb-2">Notebooks</h3>
                 <p className="text-sm text-slate-400">Substituição Técnica de telas, teclados e baterias, Reparo de Carcaças/Dobradiças e Upgrade de performance (SSD/RAM).</p>
               </div>
-              <div className="p-4">
-                <div className="mx-auto w-12 h-12 bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-400 mb-4">
-                  <FileSearch className="w-6 h-6" />
+              <div className="p-4 animate-in fade-in zoom-in duration-700 delay-300 hover:scale-105 transition-transform cursor-default">
+                <div className="mx-auto w-12 h-12 bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-400 mb-4 shadow-lg shadow-emerald-500/20">
+                  <FileSearch className="w-6 h-6 animate-pulse" />
                 </div>
                 <h3 className="font-bold text-lg text-slate-200 mb-2">Impressoras</h3>
                 <p className="text-sm text-slate-400">Desobstrução do Sistema de Tinta (falhas de impressão), Reset de Almofadas/Erros Lógicos e Manutenção Preventiva de tracionadores.</p>
@@ -191,12 +207,12 @@ export default async function Home() {
                   desc: 'Seus dados são sagrados. Utilizo protocolos de segurança e mantenho total sigilo sobre seus arquivos e senhas.'
                 }
               ].map((item, i) => (
-                <div key={i} className="group p-8 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-primary/20 hover:bg-white/[0.05] transition-all">
-                  <div className="w-12 h-12 rounded-lg bg-primary/10 text-primary flex items-center justify-center mb-6 border border-primary/20 group-hover:scale-110 transition-transform">
+                <div key={i} className="group p-8 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-primary/50 hover:bg-white/[0.08] transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10">
+                  <div className="w-12 h-12 rounded-lg bg-primary/10 text-primary flex items-center justify-center mb-6 border border-primary/20 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
                     <item.icon className="w-6 h-6" />
                   </div>
-                  <h3 className="text-xl font-bold mb-3 text-white">{item.title}</h3>
-                  <p className="text-slate-400 leading-relaxed">
+                  <h3 className="text-xl font-bold mb-3 text-white group-hover:text-primary transition-colors">{item.title}</h3>
+                  <p className="text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors">
                     {item.desc}
                   </p>
                 </div>
@@ -226,14 +242,14 @@ export default async function Home() {
                 { icon: Smartphone, title: '4. Entrega', desc: 'Equipamento pronto. Levo até você e o pagamento é feito na entrega.' },
               ].map((step, i) => (
                 <div key={i} className="relative z-10 text-center group">
-                  <div className="w-16 h-16 mx-auto rounded-full bg-slate-900 border-4 border-slate-950 flex items-center justify-center mb-6 shadow-xl group-hover:border-primary/50 transition-colors">
-                    <step.icon className="w-7 h-7 text-primary" />
-                    <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-primary text-slate-950 font-bold text-xs flex items-center justify-center border-2 border-slate-950">
+                  <div className="w-16 h-16 mx-auto rounded-full bg-slate-900 border-4 border-slate-950 flex items-center justify-center mb-6 shadow-xl group-hover:border-primary/50 group-hover:scale-110 group-hover:shadow-primary/20 transition-all duration-300">
+                    <step.icon className="w-7 h-7 text-primary group-hover:animate-bounce" />
+                    <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-primary text-slate-950 font-bold text-xs flex items-center justify-center border-2 border-slate-950 group-hover:scale-125 transition-transform">
                       {i + 1}
                     </div>
                   </div>
-                  <h3 className="text-lg font-bold mb-2 text-white">{step.title}</h3>
-                  <p className="text-sm text-slate-400">{step.desc}</p>
+                  <h3 className="text-lg font-bold mb-2 text-white group-hover:text-primary transition-colors">{step.title}</h3>
+                  <p className="text-sm text-slate-400 group-hover:text-slate-300 transition-colors">{step.desc}</p>
                 </div>
               ))}
             </div>
