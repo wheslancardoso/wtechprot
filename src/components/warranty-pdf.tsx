@@ -327,7 +327,7 @@ function WarrantyDocument({ data, settings }: { data: OrderData; settings: Store
                 {/* Bônus: Suporte Remoto */}
                 <View style={[styles.section, { backgroundColor: '#F9FAFB', padding: 8, borderRadius: 4, border: '1 dashed #E5E7EB' }]}>
                     <Text style={[styles.sectionTitle, { backgroundColor: 'transparent', marginBottom: 4, color: '#059669' }]}>
-                        🎁 BÔNUS: SUPORTE TÉCNICO REMOTO
+                        BÔNUS: SUPORTE TÉCNICO REMOTO
                     </Text>
                     <Text style={{ fontSize: 8, color: '#374151', lineHeight: 1.4 }}>
                         Como cortesia, esta Ordem de Serviço concede ao cliente o direito a <Text style={{ fontWeight: 'bold' }}>02 (dois) Tickets de Suporte Remoto</Text> (via WhatsApp ou Acesso Remoto) para dúvidas de configuração ou ajustes finos relacionados ao serviço executado.
@@ -385,7 +385,7 @@ function WarrantyDocument({ data, settings }: { data: OrderData; settings: Store
                     {data.signatureEvidence && (
                         <View style={{ marginBottom: 5 }}>
                             <Text style={styles.digitalSignatureText}>
-                                DOCUMENTO ASSINADO DIGITALMENTE VIA WTECH
+                                DOCUMENTO ASSINADO DIGITALMENTE VIA {settings.trade_name.toUpperCase()}
                             </Text>
                             <Text style={styles.digitalSignatureText}>
                                 Assinado por: {data.customerName} | Data/Hora: {formatDateToLocal(data.signatureEvidence.accepted_at, 'dd/MM/yyyy HH:mm:ss')} | IP: {cleanIp(data.signatureEvidence.ip_address)}
