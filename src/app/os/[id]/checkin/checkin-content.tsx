@@ -14,6 +14,7 @@ import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 import { saveCheckinData } from '../actions'
 import QRCode from 'qrcode'
+import imageCompression from 'browser-image-compression'
 
 import {
     ArrowLeft,
@@ -169,13 +170,34 @@ function CheckinPageContent({ params }: { params: Promise<{ id: string }> }) {
     const handlePhotoUpload = async (index: number, file: File) => {
         try {
             setActionLoading(true)
-            const fileExt = file.name.split('.').pop()
+
+            // Compression Options
+            const options = {
+                maxSizeMB: 0.3, // 300KB
+                maxWidthOrHeight: 1280, // HD
+                useWebWorker: true,
+                initialQuality: 0.7,
+                fileType: "image/jpeg" // Force JPEG for compatibility or WebP
+            }
+
+            let fileToUpload = file
+
+            try {
+                console.log(`Original size: ${file.size / 1024 / 1024} MB`)
+                const compressedFile = await imageCompression(file, options)
+                console.log(`Compressed size: ${compressedFile.size / 1024 / 1024} MB`)
+                fileToUpload = compressedFile
+            } catch (compressionError) {
+                console.warn('Image compression failed, falling back to original file:', compressionError)
+            }
+
+            const fileExt = fileToUpload.name.split('.').pop() || 'jpg'
             const fileName = `home-care-${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
             const filePath = `checkin/${fileName}`
 
             const { error: uploadError } = await supabase.storage
                 .from('order-evidence')
-                .upload(filePath, file)
+                .upload(filePath, fileToUpload)
 
             if (uploadError) throw uploadError
 
@@ -189,7 +211,7 @@ function CheckinPageContent({ params }: { params: Promise<{ id: string }> }) {
                 return newPhotos
             })
 
-            toast({ title: 'Foto enviada!', description: 'Imagem carregada com sucesso.' })
+            toast({ title: 'Foto enviada!', description: 'Imagem carregada e otimizada com sucesso.' })
         } catch (error) {
             console.error(error)
             toast({ title: 'Erro no upload', description: 'Não foi possível enviar a foto.', variant: 'destructive' })
