@@ -235,7 +235,7 @@ export default function ClientActions({ orderId, displayId, hasParts, status, cu
                                 <Wrench className="h-5 w-5" />
                             )}
                             <span className="font-bold text-lg">
-                                {status === 'in_progress' && 'Reparo em Andamento'}
+                                {status === 'in_progress' && 'Serviço em Andamento'}
                                 {status === 'ready' && 'Pronto para Retirada!'}
                                 {status === 'finished' && 'Serviço Finalizado!'}
                                 {!['in_progress', 'ready', 'finished'].includes(status) && 'Orçamento Aprovado!'}
@@ -244,7 +244,7 @@ export default function ClientActions({ orderId, displayId, hasParts, status, cu
                     </div>
 
                     <p className="text-sm text-muted-foreground">
-                        {status === 'in_progress' && 'O técnico já iniciou o reparo. Acompanhe em tempo real:'}
+                        {status === 'in_progress' && 'Acompanhe a evolução do serviço:'}
                         {status === 'ready' && 'Seu aparelho já está pronto. Venha buscar em horário comercial.'}
                         {status === 'finished' && 'O serviço foi concluído. Obrigado pela confiança!'}
                         {!['in_progress', 'ready', 'finished'].includes(status) && 'O técnico já recebeu sua confirmação.'}
