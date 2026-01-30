@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -10,7 +11,7 @@ import { Label } from '@/components/ui/label'
 import { useToast } from '@/hooks/use-toast'
 import { createClient } from '@/lib/supabase/client'
 import { signCustodyTerm } from '@/app/os/[id]/actions'
-import { Loader2, MapPin, CheckCircle2, ShieldAlert, Package, ArrowRight, FileSignature } from 'lucide-react'
+import { Loader2, MapPin, CheckCircle2, ShieldAlert, Package, ArrowRight, FileSignature, Home } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 export default function PublicSignPage() {
@@ -35,7 +36,7 @@ export default function PublicSignPage() {
             // Support both UUID and DisplayID
             const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
 
-            const query = supabase
+            let query = supabase
                 .from('orders')
                 .select(`
                     id, display_id, status, 
@@ -45,9 +46,9 @@ export default function PublicSignPage() {
                 `)
 
             if (isUuid) {
-                query.eq('id', id)
+                query = query.eq('id', id)
             } else {
-                query.eq('display_id', id)
+                query = query.eq('display_id', id)
             }
 
             const { data, error } = await query.single()
@@ -145,8 +146,13 @@ export default function PublicSignPage() {
                 <p className="text-muted-foreground text-center max-w-sm mb-8">
                     O termo foi assinado e o equipamento já está registrado em nosso sistema.
                 </p>
-                <div className="bg-muted p-4 rounded-lg text-xs text-muted-foreground text-center max-w-xs border">
-                    Você pode fechar esta janela agora.
+                <div className="flex flex-col gap-3 w-full max-w-xs">
+                    <Link href="/" className="w-full">
+                        <Button variant="outline" className="w-full gap-2 h-12 text-base">
+                            <Home className="h-4 w-4" />
+                            Voltar para o Início
+                        </Button>
+                    </Link>
                 </div>
             </div>
         )
