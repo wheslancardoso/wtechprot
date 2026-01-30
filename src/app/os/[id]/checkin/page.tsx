@@ -11,7 +11,13 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useToast } from '@/hooks/use-toast'
-import SignaturePad, { SignaturePadRef } from '@/components/ui/signature-pad'
+import type { SignaturePadRef } from '@/components/ui/signature-pad'
+import dynamic from 'next/dynamic'
+
+const SignaturePad = dynamic(() => import('@/components/ui/signature-pad'), {
+    ssr: false,
+    loading: () => <div className="h-[200px] w-full bg-gray-100 rounded-lg animate-pulse" />
+})
 import {
     ArrowLeft,
     ArrowRight,
@@ -284,8 +290,8 @@ export default function CheckinPage({ params }: CheckinPageProps) {
                             {COMMON_ACCESSORIES.map(item => (
                                 <div key={item}
                                     className={`flex items-center p-3 rounded-lg border-2 cursor-pointer transition-colors ${accessories.includes(item)
-                                            ? 'border-primary bg-primary/5'
-                                            : 'border-transparent bg-white shadow-sm hover:bg-gray-50'
+                                        ? 'border-primary bg-primary/5'
+                                        : 'border-transparent bg-white shadow-sm hover:bg-gray-50'
                                         }`}
                                     onClick={() => handleAccessoryToggle(item)}
                                 >

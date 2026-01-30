@@ -1,12 +1,7 @@
 'use client'
 
 import { useRef, useState, useImperativeHandle, forwardRef, useEffect } from 'react'
-import dynamic from 'next/dynamic'
-
-const SignatureCanvas = dynamic(() => import('react-signature-canvas'), {
-    ssr: false,
-    loading: () => <div className="w-full h-full bg-gray-100 rounded-lg animate-pulse" />
-})
+import SignatureCanvas from 'react-signature-canvas'
 import { Button } from '@/components/ui/button'
 import { Eraser } from 'lucide-react'
 
