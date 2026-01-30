@@ -44,16 +44,25 @@ export default async function TrackingPage({ params }: PageProps) {
     const { id } = await params
     const supabase = await createAdminClient()
 
-    // Buscar ordem
-    const { data: order, error } = await supabase
+    // Validar se é UUID
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+
+    // Construir query
+    let query = supabase
         .from('orders')
         .select(`
       *,
       equipment:equipments(*),
       customer:customers(name)
     `)
-        .eq('id', id)
-        .single()
+
+    if (isUuid) {
+        query = query.eq('id', id)
+    } else {
+        query = query.eq('display_id', id)
+    }
+
+    const { data: order, error } = await query.single()
 
     if (error || !order) {
         notFound()
@@ -74,7 +83,7 @@ export default async function TrackingPage({ params }: PageProps) {
             <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm border-b">
                 <div className="container mx-auto px-4 py-3 flex items-center justify-between">
                     <Button variant="ghost" size="sm" asChild className="-ml-2">
-                        <Link href={`/os/${id}`}>
+                        <Link href={`/os/${order.display_id}`}>
                             <ArrowLeft className="mr-1 h-4 w-4" />
                             Detalhes
                         </Link>

@@ -134,15 +134,7 @@ export default async function ClientOrderPage({ params }: PageProps) {
                         {statusDescriptions[order.status as OrderStatus]}
 
                         {/* Botão de Rastreamento (Pós Aprovação) */}
-                        {['in_progress', 'ready', 'finished'].includes(order.status) && (
-                            <div className="mt-3 pt-3 border-t border-primary/20">
-                                <Button className="w-full bg-primary font-bold shadow-lg animate-in fade-in" size="lg" asChild>
-                                    <Link href={`/os/${order.id}/track`}>
-                                        ACOMPANHAR EM TEMPO REAL
-                                    </Link>
-                                </Button>
-                            </div>
-                        )}
+
                     </AlertDescription>
                 </Alert>
 
@@ -246,6 +238,7 @@ export default async function ClientOrderPage({ params }: PageProps) {
             {/* Footer com Ações do Cliente */}
             <ClientActions
                 orderId={order.id}
+                displayId={order.display_id}
                 hasParts={hasParts}
                 status={order.status}
                 customerName={order.customer?.name || 'Cliente'}

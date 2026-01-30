@@ -44,6 +44,7 @@ import TermsAgreementStep from '@/components/approval/terms-agreement-step'
 
 interface ClientActionsProps {
     orderId: string
+    displayId?: string
     hasParts: boolean
     status: string
     customerName: string
@@ -52,8 +53,11 @@ interface ClientActionsProps {
 
 type WizardStep = 'TERMS' | 'PROCESSING' | 'SUCCESS'
 
-export default function ClientActions({ orderId, hasParts, status, customerName, techPhone }: ClientActionsProps) {
+export default function ClientActions({ orderId, displayId, hasParts, status, customerName, techPhone }: ClientActionsProps) {
     const router = useRouter()
+
+    // Use displayId if available for prettier URLs, otherwise fallback to orderId
+    const trackingId = displayId || orderId
 
     // Estados do Modal
     const [isOpen, setIsOpen] = useState(false)
@@ -130,7 +134,7 @@ export default function ClientActions({ orderId, hasParts, status, customerName,
                     if (hasParts) {
                         router.refresh()
                     } else {
-                        router.push(`/os/${orderId}/track`)
+                        router.push(`/os/${trackingId}/track`)
                     }
                 }, 3000)
             } else {
@@ -239,7 +243,7 @@ export default function ClientActions({ orderId, hasParts, status, customerName,
                     <Button
                         size="lg"
                         className="w-full h-14 text-lg font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all animate-pulse-slow"
-                        onClick={() => router.push(`/os/${orderId}/track`)}
+                        onClick={() => router.push(`/os/${trackingId}/track`)}
                     >
                         <Wrench className="mr-2 h-5 w-5" />
                         ACOMPANHAR EM TEMPO REAL
