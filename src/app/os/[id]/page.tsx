@@ -134,7 +134,7 @@ export default async function ClientOrderPage({ params }: PageProps) {
                         {statusDescriptions[order.status as OrderStatus]}
 
                         {/* Botão de Rastreamento (Pós Aprovação) */}
-                        {['in_progress', 'waiting_parts', 'ready', 'finished'].includes(order.status) && (
+                        {['in_progress', 'ready', 'finished'].includes(order.status) && (
                             <div className="mt-3 pt-3 border-t border-primary/20">
                                 <Button className="w-full bg-primary font-bold shadow-lg animate-in fade-in" size="lg" asChild>
                                     <Link href={`/os/${id}/track`}>
