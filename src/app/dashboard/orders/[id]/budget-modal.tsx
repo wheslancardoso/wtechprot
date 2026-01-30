@@ -58,6 +58,7 @@ type BudgetFormData = z.infer<typeof budgetSchema>
 // ==================================================
 interface BudgetModalProps {
     orderId: string
+    displayId: number | string
     open: boolean
     onOpenChange: (open: boolean) => void
 }
@@ -65,7 +66,7 @@ interface BudgetModalProps {
 // ==================================================
 // Component
 // ==================================================
-export default function BudgetModal({ orderId, open, onOpenChange }: BudgetModalProps) {
+export default function BudgetModal({ orderId, displayId, open, onOpenChange }: BudgetModalProps) {
     const router = useRouter()
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
@@ -112,8 +113,8 @@ export default function BudgetModal({ orderId, open, onOpenChange }: BudgetModal
             )
 
             if (result.success) {
-                // Gerar link público
-                const link = `${window.location.origin}/os/${orderId}`
+                // Gerar link público com ID curto
+                const link = `${window.location.origin}/os/${displayId}`
                 setPublicLink(link)
                 setShowSuccess(true)
                 reset()

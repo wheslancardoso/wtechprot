@@ -331,6 +331,7 @@ export default function OrderActions({
 
                 <BudgetModal
                     orderId={orderId}
+                    displayId={displayId}
                     open={isBudgetOpen}
                     onOpenChange={setIsBudgetOpen}
                 />
