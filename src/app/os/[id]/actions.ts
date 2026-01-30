@@ -267,3 +267,106 @@ export async function confirmPartArrival(orderId: string): Promise<ActionResult>
         }
     }
 }
+
+// ==================================================
+// Server Action: Assinar Termo de Custódia (Home Care)
+// ==================================================
+interface CustodySignatureData {
+    accessories: string[]
+    conditions: string
+    signatureUrl: string // URL do Supabase Storage
+    geolocation: {
+        lat: number
+        lng: number
+    }
+}
+
+export async function signCustodyTerm(
+    orderId: string,
+    data: CustodySignatureData
+): Promise<ActionResult> {
+    console.log('✍️ signCustodyTerm iniciado:', { orderId })
+
+    try {
+        if (!orderId) return { success: false, message: 'ID da OS inválido' }
+
+        // 1. Capturar Metadados de Auditoria
+        const headersList = await headers()
+        let clientIp = headersList.get('x-forwarded-for')?.split(',')[0].trim() ||
+            headersList.get('x-real-ip') || 'unknown'
+        if (clientIp.startsWith('::ffff:')) clientIp = clientIp.replace('::ffff:', '')
+
+        const userAgent = headersList.get('user-agent') || 'unknown'
+
+        // 2. Montar Payload de Evidência para Hash
+        // IMPORTANTE: A ordem dos campos deve ser consistente para validar o hash depois
+        const evidencePayload = {
+            method: "HYBRID_CUSTODY_V1", // Hybrid = Physicial Signature + Digital Meta
+            signed_at: new Date().toISOString(),
+            order_id: orderId,
+            ip_address: clientIp,
+            device_fingerprint: userAgent,
+            geolocation: {
+                lat: data.geolocation.lat,
+                lng: data.geolocation.lng
+            },
+            content_summary: {
+                accessories: data.accessories.sort(), // Ordenar para consistência
+                conditions_hash: require('crypto').createHash('md5').update(data.conditions || '').digest('hex'),
+                signature_image_url: data.signatureUrl
+            }
+        }
+
+        // 3. Gerar Hash de Integridade (SHA-256)
+        const crypto = require('crypto')
+        const integrityString = JSON.stringify(evidencePayload)
+        const integrityHash = crypto.createHash('sha256').update(integrityString).digest('hex')
+
+        console.log('🔒 Integrity Hash generated:', integrityHash)
+
+        // 4. Salvar no Banco (Admin Client para garantir permissão de escrita em campos restritos)
+        const supabase = await createAdminClient()
+
+        const { error: updateError } = await supabase
+            .from('orders')
+            .update({
+                accessories_received: data.accessories,
+                custody_conditions: data.conditions,
+                custody_signature_url: data.signatureUrl,
+                custody_signed_at: evidencePayload.signed_at,
+                custody_geo_lat: data.geolocation.lat,
+                custody_geo_lng: data.geolocation.lng,
+                custody_integrity_hash: integrityHash,
+                status: 'analyzing' // Move para Em Análise
+            })
+            .eq('id', orderId) // Importante: Assegurar que estamos alterando a OS correta (pelo DisplayID ou UUID, o chamador deve passar UUID)
+
+        if (updateError) {
+            console.error('❌ Erro ao salvar custódia:', updateError)
+            return { success: false, message: `Erro ao salvar: ${updateError.message}` }
+        }
+
+        // 5. Log de Auditoria
+        await supabase.from('order_logs').insert({
+            order_id: orderId,
+            description: `Equipamento retirado. Custódia assinada digitalmente. (Hash: ${integrityHash.substring(0, 8)}...)`,
+            type: 'status_change',
+            created_at: new Date().toISOString()
+        })
+
+        // 6. Revalidar
+        revalidatePath(`/dashboard/orders/${orderId}`)
+
+        return {
+            success: true,
+            message: '✅ Termo assinado e equipamento registrado com sucesso!'
+        }
+
+    } catch (error) {
+        console.error('❌ signCustodyTerm erro:', error)
+        return {
+            success: false,
+            message: `Erro inesperado: ${error instanceof Error ? error.message : 'Desconhecido'}`
+        }
+    }
+}

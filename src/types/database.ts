@@ -64,6 +64,9 @@ export interface Order {
     custody_conditions: string | null
     custody_signed_at: string | null
     custody_signature_url: string | null
+    custody_geo_lat: number | null
+    custody_geo_lng: number | null
+    custody_integrity_hash: string | null
     collected_by: string | null // UUID of the technician
     // Relacionamentos opcionais (joins)
     customer?: Pick<Customer, 'name'> | null
@@ -121,6 +124,9 @@ export interface OrderInsert {
     custody_conditions?: string | null
     custody_signed_at?: string | null
     custody_signature_url?: string | null
+    custody_geo_lat?: number | null
+    custody_geo_lng?: number | null
+    custody_integrity_hash?: string | null
     collected_by?: string | null
 }
 
