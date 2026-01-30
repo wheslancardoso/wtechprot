@@ -229,15 +229,25 @@ export default function ClientActions({ orderId, displayId, hasParts, status, cu
                 <div className="container mx-auto max-w-lg space-y-3">
                     <div className="flex items-center justify-between text-green-700 dark:text-green-400">
                         <div className="flex items-center gap-2">
-                            <PartyPopper className="h-5 w-5" />
-                            <span className="font-bold text-lg">Orçamento Aprovado!</span>
+                            {status === 'ready' || status === 'finished' ? (
+                                <CheckCircle className="h-5 w-5" />
+                            ) : (
+                                <Wrench className="h-5 w-5" />
+                            )}
+                            <span className="font-bold text-lg">
+                                {status === 'in_progress' && 'Mão na Massa!'}
+                                {status === 'ready' && 'Pronto para Retirada!'}
+                                {status === 'finished' && 'Serviço Finalizado!'}
+                                {!['in_progress', 'ready', 'finished'].includes(status) && 'Orçamento Aprovado!'}
+                            </span>
                         </div>
                     </div>
 
                     <p className="text-sm text-muted-foreground">
-                        {status === 'in_progress'
-                            ? 'O técnico já recebeu sua confirmação. Acompanhe a visita:'
-                            : 'Serviço finalizado ou pronto.'}
+                        {status === 'in_progress' && 'O técnico já iniciou o reparo. Acompanhe em tempo real:'}
+                        {status === 'ready' && 'Seu aparelho já está pronto. Venha buscar em horário comercial.'}
+                        {status === 'finished' && 'O serviço foi concluído. Obrigado pela confiança!'}
+                        {!['in_progress', 'ready', 'finished'].includes(status) && 'O técnico já recebeu sua confirmação.'}
                     </p>
 
                     <Button
