@@ -102,7 +102,7 @@ export default async function ClientOrderPage({ params }: PageProps) {
     // Buscar telefone do técnico (Tenant)
     const { data: tenant } = await supabase
         .from('tenants')
-        .select('phone')
+        .select('phone, trade_name')
         .eq('id', order.user_id)
         .single()
 
@@ -115,7 +115,7 @@ export default async function ClientOrderPage({ params }: PageProps) {
                         <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
                             <Wrench className="w-5 h-5 text-primary-foreground" />
                         </div>
-                        <span className="font-bold text-lg">WTECH</span>
+                        <span className="font-bold text-lg">{tenant?.trade_name || 'InforTech'}</span>
                     </div>
                     <Badge variant={order.status as OrderStatus} className="text-sm">
                         {statusLabels[order.status as OrderStatus] || order.status}
