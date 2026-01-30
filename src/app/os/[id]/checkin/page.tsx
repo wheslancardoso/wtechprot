@@ -300,18 +300,19 @@ export default function CheckinPage({ params }: CheckinPageProps) {
                                         onCheckedChange={() => handleAccessoryToggle(item)}
                                         className="mr-3"
                                     />
-                                    <span className="font-medium text-sm">{item}</span>
+                                    <span className="font-medium text-sm text-gray-900">{item}</span>
                                 </div>
                             ))}
                         </div>
 
-                        <div className="pt-4 border-t">
-                            <Label className="text-xs text-muted-foreground mb-2 block">Item Personalizado / Outro</Label>
+                        <div className="pt-4 border-t border-gray-100">
+                            <Label className="text-xs text-gray-500 mb-2 block">Item Personalizado / Outro</Label>
                             <div className="flex gap-2">
                                 <Input
                                     placeholder="Ex: Adaptador HDMI..."
                                     value={customAccessory}
                                     onChange={(e) => setCustomAccessory(e.target.value)}
+                                    className="bg-white text-gray-900 border-gray-300 placeholder:text-gray-400"
                                 />
                                 <Button variant="outline" onClick={handleAddCustomAccessory} disabled={!customAccessory}>
                                     Adicionar
