@@ -84,7 +84,7 @@ export default function ClientActions({ orderId, displayId, hasParts, status, cu
             if (result.success) {
                 // Redirecionar para WhatsApp
                 if (techPhone) {
-                    const message = encodeURIComponent(`Olá! Confirmo que as peças da OS #${orderId.slice(0, 8).toUpperCase()} já chegaram no meu endereço. Podemos agendar a visita técnica para instalação?`)
+                    const message = encodeURIComponent(`Olá! Confirmo que as peças da OS #${trackingId} já chegaram no meu endereço. Podemos agendar a visita técnica para instalação?`)
                     const whatsappUrl = `https://wa.me/55${techPhone.replace(/\D/g, '')}?text=${message}`
                     window.location.href = whatsappUrl
                 } else {
