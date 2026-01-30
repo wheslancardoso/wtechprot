@@ -11,6 +11,7 @@ import ExecutionChecklist from '@/components/execution-checklist'
 import type { ExecutionTask } from '@/lib/execution-tasks-types'
 import type { OrderData, StoreSettings } from '@/components/warranty-pdf'
 import OrderRealtimeListener from '@/components/order-realtime-listener'
+import WithdrawalTermButton from '@/components/home-care/withdrawal-term-pdf'
 
 // UI Components
 import { Badge } from '@/components/ui/badge'
@@ -169,6 +170,26 @@ export default async function OrderDetailPage({ params }: PageProps) {
                             customerName={customer?.name || 'Cliente'}
                             displayId={order.display_id}
                         />
+
+                        {/* Botão de Termo de Retirada (Só se tiver assiante) */}
+                        {order.custody_signature_url && (
+                            <WithdrawalTermButton
+                                data={{
+                                    orderDisplayId: order.display_id,
+                                    customerName: customer?.name || 'Consumidor',
+                                    customerDocument: customer?.document_id || '',
+                                    equipmentType: equipment?.type || 'Equipamento',
+                                    equipmentBrand: equipment?.brand || '',
+                                    equipmentModel: equipment?.model || '',
+                                    equipmentSerial: equipment?.serial_number || '',
+                                    accessories: order.accessories_received || [],
+                                    conditionNotes: order.custody_conditions || '',
+                                    signatureUrl: order.custody_signature_url,
+                                    signedAt: order.custody_signed_at || new Date().toISOString()
+                                }}
+                                settings={storeSettings}
+                            />
+                        )}
                     </div>
                 </div>
 

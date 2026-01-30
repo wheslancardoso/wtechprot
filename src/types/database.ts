@@ -59,6 +59,12 @@ export interface Order {
     created_at: string
     updated_at: string
     finished_at: string | null
+    // Home Care / Custody fields
+    accessories_received: string[] | null // JSONB array of strings
+    custody_conditions: string | null
+    custody_signed_at: string | null
+    custody_signature_url: string | null
+    collected_by: string | null // UUID of the technician
     // Relacionamentos opcionais (joins)
     customer?: Pick<Customer, 'name'> | null
     equipment?: Pick<Equipment, 'type' | 'model' | 'serial_number'> | null
@@ -110,6 +116,12 @@ export interface OrderInsert {
     parts_cost_external?: number
     diagnosis_text?: string | null
     solution_text?: string | null
+    // Home Care / Custody fields
+    accessories_received?: string[] | null
+    custody_conditions?: string | null
+    custody_signed_at?: string | null
+    custody_signature_url?: string | null
+    collected_by?: string | null
 }
 
 export interface OrderItemInsert {
