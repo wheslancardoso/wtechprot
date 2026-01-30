@@ -7,14 +7,28 @@ import { useToast } from '@/hooks/use-toast'
 
 interface OrderRealtimeListenerProps {
     orderId: string
+    strategy?: 'realtime' | 'polling'
+    pollingInterval?: number
 }
 
-export default function OrderRealtimeListener({ orderId }: OrderRealtimeListenerProps) {
+export default function OrderRealtimeListener({
+    orderId,
+    strategy = 'realtime',
+    pollingInterval = 5000
+}: OrderRealtimeListenerProps) {
     const router = useRouter()
     const { toast } = useToast()
     const supabase = createClient()
 
     useEffect(() => {
+        if (strategy === 'polling') {
+            const interval = setInterval(() => {
+                router.refresh()
+            }, pollingInterval)
+            return () => clearInterval(interval)
+        }
+
+        // Strategy: Realtime
         const channel = supabase
             .channel(`order-${orderId}`)
             .on(
@@ -40,7 +54,7 @@ export default function OrderRealtimeListener({ orderId }: OrderRealtimeListener
         return () => {
             supabase.removeChannel(channel)
         }
-    }, [orderId, router, supabase, toast])
+    }, [orderId, router, supabase, toast, strategy, pollingInterval])
 
-    return null // Componente invisível (apenas lógica)
+    return null
 }

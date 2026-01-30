@@ -5,7 +5,9 @@ import type { OrderStatus } from '@/types/database'
 import type { ExecutionTask } from '@/lib/execution-tasks-types'
 
 // Components
+// Components
 import RealtimeTracker from '@/components/realtime-tracker'
+import OrderRealtimeListener from '@/components/order-realtime-listener'
 
 // UI Components
 import { Badge } from '@/components/ui/badge'
@@ -141,6 +143,9 @@ export default async function TrackingPage({ params }: PageProps) {
                         orderId={order.id}
                         initialTasks={(order.execution_tasks || []) as ExecutionTask[]}
                     />
+
+                    {/* Listener de Status (Polling para Public) */}
+                    <OrderRealtimeListener orderId={order.id} strategy="polling" />
                 </div>
 
                 {/* Footer Info */}

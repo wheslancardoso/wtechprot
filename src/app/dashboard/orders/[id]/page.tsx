@@ -10,7 +10,7 @@ import OrderTimeline from './order-timeline'
 import ExecutionChecklist from '@/components/execution-checklist'
 import type { ExecutionTask } from '@/lib/execution-tasks-types'
 import type { OrderData, StoreSettings } from '@/components/warranty-pdf'
-import OrderRealtimeListener from './order-realtime-listener'
+import OrderRealtimeListener from '@/components/order-realtime-listener'
 
 // UI Components
 import { Badge } from '@/components/ui/badge'
