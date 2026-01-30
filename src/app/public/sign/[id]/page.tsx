@@ -25,6 +25,7 @@ export default function PublicSignPage() {
     const [order, setOrder] = useState<any>(null)
     const [geolocation, setGeolocation] = useState<{ lat: number; lng: number } | null>(null)
     const [acceptedTerms, setAcceptedTerms] = useState(false)
+    const [success, setSuccess] = useState(false)
 
     // Fetch Order Data
     useEffect(() => {
@@ -120,15 +121,7 @@ export default function PublicSignPage() {
 
             if (!result.success) throw new Error(result.message)
 
-            toast({
-                title: 'Assinado com Sucesso! 🎉',
-                description: 'O equipamento foi registrado.',
-                className: 'bg-green-600 text-white'
-            })
-
-            // Redirecionar para uma página de sucesso ou tracking
-            // Para demo pública, talvez tracking page?
-            router.push(`/tracking/${order.display_id}`)
+            setSuccess(true) // Show success view instead of redirecting
 
         } catch (error) {
             console.error(error)
@@ -142,12 +135,35 @@ export default function PublicSignPage() {
         }
     }
 
+    if (success) {
+        return (
+            <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 animate-in zoom-in-95 duration-500">
+                <div className="bg-green-100 text-green-600 w-20 h-20 rounded-full flex items-center justify-center mb-6 shadow-sm">
+                    <CheckCircle2 className="h-10 w-10" />
+                </div>
+                <h1 className="text-2xl font-bold text-center mb-2">Tudo Certo!</h1>
+                <p className="text-muted-foreground text-center max-w-sm mb-8">
+                    O termo foi assinado e o equipamento já está registrado em nosso sistema.
+                </p>
+                <div className="bg-muted p-4 rounded-lg text-xs text-muted-foreground text-center max-w-xs border">
+                    Você pode fechar esta janela agora.
+                </div>
+            </div>
+        )
+    }
+
     if (loading) {
         return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
     }
 
     if (!order) {
         return <div className="min-h-screen flex items-center justify-center text-muted-foreground">Pedido não encontrado.</div>
+    }
+
+    // Check if already signed (Client-side protection)
+    if (order.status !== 'open' && order.status !== 'analyzing' && !success) {
+        // Optionally render "Already Signed" view here contextually
+        // But server protection is more important
     }
 
     return (

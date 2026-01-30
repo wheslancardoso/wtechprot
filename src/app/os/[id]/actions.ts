@@ -302,6 +302,19 @@ export async function signCustodyTerm(
 
         const userAgent = headersList.get('user-agent') || 'unknown'
 
+        // 1.5 Verificar se já foi assinado (Idempotência)
+        const supabaseCheck = await createAdminClient()
+        const { data: currentOrder } = await supabaseCheck
+            .from('orders')
+            .select('custody_signed_at, status')
+            .eq('id', orderId)
+            .single()
+
+        if (currentOrder?.custody_signed_at) {
+            console.log('⚠️ Termo já assinado anteriormente. Ignorando.', orderId)
+            return { success: true, message: 'Termo já foi assinado anteriormente.' }
+        }
+
         // 2. Montar Payload de Evidência para Hash
         // IMPORTANTE: A ordem dos campos deve ser consistente para validar o hash depois
         const evidencePayload = {
