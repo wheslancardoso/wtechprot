@@ -72,7 +72,7 @@ export default async function Home() {
   const whatsappLink = `https://wa.me/${whatsappNumber}`
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-950 text-slate-50 selection:bg-primary selection:text-primary-foreground">
+    <div className="dark flex min-h-screen flex-col bg-slate-950 text-slate-50 selection:bg-primary selection:text-primary-foreground">
 
       {/* HEADER / NAV */}
       <header className="fixed top-0 w-full z-50 bg-slate-950/80 backdrop-blur-md border-b border-white/5">
