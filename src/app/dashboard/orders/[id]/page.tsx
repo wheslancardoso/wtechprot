@@ -179,6 +179,7 @@ export default async function OrderDetailPage({ params }: PageProps) {
                             storeSettings={storeSettings}
                             customerName={customer?.name || 'Cliente'}
                             displayId={order.display_id}
+                            technicalReport={technicalReport as TechnicalReport | null}
                         />
 
                         {/* Botão de Termo de Retirada (Só se tiver assiante) */}

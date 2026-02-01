@@ -5,7 +5,7 @@ import { createAdminClient } from '@/lib/supabase/server'
 import type { OrderStatus } from '@/types/database'
 import type { TechnicalReport } from '@/types/technical-report'
 import type { OrderData, StoreSettings } from '@/components/warranty-pdf'
-import TechnicalReportPdfButton from '@/components/technical-report-pdf'
+import TechnicalReportPdfWrapper from '@/components/technical-report-pdf-wrapper'
 
 // Components
 import ClientActions from './client-actions'
@@ -142,6 +142,7 @@ export default async function ClientOrderPage({ params }: PageProps) {
     // Buscar telefone do técnico (Tenant)
     const { data: tenant } = await supabase
         .from('tenants')
+        .select('*')
         .eq('id', order.user_id)
         .single()
 
@@ -297,7 +298,7 @@ export default async function ClientOrderPage({ params }: PageProps) {
                                         </AlertDescription>
                                     </Alert>
 
-                                    <TechnicalReportPdfButton
+                                    <TechnicalReportPdfWrapper
                                         report={technicalReport as TechnicalReport}
                                         orderData={orderData}
                                         storeSettings={storeSettings}

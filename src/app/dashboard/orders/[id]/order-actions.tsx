@@ -15,6 +15,7 @@ import ShareActions from '@/components/share-actions'
 
 // Types
 import type { OrderData, StoreSettings } from '@/components/warranty-pdf'
+import type { TechnicalReport } from '@/types/technical-report'
 
 // UI Components
 import { Button } from '@/components/ui/button'
@@ -43,6 +44,7 @@ interface OrderActionsProps {
     storeSettings?: StoreSettings
     customerName: string
     displayId: number
+    technicalReport?: TechnicalReport | null
 }
 
 export default function OrderActions({
@@ -51,7 +53,8 @@ export default function OrderActions({
     orderData,
     storeSettings,
     customerName,
-    displayId
+    displayId,
+    technicalReport
 }: OrderActionsProps) {
     const router = useRouter()
     const [isPending, setIsPending] = useState(false)
@@ -344,6 +347,7 @@ export default function OrderActions({
                     displayId={displayId}
                     open={isBudgetOpen}
                     onOpenChange={setIsBudgetOpen}
+                    technicalReport={technicalReport}
                 />
 
                 <FinishOrderModal

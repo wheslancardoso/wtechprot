@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import { useEffect } from 'react'
+import type { TechnicalReport } from '@/types/technical-report'
 
 // Server Action
 import { saveBudget } from '../actions'
@@ -61,12 +63,13 @@ interface BudgetModalProps {
     displayId: number | string
     open: boolean
     onOpenChange: (open: boolean) => void
+    technicalReport?: TechnicalReport | null
 }
 
 // ==================================================
 // Component
 // ==================================================
-export default function BudgetModal({ orderId, displayId, open, onOpenChange }: BudgetModalProps) {
+export default function BudgetModal({ orderId, displayId, open, onOpenChange, technicalReport }: BudgetModalProps) {
     const router = useRouter()
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
@@ -80,6 +83,7 @@ export default function BudgetModal({ orderId, displayId, open, onOpenChange }: 
         handleSubmit,
         watch,
         reset,
+        setValue,
         formState: { errors },
     } = useForm<BudgetFormData>({
         resolver: zodResolver(budgetSchema),
@@ -94,6 +98,17 @@ export default function BudgetModal({ orderId, displayId, open, onOpenChange }: 
         control,
         name: 'externalParts',
     })
+
+    // Pre-fill technical report if available and field is empty
+    useEffect(() => {
+        if (open && technicalReport) {
+            const currentVal = watch('technicalReport')
+            if (!currentVal) {
+                const formattedReport = `ANÁLISE TÉCNICA:\n${technicalReport.technical_analysis}\n\nCONCLUSÃO:\n${technicalReport.conclusion}`
+                setValue('technicalReport', formattedReport)
+            }
+        }
+    }, [open, technicalReport, setValue, watch])
 
     const laborCost = watch('laborCost') || 0
 

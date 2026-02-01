@@ -122,8 +122,7 @@ export default function TechnicalReportForm({
                 .upsert({
                     order_id: orderId,
                     tenant_id: tenantId,
-                    ...payload,
-                    updated_at: new Date().toISOString() // Assuming updated_at exists or just overwrite
+                    ...payload
                 }, { onConflict: 'order_id' })
                 .select()
                 .single()
@@ -138,7 +137,7 @@ export default function TechnicalReportForm({
             router.refresh()
             setIsEditing(false)
         } catch (err) {
-            console.error(err)
+            console.error('Error saving report:', JSON.stringify(err, null, 2))
             alert("Erro ao salvar laudo.")
         } finally {
             setIsSaving(false)
