@@ -2,12 +2,14 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import type { OrderStatus } from '@/types/database'
+import type { TechnicalReport } from '@/types/technical-report'
 
 // Components
 import OrderActions from './order-actions'
 import EvidenceSection from './evidence-section'
 import OrderTimeline from './order-timeline'
 import ExecutionChecklist from '@/components/execution-checklist'
+import TechnicalReportForm from '@/components/technical-report-form'
 import type { ExecutionTask } from '@/lib/execution-tasks-types'
 import type { OrderData, StoreSettings } from '@/components/warranty-pdf'
 import OrderRealtimeListener from '@/components/order-realtime-listener'
@@ -89,6 +91,13 @@ export default async function OrderDetailPage({ params }: PageProps) {
         .select('*')
         .eq('id', (await supabase.auth.getUser()).data.user?.id)
         .single()
+
+    // Fetch technical report (maybeSingle because it might not exist yet)
+    const { data: technicalReport } = await supabase
+        .from('technical_reports')
+        .select('*')
+        .eq('order_id', id)
+        .maybeSingle()
 
     if (error || !order) {
         notFound()
@@ -344,6 +353,21 @@ export default async function OrderDetailPage({ params }: PageProps) {
                             </div>
                         </CardContent>
                     </Card>
+
+                    {/* Card Laudo Técnico - Disponível apenas após início da análise */}
+                    {order.status !== 'open' && (
+                        <div id="technical-report-section">
+                            <TechnicalReportForm
+                                orderId={order.id}
+                                tenantId={tenant?.id || ''}
+                                existingReport={technicalReport as TechnicalReport | null}
+                                orderData={orderData}
+                                storeSettings={storeSettings}
+                                checkinPhotos={order.photos_checkin || []}
+                                checkoutPhotos={order.photos_checkout || []}
+                            />
+                        </div>
+                    )}
 
                     {/* Card Timeline - Novo componente dinâmico */}
                     <OrderTimeline orderId={order.id} currentStatus={order.status} />

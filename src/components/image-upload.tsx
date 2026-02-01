@@ -24,7 +24,7 @@ import {
 
 interface ImageUploadProps {
     orderId: string
-    type: 'checkin' | 'checkout'
+    type: 'checkin' | 'checkout' | 'technical_report'
     existingImages?: string[]
     onUploadComplete?: (urls: string[]) => void
     disabled?: boolean
@@ -156,7 +156,7 @@ export default function ImageUpload({
         }
     }
 
-    const typeLabels = {
+    const typeLabels: Record<string, { title: string; description: string }> = {
         checkin: {
             title: '📥 Fotos de Entrada (Check-in)',
             description: 'Registre o estado do aparelho ao receber',
@@ -165,6 +165,10 @@ export default function ImageUpload({
             title: '📤 Fotos de Saída (Check-out)',
             description: 'Registre o estado do aparelho ao entregar',
         },
+        technical_report: {
+            title: '📷 Evidências do Laudo',
+            description: 'Adicione fotos específicas do defeito ou testes',
+        }
     }
 
     return (

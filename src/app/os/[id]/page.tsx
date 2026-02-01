@@ -3,6 +3,9 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { createAdminClient } from '@/lib/supabase/server'
 import type { OrderStatus } from '@/types/database'
+import type { TechnicalReport } from '@/types/technical-report'
+import type { OrderData, StoreSettings } from '@/components/warranty-pdf'
+import TechnicalReportPdfButton from '@/components/technical-report-pdf'
 
 // Components
 import ClientActions from './client-actions'
@@ -139,9 +142,49 @@ export default async function ClientOrderPage({ params }: PageProps) {
     // Buscar telefone do técnico (Tenant)
     const { data: tenant } = await supabase
         .from('tenants')
-        .select('phone, trade_name')
         .eq('id', order.user_id)
         .single()
+
+    // Fetch Technical Report
+    const { data: technicalReport } = await supabase
+        .from('technical_reports')
+        .select('*')
+        .eq('order_id', order.id)
+        .maybeSingle()
+
+    // Fetch Equipment details if available
+    let equipment = null
+    if (order.equipment_id) {
+        const { data: eq } = await supabase
+            .from('equipments')
+            .select('*')
+            .eq('id', order.equipment_id)
+            .single()
+        equipment = eq
+    }
+
+    // Prepare data for PDF/Report if exists
+    const orderData: OrderData = {
+        displayId: String(order.display_id),
+        customerName: order.customer?.name || 'Cliente',
+        customerPhone: order.customer?.phone || '',
+        equipmentType: equipment?.type || 'Equipamento',
+        equipmentBrand: equipment?.brand || '',
+        equipmentModel: equipment?.model || '',
+        diagnosisText: order.diagnosis_text || '',
+        laborCost: order.labor_cost || 0,
+        photosCheckout: order.photos_checkout || [],
+        finishedAt: order.finished_at || new Date().toISOString(),
+        externalParts: [],
+        signatureEvidence: order.signature_evidence || null,
+    }
+
+    // Construct Store Settings
+    const storeSettings: StoreSettings = {
+        trade_name: tenant?.trade_name || 'Assistência Técnica',
+        phone: tenant?.phone,
+        // legal_document? map if available
+    }
 
     return (
         <div className="min-h-screen bg-muted/30 pb-32 sm:pb-40">
@@ -232,6 +275,35 @@ export default async function ClientOrderPage({ params }: PageProps) {
                                             </div>
                                         ))}
                                     </div>
+                                </CardContent>
+                            </Card>
+                        )}
+
+                        {/* Card: Laudo Técnico (Se disponível) */}
+                        {technicalReport && (
+                            <Card className="border-green-600/20 bg-green-50/10">
+                                <CardHeader className="pb-3">
+                                    <CardTitle className="flex items-center gap-2 text-base">
+                                        <FileText className="h-5 w-5 text-green-600" />
+                                        Laudo Técnico Pericial
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                    <Alert variant="default" className="bg-white/50">
+                                        <AlertDescription className="text-sm">
+                                            Um laudo técnico detalhado foi emitido para este serviço.
+                                            <br />
+                                            <strong>Conclusão:</strong> {technicalReport.conclusion}
+                                        </AlertDescription>
+                                    </Alert>
+
+                                    <TechnicalReportPdfButton
+                                        report={technicalReport as TechnicalReport}
+                                        orderData={orderData}
+                                        storeSettings={storeSettings}
+                                        label="Baixar Laudo Técnico Completo (PDF)"
+                                        variant="outline"
+                                    />
                                 </CardContent>
                             </Card>
                         )}
