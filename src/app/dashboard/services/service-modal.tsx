@@ -37,6 +37,7 @@ const serviceSchema = z.object({
     price_min: z.coerce.number().min(0, 'Preço deve ser positivo'),
     price_max: z.coerce.number().min(0, 'Preço deve ser positivo'),
     category: z.string().min(1, 'Selecione ou digite uma categoria'),
+    estimated_time: z.string().optional(),
     active: z.boolean().default(true),
 }).refine(data => data.price_min <= data.price_max, {
     message: "Preço mínimo não pode ser maior que o máximo",
@@ -75,13 +76,14 @@ export default function ServiceModal({ open, onOpenChange, serviceToEdit }: Serv
         watch,
         formState: { errors },
     } = useForm<ServiceFormData>({
-        resolver: zodResolver(serviceSchema),
+        resolver: zodResolver(serviceSchema) as any,
         defaultValues: {
             name: '',
             description: '',
             price_min: 0,
             price_max: 0,
             category: 'Computadores',
+            estimated_time: '',
             active: true,
         },
     })
@@ -96,6 +98,7 @@ export default function ServiceModal({ open, onOpenChange, serviceToEdit }: Serv
                 price_min: Number(serviceToEdit.price_min),
                 price_max: Number(serviceToEdit.price_max),
                 category: serviceToEdit.category,
+                estimated_time: serviceToEdit.estimated_time || '',
                 active: serviceToEdit.active,
             })
         } else {
@@ -105,6 +108,7 @@ export default function ServiceModal({ open, onOpenChange, serviceToEdit }: Serv
                 price_min: 0,
                 price_max: 0,
                 category: 'Computadores',
+                estimated_time: '',
                 active: true,
             })
         }
@@ -121,6 +125,7 @@ export default function ServiceModal({ open, onOpenChange, serviceToEdit }: Serv
         formData.append('price_min', String(data.price_min))
         formData.append('price_max', String(data.price_max))
         formData.append('category', data.category)
+        if (data.estimated_time) formData.append('estimated_time', data.estimated_time)
         if (data.active) formData.append('active', 'on')
 
         try {
