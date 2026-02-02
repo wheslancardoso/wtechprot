@@ -298,13 +298,17 @@ export async function saveBudget(
     orderId: string,
     diagnosisText: string,
     laborCost: number,
-    parts: ExternalPart[]
+    parts: ExternalPart[],
+    discountAmount?: number,
+    couponCode?: string | null
 ): Promise<ActionResult> {
     console.log("🔧 Iniciando saveBudget", {
         orderId,
         diagnosisText: diagnosisText.substring(0, 50) + '...',
         laborCost,
         partsCount: parts.length,
+        discountAmount,
+        couponCode,
         targetStatus: 'waiting_approval'
     })
 
@@ -344,6 +348,8 @@ export async function saveBudget(
             labor_cost: laborCost,
             parts_cost_external: 0,
             status: 'waiting_approval' as const, // CRÍTICO: Forçar mudança de status
+            discount_amount: discountAmount || 0,
+            coupon_code: couponCode || null,
         }
         console.log("📝 saveBudget: Payload de update:", updatePayload)
 

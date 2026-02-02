@@ -45,7 +45,8 @@ interface OrderActionsProps {
     customerName: string
     displayId: number | string
     technicalReport?: TechnicalReport | null
-    problemDescription?: string // New prop
+    problemDescription?: string
+    discountAmount?: number
 }
 
 export default function OrderActions({
@@ -56,7 +57,8 @@ export default function OrderActions({
     customerName,
     displayId,
     technicalReport,
-    problemDescription
+    problemDescription,
+    discountAmount = 0
 }: OrderActionsProps) {
     const router = useRouter()
     const [isPending, setIsPending] = useState(false)
@@ -362,6 +364,7 @@ export default function OrderActions({
                     onOpenChange={setIsFinishOpen}
                     orderData={orderData}
                     storeSettings={storeSettings}
+                    discountAmount={discountAmount}
                 />
             </div>
         </>

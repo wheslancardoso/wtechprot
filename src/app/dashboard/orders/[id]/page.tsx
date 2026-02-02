@@ -205,6 +205,7 @@ export default async function OrderDetailPage({ params }: PageProps) {
                         displayId={order.display_id}
                         technicalReport={technicalReport}
                         problemDescription={customerReport || undefined}
+                        discountAmount={order.discount_amount || 0}
                     />
 
                     {order.custody_signature_url && (
