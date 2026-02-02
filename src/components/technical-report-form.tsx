@@ -99,7 +99,8 @@ export default function TechnicalReportForm({
         setIsGeneratingBudget(true)
         try {
             // Use the new dedicated action
-            const result = await generateTechnicalReport(analysis)
+            const equipmentContext = `${orderData.equipmentType} ${orderData.equipmentBrand} ${orderData.equipmentModel}`
+            const result = await generateTechnicalReport(analysis, orderId, equipmentContext)
 
             if (result.success && result.data) {
                 setAnalysis(result.data) // Directly set the text
