@@ -185,7 +185,7 @@ export default async function OrderDetailPage({ params }: PageProps) {
                     <div className="flex items-center gap-3">
                         <h1 className="text-3xl font-bold tracking-tight">OS #{order.display_id}</h1>
                         <Badge variant={order.status} className="text-sm px-3 py-1">
-                            {statusLabels[order.status]}
+                            {statusLabels[order.status as OrderStatus]}
                         </Badge>
                     </div>
                     <p className="text-muted-foreground mt-2 text-sm flex items-center gap-2">

@@ -244,11 +244,11 @@ export default function TechnicalReportForm({
                     />
                     <Button
                         variant="outline"
-                        className="gap-2 text-green-600 border-green-200 hover:bg-green-50"
+                        className="gap-2 text-green-600 border-green-200 hover:bg-green-600 hover:text-white transition-colors"
                         onClick={() => {
                             const phone = orderData.customerPhone?.replace(/\D/g, '') || ''
                             const link = `${window.location.origin}/os/${orderData.displayId}`
-                            const message = `Olá *${orderData.customerName}*! 🛠️\n\nSeu *Laudo Técnico* foi emitido com sucesso pela ${storeSettings.trade_name}.\n\nPara ver os especialistas, fotos e detalhes técnicos, acesse:\n🔗 ${link}\n\nQualquer dúvida, estamos à disposição!`
+                            const message = `Olá, *${orderData.customerName}*!\nSeu equipamento já foi analisado.\nConfira o Laudo Técnico com o diagnóstico e as fotos do serviço no link seguro abaixo:\n${link}\n\nAtt, Equipe ${storeSettings.trade_name}.`
 
                             const target = phone.length >= 10 ? `55${phone}` : ''
                             window.open(`https://wa.me/${target}?text=${encodeURIComponent(message)}`, '_blank')
