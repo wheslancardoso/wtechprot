@@ -173,29 +173,29 @@ export default async function OrderDetailPage({ params }: PageProps) {
     return (
         <div className="container mx-auto max-w-7xl py-6 px-4 space-y-6">
             {/* Header + Actions */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
-                        <Link href="/dashboard/orders" className="hover:text-foreground flex items-center gap-1">
-                            <ArrowLeft className="h-4 w-4" />
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div className="w-full md:w-auto">
+                    <div className="flex items-center gap-2 text-xs md:text-sm text-muted-foreground mb-2">
+                        <Link href="/dashboard/orders" className="underline underline-offset-4 hover:text-foreground flex items-center gap-1">
+                            <ArrowLeft className="h-3 w-3 md:h-4 md:w-4" />
                             Ordens
                         </Link>
                         <span>/</span>
                         <span>#{order.display_id}</span>
                     </div>
-                    <div className="flex items-center gap-3">
-                        <h1 className="text-3xl font-bold tracking-tight">OS #{order.display_id}</h1>
-                        <Badge variant={order.status} className="text-sm px-3 py-1">
+                    <div className="flex flex-wrap items-center gap-3">
+                        <h1 className="text-2xl md:text-3xl font-bold tracking-tight">OS #{order.display_id}</h1>
+                        <Badge variant={order.status} className="text-xs md:text-sm px-3 py-0.5 md:py-1">
                             {statusLabels[order.status as OrderStatus]}
                         </Badge>
                     </div>
-                    <p className="text-muted-foreground mt-2 text-sm flex items-center gap-2">
-                        <Clock className="w-4 h-4" />
+                    <p className="text-muted-foreground mt-2 text-xs md:text-sm flex items-center gap-2">
+                        <Clock className="w-3.5 h-3.5 md:w-4 md:h-4 text-blue-500" />
                         Aberta em {formatDate(order.created_at)}
                     </p>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
                     <OrderActions
                         orderId={order.id}
                         currentStatus={order.status}
@@ -230,16 +230,18 @@ export default async function OrderDetailPage({ params }: PageProps) {
 
             {/* TABBED LAYOUT */}
             <Tabs defaultValue="overview" className="w-full space-y-6">
-                <TabsList className="grid w-full grid-cols-5 lg:w-[750px] overflow-x-auto">
-                    <TabsTrigger value="overview">Visão Geral</TabsTrigger>
-                    <TabsTrigger value="technical">Técnico</TabsTrigger>
-                    <TabsTrigger value="execution">Execução</TabsTrigger>
-                    <TabsTrigger value="telemetry">
-                        <Monitor className="h-4 w-4 mr-2" />
-                        Telemetria
-                    </TabsTrigger>
-                    <TabsTrigger value="evidence">Anexos</TabsTrigger>
-                </TabsList>
+                <div className="w-full overflow-x-auto pb-1 scrollbar-hide">
+                    <TabsList className="inline-flex w-full sm:w-auto min-w-full sm:min-w-0 bg-muted/50 p-1 border">
+                        <TabsTrigger value="overview" className="flex-1 sm:flex-none">Visão Geral</TabsTrigger>
+                        <TabsTrigger v-value="technical" className="flex-1 sm:flex-none">Técnico</TabsTrigger>
+                        <TabsTrigger value="execution" className="flex-1 sm:flex-none">Execução</TabsTrigger>
+                        <TabsTrigger value="telemetry" className="flex-1 sm:flex-none">
+                            <Monitor className="h-4 w-4 mr-1 md:mr-2" />
+                            <span className="hidden xs:inline">Telemetria</span>
+                        </TabsTrigger>
+                        <TabsTrigger value="evidence" className="flex-1 sm:flex-none">Anexos</TabsTrigger>
+                    </TabsList>
+                </div>
 
                 {/* 1. Visão Geral */}
                 <TabsContent value="overview" className="space-y-6">

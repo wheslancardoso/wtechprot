@@ -146,41 +146,40 @@ export default function OrderActions({
         <>
             <div className="space-y-4">
                 {/* TOOLBAR: Ações Principais + Compartilhar */}
-                <div className="flex flex-wrap items-center justify-end gap-2 [&>button]:w-full sm:[&>button]:w-auto">
-
+                <div className="flex flex-wrap items-center justify-start md:justify-end gap-2 w-full">
                     {/* Botões de Ação por Status */}
 
                     {/* Status: OPEN → Iniciar Diagnóstico */}
-                    {/* Status: OPEN → Iniciar Diagnóstico */}
                     {currentStatus === 'open' && (
-                        <>
-                            <Link href={`/os/${displayId}/checkin`} passHref>
-                                <Button className="w-full sm:w-auto" variant="outline">
+                        <div className="flex flex-col xs:flex-row gap-2 w-full md:w-auto">
+                            <Link href={`/os/${displayId}/checkin`} passHref className="w-full xs:w-auto">
+                                <Button className="w-full" variant="outline">
                                     <Package className="mr-2 h-4 w-4" />
-                                    Retirar Equipamento
+                                    Retirar
                                 </Button>
                             </Link>
                             <Button
                                 onClick={() => handleStatusChange('analyzing')}
                                 disabled={isPending}
+                                className="w-full xs:w-auto shadow-sm"
                             >
                                 {isPending ? (
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                 ) : (
                                     <Play className="mr-2 h-4 w-4" />
                                 )}
-                                Iniciar Diagnóstico
+                                Iniciar Análise
                             </Button>
-                        </>
+                        </div>
                     )}
 
-                    {/* Status: ANALYZING → Finalizar Diagnóstico (abre modal de orçamento) */}
+                    {/* Status: ANALYZING → Finalizar Diagnóstico */}
                     {currentStatus === 'analyzing' && (
-                        <>
+                        <div className="flex flex-col xs:flex-row gap-2 w-full md:w-auto">
                             <Button
                                 onClick={() => setIsBudgetOpen(true)}
                                 disabled={isPending}
-                                className="bg-green-600 hover:bg-green-700"
+                                className="w-full xs:w-auto bg-green-600 hover:bg-green-700 shadow-md shadow-green-600/10"
                             >
                                 <FileText className="mr-2 h-4 w-4" />
                                 Finalizar Diagnóstico
@@ -189,6 +188,7 @@ export default function OrderActions({
                                 onClick={() => handleStatusChange('canceled')}
                                 disabled={isPending}
                                 variant="destructive"
+                                className="w-full xs:w-auto"
                             >
                                 {isPending ? (
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -197,7 +197,7 @@ export default function OrderActions({
                                 )}
                                 Cancelar
                             </Button>
-                        </>
+                        </div>
                     )}
 
                     {/* Status: WAITING_PARTS → Confirmar Chegada da Peça */}
@@ -206,14 +206,14 @@ export default function OrderActions({
                             onClick={handleConfirmPartArrival}
                             disabled={isPending}
                             variant="secondary"
-                            className="border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800 border"
+                            className="w-full md:w-auto border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800 border"
                         >
                             {isPending ? (
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                             ) : (
                                 <PackageCheck className="mr-2 h-4 w-4" />
                             )}
-                            🔓 Confirmar Chegada Manualmente
+                            🔓 Confirmar Peças
                         </Button>
                     )}
 
@@ -222,32 +222,32 @@ export default function OrderActions({
                         <Button
                             onClick={() => setIsFinishOpen(true)}
                             disabled={isPending}
-                            className="bg-green-600 hover:bg-green-700"
+                            className="w-full md:w-auto bg-green-600 hover:bg-green-700 shadow-md shadow-green-600/10"
                         >
                             <Receipt className="mr-2 h-4 w-4" />
-                            Finalizar
+                            Finalizar Serviço
                         </Button>
                     )}
 
                     {/* Status: READY → Entregar ao Cliente */}
                     {currentStatus === 'ready' && (
-                        <>
+                        <div className="flex flex-col xs:flex-row gap-2 w-full md:w-auto">
                             <Button
                                 onClick={() => setIsFinishOpen(true)}
                                 disabled={isPending}
-                                className="bg-green-600 hover:bg-green-700"
+                                className="w-full xs:w-auto bg-green-600 hover:bg-green-700 shadow-md shadow-green-600/10"
                             >
                                 <Receipt className="mr-2 h-4 w-4" />
                                 Finalizar
                             </Button>
                             <PdfButtonWrapper orderData={orderData!} storeSettings={storeSettings!} />
-                        </>
+                        </div>
                     )}
 
                     {/* Status: FINISHED ou CANCELED -> Ações Finais */}
                     {(currentStatus === 'finished' || currentStatus === 'canceled') && (
-                        <>
-                            <Button variant="outline" onClick={handleReopen} disabled={isPending}>
+                        <div className="flex flex-col xs:flex-row gap-2 w-full md:w-auto">
+                            <Button variant="outline" onClick={handleReopen} disabled={isPending} className="w-full xs:w-auto">
                                 <RefreshCcw className="mr-2 h-4 w-4" />
                                 Reabrir
                             </Button>
@@ -255,16 +255,18 @@ export default function OrderActions({
                             {currentStatus === 'finished' && (
                                 <PdfButtonWrapper orderData={orderData!} storeSettings={storeSettings!} />
                             )}
-                        </>
+                        </div>
                     )}
 
-                    {/* Compartilhar (Sempre visível e alinhado) */}
-                    <ShareActions
-                        orderId={orderId}
-                        displayId={displayId}
-                        customerName={customerName}
-                        storeName={storeSettings?.trade_name}
-                    />
+                    {/* Compartilhar */}
+                    <div className="w-full sm:w-auto">
+                        <ShareActions
+                            orderId={orderId}
+                            displayId={displayId}
+                            customerName={customerName}
+                            storeName={storeSettings?.trade_name}
+                        />
+                    </div>
                 </div>
 
                 {/* Feedback Alert */}

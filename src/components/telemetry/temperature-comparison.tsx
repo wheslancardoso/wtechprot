@@ -101,15 +101,15 @@ export function TemperatureComparison({ telemetryData }: TemperatureComparisonPr
     }
 
     return (
-        <div className="space-y-6">
-            <Card>
-                <CardHeader className="pb-3 text-primary">
-                    <CardTitle className="text-base flex items-center gap-2">
-                        <Thermometer className="h-5 w-5" />
+        <div className="space-y-6 md:space-y-8">
+            <Card className="border-border/60 shadow-none overflow-hidden hover:shadow-md transition-shadow">
+                <CardHeader className="pb-3 text-primary bg-muted/20 border-b">
+                    <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2">
+                        <Thermometer className="h-4 w-4" />
                         Evolução Térmica (CPU)
                     </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-4 sm:p-6">
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         {renderMetricCard('Inicial', initialTemp, '°C', undefined, 'initial')}
                         {renderMetricCard('Pós-Reparo', postRepairTemp, '°C', postRepairDiff, 'post_repair')}
@@ -117,30 +117,32 @@ export function TemperatureComparison({ telemetryData }: TemperatureComparisonPr
                     </div>
 
                     {(postRepairDiff !== null && postRepairDiff < 0) && (
-                        <div className="mt-4 p-2 bg-green-50 dark:bg-green-950/20 text-green-700 dark:text-green-400 rounded text-xs font-medium flex items-center gap-2">
-                            <TrendingDown className="h-4 w-4" />
-                            Redução de {Math.abs(postRepairDiff)}°C na temperatura máxima após intervenção técnica.
+                        <div className="mt-4 p-3 bg-green-50 dark:bg-green-950/20 text-green-700 dark:text-green-400 rounded-lg text-xs font-bold flex items-center gap-3 border border-green-100 dark:border-green-900/50">
+                            <div className="bg-green-500 rounded-full p-1">
+                                <TrendingDown className="h-3 w-3 text-white" />
+                            </div>
+                            <span>Otimização Eficiente: Redução de {Math.abs(postRepairDiff)}°C após intervenção técnica.</span>
                         </div>
                     )}
                 </CardContent>
             </Card>
 
             {(initialSSD || initialTBW) && (
-                <Card>
-                    <CardHeader className="pb-3 text-blue-500">
-                        <CardTitle className="text-base flex items-center gap-2">
-                            <HardDrive className="h-5 w-5" />
+                <Card className="border-border/60 shadow-none overflow-hidden hover:shadow-md transition-shadow">
+                    <CardHeader className="pb-3 text-blue-500 bg-muted/20 border-b">
+                        <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2">
+                            <HardDrive className="h-4 w-4" />
                             Saúde e Escrita (SSD)
                         </CardTitle>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="p-4 sm:p-6">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             {renderMetricCard('Saúde Inicial', initialSSD, '%', undefined, 'initial', false)}
                             {renderMetricCard('Uso (TBW)', initialTBW, ' TB', tbwDiff, 'post_repair', true)}
                         </div>
                         {tbwDiff !== null && tbwDiff > 0 && (
-                            <p className="mt-4 text-[10px] text-muted-foreground italic">
-                                * O TBW aumentou {tbwDiff.toFixed(3)} TB durante os testes e formatação.
+                            <p className="mt-4 text-[10px] text-muted-foreground italic font-medium px-2 py-1 bg-muted/50 rounded inline-block">
+                                * Escrita acumulada: +{tbwDiff.toFixed(3)} TB registrados durante os ciclos de trabalho e testes.
                             </p>
                         )}
                     </CardContent>

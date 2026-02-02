@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
-import { Activity, Thermometer, HardDrive, Battery, Gauge } from 'lucide-react'
+import { Activity, Thermometer, HardDrive, Battery, Gauge, Monitor } from 'lucide-react'
 import type { HardwareTelemetry } from '@/types/telemetry'
 import { ReprocessButton } from './reprocess-button'
 
@@ -71,134 +71,214 @@ export function TelemetryDashboard({ telemetry: allTelemetry }: TelemetryDashboa
     }
 
     return (
-        <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="uppercase">{source_type}</Badge>
-                    <span className="text-xs text-muted-foreground">
-                        Analisado em {new Date(created_at).toLocaleString()}
-                    </span>
+        <div className="space-y-6 md:space-y-8 animate-in fade-in duration-500">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-muted/30 p-4 rounded-xl border border-border/50 backdrop-blur-sm">
+                <div className="flex items-center gap-3">
+                    <div className="bg-primary/10 p-2 rounded-lg">
+                        <Activity className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                        <div className="flex items-center gap-2">
+                            <Badge variant="outline" className="px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider bg-background">
+                                {source_type}
+                            </Badge>
+                            <span className="text-[10px] md:text-xs text-muted-foreground font-medium">
+                                Analisado em {new Date(created_at).toLocaleString('pt-BR')}
+                            </span>
+                        </div>
+                        <h2 className="text-sm font-semibold mt-0.5">Relatório de Saúde do Hardware</h2>
+                    </div>
                 </div>
-                <ReprocessButton telemetryId={id} />
+                <div className="flex justify-end">
+                    <ReprocessButton telemetryId={id} />
+                </div>
             </div>
 
             {/* Health Score Overview */}
-            <Card className="bg-gradient-to-br from-background to-muted/20 border-primary/20">
+            <Card className="overflow-hidden border-primary/20 bg-gradient-to-br from-primary/5 via-background to-primary/5 shadow-sm">
                 <CardHeader className="pb-2">
-                    <CardTitle className="flex items-center gap-2">
-                        <Activity className="h-5 w-5 text-primary" />
+                    <CardTitle className="text-sm font-medium flex items-center gap-2 text-primary">
+                        <Gauge className="h-4 w-4" />
                         Health Score Geral
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="flex items-end gap-4">
-                        <div className="text-5xl font-bold tracking-tighter">
-                            {health_score ?? '--'}
-                            <span className="text-lg text-muted-foreground font-normal ml-1">/100</span>
+                    <div className="flex flex-col md:flex-row md:items-center gap-6">
+                        <div className="flex items-baseline gap-1">
+                            <span className="text-6xl font-black tracking-tighter bg-gradient-to-br from-foreground to-primary bg-clip-text text-transparent">
+                                {health_score ?? '--'}
+                            </span>
+                            <span className="text-xl text-muted-foreground font-medium">/100</span>
                         </div>
-                        <Progress value={health_score || 0} className="mb-2 h-3" />
+                        <div className="flex-1 space-y-2">
+                            <div className="flex justify-between text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                                <span>Estado do Sistema</span>
+                                <span className={getStatusColor(health_score || 0, true, 80, 50).replace('text-', 'bg-').replace('500', '100') + ' ' + getStatusColor(health_score || 0, true, 80, 50) + ' px-2 rounded-full'}>
+                                    {health_score && health_score >= 80 ? 'Excelente' : health_score && health_score >= 50 ? 'Bom' : health_score ? 'Crítico' : 'N/A'}
+                                </span>
+                            </div>
+                            <Progress value={health_score || 0} className="h-4 rounded-full bg-primary/10" />
+                            <p className="text-[11px] text-muted-foreground leading-snug">
+                                {health_score && health_score >= 80
+                                    ? 'Todos os componentes críticos operando dentro das especificações ideais.'
+                                    : health_score && health_score >= 50
+                                        ? 'Atenção necessária em pontos específicos de desempenho ou temperatura.'
+                                        : 'Intervenção técnica imediata recomendada para evitar falha de hardware.'}
+                            </p>
+                        </div>
                     </div>
                 </CardContent>
             </Card>
 
             {/* Hardware Specs (Aggregated) */}
-            <Card>
-                <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium flex items-center gap-2">
-                        <Gauge className="h-4 w-4" /> Especificações do Hardware
+            <Card className="border-border/60 shadow-none bg-muted/5">
+                <CardHeader className="pb-3 border-b bg-muted/20">
+                    <CardTitle className="text-xs font-bold uppercase tracking-widest flex items-center gap-2 text-muted-foreground">
+                        <Monitor className="h-3.5 w-3.5" /> Ficha Técnica do Equipamento
                     </CardTitle>
                 </CardHeader>
-                <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                    <div>
-                        <span className="text-xs text-muted-foreground block">Processador (CPU)</span>
-                        <span className="font-medium">{aggregated.cpu_model || 'N/A'}</span>
-                    </div>
-                    <div>
-                        <span className="text-xs text-muted-foreground block">Memória RAM</span>
-                        <div className="flex flex-col">
-                            <span className="font-medium">
-                                {aggregated.ram_total_gb ? `${aggregated.ram_total_gb} GB` : 'N/A'}
-                            </span>
-                            {(aggregated.ram_speed || aggregated.ram_slots) && (
-                                <span className="text-[10px] text-muted-foreground leading-tight">
-                                    {aggregated.ram_speed ? `${aggregated.ram_speed} MHz` : ''}
-                                    {aggregated.ram_slots ? ` (${aggregated.ram_slots} slot${aggregated.ram_slots > 1 ? 's' : ''})` : ''}
+                <CardContent className="grid grid-cols-1 sm:grid-cols-2 p-0 divide-y sm:divide-y-0 sm:divide-x divide-border/40">
+                    <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-border/40">
+                        <div className="p-4 flex flex-col gap-1 hover:bg-muted/30 transition-colors">
+                            <span className="text-[10px] font-bold uppercase text-muted-foreground tracking-tight">CPU</span>
+                            <span className="text-sm font-semibold line-clamp-2 leading-tight">{aggregated.cpu_model || 'N/A'}</span>
+                        </div>
+                        <div className="p-4 flex flex-col gap-1 hover:bg-muted/30 transition-colors">
+                            <span className="text-[10px] font-bold uppercase text-muted-foreground tracking-tight">Memória RAM</span>
+                            <div className="flex items-baseline gap-2">
+                                <span className="text-sm font-bold">
+                                    {aggregated.ram_total_gb ? `${aggregated.ram_total_gb} GB` : 'N/A'}
                                 </span>
-                            )}
+                                {(aggregated.ram_speed || aggregated.ram_slots) && (
+                                    <span className="text-[10px] font-medium text-blue-600 dark:text-blue-400">
+                                        {aggregated.ram_speed ? `${aggregated.ram_speed}MHz` : ''}
+                                        {aggregated.ram_slots ? ` [${aggregated.ram_slots} slot${aggregated.ram_slots > 1 ? 's' : ''}]` : ''}
+                                    </span>
+                                )}
+                            </div>
                         </div>
                     </div>
-                    <div>
-                        <span className="text-xs text-muted-foreground block">Placa Mãe (Motherboard)</span>
-                        <span className="font-medium">{aggregated.motherboard_model || 'N/A'}</span>
-                    </div>
-                    <div>
-                        <span className="text-xs text-muted-foreground block">Placa de Vídeo (GPU)</span>
-                        <span className="font-medium">{aggregated.gpu_model || 'N/A'}</span>
+                    <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-border/40">
+                        <div className="p-4 flex flex-col gap-1 hover:bg-muted/30 transition-colors">
+                            <span className="text-[10px] font-bold uppercase text-muted-foreground tracking-tight">Placa Mãe</span>
+                            <span className="text-sm font-semibold truncate leading-tight">{aggregated.motherboard_model || 'N/A'}</span>
+                        </div>
+                        <div className="p-4 flex flex-col gap-1 hover:bg-muted/30 transition-colors">
+                            <span className="text-[10px] font-bold uppercase text-muted-foreground tracking-tight">GPU</span>
+                            <span className="text-sm font-semibold truncate leading-tight">{aggregated.gpu_model || 'N/A'}</span>
+                        </div>
                     </div>
                 </CardContent>
             </Card>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
                 {/* SSD Card */}
-                <Card>
+                <Card className="relative overflow-hidden group border-border/60 hover:border-primary/30 transition-all hover:shadow-md">
+                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <HardDrive className="h-12 w-12" />
+                    </div>
                     <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium flex items-center gap-2">
-                            <HardDrive className="h-4 w-4" /> Armazenamento (SSD/HD)
+                        <CardTitle className="text-[11px] font-bold uppercase tracking-wider flex items-center gap-2 text-muted-foreground">
+                            <HardDrive className="h-3.5 w-3.5 text-blue-500" /> Armazenamento
                         </CardTitle>
                     </CardHeader>
-                    <CardContent>
-                        <div className="flex flex-col gap-1">
-                            <span className="text-xs text-muted-foreground">
-                                {aggregated.ssd_total_gb ? `Capacidade: ${aggregated.ssd_total_gb} GB` : 'Saúde Restante'}
-                            </span>
-                            <div className={`text-2xl font-bold ${getStatusColor(ssd_health_percent || 0, true, 80, 50)}`}>
+                    <CardContent className="space-y-3">
+                        <div className="flex items-baseline justify-between">
+                            <div className={`text-3xl font-black ${getStatusColor(ssd_health_percent || 0, true, 80, 50)}`}>
                                 {ssd_health_percent != null ? `${ssd_health_percent}%` : 'N/A'}
-                                {aggregated.ssd_total_gb && <span className="text-xs font-normal ml-2 text-muted-foreground">Saúde</span>}
                             </div>
-                            {ssd_tbw && (
-                                <span className="text-xs text-muted-foreground mt-1">TBW: {ssd_tbw} TB</span>
-                            )}
+                            <span className="text-[10px] font-bold text-muted-foreground uppercase">{aggregated.ssd_total_gb ? `${aggregated.ssd_total_gb}GB` : 'SSD'}</span>
                         </div>
+                        <div className="space-y-1.5">
+                            <div className="flex justify-between text-[10px] font-medium">
+                                <span className="text-muted-foreground">Saúde do Drive</span>
+                                <span className="font-bold">{ssd_health_percent ?? 0}%</span>
+                            </div>
+                            <Progress
+                                value={ssd_health_percent || 0}
+                                className={`h-1.5 ${ssd_health_percent != null && ssd_health_percent < 50 ? 'bg-red-100' : 'bg-blue-100'}`}
+                            />
+                        </div>
+                        {ssd_tbw && (
+                            <div className="pt-2 border-t flex items-center justify-between">
+                                <span className="text-[10px] text-muted-foreground uppercase font-bold">Total Bytes Written</span>
+                                <span className="text-[11px] font-mono font-bold text-blue-600">{ssd_tbw} TB</span>
+                            </div>
+                        )}
                     </CardContent>
                 </Card>
 
                 {/* Thermals Card */}
-                <Card>
+                <Card className="relative overflow-hidden group border-border/60 hover:border-primary/30 transition-all hover:shadow-md">
+                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <Thermometer className="h-12 w-12" />
+                    </div>
                     <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium flex items-center gap-2">
-                            <Thermometer className="h-4 w-4" /> Temperatura (Máx)
+                        <CardTitle className="text-[11px] font-bold uppercase tracking-wider flex items-center gap-2 text-muted-foreground">
+                            <Thermometer className="h-3.5 w-3.5 text-orange-500" /> Stress Térmico
                         </CardTitle>
                     </CardHeader>
-                    <CardContent>
-                        <div className="flex flex-col gap-1">
-                            <span className="text-xs text-muted-foreground">Pico Registrado</span>
-                            <div className={`text-2xl font-bold ${getStatusColor(cpu_temp_max || 0, false, 75, 90)}`}>
+                    <CardContent className="space-y-3">
+                        <div className="flex items-baseline justify-between">
+                            <div className={`text-3xl font-black ${getStatusColor(cpu_temp_max || 0, false, 75, 90)}`}>
                                 {cpu_temp_max != null ? `${cpu_temp_max}°C` : 'N/A'}
                             </div>
-                            <span className="text-xs text-muted-foreground mt-1">
-                                {cpu_temp_max && cpu_temp_max > 90 ? 'Crítico (Thermal Throttling)' : 'Dentro do limite'}
-                            </span>
+                            <span className="text-[10px] font-bold text-muted-foreground uppercase">Peak Package</span>
+                        </div>
+                        <div className="space-y-1.5">
+                            <div className="flex justify-between text-[10px] font-medium">
+                                <span className="text-muted-foreground">Limite Térmico</span>
+                                <span className="font-bold">100°C</span>
+                            </div>
+                            <Progress
+                                value={cpu_temp_max || 0}
+                                className={`h-1.5 ${cpu_temp_max != null && cpu_temp_max > 85 ? 'bg-orange-100' : 'bg-green-100'}`}
+                            />
+                        </div>
+                        <div className="pt-2 border-t text-[10px] font-bold flex items-center gap-2 uppercase tracking-tighter">
+                            <div className={`w-2 h-2 rounded-full ${cpu_temp_max && cpu_temp_max > 90 ? 'bg-red-500 animate-pulse' : 'bg-green-500'}`} />
+                            {cpu_temp_max && cpu_temp_max > 90 ? 'Crítico (Thermal Throttling)' : 'Estabilidade Térmica OK'}
                         </div>
                     </CardContent>
                 </Card>
 
                 {/* Battery Card */}
-                <Card>
+                <Card className="relative overflow-hidden group border-border/60 hover:border-primary/30 transition-all hover:shadow-md sm:col-span-2 lg:col-span-1">
+                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <Battery className="h-12 w-12" />
+                    </div>
                     <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium flex items-center gap-2">
-                            <Battery className="h-4 w-4" /> Bateria
+                        <CardTitle className="text-[11px] font-bold uppercase tracking-wider flex items-center gap-2 text-muted-foreground">
+                            <Battery className="h-3.5 w-3.5 text-green-500" /> Bateria
                         </CardTitle>
                     </CardHeader>
-                    <CardContent>
-                        <div className="flex flex-col gap-1">
-                            <span className="text-xs text-muted-foreground">Nível de Desgaste (Wear)</span>
-                            <div className={`text-2xl font-bold ${getStatusColor(battery_wear_level || 0, false, 20, 50)}`}>
+                    <CardContent className="space-y-3">
+                        <div className="flex items-baseline justify-between">
+                            <div className={`text-3xl font-black ${getStatusColor(battery_wear_level || 0, false, 20, 50)}`}>
                                 {battery_wear_level != null ? `${battery_wear_level}%` : 'N/A'}
                             </div>
-                            {battery_cycles && (
-                                <span className="text-xs text-muted-foreground mt-1">Ciclos: {battery_cycles}</span>
-                            )}
+                            <span className="text-[10px] font-bold text-muted-foreground uppercase">Desgaste</span>
+                        </div>
+                        <div className="space-y-1.5">
+                            <div className="flex justify-between text-[10px] font-medium">
+                                <span className="text-muted-foreground">Ciclos de Carga</span>
+                                <span className="font-bold">{battery_cycles ?? 'N/A'}</span>
+                            </div>
+                            <div className="flex gap-1 h-1.5">
+                                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
+                                    <div
+                                        key={i}
+                                        className={`flex-1 rounded-sm ${battery_wear_level != null && (100 - battery_wear_level) >= i * 10 ? 'bg-green-500' : 'bg-muted'}`}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                        <div className="pt-2 border-t flex items-center justify-between text-[10px] font-bold uppercase tracking-tight">
+                            <span className="text-muted-foreground">Saúde Química</span>
+                            <span className={battery_wear_level != null && battery_wear_level > 30 ? 'text-red-500' : 'text-green-500'}>
+                                {battery_wear_level != null && battery_wear_level > 30 ? 'Degradação Notável' : 'Saúde Excelente'}
+                            </span>
                         </div>
                     </CardContent>
                 </Card>
