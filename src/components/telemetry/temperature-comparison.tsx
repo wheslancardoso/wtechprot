@@ -90,7 +90,7 @@ export function TemperatureComparison({ telemetryData }: TemperatureComparisonPr
                             <deltaStatus.icon className={`h-6 w-6 ${deltaStatus.color}`} />
                             <div className="flex flex-col">
                                 <span className={`text-2xl font-bold ${deltaStatus.color}`}>
-                                    {deltaStatus.sign}{delta.toFixed(delta < 1 && delta !== 0 ? 3 : 1).replace('.0', '')}{unit}
+                                    {deltaStatus.sign}{(delta !== null && delta !== undefined) ? delta.toFixed(delta < 1 && delta !== 0 ? 3 : 1).replace('.0', '') : ''}{unit}
                                 </span>
                                 {value && (
                                     <span className="text-[10px] text-muted-foreground font-medium">Final: {value}{unit}</span>
@@ -104,7 +104,7 @@ export function TemperatureComparison({ telemetryData }: TemperatureComparisonPr
                                 <div className="flex items-center gap-1">
                                     <deltaStatus.icon className={`h-4 w-4 ${deltaStatus.color}`} />
                                     <span className={`text-sm font-medium ${deltaStatus.color}`}>
-                                        {deltaStatus.sign}{delta.toFixed(delta < 1 && delta !== 0 ? 3 : 1).replace('.0', '')}{unit}
+                                        {deltaStatus.sign}{(delta !== null && delta !== undefined) ? delta.toFixed(delta < 1 && delta !== 0 ? 3 : 1).replace('.0', '') : ''}{unit}
                                     </span>
                                 </div>
                             )}
