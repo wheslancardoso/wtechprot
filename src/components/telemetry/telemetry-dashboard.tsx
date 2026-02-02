@@ -5,6 +5,7 @@ import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
 import { Activity, Thermometer, HardDrive, Battery, Gauge } from 'lucide-react'
 import type { HardwareTelemetry } from '@/types/telemetry'
+import { ReprocessButton } from './reprocess-button'
 
 interface TelemetryDashboardProps {
     telemetry: HardwareTelemetry
@@ -19,7 +20,8 @@ export function TelemetryDashboard({ telemetry }: TelemetryDashboardProps) {
         battery_cycles,
         battery_wear_level,
         source_type,
-        created_at
+        created_at,
+        id
     } = telemetry
 
     // Helper for Status Colors
@@ -45,6 +47,7 @@ export function TelemetryDashboard({ telemetry }: TelemetryDashboardProps) {
                         Analisado em {new Date(created_at).toLocaleString()}
                     </span>
                 </div>
+                <ReprocessButton telemetryId={id} />
             </div>
 
             {/* Health Score Overview */}

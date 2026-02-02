@@ -21,6 +21,9 @@ export interface HardwareTelemetry {
     ram_total_gb?: number
     gpu_model?: string
 
+    // Temperature Comparison
+    stage?: 'initial' | 'post_repair' | 'final'
+
     // Parsing Audit
     health_score?: number
     raw_content?: string
@@ -46,6 +49,9 @@ export interface TelemetryInsert {
     motherboard_model?: string
     ram_total_gb?: number
     gpu_model?: string
+
+    // Temperature Comparison
+    stage?: 'initial' | 'post_repair' | 'final'
 
     health_score?: number
     raw_content?: string

@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Card, CardContent } from '@/components/ui/card'
 import { uploadTelemetry } from '@/app/dashboard/orders/actions/telemetry'
+import { Label } from '@/components/ui/label'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 
 import { useRouter } from 'next/navigation'
 
@@ -21,6 +23,7 @@ export function TelemetryUpload({ orderId, equipmentId, tenantId, onUploadSucces
     const [isDragging, setIsDragging] = useState(false)
     const [isUploading, setIsUploading] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const [stage, setStage] = useState<'initial' | 'post_repair' | 'final'>('initial')
 
     const handleDragOver = (e: React.DragEvent) => {
         e.preventDefault()
@@ -66,7 +69,7 @@ export function TelemetryUpload({ orderId, equipmentId, tenantId, onUploadSucces
         // Let's modify the server action to take it as argument, it's cleaner.
 
         try {
-            const result = await uploadTelemetry(orderId, equipmentId, tenantId, formData)
+            const result = await uploadTelemetry(orderId, equipmentId, tenantId, formData, stage)
             if (result.success) {
                 if (onUploadSuccess) {
                     onUploadSuccess()
@@ -95,6 +98,24 @@ export function TelemetryUpload({ orderId, equipmentId, tenantId, onUploadSucces
                     <p className="text-sm text-muted-foreground">
                         Arraste arquivos <b>CrystalDiskInfo (.txt)</b> ou <b>HWiNFO (.csv, .log)</b>
                     </p>
+                </div>
+
+                <div className="w-full max-w-md space-y-3">
+                    <Label className="text-sm font-medium">Estágio da Telemetria</Label>
+                    <RadioGroup value={stage} onValueChange={(v) => setStage(v as typeof stage)} className="flex gap-4">
+                        <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="initial" id="initial" />
+                            <Label htmlFor="initial" className="font-normal cursor-pointer">Diagnóstico Inicial</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="post_repair" id="post_repair" />
+                            <Label htmlFor="post_repair" className="font-normal cursor-pointer">Pós-Reparo</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="final" id="final" />
+                            <Label htmlFor="final" className="font-normal cursor-pointer">Entrega Final</Label>
+                        </div>
+                    </RadioGroup>
                 </div>
 
                 <div className="flex gap-2">

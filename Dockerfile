@@ -13,7 +13,7 @@ RUN apk add --no-cache libc6-compat
 COPY package.json package-lock.json* .npmrc* ./
 
 # Instalar dependências
-RUN npm ci --legacy-peer-deps
+RUN npm install --legacy-peer-deps
 
 # Copiar o restante do código fonte
 COPY . .

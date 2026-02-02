@@ -186,56 +186,167 @@ function parseHWiNFO_TXT(content: string): ParseResult {
     try {
         const data: Partial<TelemetryInsert> = { source_type: 'hwinfo' }
 
-        // 1. CPU Model
-        const cpuMatch = content.match(/Processor Name:\s*(.+)/i)
-        if (cpuMatch) data.cpu_model = cpuMatch[1].trim()
-
-        // 2. Motherboard
-        const moboMatch = content.match(/Motherboard Model:\s*(.+)/i)
-        if (moboMatch) data.motherboard_model = moboMatch[1].trim()
-
-        // 3. RAM
-        const ramMatch = content.match(/Total Memory Size:\s*(\d+)\s*(GB|MB|KB)/i)
-        if (ramMatch) {
-            let val = parseInt(ramMatch[1], 10)
-            const unit = ramMatch[2].toUpperCase()
-            if (unit === 'MB') val = val / 1024
-            if (unit === 'KB') val = val / 1024 / 1024
-            data.ram_total_gb = Math.round(val)
-        }
-
-        // 4. GPU
-        const gpuMatch = content.match(/Video Adapter:\s*(.+)/i)
-        if (gpuMatch) data.gpu_model = gpuMatch[1].trim()
-
-        // 5. CPU Temp (Robust Regex)
-        const tempPatterns = [
-            /(?:CPU Package|CPU Temperature|Core Max)(?:[^:]*):\s*(\d+)/i,
-            /Temperature\s*.*\s*(\d+)\s*°C/i
+        // 1. CPU Model - Multiple patterns for different languages
+        const cpuPatterns = [
+            /Nome do processador:\s*(.+)/i,  // Portuguese
+            /Processor Name:\s*(.+)/i,       // English
+            /CPU ID.*\n.*Nome da marca da CPU:\s*(.+)/i,
+            /Intel Core [^\n]+/,
+            /AMD Ryzen [^\n]+/
         ]
 
-        for (const p of tempPatterns) {
-            const m = content.match(p)
-            if (m) {
-                data.cpu_temp_max = parseInt(m[1], 10)
+        for (const pattern of cpuPatterns) {
+            const match = content.match(pattern)
+            if (match && match[1] && match[1].trim().length > 5) {
+                data.cpu_model = match[1].trim()
+                break
+            } else if (match && match[0] && (match[0].includes('Intel Core') || match[0].includes('AMD Ryzen'))) {
+                data.cpu_model = match[0].trim()
                 break
             }
         }
 
-        // 6. Battery Wear
-        const wearMatch = content.match(/Wear Level\s*:\s*(\d+(?:\.\d+)?)\s*%/)
-        if (wearMatch) {
-            data.battery_wear_level = Math.round(parseFloat(wearMatch[1]))
+        // 2. Motherboard - Portuguese and English
+        const moboPatterns = [
+            /Modelo de placa-mãe:\s*(.+)/i,  // Portuguese
+            /Motherboard Model:\s*(.+)/i,     // English
+            /Nome da placa-mãe:\s*(.+)/i
+        ]
+
+        for (const pattern of moboPatterns) {
+            const match = content.match(pattern)
+            if (match && match[1] && match[1].trim().length > 3) {
+                data.motherboard_model = match[1].trim()
+                break
+            }
         }
 
-        // 7. Drive Remaining Life
-        const lifeMatch = content.match(/(?:Drive Remaining Life|Estimated Life)\s*:\s*(\d+(?:\.\d+)?)\s*%/)
-        if (lifeMatch) {
-            data.ssd_health_percent = Math.round(parseFloat(lifeMatch[1]))
+        // 3. RAM - Sum all memory modules
+        const ramPatterns = [
+            /Tamanho total da memória:\s*(\d+)\s*(GBytes?|MBytes?|GB|MB)/i,  // Portuguese
+            /Total Memory Size:\s*(\d+)\s*(GBytes?|MBytes?|GB|MB)/i,         // English
+            /Total.*Memory.*:\s*(\d+)\s*(GB|MB)/i
+        ]
+
+        for (const pattern of ramPatterns) {
+            const match = content.match(pattern)
+            if (match) {
+                let val = parseInt(match[1], 10)
+                const unit = match[2].toUpperCase()
+                if (unit.includes('MB') || unit.includes('MBYTES')) {
+                    val = Math.round(val / 1024)
+                }
+                data.ram_total_gb = val
+                break
+            }
         }
+
+        // 4. GPU - Look for dedicated GPU first, then integrated
+        const gpuPatterns = [
+            /Conjunto de chips gráficos:\s*(.+)/i,  // Portuguese
+            /Graphics Chipset:\s*(.+)/i,            // English
+            /Placa de vídeo:\s*(.+)/i,
+            /Video Card:\s*(.+)/i
+        ]
+
+        for (const pattern of gpuPatterns) {
+            const match = content.match(pattern)
+            if (match && match[1] && match[1].trim().length > 5) {
+                const gpu = match[1].trim()
+                if (!gpu.includes('Integrated') || !data.gpu_model) {
+                    data.gpu_model = gpu
+                    if (!gpu.includes('Intel UHD') && !gpu.includes('Intel HD')) {
+                        break
+                    }
+                }
+            }
+        }
+
+        // 5. SSD/NVMe Health
+        const ssdHealthPatterns = [
+            /Saúde do dispositivo:\s*(\d+)%/i,      // Portuguese
+            /Device Health:\s*(\d+)%/i,             // English
+            /Health Status:\s*(\d+)%/i
+        ]
+
+        for (const pattern of ssdHealthPatterns) {
+            const match = content.match(pattern)
+            if (match) {
+                data.ssd_health_percent = parseInt(match[1], 10)
+                break
+            }
+        }
+
+        // 6. SSD Temperature
+        const ssdTempPatterns = [
+            /Temperatura do disco:\s*(\d+)\s*°C/i,  // Portuguese
+            /Drive Temperature:\s*(\d+)\s*°C/i,     // English
+        ]
+
+        for (const pattern of ssdTempPatterns) {
+            const match = content.match(pattern)
+            if (match) {
+                data.cpu_temp_max = parseInt(match[1], 10)
+                break
+            }
+        }
+
+        // 7. Battery Information (from "Bateria portátil" section)
+        // Note: HWiNFO may not always show Wear Level or Cycle Count in TXT exports
+        // We'll try to extract what's available
+
+        const batteryWearPatterns = [
+            /Nível de desgaste:\s*(\d+(?:\.\d+)?)\s*%/i,           // Portuguese "Nível de desgaste"
+            /Wear Level:\s*(\d+(?:\.\d+)?)\s*%/i,                  // English
+            /Desgaste da bateria:\s*(\d+(?:\.\d+)?)\s*%/i,         // Portuguese "Battery Wear"
+            /Battery Wear:\s*(\d+(?:\.\d+)?)\s*%/i,                // English
+        ]
+
+        for (const pattern of batteryWearPatterns) {
+            const match = content.match(pattern)
+            if (match) {
+                data.battery_wear_level = Math.round(parseFloat(match[1]))
+                break
+            }
+        }
+
+        // Try to calculate wear from capacity if available
+        if (!data.battery_wear_level) {
+            const designCapMatch = content.match(/Capacidade de design:\s*(\d+)\s*mWh/i)
+            const fullCapMatch = content.match(/Capacidade total:\s*(\d+)\s*mWh/i)
+
+            if (designCapMatch && fullCapMatch) {
+                const design = parseInt(designCapMatch[1], 10)
+                const full = parseInt(fullCapMatch[1], 10)
+                if (design > 0) {
+                    data.battery_wear_level = Math.round(((design - full) / design) * 100)
+                }
+            }
+        }
+
+        // 8. Battery Cycles
+        const batteryCyclesPatterns = [
+            /Contagem de ciclo:\s*(\d+)/i,                         // Portuguese "Contagem de ciclo" (singular)
+            /Contagem de ciclos:\s*(\d+)/i,                        // Portuguese "Contagem de ciclos" (plural)
+            /Cycle Count:\s*(\d+)/i,                               // English
+            /Ciclos da bateria:\s*(\d+)/i,                         // Portuguese alt
+            /Battery Cycles:\s*(\d+)/i,                            // English alt
+            /Ciclos de energia:\s*(\d+)/i                          // Portuguese "Power Cycles"
+        ]
+
+        for (const pattern of batteryCyclesPatterns) {
+            const match = content.match(pattern)
+            if (match) {
+                data.battery_cycles = parseInt(match[1], 10)
+                break
+            }
+        }
+
+        console.log('🔍 HWiNFO TXT Parser Result:', JSON.stringify(data, null, 2))
 
         return { source: 'hwinfo', success: true, data }
     } catch (e) {
+        console.error('❌ Error in parseHWiNFO_TXT:', e)
         return { source: 'hwinfo', success: false, error: 'Falha ao processar TXT do HWiNFO.' }
     }
 }
@@ -334,7 +445,13 @@ function calculateHealthScore(data: Partial<TelemetryInsert>) {
 // MAIN ACTION
 // ----------------------------------------------------------------------
 
-export async function uploadTelemetry(orderId: string, equipmentId: string, tenantId: string, formData: FormData) {
+export async function uploadTelemetry(
+    orderId: string,
+    equipmentId: string,
+    tenantId: string,
+    formData: FormData,
+    stage: 'initial' | 'post_repair' | 'final' = 'initial'
+) {
     const supabase = await createClient()
 
     // Check Auth
@@ -402,6 +519,17 @@ export async function uploadTelemetry(orderId: string, equipmentId: string, tena
         return { success: false, error: result.error || 'Falha na análise do arquivo (Regex + AI).' }
     }
 
+    // DEBUG: Log what was extracted
+    console.log('🔍 Parser Result:', JSON.stringify({
+        source: result.source,
+        success: result.success,
+        dataKeys: Object.keys(result.data || {}),
+        cpu_model: result.data?.cpu_model,
+        ram_total_gb: result.data?.ram_total_gb,
+        gpu_model: result.data?.gpu_model,
+        motherboard_model: result.data?.motherboard_model
+    }, null, 2))
+
     const healthScore = calculateHealthScore(result.data)
 
     // Robust Tenant Resolution
@@ -436,8 +564,20 @@ export async function uploadTelemetry(orderId: string, equipmentId: string, tena
         source_type: result.source,
         raw_content: content.slice(0, 50000), // Safety clip
         health_score: healthScore,
+        stage: stage,
         ...result.data
     }
+
+    // DEBUG: Log what we're about to save
+    console.log('📊 Telemetry Payload:', JSON.stringify({
+        source: result.source,
+        cpu_model: payload.cpu_model,
+        ram_total_gb: payload.ram_total_gb,
+        gpu_model: payload.gpu_model,
+        motherboard_model: payload.motherboard_model,
+        ssd_health_percent: payload.ssd_health_percent,
+        cpu_temp_max: payload.cpu_temp_max
+    }, null, 2))
 
     const { error } = await adminSupabase.from('hardware_telemetry').insert({
         ...payload,
@@ -451,4 +591,123 @@ export async function uploadTelemetry(orderId: string, equipmentId: string, tena
 
     revalidatePath(`/dashboard/orders/${orderId}`)
     return { success: true, healthScore, data: result.data }
+}
+
+// ----------------------------------------------------------------------
+// REPROCESS EXISTING TELEMETRY
+// ----------------------------------------------------------------------
+
+export async function reprocessTelemetry(telemetryId: string) {
+    try {
+        const adminSupabase = await createAdminClient()
+
+        // 1. Fetch the existing record
+        const { data: telemetry, error: fetchError } = await adminSupabase
+            .from('hardware_telemetry')
+            .select('*')
+            .eq('id', telemetryId)
+            .single()
+
+        if (fetchError || !telemetry) {
+            return { success: false, error: 'Registro não encontrado' }
+        }
+
+        if (!telemetry.raw_content) {
+            return { success: false, error: 'raw_content vazio' }
+        }
+
+        console.log('🔄 Reprocessing telemetry:', telemetryId)
+
+        // 2. Determine file type and parse
+        const content = telemetry.raw_content
+        let result: ParseResult = { source: 'manual', success: false }
+
+        // Try to detect format from content
+        if (content.includes('CrystalDiskInfo')) {
+            result = parseCrystalDiskInfo(content)
+        } else if (content.includes('CPUID HWMonitor')) {
+            result = parseHWMonitor(content)
+        } else if (content.includes('HWiNFO') || content.includes('Sensor Status') || content.toLowerCase().includes('processor name')) {
+            // Try TXT format first
+            result = parseHWiNFO_TXT(content)
+
+            // If TXT didn't work well, try CSV
+            if (!result.success || !result.data || Object.keys(result.data).length <= 1) {
+                const csvResult = parseHWiNFO(content)
+                if (csvResult.success && csvResult.data && Object.keys(csvResult.data).length > Object.keys(result.data || {}).length) {
+                    result = csvResult
+                }
+            }
+        } else {
+            // Fallback: try all parsers
+            result = parseHWiNFO_TXT(content)
+            if (!result.success || !result.data || Object.keys(result.data).length <= 1) {
+                result = parseHWiNFO(content)
+            }
+        }
+
+        // 3. If regex parsing failed or incomplete, try AI
+        const hasDetailedInfo = result.success && result.data && (
+            result.data.cpu_model ||
+            result.data.motherboard_model ||
+            result.data.ram_total_gb
+        )
+
+        if (!hasDetailedInfo) {
+            console.log('⚠️ Regex incomplete, trying AI...')
+            const aiResult = await parseWithAI(content)
+            if (aiResult.success && aiResult.data) {
+                if (!result.data) {
+                    result = aiResult
+                } else {
+                    result.data = { ...result.data, ...aiResult.data }
+                }
+                result.source = aiResult.source
+                result.success = true
+            }
+        }
+
+        if (!result.success || !result.data) {
+            return { success: false, error: 'Falha ao reprocessar' }
+        }
+
+        // 4. Recalculate health score
+        const healthScore = calculateHealthScore(result.data)
+
+        // 5. Update the record
+        const updatePayload: any = {
+            source_type: result.source,
+            health_score: healthScore,
+            cpu_model: result.data.cpu_model || null,
+            motherboard_model: result.data.motherboard_model || null,
+            ram_total_gb: result.data.ram_total_gb || null,
+            gpu_model: result.data.gpu_model || null,
+            ssd_health_percent: result.data.ssd_health_percent || null,
+            ssd_tbw: result.data.ssd_tbw || null,
+            cpu_temp_max: result.data.cpu_temp_max || null,
+            battery_wear_level: result.data.battery_wear_level || null,
+            battery_cycles: result.data.battery_cycles || null
+        }
+
+        console.log('✅ Updating with:', JSON.stringify(updatePayload, null, 2))
+
+        const { error: updateError } = await adminSupabase
+            .from('hardware_telemetry')
+            .update(updatePayload)
+            .eq('id', telemetryId)
+
+        if (updateError) {
+            console.error('Update error:', updateError)
+            return { success: false, error: updateError.message }
+        }
+
+        // 6. Revalidate the order page
+        revalidatePath(`/dashboard/orders/${telemetry.order_id}`)
+
+        return { success: true, data: updatePayload }
+
+    } catch (error) {
+        console.error('Reprocess error:', error)
+        return { success: false, error: 'Erro ao reprocessar' }
+    }
 }
