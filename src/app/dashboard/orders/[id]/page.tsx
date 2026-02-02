@@ -315,7 +315,7 @@ export default async function OrderDetailPage({ params }: PageProps) {
                                 <div className="space-y-4">
                                     <div className="flex items-center justify-between">
                                         <span className="text-sm text-muted-foreground">Status</span>
-                                        <Badge variant={order.status}>{statusLabels[order.status]}</Badge>
+                                        <Badge variant={order.status}>{statusLabels[order.status as OrderStatus]}</Badge>
                                     </div>
                                     <div>
                                         <span className="text-sm text-muted-foreground block mb-1">Última atualização</span>
