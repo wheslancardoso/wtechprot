@@ -19,6 +19,7 @@ import { AIBudgetAssistant } from '@/components/budget/ai-budget-assistant'
 // UI Components
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 // Icons
 import {
@@ -32,6 +33,8 @@ import {
     Key,
     Hash,
     Package,
+    Images,
+    Hammer
 } from 'lucide-react'
 
 // Status config
@@ -93,7 +96,7 @@ export default async function OrderDetailPage({ params }: PageProps) {
         .eq('id', (await supabase.auth.getUser()).data.user?.id)
         .single()
 
-    // Fetch technical report (maybeSingle because it might not exist yet)
+    // Fetch technical report
     const { data: technicalReport } = await supabase
         .from('technical_reports')
         .select('*')
@@ -107,7 +110,7 @@ export default async function OrderDetailPage({ params }: PageProps) {
     const customer = order.customer
     const equipment = order.equipment
 
-    // Preparar dados para PDF de Garantia (Com dados reais do Tenant)
+    // Preparar dados para PDF de Garantia
     const orderData: OrderData = {
         displayId: String(order.display_id),
         customerName: customer?.name || 'Cliente',
@@ -119,11 +122,11 @@ export default async function OrderDetailPage({ params }: PageProps) {
         laborCost: order.labor_cost || 0,
         photosCheckout: order.photos_checkout || [],
         finishedAt: order.finished_at || new Date().toISOString(),
-        externalParts: [], // TODO: Buscar external parts se houver tabela
+        externalParts: [],
         signatureEvidence: order.signature_evidence || null,
     }
 
-    // Configurações da Loja (Do Banco de Dados)
+    // Configurações da Loja
     const snapshot = order.store_snapshot as StoreSettings | null
     const currentSettings = tenant ? {
         trade_name: tenant.trade_name,
@@ -134,7 +137,6 @@ export default async function OrderDetailPage({ params }: PageProps) {
         address: tenant.address
     } : null
 
-    // Priorizar Snapshot -> Settings Atuais -> Default
     const storeSettings: StoreSettings = snapshot || (currentSettings ? {
         ...currentSettings,
         warranty_days_labor: currentSettings.warranty_days_labor || 90,
@@ -143,30 +145,22 @@ export default async function OrderDetailPage({ params }: PageProps) {
         warranty_days_labor: 90
     })
 
-    // Helper to get the correct customer report (handling legacy data)
+    // Helper to get the correct customer report
     const getCustomerReport = () => {
         if (order.problem_description) return order.problem_description
-
-        // Legacy fallback: Try to extract from diagnosis_text if it starts with the old pattern
         if (order.diagnosis_text && order.diagnosis_text.startsWith('Relato do cliente:')) {
-            // Extract content between "Relato do cliente:" and the double newline (before accessories)
             const match = order.diagnosis_text.match(/Relato do cliente:\n([\s\S]*?)(\n\n|$)/)
             if (match && match[1]) return match[1].trim()
-            // If match fails but starts with tag, fallback to full text (better than nothing)
             return order.diagnosis_text
         }
-
         return null
     }
 
     const customerReport = getCustomerReport()
 
-    // Helper to clean technical report (remove legacy customer report if present)
+    // Helper to clean technical report
     const getTechnicalReportDisplay = () => {
         if (!order.diagnosis_text) return null
-
-        // If diagnosis text starts with "Relato do cliente:", strip it to avoid duplication
-        // because we are already showing it in the "Relato do Cliente" section
         if (order.diagnosis_text.startsWith('Relato do cliente:')) {
             return order.diagnosis_text.replace(/Relato do cliente:[\s\S]*?(\n\n|$)/, '').trim()
         }
@@ -176,7 +170,7 @@ export default async function OrderDetailPage({ params }: PageProps) {
     const technicalDiagnosisDisplay = getTechnicalReportDisplay()
 
     return (
-        <div className="container mx-auto max-w-5xl py-8 px-4 space-y-8">
+        <div className="container mx-auto max-w-7xl py-6 px-4 space-y-6">
             {/* Header + Actions */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
@@ -194,8 +188,8 @@ export default async function OrderDetailPage({ params }: PageProps) {
                             {statusLabels[order.status]}
                         </Badge>
                     </div>
-                    {/* Meta info */}
-                    <p className="text-muted-foreground mt-2 text-sm">
+                    <p className="text-muted-foreground mt-2 text-sm flex items-center gap-2">
+                        <Clock className="w-4 h-4" />
                         Aberta em {formatDate(order.created_at)}
                     </p>
                 </div>
@@ -207,7 +201,7 @@ export default async function OrderDetailPage({ params }: PageProps) {
                         orderData={orderData}
                         storeSettings={storeSettings}
                         customerName={orderData.customerName}
-                        displayId={Number(order.display_id)}
+                        displayId={order.display_id}
                         technicalReport={technicalReport}
                         problemDescription={customerReport || undefined}
                     />
@@ -233,211 +227,236 @@ export default async function OrderDetailPage({ params }: PageProps) {
                 </div>
             </div>
 
-            {/* Grid Principal */}
-            <div className="grid gap-6 lg:grid-cols-3">
-                {/* Coluna Esquerda (1/3) */}
-                <div className="space-y-6">
-                    {/* Card Cliente */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-lg">
-                                <User className="h-5 w-5" />
-                                Cliente
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            {customer ? (
-                                <>
-                                    <div>
-                                        <p className="text-sm text-muted-foreground">Nome</p>
-                                        <p className="font-medium">{customer.name}</p>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <CreditCard className="h-4 w-4 text-muted-foreground" />
-                                        <div>
-                                            <p className="text-sm text-muted-foreground">CPF</p>
-                                            <p className="font-mono">{formatCpf(customer.document_id)}</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <Phone className="h-4 w-4 text-muted-foreground" />
-                                        <div>
-                                            <p className="text-sm text-muted-foreground">WhatsApp</p>
-                                            <p>{customer.phone || '—'}</p>
-                                        </div>
-                                    </div>
-                                </>
-                            ) : (
-                                <p className="text-muted-foreground italic">Cliente não vinculado</p>
-                            )}
-                        </CardContent>
-                    </Card>
+            {/* TABBED LAYOUT */}
+            <Tabs defaultValue="overview" className="w-full space-y-6">
+                <TabsList className="grid w-full grid-cols-4 lg:w-[600px]">
+                    <TabsTrigger value="overview">Visão Geral</TabsTrigger>
+                    <TabsTrigger value="technical">Técnico</TabsTrigger>
+                    <TabsTrigger value="execution">Execução</TabsTrigger>
+                    <TabsTrigger value="evidence">Anexos</TabsTrigger>
+                </TabsList>
 
-                    {/* Card Equipamento */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-lg">
-                                <Monitor className="h-5 w-5" />
-                                Equipamento
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            {equipment ? (
-                                <>
-                                    <div>
-                                        <p className="text-sm text-muted-foreground">Tipo</p>
-                                        <p className="font-medium capitalize">{equipment.type || '—'}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-sm text-muted-foreground">Marca / Modelo</p>
-                                        <p className="font-medium">
-                                            {equipment.brand || ''} {equipment.model || '—'}
-                                        </p>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <Hash className="h-4 w-4 text-muted-foreground" />
-                                        <div>
-                                            <p className="text-sm text-muted-foreground">Número de Série</p>
-                                            <p className="font-mono text-sm">{equipment.serial_number || '—'}</p>
+                {/* 1. Visão Geral */}
+                <TabsContent value="overview" className="space-y-6">
+                    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                        {/* Summary Card: Customer */}
+                        <Card>
+                            <CardHeader className="pb-2">
+                                <CardTitle className="text-sm font-medium flex items-center gap-2 text-muted-foreground">
+                                    <User className="h-4 w-4" /> Cliente
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                {customer ? (
+                                    <div className="space-y-1">
+                                        <p className="text-lg font-bold leading-none">{customer.name}</p>
+                                        <p className="text-sm text-muted-foreground">{formatCpf(customer.document_id)}</p>
+                                        <div className="flex items-center gap-2 pt-2">
+                                            <Phone className="h-4 w-4 text-green-600" />
+                                            <span className="text-sm font-medium">{customer.phone || '—'}</span>
                                         </div>
                                     </div>
+                                ) : (
+                                    <span className="text-sm italic text-muted-foreground">Não vinculado</span>
+                                )}
+                            </CardContent>
+                        </Card>
 
-                                    {/* Acesso Remoto (Visível Apenas para Técnicos) */}
-                                    {(equipment.remote_access_id || equipment.remote_access_password) && (
-                                        <div className="border-t border-border pt-2 mt-2 space-y-2">
-                                            <div className="flex items-center gap-2 text-primary font-medium">
-                                                <Monitor className="h-4 w-4" />
-                                                <span className="text-sm">Acesso Remoto</span>
+                        {/* Summary Card: Equipment */}
+                        <Card>
+                            <CardHeader className="pb-2">
+                                <CardTitle className="text-sm font-medium flex items-center gap-2 text-muted-foreground">
+                                    <Monitor className="h-4 w-4" /> Equipamento
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                {equipment ? (
+                                    <div className="space-y-1">
+                                        <p className="text-lg font-bold leading-none">{equipment.brand} {equipment.model}</p>
+                                        <p className="text-sm text-muted-foreground capitalize">{equipment.type}</p>
+                                        <div className="flex items-center gap-2 pt-2 text-muted-foreground">
+                                            <Hash className="h-4 w-4" />
+                                            <span className="text-sm font-mono">{equipment.serial_number || 'S/N'}</span>
+                                        </div>
+                                        {/* Security Info (Passwords) */}
+                                        {(equipment.remote_access_id || equipment.notes?.includes('Senha:')) && (
+                                            <div className="mt-3 pt-3 border-t text-xs space-y-1">
+                                                {equipment.remote_access_id && (
+                                                    <div className="grid grid-cols-[60px_1fr]">
+                                                        <span className="text-muted-foreground">AnyDesk:</span>
+                                                        <span className="font-mono select-all">{equipment.remote_access_id}</span>
+                                                    </div>
+                                                )}
+                                                {equipment.notes?.includes('Senha:') && (
+                                                    <div className="grid grid-cols-[60px_1fr]">
+                                                        <span className="text-muted-foreground">Senha:</span>
+                                                        <span className="font-mono select-all font-bold text-red-500">
+                                                            {equipment.notes.replace('Senha: ', '')}
+                                                        </span>
+                                                    </div>
+                                                )}
                                             </div>
-                                            {equipment.remote_access_id && (
-                                                <div className="grid grid-cols-3 gap-2 text-sm">
-                                                    <span className="text-muted-foreground">ID:</span>
-                                                    <span className="font-mono col-span-2 select-all">{equipment.remote_access_id}</span>
-                                                </div>
-                                            )}
-                                            {equipment.remote_access_password && (
-                                                <div className="grid grid-cols-3 gap-2 text-sm">
-                                                    <span className="text-muted-foreground">Senha:</span>
-                                                    <span className="font-mono col-span-2 select-all text-red-400">{equipment.remote_access_password}</span>
-                                                </div>
-                                            )}
-                                        </div>
-                                    )}
+                                        )}
+                                    </div>
+                                ) : (
+                                    <span className="text-sm italic text-muted-foreground">—</span>
+                                )}
+                            </CardContent>
+                        </Card>
 
-                                    {equipment.notes && equipment.notes.includes('Senha:') && (
-                                        <div className="flex items-center gap-2">
-                                            <Key className="h-4 w-4 text-muted-foreground" />
-                                            <div>
-                                                <p className="text-sm text-muted-foreground">Senha de Acesso (Device)</p>
-                                                <p className="font-mono text-sm">
-                                                    {equipment.notes.replace('Senha: ', '')}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    )}
-                                </>
-                            ) : (
-                                <p className="text-muted-foreground italic">Equipamento não vinculado</p>
-                            )}
-                        </CardContent>
-                    </Card>
-                </div>
+                        {/* Summary Card: Recent Status */}
+                        <Card>
+                            <CardHeader className="pb-2">
+                                <CardTitle className="text-sm font-medium flex items-center gap-2 text-muted-foreground">
+                                    <Clock className="h-4 w-4" /> Situação Atual
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-sm text-muted-foreground">Status</span>
+                                        <Badge variant={order.status}>{statusLabels[order.status]}</Badge>
+                                    </div>
+                                    <div>
+                                        <span className="text-sm text-muted-foreground block mb-1">Última atualização</span>
+                                        <span className="text-sm font-medium">{formatDate(order.updated_at || order.created_at)}</span>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
 
-                {/* Coluna Centro/Direita (2/3) */}
-                <div className="lg:col-span-2 space-y-6">
-                    {/* Card Diagnóstico Técnico */}
+                    {/* Customer Report (Full Width) */}
                     <Card>
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-lg">
+                            <CardTitle className="flex items-center gap-2">
                                 <FileText className="h-5 w-5" />
-                                Diagnóstico Técnico
+                                Relato do Problema
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <div className="space-y-4">
-                                <div>
-                                    <h4 className="font-medium mb-2">Relato do Cliente</h4>
-                                    <div className="bg-muted rounded-lg p-4">
-                                        <p className="whitespace-pre-wrap text-sm">
-                                            {customerReport || 'Nenhum relato registrado.'}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <h4 className="font-medium mb-2">Laudo Técnico (Orçamento)</h4>
-                                    <div className="bg-muted/50 border border-border rounded-lg p-4">
-                                        <p className="whitespace-pre-wrap text-sm">
-                                            {order.diagnosis_text ? order.diagnosis_text : <span className="text-muted-foreground italic">Aguardando análise técnica...</span>}
-                                        </p>
-                                    </div>
-                                </div>
-
-
-                                {/* AI Budget Assistant */}
-                                <div>
-                                    <h4 className="font-medium mb-2">Assistente de Orçamento</h4>
-                                    <AIBudgetAssistant />
-                                </div>
-
-                                {order.solution_text && (
-                                    <div>
-                                        <h4 className="font-medium mb-2">Solução Aplicada</h4>
-                                        <div className="bg-green-50 dark:bg-green-950 rounded-lg p-4 border border-green-200 dark:border-green-800">
-                                            <p className="whitespace-pre-wrap text-sm">
-                                                {order.solution_text}
-                                            </p>
-                                        </div>
-                                    </div>
-                                )}
+                            <div className="bg-muted/50 p-4 rounded-lg border">
+                                <p className="whitespace-pre-wrap text-sm leading-relaxed">
+                                    {customerReport || 'Nenhum relato registrado.'}
+                                </p>
                             </div>
                         </CardContent>
                     </Card>
+                </TabsContent>
 
-                    {/* Card Laudo Técnico - Disponível apenas após início da análise */}
-                    {order.status !== 'open' && (
-                        <div id="technical-report-section">
-                            <TechnicalReportForm
-                                orderId={order.id}
-                                tenantId={tenant?.id || ''}
-                                existingReport={technicalReport as TechnicalReport | null}
-                                orderData={orderData}
-                                storeSettings={storeSettings}
-                                checkinPhotos={order.photos_checkin || []}
-                                checkoutPhotos={order.photos_checkout || []}
-                            />
+                {/* 2. Técnico */}
+                <TabsContent value="technical" className="space-y-6">
+                    <div className="grid gap-6 lg:grid-cols-2">
+                        {/* Left: AI Budget Assistant & Current Diagnosis */}
+                        <div className="space-y-6">
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle className="flex items-center gap-2">
+                                        <Monitor className="h-5 w-5" />
+                                        Diagnóstico & Orçamento
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-6">
+                                    {/* AI Assistant - Only visible if analyzing or later */}
+                                    {order.status !== 'open' && (
+                                        <div>
+                                            <h4 className="text-sm font-medium mb-3 text-muted-foreground">Assistente de Orçamento</h4>
+                                            <AIBudgetAssistant />
+                                        </div>
+                                    )}
+
+                                    {/* Current Diagnosis Display */}
+                                    <div className="pt-4 border-t">
+                                        <h4 className="text-sm font-medium mb-3 text-muted-foreground">Laudo Técnico Atual</h4>
+                                        <div className="bg-muted/30 border rounded-lg p-4 min-h-[100px]">
+                                            <p className="whitespace-pre-wrap text-sm">
+                                                {technicalDiagnosisDisplay || <span className="text-muted-foreground italic">Aguardando análise técnica...</span>}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {order.solution_text && (
+                                        <div className="pt-4 border-t">
+                                            <h4 className="text-sm font-medium mb-3 text-green-600">Solução Aplicada</h4>
+                                            <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg p-4">
+                                                <p className="whitespace-pre-wrap text-sm">{order.solution_text}</p>
+                                            </div>
+                                        </div>
+                                    )}
+                                </CardContent>
+                            </Card>
                         </div>
-                    )}
 
-                    {/* Card Timeline - Novo componente dinâmico */}
-                    <OrderTimeline orderId={order.id} currentStatus={order.status} />
+                        {/* Right: Technical Report Form (Editing) */}
+                        <div className="space-y-6">
+                            {order.status !== 'open' ? (
+                                <TechnicalReportForm
+                                    orderId={order.id}
+                                    tenantId={tenant?.id || ''}
+                                    existingReport={technicalReport as TechnicalReport | null}
+                                    orderData={orderData}
+                                    storeSettings={storeSettings}
+                                    checkinPhotos={order.photos_checkin || []}
+                                    checkoutPhotos={order.photos_checkout || []}
+                                />
+                            ) : (
+                                <Card className="border-dashed">
+                                    <CardContent className="flex flex-col items-center justify-center py-12 text-center">
+                                        <Hammer className="h-12 w-12 text-muted-foreground/30 mb-4" />
+                                        <h3 className="text-lg font-medium">Ordem em Aberto</h3>
+                                        <p className="text-muted-foreground max-w-sm mt-2">
+                                            Inicie a análise da ordem para liberar o preenchimento do Laudo Técnico.
+                                        </p>
+                                    </CardContent>
+                                </Card>
+                            )}
+                        </div>
+                    </div>
+                </TabsContent>
 
-                    {/* Checklist de Execução - visível quando em andamento */}
-                    {['in_progress', 'waiting_parts', 'analyzing'].includes(order.status) && (
-                        <ExecutionChecklist
-                            orderId={order.id}
-                            initialTasks={(order.execution_tasks || []) as ExecutionTask[]}
-                            isEditable={true}
-                        />
-                    )}
-                </div>
-            </div>
+                {/* 3. Execução */}
+                <TabsContent value="execution" className="space-y-6">
+                    <div className="grid gap-6 lg:grid-cols-3">
+                        <div className="lg:col-span-2">
+                            {['in_progress', 'waiting_parts', 'analyzing'].includes(order.status) ? (
+                                <ExecutionChecklist
+                                    orderId={order.id}
+                                    initialTasks={(order.execution_tasks || []) as ExecutionTask[]}
+                                    isEditable={true}
+                                />
+                            ) : (
+                                <Card>
+                                    <CardHeader>
+                                        <CardTitle>Checklist de Execução</CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <p className="text-muted-foreground">O checklist fica disponível quando a ordem está em análise ou andamento.</p>
+                                    </CardContent>
+                                </Card>
+                            )}
+                        </div>
+                        <div>
+                            <OrderTimeline orderId={order.id} currentStatus={order.status} />
+                        </div>
+                    </div>
+                </TabsContent>
 
-            {/* Seção de Evidências e Comunicação */}
-            <div className="mt-6">
-                <EvidenceSection
-                    orderId={order.id}
-                    status={order.status}
-                    customerName={customer?.name || 'Cliente'}
-                    customerPhone={customer?.phone || ''}
-                    displayId={order.display_id}
-                    laborCost={order.labor_cost}
-                    photosCheckin={order.photos_checkin || []}
-                    photosCheckout={order.photos_checkout || []}
-                />
-            </div>
+                {/* 4. Anexos/Evidence */}
+                <TabsContent value="evidence">
+                    <EvidenceSection
+                        orderId={order.id}
+                        status={order.status}
+                        customerName={customer?.name || 'Cliente'}
+                        customerPhone={customer?.phone || ''}
+                        displayId={order.display_id}
+                        laborCost={order.labor_cost}
+                        photosCheckin={order.photos_checkin || []}
+                        photosCheckout={order.photos_checkout || []}
+                    />
+                </TabsContent>
+            </Tabs>
 
-            {/* Listener de Realtime */}
+            {/* Listener de Realtime (Invisible) */}
             <OrderRealtimeListener orderId={order.id} />
         </div>
     )

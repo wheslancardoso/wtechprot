@@ -18,7 +18,7 @@ import { Share2, Copy, MessageCircle, Link, Check } from 'lucide-react'
 // ==================================================
 interface ShareActionsProps {
     orderId: string
-    displayId: number
+    displayId: number | string
     customerName: string
     storeName?: string
 }

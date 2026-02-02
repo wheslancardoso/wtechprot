@@ -43,7 +43,7 @@ interface OrderActionsProps {
     orderData?: OrderData
     storeSettings?: StoreSettings
     customerName: string
-    displayId: number
+    displayId: number | string
     technicalReport?: TechnicalReport | null
     problemDescription?: string // New prop
 }

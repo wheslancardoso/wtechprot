@@ -18,7 +18,8 @@ import { toast } from '@/hooks/use-toast' // Assuming this exists, or use standa
 
 import ImageUpload from '@/components/image-upload'
 import TechnicalReportPdfButton from './technical-report-pdf'
-import { generateBudget, type BudgetSuggestion } from '@/app/actions/generate-budget'
+import { generateTechnicalReport } from '@/app/actions/generate-technical-report'
+import { type BudgetSuggestion } from '@/app/actions/generate-budget'
 import { Wand2, AlertTriangle, Copy, Check } from 'lucide-react'
 import {
     Dialog,
@@ -34,7 +35,7 @@ import type { OrderData, StoreSettings } from '@/components/warranty-pdf'
 
 interface TechnicalReportFormProps {
     orderId: string
-    tenantId: string // We need this for the record (or maybe RLS handles it, but good to have)
+    tenantId: string
     existingReport?: TechnicalReport | null
     orderData: OrderData
     storeSettings: StoreSettings
@@ -86,10 +87,10 @@ export default function TechnicalReportForm({
     const [showBudgetDialog, setShowBudgetDialog] = useState(false)
 
     const handleGenerateBudget = async () => {
-        if (!analysis || analysis.length < 10) {
+        if (!analysis || analysis.length < 5) { // Relaxed len check slightly
             toast({
                 title: "Análise muito curta",
-                description: "Escreva mais detalhes na análise técnica para gerar um orçamento preciso.",
+                description: "Escreva algumas palavras-chave para a IA expandir.",
                 variant: "destructive"
             })
             return
@@ -97,14 +98,21 @@ export default function TechnicalReportForm({
 
         setIsGeneratingBudget(true)
         try {
-            const result = await generateBudget(analysis)
+            // Use the new dedicated action
+            const result = await generateTechnicalReport(analysis)
+
             if (result.success && result.data) {
-                setBudgetSuggestion(result.data)
-                setShowBudgetDialog(true)
+                setAnalysis(result.data) // Directly set the text
+                toast({
+                    title: "Laudo Gerado!",
+                    description: "O texto técnico foi expandido com sucesso.",
+                    variant: "default",
+                    className: "bg-green-50 border-green-200 text-green-800"
+                })
             } else {
                 toast({
                     title: "Erro na IA",
-                    description: result.error || "Não foi possível gerar o orçamento.",
+                    description: result.error || "Não foi possível gerar o laudo.",
                     variant: "destructive"
                 })
             }
@@ -324,7 +332,7 @@ export default function TechnicalReportForm({
                             ) : (
                                 <Wand2 className="mr-2 h-4 w-4" />
                             )}
-                            {isGeneratingBudget ? 'Analisando...' : 'Sugerir Orçamento com IA'}
+                            {isGeneratingBudget ? 'Refinando...' : 'Refinar Análise com IA'}
                         </Button>
                     </div>
                 </div>

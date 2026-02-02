@@ -28,6 +28,12 @@ export async function generateBudget(userDescription: string, equipmentContext?:
         }
 
         // 1. Busca Contexto (Catálogo de Serviços)
+        console.log('🤖 generateBudget started.')
+        if (!process.env.OPENAI_API_KEY) {
+            console.error('❌ OPENAI_API_KEY is missing in environment variables!')
+            return { success: false, error: 'Configuração de IA ausente (API Key).' }
+        }
+
         const supabase = await createClient()
         const { data: services, error: dbError } = await supabase
             .from('service_catalog')
@@ -80,7 +86,12 @@ export async function generateBudget(userDescription: string, equipmentContext?:
          (Linha em branco)
          [SUGESTÃO DE UPGRADE] (Se houver)
 
-      3. VOCABULÁRIO:
+      3. CRITÉRIOS DE SELEÇÃO DE SERVIÇO (CRUCIAL):
+         - COMBOS: Se o relato citar múltiplos serviços (ex: "Limpeza" E "Formatação"), escolha SEMPRE o serviço de MAIOR VALOR/COMPLEXIDADE como base.
+         - BACKUP: Se houver menção a "Salvar arquivos", "Backup" ou "Documentos", você DEVE escolher "Formatação com Backup" (exceto se for apenas limpeza).
+         - PREÇO: Nunca sugira um preço fora do range min/max do serviço escolhido.
+
+      4. VOCABULÁRIO:
          - Comece frases de ação com "Realizada...", "Efetuada...", "Substituição de...", "Reinstalação de...".
          - Seja formal e técnico.
 
@@ -106,13 +117,13 @@ export async function generateBudget(userDescription: string, equipmentContext?:
 
         // 3. Chamada OpenAI
         const completion = await openai.chat.completions.create({
-            model: "gpt-5-mini-2025-08-07",
+            model: "gpt-4o",
             messages: [
                 { role: "system", content: systemPrompt },
                 { role: "user", content: `TEXTO TÉCNICO INFORMAL (RASCUNHO): "${userDescription}"` }
             ],
             response_format: { type: "json_object" },
-            temperature: 0.2, // Baixa criatividade para garantir respeito aos preços
+            temperature: 0, // Zero para máxima consistência
         })
 
         const content = completion.choices[0].message.content
@@ -136,7 +147,10 @@ export async function generateBudget(userDescription: string, equipmentContext?:
         return { success: true, data: suggestion }
 
     } catch (error) {
-        console.error('Erro na geração de orçamento:', error)
+        console.error('❌ CRITICAL ERROR in generateBudget:', error)
+        if (error instanceof OpenAI.APIError) {
+            console.error('OpenAI API Error details:', error.status, error.message, error.code, error.type)
+        }
         return { success: false, error: 'Falha ao gerar inteligência. Tente novamente.' }
     }
 }
