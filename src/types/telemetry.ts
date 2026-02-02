@@ -1,4 +1,4 @@
-export type TelemetrySource = 'crystaldisk' | 'hwinfo' | 'manual'
+export type TelemetrySource = 'crystaldisk' | 'hwinfo' | 'hwmonitor' | 'manual'
 
 export interface HardwareTelemetry {
     id: string
@@ -20,6 +20,9 @@ export interface HardwareTelemetry {
     motherboard_model?: string
     ram_total_gb?: number
     gpu_model?: string
+    ssd_total_gb?: number
+    ram_speed?: number
+    ram_slots?: number
 
     // Temperature Comparison
     stage?: 'initial' | 'post_repair' | 'final'
@@ -49,6 +52,9 @@ export interface TelemetryInsert {
     motherboard_model?: string
     ram_total_gb?: number
     gpu_model?: string
+    ssd_total_gb?: number
+    ram_speed?: number
+    ram_slots?: number
 
     // Temperature Comparison
     stage?: 'initial' | 'post_repair' | 'final'

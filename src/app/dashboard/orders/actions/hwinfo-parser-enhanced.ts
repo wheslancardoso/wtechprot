@@ -1,7 +1,9 @@
+import { TelemetryInsert } from "@/types/telemetry"
+
 // Enhanced HWiNFO TXT Parser - Supports Portuguese format
-function parseHWiNFO_TXT_Enhanced(content: string): ParseResult {
+function parseHWiNFO_TXT_Enhanced(content: string): Partial<TelemetryInsert> {
+    const data: Partial<TelemetryInsert> = { source_type: 'hwinfo' }
     try {
-        const data: Partial<TelemetryInsert> = { source_type: 'hwinfo' }
 
         // 1. CPU Model - Multiple patterns for different languages
         const cpuPatterns = [
@@ -89,25 +91,30 @@ function parseHWiNFO_TXT_Enhanced(content: string): ParseResult {
         const ssdHealthPatterns = [
             /Saúde do dispositivo:\s*(\d+)%/i,      // Portuguese
             /Device Health:\s*(\d+)%/i,             // English
-            /Health Status:\s*(\d+)%/i
+            /Health Status:\s*(\d+)%/i,
+            /Capacidade sobressalente disponível:\s*(\d+)%/i, // SSD Spare (NVMe)
+            /Available Spare:\s*(\d+)%/i
         ]
 
         for (const pattern of ssdHealthPatterns) {
             const match = content.match(pattern)
             if (match) {
+                // If it's Available Spare, it's already health (100% is good)
                 data.ssd_health_percent = parseInt(match[1], 10)
                 break
             }
         }
 
-        // 6. SSD Temperature
-        const ssdTempPatterns = [
-            /Temperatura do disco:\s*(\d+)\s*°C/i,  // Portuguese
-            /Drive Temperature:\s*(\d+)\s*°C/i,     // English
-            /Disk Temperature:\s*(\d+)\s*°C/i
+        // 6. Temperature (Prioritize CPU, fallback to SSD if missing)
+        const tempPatterns = [
+            /Temperaturas?\s+.*\s+Package:\s*(\d+)\s*°C/i, // HWiNFO Sensor style
+            /CPU Package:\s*(\d+)\s*°C/i,
+            /Tj\(Max\):\s*(\d+)\s*°C/i,
+            /Temperatura do disco:\s*(\d+)\s*°C/i,
+            /Drive Temperature:\s*(\d+)\s*°C/i
         ]
 
-        for (const pattern of ssdTempPatterns) {
+        for (const pattern of tempPatterns) {
             const match = content.match(pattern)
             if (match) {
                 data.cpu_temp_max = parseInt(match[1], 10)
@@ -115,27 +122,78 @@ function parseHWiNFO_TXT_Enhanced(content: string): ParseResult {
             }
         }
 
-        // 7. Battery
+        // 7. RAM Details (Speed and Slots) - Expanded patterns
+        const speedPatterns = [
+            /Relógio da Memória:\s*(\d+(?:\.\d+)?)\s*MHz/i,
+            /Memory Speed:\s*(\d+(?:\.\d+)?)\s*MHz/i,
+            /Memory Clock:\s*(\d+(?:\.\d+)?)\s*MHz/i,
+            /Velocidade da memória:\s*(\d+(?:\.\d+)?)\s*MHz/i,
+            /Frequência da memória:\s*(\d+(?:\.\d+)?)\s*MHz/i,
+            /Frequência de memória atual:\s*(\d+(?:\.\d+)?)\s*MHz/i
+        ];
+
+        for (const pattern of speedPatterns) {
+            const match = content.match(pattern);
+            if (match) {
+                let speed = parseFloat(match[1]);
+                // If it's a clock speed (like 666, 1066, 1333), some users might prefer the DDR speed
+                // But for now we'll take the value found.
+                data.ram_speed = Math.round(speed);
+                break;
+            }
+        }
+
+        // Count RAM slots by looking for Memory Module sections
+        const slotMatches = content.match(/Módulo de memória(?: \[#\d+\])?:\s*/gi) ||
+            content.match(/Memory Module(?: \[#\d+\])?:\s*/gi) ||
+            content.match(/Informações gerais do módulo/gi) ||
+            content.match(/Número do módulo:\s*\d+/gi) ||
+            content.match(/Slot de memória:/gi);
+        if (slotMatches) {
+            data.ram_slots = slotMatches.length;
+        }
+
+        // 8. Storage Capacity
+        const storageSizePatterns = [
+            /Capacidade do disco:\s*([\d,.]+)\s*(GB|TBytes|GBytes)/i,
+            /Drive Capacity:\s*([\d,.]+)\s*(GB|TBytes|GBytes)/i,
+            /Disk Size:\s*([\d,.]+)\s*(GB|TBytes|GBytes)/i,
+            /Tamanho do disco:\s*([\d,.]+)\s*(GB|TBytes|GBytes)/i,
+            /Capacidade de unidade:\s*.*\((\d+)\s*GB\)/i, // Portuguese T480 style
+            /Capacidade de unidade:\s*([\d,.]+)\s*(GB|TBytes|GBytes)/i
+        ];
+
+        for (const pattern of storageSizePatterns) {
+            const match = content.match(pattern);
+            if (match) {
+                let val = parseFloat(match[1].replace(',', '.'));
+                const unit = (match[2] || 'GB').toUpperCase();
+                if (unit && unit.includes('TBYTES')) val = val * 1024;
+                data.ssd_total_gb = Math.round(val);
+                break;
+            }
+        }
+
+        // 9. Battery
         const batteryPatterns = [
-            /Capacidade sobressalente disponível:\s*(\d+)%/i,  // Portuguese "Available Spare"
-            /Available Spare:\s*(\d+)%/i
+            /Nível de desgaste:\s*(\d+(?:\.\d+)?)\s*%/i,
+            /Wear Level:\s*(\d+(?:\.\d+)?)\s*%/i
         ]
 
         for (const pattern of batteryPatterns) {
             const match = content.match(pattern)
             if (match) {
-                const spare = parseInt(match[1], 10)
-                data.battery_wear_level = 100 - spare  // Invert: spare 100% = wear 0%
+                data.battery_wear_level = Math.round(parseFloat(match[1]));
                 break
             }
         }
 
         console.log('🔍 HWiNFO TXT Enhanced Parser Result:', JSON.stringify(data, null, 2))
 
-        return { source: 'hwinfo', success: true, data }
+        return data
     } catch (e) {
         console.error('❌ Error in parseHWiNFO_TXT_Enhanced:', e)
-        return { source: 'hwinfo', success: false, error: 'Falha ao processar TXT do HWiNFO.' }
+        return data
     }
 }
 

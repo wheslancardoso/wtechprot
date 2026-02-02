@@ -32,7 +32,7 @@ export default async function TelemetryTab({ orderId, equipmentId, tenantId }: T
         <div className="space-y-8 py-4">
             {latestTelemetry ? (
                 <>
-                    <TelemetryDashboard telemetry={latestTelemetry as HardwareTelemetry} />
+                    <TelemetryDashboard telemetry={allTelemetry as HardwareTelemetry[]} />
 
                     {/* Temperature Comparison (if multiple stages exist) */}
                     {allTelemetry && allTelemetry.length > 1 && (

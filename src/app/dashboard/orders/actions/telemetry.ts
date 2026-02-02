@@ -1,5 +1,8 @@
 'use server'
 
+import { parseCrystalDiskInfo_TXT } from './crystal-parser'
+import { parseHWiNFO_TXT_Enhanced } from './hwinfo-parser-enhanced'
+import { parseHWMonitor_TXT } from './hwmonitor-parser'
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import type { TelemetryInsert, TelemetrySource } from '@/types/telemetry'
@@ -14,6 +17,70 @@ interface ParseResult {
     success: boolean
     data?: Partial<TelemetryInsert>
     error?: string
+}
+
+// ----------------------------------------------------------------------
+// HELPERS (Storage Optimization)
+// ----------------------------------------------------------------------
+
+/**
+ * Removes huge redundant sections from HWiNFO logs to save database space
+ * while keeping essential technical specs and sensor data.
+ */
+function slimHWiNFOLog(content: string): string {
+    if (!content.includes('HWiNFO')) return content;
+
+    const lines = content.split('\n');
+    let slimmedLines: string[] = [];
+    let skipSection = false;
+
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const trimmed = line.trim();
+
+        // Detect sections to skip
+        // 1. Feature Flags (Sinalizadores de recurso)
+        if (trimmed.startsWith('[Sinalizadores de recurso') ||
+            trimmed.startsWith('[Sinalizadores de recurso estendido]') ||
+            trimmed.startsWith('[Mecanismos de mitigação de vulnerabilidade]')) {
+            skipSection = true;
+            slimmedLines.push(line + " [SEÇÃO REMOVIDA PARA ECONOMIZAR ESPAÇO]");
+            continue;
+        }
+
+        // 2. PCI Bus details (usually huge and technical bridge data)
+        if (trimmed.startsWith('PCI Barramento #') || trimmed.startsWith('PCI Bus #')) {
+            skipSection = true;
+            slimmedLines.push(line + " [DETALHES DE BARRAMENTO REMOVIDOS]");
+            continue;
+        }
+
+        // Detect important section headers to resume saving
+        if (trimmed.startsWith('Placa-mãe') ||
+            trimmed.startsWith('Motherboard') ||
+            trimmed.startsWith('Dispositivos ACPI') ||
+            trimmed.startsWith('SMBIOS DMI') ||
+            trimmed.startsWith('Memória') ||
+            trimmed.startsWith('Memory') ||
+            trimmed.startsWith('Unidades de disco') ||
+            trimmed.startsWith('Drives') ||
+            trimmed.startsWith('Bateria') ||
+            trimmed.startsWith('Battery') ||
+            trimmed.startsWith('Sensor Status')) {
+            skipSection = false;
+        }
+
+        if (!skipSection) {
+            slimmedLines.push(line);
+        }
+    }
+
+    // Optimization: If we didn't find any headers to resume, just return first 500 lines as safety
+    if (slimmedLines.length < 50 && lines.length > 500) {
+        return lines.slice(0, 500).join('\n') + "\n[LOG TRUNCADO POR SEGURANÇA]";
+    }
+
+    return slimmedLines.join('\n');
 }
 
 // ----------------------------------------------------------------------
@@ -40,30 +107,35 @@ async function parseWithAI(content: string): Promise<ParseResult> {
                     content: `
                     Você é um especialista em Hardware Parser. Sua missão é ler logs técnicos (HWiNFO, CrystalDiskInfo, HWMonitor, etc) e extrair dados estruturados JSON.
                     
-                    Extraia os seguintes campos (se disponíveis):
-                    - source_type: 'hwinfo' | 'crystaldisk' | 'manual' (infira pelo conteúdo)
-                    - ssd_health_percent: Saúde do SSD/HD (0-100) (Use 'Drive Remaining Life' ou 'Health Status')
-                    - ssd_tbw: Total Bytes Written (em TB). Se estiver em GB, converta.
-                    - cpu_temp_max: Temperatura MÁXIMA registrada da CPU (°C). (Procure por 'Maximum', 'Max', 'Peak' em 'CPU Package' ou 'Core Max')
-                    - battery_wear_level: Nível de desgaste da bateria (%) (Wear Level / Battery Health invertido se necessário - queremos o 'Wear', ou seja, quanto ja desgastou. Se o log der 'Health 80%', então Wear é 20%).
+                    - source_type: 'hwinfo' | 'crystaldisk' | 'hwmonitor' | 'manual' (infira pelo conteúdo)
+                    - ssd_health_percent: Saúde do SSD/HD (0-100)
+                    - ssd_tbw: Total Bytes Written (em TB).
+                    - ssd_total_gb: Capacidade total do disco (em GB).
+                    - cpu_temp_max: Temperatura MÁXIMA registrada da CPU (°C).
+                    - battery_wear_level: Nível de desgaste da bateria (%) (0-100).
                     - battery_cycles: Contagem de ciclos da bateria.
-                    - cpu_model: Nome completo do processador (Ex: Intel Core i7-12700H).
+                    - cpu_model: Nome completo do processador.
                     - motherboard_model: Modelo da placa mãe.
                     - ram_total_gb: Total de memória RAM instalada (em GB).
-                    - gpu_model: Modelo da placa de vídeo (dê preferência à dedicada se houver).
+                    - ram_speed: Frequência da RAM (em MHz).
+                    - ram_slots: Quantidade de pentes/slots ocupados.
+                    - gpu_model: Modelo da placa de vídeo.
 
-                    Retorne APENAS um JSON válido no formato:
+                    Retorne APENAS um JSON:
                     {
                         "source_type": "string",
                         "data": {
                             "ssd_health_percent": number | null,
                             "ssd_tbw": number | null,
+                            "ssd_total_gb": number | null,
                             "cpu_temp_max": number | null,
                             "battery_wear_level": number | null,
                             "battery_cycles": number | null,
                             "cpu_model": "string" | null,
                             "motherboard_model": "string" | null,
                             "ram_total_gb": number | null,
+                            "ram_speed": number | null,
+                            "ram_slots": number | null,
                             "gpu_model": "string" | null
                         }
                     }
@@ -469,11 +541,14 @@ export async function uploadTelemetry(
     // 1. First pass: Try Regex Parsers
     if (fileName.endsWith('.txt') || fileName.endsWith('.log')) {
         if (content.includes('CrystalDiskInfo')) {
-            result = parseCrystalDiskInfo(content)
+            const data = parseCrystalDiskInfo_TXT(content);
+            result = { source: 'crystaldisk', success: Object.keys(data).length > 0, data };
         } else if (content.includes('CPUID HWMonitor')) {
-            result = parseHWMonitor(content)
-        } else if (content.includes('HWiNFO') || content.includes('Sensor Status')) {
-            result = parseHWiNFO_TXT(content)
+            const data = parseHWMonitor_TXT(content);
+            result = { source: 'hwmonitor', success: Object.keys(data).length > 0, data };
+        } else if (content.includes('HWiNFO') || content.includes('Sensor Status') || content.includes('Processor Name:')) {
+            const data = parseHWiNFO_TXT_Enhanced(content);
+            result = { source: 'hwinfo', success: Object.keys(data).length > 0, data };
         } else {
             result = parseCrystalDiskInfo(content)
             if (!result.success || !result.data || Object.keys(result.data).length <= 1) {
@@ -487,15 +562,14 @@ export async function uploadTelemetry(
         result = parseHWiNFO(content)
     }
 
-    // 2. Second pass: If Regex results are weak (missing key Enhanced Specs), Try AI
-    // Key specs we really want: cpu_model, ram_total_gb, or at least cpu_temp_max
-    const hasDetailedInfo = result.success && result.data && (
-        result.data.cpu_model ||
-        result.data.motherboard_model ||
-        result.data.ram_total_gb
+    // 2. Second pass: If Regex results are weak or missing detailed fields, Try AI
+    const hasEssentialInfo = result.success && result.data && (
+        result.data.cpu_model &&
+        result.data.ram_total_gb &&
+        (result.data.ram_speed || result.data.ram_slots || result.source !== 'hwinfo')
     )
 
-    if (!hasDetailedInfo) {
+    if (!hasEssentialInfo) {
         console.log("⚠️ Regex parser result poor. Encouraging AI fallback...")
         const aiResult = await parseWithAI(content)
         if (aiResult.success && aiResult.data) {
@@ -558,11 +632,15 @@ export async function uploadTelemetry(
 
     // Save to DB using Admin Client
     const adminSupabase = await createAdminClient()
+
+    // Slim the log ONLY after parsing is DONE (to ensure parsers see the full thing)
+    const slimmedContent = slimHWiNFOLog(content);
+
     const payload: TelemetryInsert = {
         order_id: orderId,
         equipment_id: equipmentId,
         source_type: result.source,
-        raw_content: content.slice(0, 50000), // Safety clip
+        raw_content: slimmedContent.slice(0, 150000), // Safety clip on slimmed content
         health_score: healthScore,
         stage: stage,
         ...result.data
@@ -624,36 +702,28 @@ export async function reprocessTelemetry(telemetryId: string) {
 
         // Try to detect format from content
         if (content.includes('CrystalDiskInfo')) {
-            result = parseCrystalDiskInfo(content)
+            const data = parseCrystalDiskInfo_TXT(content);
+            result = { source: 'crystaldisk', success: Object.keys(data).length > 0, data };
         } else if (content.includes('CPUID HWMonitor')) {
-            result = parseHWMonitor(content)
+            const data = parseHWMonitor_TXT(content);
+            result = { source: 'hwmonitor', success: Object.keys(data).length > 0, data };
         } else if (content.includes('HWiNFO') || content.includes('Sensor Status') || content.toLowerCase().includes('processor name')) {
-            // Try TXT format first
-            result = parseHWiNFO_TXT(content)
-
-            // If TXT didn't work well, try CSV
-            if (!result.success || !result.data || Object.keys(result.data).length <= 1) {
-                const csvResult = parseHWiNFO(content)
-                if (csvResult.success && csvResult.data && Object.keys(csvResult.data).length > Object.keys(result.data || {}).length) {
-                    result = csvResult
-                }
-            }
+            const data = parseHWiNFO_TXT_Enhanced(content);
+            result = { source: 'hwinfo', success: Object.keys(data).length > 0, data };
         } else {
-            // Fallback: try all parsers
-            result = parseHWiNFO_TXT(content)
-            if (!result.success || !result.data || Object.keys(result.data).length <= 1) {
-                result = parseHWiNFO(content)
-            }
+            // Fallback
+            const data = parseHWiNFO_TXT_Enhanced(content);
+            result = { source: 'hwinfo', success: Object.keys(data).length > 0, data };
         }
 
         // 3. If regex parsing failed or incomplete, try AI
-        const hasDetailedInfo = result.success && result.data && (
-            result.data.cpu_model ||
-            result.data.motherboard_model ||
-            result.data.ram_total_gb
+        const hasEssentialInfo = result.success && result.data && (
+            result.data.cpu_model &&
+            result.data.ram_total_gb &&
+            (result.data.ram_speed || result.data.ram_slots || result.source !== 'hwinfo')
         )
 
-        if (!hasDetailedInfo) {
+        if (!hasEssentialInfo) {
             console.log('⚠️ Regex incomplete, trying AI...')
             const aiResult = await parseWithAI(content)
             if (aiResult.success && aiResult.data) {
@@ -681,8 +751,11 @@ export async function reprocessTelemetry(telemetryId: string) {
             cpu_model: result.data.cpu_model || null,
             motherboard_model: result.data.motherboard_model || null,
             ram_total_gb: result.data.ram_total_gb || null,
+            ram_speed: result.data.ram_speed || null,
+            ram_slots: result.data.ram_slots || null,
             gpu_model: result.data.gpu_model || null,
             ssd_health_percent: result.data.ssd_health_percent || null,
+            ssd_total_gb: result.data.ssd_total_gb || null,
             ssd_tbw: result.data.ssd_tbw || null,
             cpu_temp_max: result.data.cpu_temp_max || null,
             battery_wear_level: result.data.battery_wear_level || null,
