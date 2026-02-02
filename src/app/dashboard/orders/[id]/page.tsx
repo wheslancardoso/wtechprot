@@ -15,6 +15,7 @@ import type { OrderData, StoreSettings } from '@/components/warranty-pdf'
 import OrderRealtimeListener from '@/components/order-realtime-listener'
 import WithdrawalTermButton from '@/components/home-care/withdrawal-term-pdf'
 import { AIBudgetAssistant } from '@/components/budget/ai-budget-assistant'
+import TelemetryTab from './telemetry-tab'
 
 // UI Components
 import { Badge } from '@/components/ui/badge'
@@ -229,10 +230,14 @@ export default async function OrderDetailPage({ params }: PageProps) {
 
             {/* TABBED LAYOUT */}
             <Tabs defaultValue="overview" className="w-full space-y-6">
-                <TabsList className="grid w-full grid-cols-4 lg:w-[600px]">
+                <TabsList className="grid w-full grid-cols-5 lg:w-[750px] overflow-x-auto">
                     <TabsTrigger value="overview">Visão Geral</TabsTrigger>
                     <TabsTrigger value="technical">Técnico</TabsTrigger>
                     <TabsTrigger value="execution">Execução</TabsTrigger>
+                    <TabsTrigger value="telemetry">
+                        <Monitor className="h-4 w-4 mr-2" />
+                        Telemetria
+                    </TabsTrigger>
                     <TabsTrigger value="evidence">Anexos</TabsTrigger>
                 </TabsList>
 
@@ -452,6 +457,15 @@ export default async function OrderDetailPage({ params }: PageProps) {
                         laborCost={order.labor_cost}
                         photosCheckin={order.photos_checkin || []}
                         photosCheckout={order.photos_checkout || []}
+                    />
+                </TabsContent>
+
+                {/* 5. Telemetria (Novo) */}
+                <TabsContent value="telemetry">
+                    <TelemetryTab
+                        orderId={order.id}
+                        equipmentId={order.equipment_id}
+                        tenantId={order.tenant_id}
                     />
                 </TabsContent>
             </Tabs>
