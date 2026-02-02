@@ -28,69 +28,95 @@ export async function generateTechnicalReport(
         let telemetryContext = ''
         let healthAlert = false
 
-        // 1. Fetch Telemetry Data if orderId is provided
+        // 1. Fetch ALL Telemetry Data stages if orderId is provided
         if (orderId) {
             const supabase = await createClient()
             const { data: telemetry } = await supabase
                 .from('hardware_telemetry')
                 .select('*')
                 .eq('order_id', orderId)
-                .order('created_at', { ascending: false })
+                .order('created_at', { ascending: true }) // Order chronologically
 
             if (telemetry && telemetry.length > 0) {
-                const t = telemetry[0]
-                const metrics = []
+                const stagesMap: Record<string, any[]> = {
+                    initial: [],
+                    post_repair: [],
+                    final: []
+                }
 
-                if (t.cpu_temp_max) metrics.push(`- Temperatura Máxima CPU: ${t.cpu_temp_max}°C`)
-                if (t.ssd_health_percent) metrics.push(`- Saúde do SSD: ${t.ssd_health_percent}%`)
-                if (t.ssd_tbw) metrics.push(`- Escrita no SSD (TBW): ${t.ssd_tbw} TB`)
-                if (t.battery_wear_percent !== null && t.battery_wear_percent !== undefined) metrics.push(`- Desgaste da Bateria: ${t.battery_wear_percent}%`)
-                if (t.ram_speed) metrics.push(`- Velocidade RAM: ${t.ram_speed} MHz`)
-                if (t.ram_slots) metrics.push(`- Slots de RAM: ${t.ram_slots}`)
-                if (t.ssd_total_gb) metrics.push(`- Capacidade de Armazenamento: ${t.ssd_total_gb} GB`)
+                telemetry.forEach(t => {
+                    const stage = t.stage || 'initial'
+                    if (!stagesMap[stage]) stagesMap[stage] = []
 
-                if (metrics.length > 0) {
-                    telemetryContext = `\nREQUISITOS TÉCNICOS COLETADOS VIA SENSORES:\n${metrics.join('\n')}\n`
+                    const metrics = []
+                    if (t.cpu_model) metrics.push(`- CPU: ${t.cpu_model}`)
+                    if (t.gpu_model) metrics.push(`- GPU: ${t.gpu_model}`)
+                    if (t.ram_total_gb) metrics.push(`- RAM: ${t.ram_total_gb}GB`)
+                    if (t.cpu_temp_max !== null) metrics.push(`- Temp Máx CPU: ${t.cpu_temp_max}°C`)
+                    if (t.ssd_health_percent !== null) metrics.push(`- Saúde SSD: ${t.ssd_health_percent}%`)
+                    if (t.ssd_tbw !== null) metrics.push(`- SSD TBW: ${t.ssd_tbw}TB`)
+                    if (t.battery_wear_percent !== null) metrics.push(`- Desgaste Bateria: ${t.battery_wear_percent}%`)
 
+                    if (metrics.length > 0) {
+                        stagesMap[stage].push(metrics.join('\n'))
+                    }
+
+                    // Check for health alert on any final or latest stage
                     if (t.health_score !== null && t.health_score < 70) {
                         healthAlert = true
                     }
+                })
+
+                let contextParts = []
+                if (stagesMap.initial.length > 0) {
+                    contextParts.push(`[ESTÁGIO: INICIAL / DIAGNÓSTICO]\n${stagesMap.initial.join('\n---\n')}`)
                 }
+                if (stagesMap.post_repair.length > 0) {
+                    contextParts.push(`[ESTÁGIO: PÓS-REPARO]\n${stagesMap.post_repair.join('\n---\n')}`)
+                }
+                if (stagesMap.final.length > 0) {
+                    contextParts.push(`[ESTÁGIO: FINAL / ENTREGA]\n${stagesMap.final.join('\n---\n')}`)
+                }
+
+                if (contextParts.length > 0) {
+                    telemetryContext = `\nEVIDÊNCIAS DE SENSORES POR ESTÁGIO (COMPARAÇÃO OBRIGATÓRIA):\n${contextParts.join('\n\n')}\n`
+                }
+            } else {
+                console.warn('⚠️ No telemetry found for orderId:', orderId)
             }
         }
 
         const systemPrompt = `
-      Você é o Engenheiro Chefe da Assistência Técnica WFIX, especializado em perícia de hardware.
-      Sua missão é redigir um LAUDO TÉCNICO PROFISSIONAL E DETALHADO com base nas anotações do técnico e dados de hardware coletados.
+      Você é o Perito Sênior em Hardware da WFIX, especialista em laudos forenses e análise comparativa de performance.
+      Sua missão é gerar um LAUDO TÉCNICO PERICIAL baseado na evolução do equipamento durante o reparo.
 
-      DADOS DO EQUIPAMENTO:
-      ${equipmentContext || 'Equipamento não especificado'}
+      IDENTIFICAÇÃO DO ATIVO:
+      ${equipmentContext || 'Equipamento em análise'}
+
       ${telemetryContext}
 
-      OBJETIVO:
-      Transformar as anotações e os dados brutos de hardware em um documento técnico formal, denso e pericial. 
+      REGRAS DE OURO DA PERÍCIA (INVIOLÁVEIS):
+      1. ANÁLISE COMPARATIVA: Se houver dados de múltiplos estágios (Ex: Inicial vs Final), você OBRIGATORIAMENTE deve comparar os números. 
+         (Ex: "Observou-se uma redução térmica de XX°C após a intervenção, saindo de ${telemetryContext.includes('INICIAL') ? 'VALOR_INICIAL' : ''} para VALOR_FINAL").
+      2. CITAÇÃO EXATA: Não use termos vagos como "melhorou". Use "reduziu de 95°C para 65°C". Se o dado está acima, cite-o.
+      3. FUNDAMENTAÇÃO TÉCNICA: Correlacione os sintomas (ex: lentidão) com os dados (ex: upgrade de RAM ou thermal throttling).
+      4. ${healthAlert ? 'ALERTA DE SEGURANÇA: Score de saúde crítico (<70%). Enfatize riscos de perda de dados.' : 'TOM PROFISSIONAL: Sóbrio, técnico e autoritário.'}
+
+      ESTRUTURA OBRIGATÓRIA:
       
-      REGRAS CRÍTICAS DE CONTEÚDO:
-      1. CITE EXPLICITAMENTE os números coletados pelos sensores no texto (ex: se houver temperatura, cite o valor exato). Isso dá autoridade ao laudo.
-      2. ${healthAlert ? 'O equipamento apresenta baixo score de saúde (<70%). Use um tom de ALERTA e URGÊNCIA, enfatizando riscos de perda de dados ou falha iminente.' : 'Use um tom profissional, analítico e técnico.'}
-      3. Se não houver dados de telemetria, não invente números; foque apenas no diagnóstico visual e rascunho do técnico.
+      ANÁLISE INICIAL & SINTOMAS
+      [Contexto e sintomas reportados pelo cliente/técnico]
 
-      ESTRUTURA IMUTÁVEL (SIGA EXATAMENTE ESTA ORDEM):
-      
-      ANÁLISE INICIAL & SINTOMAS (CAIXA ALTA)
-      [Texto descritivo aqui]
+      DIAGNÓSTICO TÉCNICO
+      [Onde a evidência fala. Compare os números dos estágios de hardware aqui para provar a eficácia do serviço]
 
-      DIAGNÓSTICO TÉCNICO (CAIXA ALTA)
-      [Texto analítico aqui]
+      METODOLOGIA DE REPARO APLICADA / PROPOSTA
+      [Detalhamento técnico dos procedimentos realizados]
 
-      METODOLOGIA DE REPARO APLICADA / PROPOSTA (CAIXA ALTA)
-      [Procedimentos técnicos aqui]
+      CONCLUSÃO E RECOMENDAÇÕES
+      [Parecer final, validação da performance pós-reparo e orientações]
 
-      CONCLUSÃO E RECOMENDAÇÕES (CAIXA ALTA)
-      [Resultado e dicas aqui]
-
-      REGRA DE OURO:
-      Mantenha SEMPRE esse esqueleto. Saída deve ser apenas o texto do laudo, sem introduções.
+      RESTRIÇÃO: Saída apenas o laudo. Sem comentários extras.
       
       ENTRADA DO TÉCNICO (RASCUNHO):
       "${userDescription}"
@@ -100,21 +126,18 @@ export async function generateTechnicalReport(
             model: "gpt-4o",
             messages: [
                 { role: "system", content: systemPrompt },
-                { role: "user", content: "Gere o laudo técnico pericial WFIX baseado nos dados fornecidos." }
+                { role: "user", content: "Como Perito Sênior, redija o laudo técnico pericial comparativo." }
             ],
-            temperature: 0, // ZERO para consistência absoluta.
+            temperature: 0,
         })
 
         const content = completion.choices[0].message.content
-
-        if (!content) {
-            throw new Error('Retorno vazio da IA')
-        }
+        if (!content) throw new Error('Falha na resposta da OpenAI')
 
         return { success: true, data: content }
 
     } catch (error) {
-        console.error('❌ CRITICAL ERROR in generateTechnicalReport:', error)
-        return { success: false, error: 'Falha ao gerar laudo técnico. Tente novamente.' }
+        console.error('❌ ERROR in generateTechnicalReport:', error)
+        return { success: false, error: 'Falha ao processar laudo pericial.' }
     }
 }
