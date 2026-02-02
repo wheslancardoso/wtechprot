@@ -14,6 +14,7 @@ import type { ExecutionTask } from '@/lib/execution-tasks-types'
 import type { OrderData, StoreSettings } from '@/components/warranty-pdf'
 import OrderRealtimeListener from '@/components/order-realtime-listener'
 import WithdrawalTermButton from '@/components/home-care/withdrawal-term-pdf'
+import { AIBudgetAssistant } from '@/components/budget/ai-budget-assistant'
 
 // UI Components
 import { Badge } from '@/components/ui/badge'
@@ -123,7 +124,6 @@ export default async function OrderDetailPage({ params }: PageProps) {
     }
 
     // Configurações da Loja (Do Banco de Dados)
-    // Configurações da Loja (Snapshot ou Atual no Banco)
     const snapshot = order.store_snapshot as StoreSettings | null
     const currentSettings = tenant ? {
         trade_name: tenant.trade_name,
@@ -143,71 +143,94 @@ export default async function OrderDetailPage({ params }: PageProps) {
         warranty_days_labor: 90
     })
 
+    // Helper to get the correct customer report (handling legacy data)
+    const getCustomerReport = () => {
+        if (order.problem_description) return order.problem_description
+
+        // Legacy fallback: Try to extract from diagnosis_text if it starts with the old pattern
+        if (order.diagnosis_text && order.diagnosis_text.startsWith('Relato do cliente:')) {
+            // Extract content between "Relato do cliente:" and the double newline (before accessories)
+            const match = order.diagnosis_text.match(/Relato do cliente:\n([\s\S]*?)(\n\n|$)/)
+            if (match && match[1]) return match[1].trim()
+            // If match fails but starts with tag, fallback to full text (better than nothing)
+            return order.diagnosis_text
+        }
+
+        return null
+    }
+
+    const customerReport = getCustomerReport()
+
+    // Helper to clean technical report (remove legacy customer report if present)
+    const getTechnicalReportDisplay = () => {
+        if (!order.diagnosis_text) return null
+
+        // If diagnosis text starts with "Relato do cliente:", strip it to avoid duplication
+        // because we are already showing it in the "Relato do Cliente" section
+        if (order.diagnosis_text.startsWith('Relato do cliente:')) {
+            return order.diagnosis_text.replace(/Relato do cliente:[\s\S]*?(\n\n|$)/, '').trim()
+        }
+        return order.diagnosis_text
+    }
+
+    const technicalDiagnosisDisplay = getTechnicalReportDisplay()
+
     return (
-        <div className="container mx-auto max-w-7xl py-8 px-4">
-            {/* Header */}
-            <div className="mb-8">
-                {/* Back link */}
-                <Link
-                    href="/dashboard/orders"
-                    className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-4"
-                >
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    Voltar para lista
-                </Link>
-
-                {/* Title row */}
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                    <div className="flex items-center gap-4">
-                        {/* OS ID */}
-                        <h1 className="text-3xl font-bold tracking-tight">
-                            OS #{String(order.display_id).padStart(4, '0')}
-                        </h1>
-
-                        {/* Status Badge (Grande) */}
-                        <Badge variant={order.status as OrderStatus} className="text-sm px-3 py-1">
-                            {statusLabels[order.status as OrderStatus] || order.status}
+        <div className="container mx-auto max-w-5xl py-8 px-4 space-y-8">
+            {/* Header + Actions */}
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
+                        <Link href="/dashboard/orders" className="hover:text-foreground flex items-center gap-1">
+                            <ArrowLeft className="h-4 w-4" />
+                            Ordens
+                        </Link>
+                        <span>/</span>
+                        <span>#{order.display_id}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <h1 className="text-3xl font-bold tracking-tight">OS #{order.display_id}</h1>
+                        <Badge variant={order.status} className="text-sm px-3 py-1">
+                            {statusLabels[order.status]}
                         </Badge>
                     </div>
-
-                    {/* Actions */}
-                    <div className="flex items-center gap-2">
-                        <OrderActions
-                            orderId={order.id}
-                            currentStatus={order.status}
-                            orderData={orderData}
-                            storeSettings={storeSettings}
-                            customerName={customer?.name || 'Cliente'}
-                            displayId={order.display_id}
-                            technicalReport={technicalReport as TechnicalReport | null}
-                        />
-
-                        {/* Botão de Termo de Retirada (Só se tiver assiante) */}
-                        {order.custody_signature_url && (
-                            <WithdrawalTermButton
-                                data={{
-                                    orderDisplayId: order.display_id,
-                                    customerName: customer?.name || 'Consumidor',
-                                    customerDocument: customer?.document_id || '',
-                                    equipmentType: equipment?.type || 'Equipamento',
-                                    equipmentBrand: equipment?.brand || '',
-                                    equipmentModel: equipment?.model || '',
-                                    equipmentSerial: equipment?.serial_number || '',
-                                    accessories: order.accessories_received || [],
-                                    conditionNotes: order.custody_conditions || '',
-                                    signatureUrl: order.custody_signature_url,
-                                    signedAt: order.custody_signed_at || new Date().toISOString()
-                                }}
-                                settings={storeSettings}
-                            />
-                        )}
-                    </div>
+                    {/* Meta info */}
+                    <p className="text-muted-foreground mt-2 text-sm">
+                        Aberta em {formatDate(order.created_at)}
+                    </p>
                 </div>
 
-                {/* Meta info */}
-                <p className="text-muted-foreground mt-2">
-                    Aberta em {formatDate(order.created_at)}
-                </p>
+                <div className="flex items-center gap-2">
+                    <OrderActions
+                        orderId={order.id}
+                        currentStatus={order.status}
+                        orderData={orderData}
+                        storeSettings={storeSettings}
+                        customerName={orderData.customerName}
+                        displayId={Number(order.display_id)}
+                        technicalReport={technicalReport}
+                        problemDescription={customerReport || undefined}
+                    />
+
+                    {order.custody_signature_url && (
+                        <WithdrawalTermButton
+                            data={{
+                                orderDisplayId: order.display_id,
+                                customerName: order.customer?.name || 'Cliente',
+                                customerDocument: order.customer?.document_id || '',
+                                equipmentType: order.equipment?.type || 'Equipamento',
+                                equipmentBrand: order.equipment?.brand || '',
+                                equipmentModel: order.equipment?.model || '',
+                                equipmentSerial: order.equipment?.serial_number || '',
+                                accessories: order.accessories_received || [],
+                                conditionNotes: order.custody_conditions || '',
+                                signatureUrl: order.custody_signature_url,
+                                signedAt: order.custody_signed_at || new Date().toISOString()
+                            }}
+                            settings={storeSettings}
+                        />
+                    )}
+                </div>
             </div>
 
             {/* Grid Principal */}
@@ -336,9 +359,25 @@ export default async function OrderDetailPage({ params }: PageProps) {
                                     <h4 className="font-medium mb-2">Relato do Cliente</h4>
                                     <div className="bg-muted rounded-lg p-4">
                                         <p className="whitespace-pre-wrap text-sm">
-                                            {order.diagnosis_text || 'Nenhum relato registrado.'}
+                                            {customerReport || 'Nenhum relato registrado.'}
                                         </p>
                                     </div>
+                                </div>
+
+                                <div>
+                                    <h4 className="font-medium mb-2">Laudo Técnico (Orçamento)</h4>
+                                    <div className="bg-muted/50 border border-border rounded-lg p-4">
+                                        <p className="whitespace-pre-wrap text-sm">
+                                            {order.diagnosis_text ? order.diagnosis_text : <span className="text-muted-foreground italic">Aguardando análise técnica...</span>}
+                                        </p>
+                                    </div>
+                                </div>
+
+
+                                {/* AI Budget Assistant */}
+                                <div>
+                                    <h4 className="font-medium mb-2">Assistente de Orçamento</h4>
+                                    <AIBudgetAssistant />
                                 </div>
 
                                 {order.solution_text && (

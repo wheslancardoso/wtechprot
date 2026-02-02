@@ -18,6 +18,16 @@ import { toast } from '@/hooks/use-toast' // Assuming this exists, or use standa
 
 import ImageUpload from '@/components/image-upload'
 import TechnicalReportPdfButton from './technical-report-pdf'
+import { generateBudget, type BudgetSuggestion } from '@/app/actions/generate-budget'
+import { Wand2, AlertTriangle, Copy, Check } from 'lucide-react'
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+} from "@/components/ui/dialog"
 
 import type { TechnicalReport, TechnicalReportFormData } from '@/types/technical-report'
 import type { OrderData, StoreSettings } from '@/components/warranty-pdf'
@@ -69,6 +79,46 @@ export default function TechnicalReportForm({
     const [conclusion, setConclusion] = useState(existingReport?.conclusion || '')
     const [tests, setTests] = useState<string[]>(existingReport?.tests_performed || [])
     const [newTest, setNewTest] = useState('')
+
+    // AI Budget State
+    const [isGeneratingBudget, setIsGeneratingBudget] = useState(false)
+    const [budgetSuggestion, setBudgetSuggestion] = useState<BudgetSuggestion | null>(null)
+    const [showBudgetDialog, setShowBudgetDialog] = useState(false)
+
+    const handleGenerateBudget = async () => {
+        if (!analysis || analysis.length < 10) {
+            toast({
+                title: "Análise muito curta",
+                description: "Escreva mais detalhes na análise técnica para gerar um orçamento preciso.",
+                variant: "destructive"
+            })
+            return
+        }
+
+        setIsGeneratingBudget(true)
+        try {
+            const result = await generateBudget(analysis)
+            if (result.success && result.data) {
+                setBudgetSuggestion(result.data)
+                setShowBudgetDialog(true)
+            } else {
+                toast({
+                    title: "Erro na IA",
+                    description: result.error || "Não foi possível gerar o orçamento.",
+                    variant: "destructive"
+                })
+            }
+        } catch (error) {
+            console.error(error)
+            toast({
+                title: "Erro",
+                description: "Falha ao comunicar com o assistente.",
+                variant: "destructive"
+            })
+        } finally {
+            setIsGeneratingBudget(false)
+        }
+    }
 
     // Evidence State
     const [selectedPhotos, setSelectedPhotos] = useState<string[]>(existingReport?.photos_evidence || [])
@@ -260,7 +310,85 @@ export default function TechnicalReportForm({
                         value={analysis}
                         onChange={(e) => setAnalysis(e.target.value)}
                     />
+                    <div className="flex justify-end">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            className="text-purple-600 border-purple-200 hover:bg-purple-50"
+                            onClick={handleGenerateBudget}
+                            disabled={isGeneratingBudget || !analysis}
+                        >
+                            {isGeneratingBudget ? (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
+                                <Wand2 className="mr-2 h-4 w-4" />
+                            )}
+                            {isGeneratingBudget ? 'Analisando...' : 'Sugerir Orçamento com IA'}
+                        </Button>
+                    </div>
                 </div>
+
+                {/* AI Budget Dialog */}
+                <Dialog open={showBudgetDialog} onOpenChange={setShowBudgetDialog}>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle className="flex items-center gap-2">
+                                <Wand2 className="h-5 w-5 text-purple-600" />
+                                Sugestão de Orçamento
+                            </DialogTitle>
+                            <DialogDescription>
+                                Com base na sua análise técnica, a IA sugere o seguinte serviço e valor:
+                            </DialogDescription>
+                        </DialogHeader>
+
+                        {budgetSuggestion && (
+                            <div className="space-y-4">
+                                <div className="bg-muted p-4 rounded-lg space-y-3">
+                                    <div>
+                                        <Label className="text-xs text-muted-foreground uppercase">Serviço Sugerido</Label>
+                                        <p className="font-medium text-lg">{budgetSuggestion.commercial_description}</p>
+                                    </div>
+
+                                    <div>
+                                        <Label className="text-xs text-muted-foreground uppercase">Valor Sugerido</Label>
+                                        <div className="flex items-baseline gap-2">
+                                            <span className="text-2xl font-bold text-green-600">
+                                                {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(budgetSuggestion.suggested_price)}
+                                            </span>
+                                            <Badge variant="outline" className="text-xs">
+                                                Nível VDI
+                                            </Badge>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <Label className="text-xs text-muted-foreground uppercase">Justificativa da IA</Label>
+                                        <p className="text-sm italic text-muted-foreground">"{budgetSuggestion.difficulty_reasoning}"</p>
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col gap-2">
+                                    <Button
+                                        onClick={() => {
+                                            const textToCopy = `Serviço: ${budgetSuggestion.commercial_description}\nValor: ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(budgetSuggestion.suggested_price)}`
+                                            navigator.clipboard.writeText(textToCopy)
+                                            toast({ title: "Copiado!", description: "Orçamento copiado para a área de transferência." })
+                                            setShowBudgetDialog(false)
+                                        }}
+                                        className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+                                    >
+                                        <Copy className="mr-2 h-4 w-4" />
+                                        Copiar Sugestão
+                                    </Button>
+                                    <Button variant="ghost" onClick={() => setShowBudgetDialog(false)}>
+                                        Fechar
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
+                    </DialogContent>
+                </Dialog>
 
                 {/* Conclusion */}
                 <div className="space-y-2">

@@ -130,15 +130,23 @@ export async function createOrder(formData: FormData): Promise<ActionResult> {
             return { success: false, message: `Erro ao criar equipamento: ${equipmentError?.message}` }
         }
 
-        // 7. Montar texto de diagnóstico inicial
+        // 7. Montar texto de diagnóstico inicial (Mantendo padrão legado como backup)
         const hasAccessories = validatedData.hasAccessories === 'on' || validatedData.hasAccessories === 'true'
         const accessoriesText = hasAccessories
             ? `Acessórios: ${validatedData.accessoriesDescription || 'Sim (não especificados)'}`
             : 'Sem acessórios'
 
+        // Salva também no diagnosis_text como redundância para garantir que não se perca
+        // caso a migração do problem_description não tenha sido rodada ainda.
         const diagnosisText = `Relato do cliente:\n${validatedData.defectReport}\n\n${accessoriesText}`
 
         // 8. Criar ordem de serviço
+        console.log('📝 createOrder debug:', {
+            defectReport: validatedData.defectReport,
+            diagnosisText: diagnosisText,
+            problem_description_field: validatedData.defectReport
+        })
+
         const { data: order, error: orderError } = await supabase
             .from('orders')
             .insert({
@@ -149,6 +157,7 @@ export async function createOrder(formData: FormData): Promise<ActionResult> {
                 labor_cost: 0,
                 parts_cost_external: 0,
                 diagnosis_text: diagnosisText,
+                problem_description: validatedData.defectReport,
             })
             .select('id, display_id')
             .single()

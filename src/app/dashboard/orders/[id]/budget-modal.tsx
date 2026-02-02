@@ -10,6 +10,7 @@ import type { TechnicalReport } from '@/types/technical-report'
 
 // Server Action
 import { saveBudget } from '../actions'
+import { generateBudget } from '@/app/actions/generate-budget'
 
 // UI Components
 import { Button } from '@/components/ui/button'
@@ -37,6 +38,7 @@ import {
     Copy,
     MessageCircle,
     X,
+    Wand2,
 } from 'lucide-react'
 
 // ==================================================
@@ -64,14 +66,17 @@ interface BudgetModalProps {
     open: boolean
     onOpenChange: (open: boolean) => void
     technicalReport?: TechnicalReport | null
+    equipmentContext?: string
+    problemDescription?: string // New prop
 }
 
 // ==================================================
 // Component
 // ==================================================
-export default function BudgetModal({ orderId, displayId, open, onOpenChange, technicalReport }: BudgetModalProps) {
+export default function BudgetModal({ orderId, displayId, open, onOpenChange, technicalReport, equipmentContext, problemDescription }: BudgetModalProps) {
     const router = useRouter()
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [isGeneratingAI, setIsGeneratingAI] = useState(false)
     const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
     const [showSuccess, setShowSuccess] = useState(false)
     const [publicLink, setPublicLink] = useState('')
@@ -145,6 +150,42 @@ export default function BudgetModal({ orderId, displayId, open, onOpenChange, te
             })
         } finally {
             setIsSubmitting(false)
+        }
+    }
+
+    async function handleGenerateBudget() {
+        const currentReport = watch('technicalReport')
+        // Use current report if meaningful, otherwise use customer's problem description
+        const textToAnalyze = (currentReport && currentReport.length > 20) ? currentReport : problemDescription
+
+        if (!textToAnalyze || textToAnalyze.length < 10) {
+            setFeedback({ type: 'error', message: 'Nenhuma descrição (Relato do Cliente ou Laudo) disponível para análise.' })
+            return
+        }
+
+        setIsGeneratingAI(true)
+        setFeedback(null)
+
+        try {
+            const result = await generateBudget(textToAnalyze, equipmentContext)
+
+            if (result.success && result.data) {
+                // Atualiza os campos com a sugestão da IA
+                setValue('technicalReport', result.data.commercial_description) // Ou manter o original + sugestão? O usuario pediu "sobreescrever de forma refinada".
+                setValue('laborCost', result.data.suggested_price)
+
+                setFeedback({
+                    type: 'success',
+                    message: `Orçamento gerado pela IA (Nível VDI)! Justificativa: ${result.data.difficulty_reasoning}`
+                })
+            } else {
+                setFeedback({ type: 'error', message: result.error || 'Erro ao gerar orçamento com IA.' })
+            }
+        } catch (error) {
+            console.error(error)
+            setFeedback({ type: 'error', message: 'Falha na comunicação com a IA.' })
+        } finally {
+            setIsGeneratingAI(false)
         }
     }
 
@@ -277,6 +318,23 @@ export default function BudgetModal({ orderId, displayId, open, onOpenChange, te
                                     {...register('technicalReport')}
                                     disabled={isSubmitting}
                                 />
+                                <div className="flex justify-end">
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={handleGenerateBudget}
+                                        disabled={isGeneratingAI || isSubmitting}
+                                        className="text-purple-600 border-purple-200 hover:bg-purple-50"
+                                    >
+                                        {isGeneratingAI ? (
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        ) : (
+                                            <Wand2 className="mr-2 h-4 w-4" />
+                                        )}
+                                        {isGeneratingAI ? 'Refinando...' : 'Refinar e Precificar com IA'}
+                                    </Button>
+                                </div>
                                 {errors.technicalReport && (
                                     <p className="text-sm text-destructive">{errors.technicalReport.message}</p>
                                 )}

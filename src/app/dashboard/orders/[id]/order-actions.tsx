@@ -45,6 +45,7 @@ interface OrderActionsProps {
     customerName: string
     displayId: number
     technicalReport?: TechnicalReport | null
+    problemDescription?: string // New prop
 }
 
 export default function OrderActions({
@@ -54,7 +55,8 @@ export default function OrderActions({
     storeSettings,
     customerName,
     displayId,
-    technicalReport
+    technicalReport,
+    problemDescription
 }: OrderActionsProps) {
     const router = useRouter()
     const [isPending, setIsPending] = useState(false)
@@ -348,6 +350,8 @@ export default function OrderActions({
                     open={isBudgetOpen}
                     onOpenChange={setIsBudgetOpen}
                     technicalReport={technicalReport}
+                    equipmentContext={orderData ? `${orderData.equipmentType} ${orderData.equipmentBrand} ${orderData.equipmentModel}`.trim() : ''}
+                    problemDescription={problemDescription}
                 />
 
                 <FinishOrderModal
