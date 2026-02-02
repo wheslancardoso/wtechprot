@@ -172,13 +172,14 @@ export default function BudgetModal({ orderId, displayId, open, onOpenChange, te
             if (result.success && result.data) {
                 // Atualiza os campos com a sugestão da IA
                 setValue('technicalReport', result.data.commercial_description)
+                setValue('laborCost', result.data.suggested_price)
 
                 setFeedback({
                     type: 'success',
-                    message: `Laudo refinado pela IA com sucesso! Justificativa Técnica: ${result.data.difficulty_reasoning}`
+                    message: `Orçamento gerado! Serviço identificado: ${result.data.difficulty_reasoning}`
                 })
             } else {
-                setFeedback({ type: 'error', message: result.error || 'Erro ao gerar laudo com IA.' })
+                setFeedback({ type: 'error', message: result.error || 'Erro ao gerar orçamento com IA.' })
             }
         } catch (error) {
             console.error(error)
@@ -331,7 +332,7 @@ export default function BudgetModal({ orderId, displayId, open, onOpenChange, te
                                         ) : (
                                             <Wand2 className="mr-2 h-4 w-4" />
                                         )}
-                                        {isGeneratingAI ? 'Refinando...' : 'Refinar Laudo com IA'}
+                                        {isGeneratingAI ? 'Analisando...' : 'Sugerir Orçamento com IA'}
                                     </Button>
                                 </div>
                                 {errors.technicalReport && (

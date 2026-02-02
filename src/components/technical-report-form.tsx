@@ -5,7 +5,7 @@ import { createBrowserClient } from '@supabase/ssr'
 import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { Loader2, Plus, X, FileText, CheckCircle2, Image as ImageIcon } from 'lucide-react'
+import { Loader2, Plus, X, FileText, CheckCircle2, Image as ImageIcon, MessageCircle } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -242,6 +242,21 @@ export default function TechnicalReportForm({
                         orderData={orderData}
                         storeSettings={storeSettings}
                     />
+                    <Button
+                        variant="outline"
+                        className="gap-2 text-green-600 border-green-200 hover:bg-green-50"
+                        onClick={() => {
+                            const phone = orderData.customerPhone?.replace(/\D/g, '') || ''
+                            const link = `${window.location.origin}/os/${orderData.displayId}`
+                            const message = `Olá *${orderData.customerName}*! 🛠️\n\nSeu *Laudo Técnico* foi emitido com sucesso pela ${storeSettings.trade_name}.\n\nPara ver os especialistas, fotos e detalhes técnicos, acesse:\n🔗 ${link}\n\nQualquer dúvida, estamos à disposição!`
+
+                            const target = phone.length >= 10 ? `55${phone}` : ''
+                            window.open(`https://wa.me/${target}?text=${encodeURIComponent(message)}`, '_blank')
+                        }}
+                    >
+                        <MessageCircle className="h-4 w-4" />
+                        Enviar via WhatsApp
+                    </Button>
                     <Button variant="ghost" onClick={() => setIsEditing(true)}>
                         Editar Laudo
                     </Button>
