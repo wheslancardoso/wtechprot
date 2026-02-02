@@ -53,7 +53,24 @@ export function TemperatureComparison({ telemetryData }: TemperatureComparisonPr
 
     const renderMetricCard = (label: string, value?: number | string, unit: string = '°C', diff?: number | null, stage?: string, isBetterLower: boolean = true) => {
         const numValue = typeof value === 'string' ? parseFloat(value) : value
-        if (numValue === undefined || numValue === null) return null
+        const isDiffCard = label.toLowerCase().includes('diferença') || label.toLowerCase().includes('final')
+
+        if (numValue === undefined || numValue === null) {
+            if (!isDiffCard || diff === null || diff === undefined) return null
+        }
+
+        const getDeltaStatus = (val: number) => {
+            if (val === 0) return { color: 'text-gray-500', icon: Minus, sign: '' }
+            const isGood = isBetterLower ? val < 0 : val > 0
+            return {
+                color: isGood ? 'text-green-500' : 'text-red-500',
+                icon: val > 0 ? TrendingUp : TrendingDown,
+                sign: val > 0 ? '+' : ''
+            }
+        }
+
+        const delta = diff
+        const deltaStatus = delta !== null && delta !== undefined ? getDeltaStatus(delta) : null
 
         return (
             <div className="flex flex-col gap-2 p-4 border rounded-lg bg-card/50">
@@ -63,37 +80,35 @@ export function TemperatureComparison({ telemetryData }: TemperatureComparisonPr
                         <Badge variant="secondary" className="text-[10px] h-4 px-1">
                             {stage === 'initial' && 'Diagnóstico'}
                             {stage === 'post_repair' && 'Pós-Reparo'}
-                            {stage === 'final' && 'Final'}
+                            {stage === 'final' && 'Relatório'}
                         </Badge>
                     )}
                 </div>
                 <div className="flex items-baseline gap-2">
-                    <span className="text-2xl font-bold">{value}{unit}</span>
-                    {diff !== null && diff !== undefined && (
-                        <div className="flex items-center gap-1">
-                            {((diff < 0 && isBetterLower) || (diff > 0 && !isBetterLower)) ? (
-                                <>
-                                    <TrendingDown className={`h-4 w-4 ${isBetterLower ? 'text-green-500' : 'text-red-500'}`} />
-                                    <span className={`text-sm font-medium ${isBetterLower ? 'text-green-500' : 'text-red-500'}`}>
-                                        {Math.abs(diff)}{unit}
-                                    </span>
-                                </>
-                            ) : ((diff > 0 && isBetterLower) || (diff < 0 && !isBetterLower)) ? (
-                                <>
-                                    <TrendingUp className={`h-4 w-4 ${isBetterLower ? 'text-red-500' : 'text-green-500'}`} />
-                                    <span className={`text-sm font-medium ${isBetterLower ? 'text-red-500' : 'text-green-500'}`}>
-                                        {diff > 0 ? '+' : ''}{diff}{unit}
-                                    </span>
-                                </>
-                            ) : (
-                                <>
-                                    <Minus className="h-4 w-4 text-gray-500" />
-                                    <span className="text-sm font-medium text-gray-500">
-                                        =
-                                    </span>
-                                </>
-                            )}
+                    {isDiffCard && delta !== null && delta !== undefined && deltaStatus ? (
+                        <div className="flex items-center gap-2">
+                            <deltaStatus.icon className={`h-6 w-6 ${deltaStatus.color}`} />
+                            <div className="flex flex-col">
+                                <span className={`text-2xl font-bold ${deltaStatus.color}`}>
+                                    {deltaStatus.sign}{delta.toFixed(delta < 1 && delta !== 0 ? 3 : 1).replace('.0', '')}{unit}
+                                </span>
+                                {value && (
+                                    <span className="text-[10px] text-muted-foreground font-medium">Final: {value}{unit}</span>
+                                )}
+                            </div>
                         </div>
+                    ) : (
+                        <>
+                            <span className="text-2xl font-bold">{value}{unit}</span>
+                            {deltaStatus && (
+                                <div className="flex items-center gap-1">
+                                    <deltaStatus.icon className={`h-4 w-4 ${deltaStatus.color}`} />
+                                    <span className={`text-sm font-medium ${deltaStatus.color}`}>
+                                        {deltaStatus.sign}{delta.toFixed(delta < 1 && delta !== 0 ? 3 : 1).replace('.0', '')}{unit}
+                                    </span>
+                                </div>
+                            )}
+                        </>
                     )}
                 </div>
             </div>

@@ -233,12 +233,9 @@ export default async function OrderDetailPage({ params }: PageProps) {
                 <div className="w-full overflow-x-auto pb-1 scrollbar-hide">
                     <TabsList className="inline-flex w-full sm:w-auto min-w-full sm:min-w-0 bg-muted/50 p-1 border">
                         <TabsTrigger value="overview" className="flex-1 sm:flex-none">Visão Geral</TabsTrigger>
-                        <TabsTrigger v-value="technical" className="flex-1 sm:flex-none">Técnico</TabsTrigger>
+                        <TabsTrigger value="technical" className="flex-1 sm:flex-none">Técnico</TabsTrigger>
                         <TabsTrigger value="execution" className="flex-1 sm:flex-none">Execução</TabsTrigger>
-                        <TabsTrigger value="telemetry" className="flex-1 sm:flex-none">
-                            <Monitor className="h-4 w-4 mr-1 md:mr-2" />
-                            <span className="hidden xs:inline">Telemetria</span>
-                        </TabsTrigger>
+                        <TabsTrigger value="telemetry" className="flex-1 sm:flex-none">Hardware</TabsTrigger>
                         <TabsTrigger value="evidence" className="flex-1 sm:flex-none">Anexos</TabsTrigger>
                     </TabsList>
                 </div>
