@@ -6,6 +6,7 @@ export interface ServiceCatalogItem {
     price_min: number
     price_max: number
     category: string
+    estimated_time?: string
     active: boolean
     created_at: string
 }

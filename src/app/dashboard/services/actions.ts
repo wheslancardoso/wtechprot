@@ -13,6 +13,7 @@ const serviceSchema = z.object({
     price_min: z.coerce.number().min(0, 'Preço mínimo deve ser maior ou igual a 0'),
     price_max: z.coerce.number().min(0, 'Preço máximo deve ser maior ou igual a 0'),
     category: z.string().min(1, 'Categoria é obrigatória'),
+    estimated_time: z.string().optional(),
     active: z.coerce.boolean().optional(),
 })
 
@@ -43,6 +44,7 @@ export async function saveService(
         price_min: formData.get('price_min'),
         price_max: formData.get('price_max'),
         category: formData.get('category'),
+        estimated_time: formData.get('estimated_time'),
         active: formData.get('active') === 'on',
     })
 
