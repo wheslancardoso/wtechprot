@@ -53,7 +53,7 @@ export default function FeedbackPage({ params }: { params: Promise<{ id: string 
         return (
             <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center p-4">
 
-                <Card className="max-w-md w-full shadow-xl border-t-4 border-t-green-500">
+                <Card className="max-w-md w-full shadow-xl border-t-4 border-t-green-500 bg-white/70 backdrop-blur-sm">
                     <CardHeader className="text-center pb-2">
                         <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
                             <CheckCircle className="w-8 h-8 text-green-600" />
@@ -64,30 +64,30 @@ export default function FeedbackPage({ params }: { params: Promise<{ id: string 
 
                     <CardContent className="space-y-6 pt-4">
                         {couponCode ? (
-                            <div className="bg-white border-2 border-dashed border-primary/20 rounded-xl p-6 text-center space-y-3 relative overflow-hidden">
+                            <div className="bg-white/80 border-2 border-dashed border-green-200 rounded-xl p-6 text-center space-y-3 relative overflow-hidden">
                                 <h3 className="text-lg font-semibold text-foreground">Parabéns! Você ganhou!</h3>
                                 <p className="text-sm text-muted-foreground">
                                     Use este cupom na sua próxima visita e ganhe <span className="font-bold text-foreground">20% de desconto</span> na mão de obra.
                                 </p>
 
-                                <div className="flex items-center gap-2 mt-4 bg-muted/50 border border-border rounded-lg p-3">
-                                    <code className="text-xl font-mono font-bold text-primary flex-1 tracking-wider">
+                                <div className="flex items-center gap-2 mt-4 bg-white/60 border border-green-100 rounded-lg p-3">
+                                    <code className="text-xl font-mono font-bold text-green-600 flex-1 tracking-wider">
                                         {couponCode}
                                     </code>
-                                    <Button size="icon" variant="ghost" onClick={handleCopy} className="hover:bg-background">
+                                    <Button size="icon" variant="ghost" onClick={handleCopy} className="hover:bg-green-50">
                                         {copied ? <CheckCircle className="h-5 w-5 text-green-600" /> : <Copy className="h-5 w-5 text-muted-foreground" />}
                                     </Button>
                                 </div>
                                 {copied && <p className="text-xs text-green-600 font-medium">Copiado!</p>}
                             </div>
                         ) : (
-                            <div className="text-center text-muted-foreground p-4">
+                            <div className="text-center text-muted-foreground p-4 bg-white/50 rounded-lg">
                                 Agradecemos seu feedback. Trabalhamos todos os dias para melhorar nosso atendimento!
                             </div>
                         )}
 
-                        <div className="pt-4 border-t">
-                            <Button variant="outline" className="w-full gap-2" asChild>
+                        <div className="pt-4 border-t border-green-100">
+                            <Button variant="outline" className="w-full gap-2 bg-white/50 hover:bg-white/80 border-green-200" asChild>
                                 <a href="https://search.google.com/local/writereview?placeid=YOUR_PLACE_ID" target="_blank" rel="noopener noreferrer">
                                     <Store className="w-4 h-4" />
                                     Avaliar também no Google
