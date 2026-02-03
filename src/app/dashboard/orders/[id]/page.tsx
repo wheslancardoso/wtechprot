@@ -231,13 +231,13 @@ export default async function OrderDetailPage({ params }: PageProps) {
 
             {/* TABBED LAYOUT */}
             <Tabs defaultValue="overview" className="w-full space-y-6">
-                <div className="w-full overflow-x-auto pb-1 scrollbar-hide">
-                    <TabsList className="inline-flex w-full sm:w-auto min-w-full sm:min-w-0 bg-muted/50 p-1 border">
-                        <TabsTrigger value="overview" className="flex-1 sm:flex-none">Visão Geral</TabsTrigger>
-                        <TabsTrigger value="technical" className="flex-1 sm:flex-none">Técnico</TabsTrigger>
-                        <TabsTrigger value="execution" className="flex-1 sm:flex-none">Execução</TabsTrigger>
-                        <TabsTrigger value="telemetry" className="flex-1 sm:flex-none">Hardware</TabsTrigger>
-                        <TabsTrigger value="evidence" className="flex-1 sm:flex-none">Anexos</TabsTrigger>
+                <div className="w-full overflow-x-auto -mx-1 px-1" style={{ WebkitOverflowScrolling: 'touch' }}>
+                    <TabsList className="inline-flex w-max min-w-full bg-muted/50 p-1 border">
+                        <TabsTrigger value="overview" className="text-xs sm:text-sm px-2 sm:px-3">Geral</TabsTrigger>
+                        <TabsTrigger value="technical" className="text-xs sm:text-sm px-2 sm:px-3">Técnico</TabsTrigger>
+                        <TabsTrigger value="execution" className="text-xs sm:text-sm px-2 sm:px-3">Exec.</TabsTrigger>
+                        <TabsTrigger value="telemetry" className="text-xs sm:text-sm px-2 sm:px-3">HW</TabsTrigger>
+                        <TabsTrigger value="evidence" className="text-xs sm:text-sm px-2 sm:px-3">Anexos</TabsTrigger>
                     </TabsList>
                 </div>
 

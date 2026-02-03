@@ -263,18 +263,23 @@ export default function OrderActions({
                 </div>
 
                 {/* ====== SEÇÃO 2: AÇÕES SECUNDÁRIAS ====== */}
-                <div className="flex flex-wrap items-center gap-2 pt-2 border-t">
+                <div className="flex flex-col sm:flex-row gap-2 pt-3 border-t">
                     {/* Compartilhar - Sempre visível */}
-                    <ShareActions
-                        orderId={orderId}
-                        displayId={displayId}
-                        customerName={customerName}
-                        storeName={storeSettings?.trade_name}
-                    />
+                    <div className="w-full sm:w-auto">
+                        <ShareActions
+                            orderId={orderId}
+                            displayId={displayId}
+                            customerName={customerName}
+                            storeName={storeSettings?.trade_name}
+                            className="w-full"
+                        />
+                    </div>
 
                     {/* PDF - Quando finalizado ou pronto */}
                     {(currentStatus === 'finished' || currentStatus === 'ready') && (
-                        <PdfButtonWrapper orderData={orderData!} storeSettings={storeSettings!} />
+                        <div className="w-full sm:w-auto">
+                            <PdfButtonWrapper orderData={orderData!} storeSettings={storeSettings!} className="w-full" />
+                        </div>
                     )}
 
                     {/* Reabrir - Quando finalizado ou cancelado */}
@@ -284,7 +289,7 @@ export default function OrderActions({
                             size="sm"
                             onClick={handleReopen}
                             disabled={isPending}
-                            className="border-dashed"
+                            className="w-full sm:w-auto border-dashed"
                         >
                             <RefreshCcw className="mr-2 h-4 w-4" />
                             Reabrir
