@@ -16,9 +16,11 @@ export interface FollowUp {
     created_at: string
     order: {
         display_id: string
-        device_type: string | null
-        device_brand: string | null
         warranty_end_date: string | null
+        equipment: {
+            brand: string | null
+            model: string | null
+        } | null
         customer: {
             name: string
             phone: string | null
@@ -50,11 +52,10 @@ export async function getFollowUps(filter: 'pending' | 'completed' | 'all' = 'pe
             skipped_at,
             notes,
             created_at,
-            order:orders!inner(
+            order:orders(
                 display_id,
-                device_type,
-                device_brand,
                 warranty_end_date,
+                equipment:equipment(brand, model),
                 customer:customers(name, phone)
             )
         `)
@@ -69,7 +70,7 @@ export async function getFollowUps(filter: 'pending' | 'completed' | 'all' = 'pe
     const { data, error } = await query.limit(100)
 
     if (error) {
-        console.error('Error fetching follow-ups:', error)
+        console.error('Error fetching follow-ups:', JSON.stringify(error, null, 2))
         return []
     }
 
@@ -85,20 +86,20 @@ export async function getActiveWarranties() {
         .select(`
             id,
             display_id,
-            device_type,
-            device_brand,
             warranty_start_date,
             warranty_end_date,
             finished_at,
+            equipment:equipment(brand, model),
             customer:customers(name, phone)
         `)
         .eq('status', 'finished')
+        .not('warranty_end_date', 'is', null)
         .gte('warranty_end_date', new Date().toISOString())
         .order('warranty_end_date', { ascending: true })
         .limit(100)
 
     if (error) {
-        console.error('Error fetching warranties:', error)
+        console.error('Error fetching warranties:', JSON.stringify(error, null, 2))
         return []
     }
 

@@ -188,7 +188,7 @@ export default async function FollowUpsPage() {
                                                         OS {order.display_id} - {order.customer?.name || 'Cliente'}
                                                     </div>
                                                     <div className="text-sm text-muted-foreground">
-                                                        {order.device_brand} {order.device_type}
+                                                        {order.equipment?.brand} {order.equipment?.model}
                                                     </div>
                                                 </Link>
 
@@ -206,7 +206,7 @@ export default async function FollowUpsPage() {
                                                         displayId={order.display_id}
                                                         customerName={order.customer?.name || 'Cliente'}
                                                         customerPhone={order.customer?.phone}
-                                                        deviceType={order.device_type}
+                                                        deviceType={order.equipment?.model || null}
                                                         type="warranty_expiring"
                                                         daysRemaining={daysRemaining}
                                                     />
@@ -241,8 +241,8 @@ export default async function FollowUpsPage() {
                                             className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50"
                                         >
                                             <div className={`p-2 rounded-full ${followUp.status === 'completed'
-                                                    ? 'bg-green-500/10'
-                                                    : 'bg-gray-500/10'
+                                                ? 'bg-green-500/10'
+                                                : 'bg-gray-500/10'
                                                 }`}>
                                                 {followUp.status === 'completed'
                                                     ? <CheckCircle2 className="h-4 w-4 text-green-500" />
@@ -300,7 +300,7 @@ function FollowUpItem({ followUp, isOverdue = false }: { followUp: any; isOverdu
                     OS {followUp.order?.display_id} - {followUp.order?.customer?.name || 'Cliente'}
                 </div>
                 <div className="text-sm text-muted-foreground">
-                    {followUp.order?.device_brand} {followUp.order?.device_type}
+                    {followUp.order?.equipment?.brand} {followUp.order?.equipment?.model}
                 </div>
             </Link>
 
@@ -315,7 +315,7 @@ function FollowUpItem({ followUp, isOverdue = false }: { followUp: any; isOverdu
                     displayId={followUp.order?.display_id}
                     customerName={followUp.order?.customer?.name || 'Cliente'}
                     customerPhone={followUp.order?.customer?.phone}
-                    deviceType={followUp.order?.device_type}
+                    deviceType={followUp.order?.equipment?.model || null}
                     type={followUp.type}
                 />
             )}
