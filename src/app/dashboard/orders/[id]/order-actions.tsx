@@ -148,150 +148,151 @@ export default function OrderActions({
     return (
         <>
             <div className="space-y-4">
-                {/* TOOLBAR: Ações Principais + Compartilhar */}
-                <div className="flex flex-wrap items-center gap-2">
-                    {/* Botões de Ação por Status */}
-
-                    {/* Status: OPEN → Iniciar Diagnóstico */}
+                {/* ====== SEÇÃO 1: AÇÃO PRINCIPAL (CTA) ====== */}
+                <div className="space-y-3">
+                    {/* Status: OPEN */}
                     {currentStatus === 'open' && (
-                        <div className="flex flex-wrap gap-2">
-                            <Link href={`/os/${displayId}/checkin`} passHref>
-                                <Button variant="outline">
+                        <div className="grid grid-cols-2 gap-2">
+                            <Link href={`/os/${displayId}/checkin`} passHref className="col-span-1">
+                                <Button variant="outline" className="w-full">
                                     <Package className="mr-2 h-4 w-4" />
-                                    Retirar
+                                    <span className="hidden sm:inline">Retirar</span>
+                                    <span className="sm:hidden">Retirar</span>
                                 </Button>
                             </Link>
                             <Button
                                 onClick={() => handleStatusChange('analyzing')}
                                 disabled={isPending}
+                                className="col-span-1 bg-primary"
                             >
                                 {isPending ? (
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                 ) : (
                                     <Play className="mr-2 h-4 w-4" />
                                 )}
-                                Iniciar Análise
+                                <span className="hidden sm:inline">Iniciar Análise</span>
+                                <span className="sm:hidden">Iniciar</span>
                             </Button>
                         </div>
                     )}
 
-                    {/* Status: ANALYZING → Finalizar Diagnóstico */}
+                    {/* Status: ANALYZING */}
                     {currentStatus === 'analyzing' && (
-                        <div className="flex flex-wrap gap-2">
+                        <div className="grid grid-cols-3 gap-2">
                             <Button
                                 onClick={() => setIsBudgetOpen(true)}
                                 disabled={isPending}
-                                className="bg-green-600 hover:bg-green-700"
+                                className="col-span-2 bg-green-600 hover:bg-green-700"
                             >
                                 <FileText className="mr-2 h-4 w-4" />
-                                Finalizar Diagnóstico
+                                <span className="hidden sm:inline">Finalizar Diagnóstico</span>
+                                <span className="sm:hidden">Diagnóstico</span>
                             </Button>
                             <Button
                                 onClick={() => handleStatusChange('canceled')}
                                 disabled={isPending}
                                 variant="destructive"
+                                className="col-span-1"
                             >
-                                {isPending ? (
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                ) : (
-                                    <XCircle className="mr-2 h-4 w-4" />
-                                )}
-                                Cancelar
+                                <XCircle className="h-4 w-4" />
+                                <span className="hidden sm:inline ml-2">Cancelar</span>
                             </Button>
                         </div>
                     )}
 
-                    {/* Status: WAITING_PARTS → Confirmar Chegada da Peça */}
+                    {/* Status: WAITING_PARTS */}
                     {currentStatus === 'waiting_parts' && (
                         <Button
                             onClick={handleConfirmPartArrival}
                             disabled={isPending}
-                            variant="secondary"
-                            className="border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800 border"
+                            className="w-full border-blue-200 bg-blue-600 text-white hover:bg-blue-700"
                         >
                             {isPending ? (
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                             ) : (
                                 <PackageCheck className="mr-2 h-4 w-4" />
                             )}
-                            🔓 Confirmar Peças
+                            Confirmar Chegada das Peças
                         </Button>
                     )}
 
-                    {/* Status: IN_PROGRESS → Finalizar Serviço */}
+                    {/* Status: IN_PROGRESS */}
                     {currentStatus === 'in_progress' && (
                         <Button
                             onClick={() => setIsFinishOpen(true)}
                             disabled={isPending}
-                            className="bg-green-600 hover:bg-green-700"
+                            className="w-full bg-green-600 hover:bg-green-700"
                         >
                             <Receipt className="mr-2 h-4 w-4" />
                             Finalizar Serviço
                         </Button>
                     )}
 
-                    {/* Status: READY → Entregar ao Cliente */}
+                    {/* Status: READY */}
                     {currentStatus === 'ready' && (
-                        <div className="flex flex-wrap gap-2">
-                            <Button
-                                onClick={() => setIsFinishOpen(true)}
-                                disabled={isPending}
-                                className="bg-green-600 hover:bg-green-700"
-                            >
-                                <Receipt className="mr-2 h-4 w-4" />
-                                Finalizar
-                            </Button>
-                            <PdfButtonWrapper orderData={orderData!} storeSettings={storeSettings!} />
-                        </div>
+                        <Button
+                            onClick={() => setIsFinishOpen(true)}
+                            disabled={isPending}
+                            className="w-full bg-green-600 hover:bg-green-700"
+                        >
+                            <Receipt className="mr-2 h-4 w-4" />
+                            Entregar ao Cliente
+                        </Button>
                     )}
 
-                    {/* Status: FINISHED ou CANCELED -> Ações Finais */}
-                    {(currentStatus === 'finished' || currentStatus === 'canceled') && (
-                        <div className="flex flex-wrap gap-2">
-                            <Button variant="outline" onClick={handleReopen} disabled={isPending}>
-                                <RefreshCcw className="mr-2 h-4 w-4" />
-                                Reabrir
-                            </Button>
-
-                            {currentStatus === 'finished' && (
-                                <PdfButtonWrapper orderData={orderData!} storeSettings={storeSettings!} />
-                            )}
-
-                            {/* Button to Send Feedback Link via WhatsApp */}
-                            {currentStatus === 'finished' && (
-                                <Button
-                                    variant="secondary"
-                                    className="bg-green-50 text-green-700 border border-green-200 hover:bg-green-100 dark:bg-green-900/20 dark:text-green-300 dark:border-green-800"
-                                    onClick={() => {
-                                        const phone = orderData?.customerPhone?.replace(/\D/g, '') || ''
-                                        if (!phone) {
-                                            alert('Cliente sem telefone cadastrado.')
-                                            return
-                                        }
-                                        const whatsappUrl = new URL('https://api.whatsapp.com/send')
-                                        whatsappUrl.searchParams.append('phone', `55${phone}`)
-                                        whatsappUrl.searchParams.append('text', `Olá ${customerName}! 👋\n\nSua ordem de serviço #${displayId} foi finalizada. Poderia avaliar nosso atendimento rapidinho? Leva menos de 1 minuto e nos ajuda muito!\n\n👉 ${window.location.origin}/feedback/${orderId}\n\nObrigado!`)
-
-                                        window.open(whatsappUrl.toString(), '_blank')
-                                    }}
-                                >
-                                    <MessageCircle className="mr-2 h-4 w-4" />
-                                    Enviar Link de Avaliação
-                                </Button>
-                            )}
-                        </div>
+                    {/* Status: FINISHED - Primary: Enviar Avaliação */}
+                    {currentStatus === 'finished' && (
+                        <Button
+                            className="w-full bg-green-600 hover:bg-green-700 text-white"
+                            onClick={() => {
+                                const phone = orderData?.customerPhone?.replace(/\D/g, '') || ''
+                                if (!phone) {
+                                    alert('Cliente sem telefone cadastrado.')
+                                    return
+                                }
+                                const whatsappUrl = new URL('https://api.whatsapp.com/send')
+                                whatsappUrl.searchParams.append('phone', `55${phone}`)
+                                whatsappUrl.searchParams.append('text', `Olá ${customerName}! 👋\n\nSua ordem de serviço #${displayId} foi finalizada. Poderia avaliar nosso atendimento rapidinho? Leva menos de 1 minuto e nos ajuda muito!\n\n👉 ${window.location.origin}/feedback/${orderId}\n\nObrigado!`)
+                                window.open(whatsappUrl.toString(), '_blank')
+                            }}
+                        >
+                            <MessageCircle className="mr-2 h-4 w-4" />
+                            Pedir Avaliação via WhatsApp
+                        </Button>
                     )}
+                </div>
 
-                    {/* Compartilhar */}
+                {/* ====== SEÇÃO 2: AÇÕES SECUNDÁRIAS ====== */}
+                <div className="flex flex-wrap items-center gap-2 pt-2 border-t">
+                    {/* Compartilhar - Sempre visível */}
                     <ShareActions
                         orderId={orderId}
                         displayId={displayId}
                         customerName={customerName}
                         storeName={storeSettings?.trade_name}
                     />
+
+                    {/* PDF - Quando finalizado ou pronto */}
+                    {(currentStatus === 'finished' || currentStatus === 'ready') && (
+                        <PdfButtonWrapper orderData={orderData!} storeSettings={storeSettings!} />
+                    )}
+
+                    {/* Reabrir - Quando finalizado ou cancelado */}
+                    {(currentStatus === 'finished' || currentStatus === 'canceled') && (
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={handleReopen}
+                            disabled={isPending}
+                            className="border-dashed"
+                        >
+                            <RefreshCcw className="mr-2 h-4 w-4" />
+                            Reabrir
+                        </Button>
+                    )}
                 </div>
 
-                {/* Feedback Alert */}
+                {/* ====== SEÇÃO 3: FEEDBACK ALERT ====== */}
                 {feedback && (
                     <Alert variant={feedback.type === 'success' ? 'success' : 'destructive'}>
                         {feedback.type === 'success' ? (
@@ -303,27 +304,24 @@ export default function OrderActions({
                     </Alert>
                 )}
 
-                {/* STATUS ALERTS (Aparecem abaixo da toolbar) */}
-
-                {/* Status: WAITING_APPROVAL → TRAVA! Técnico aguarda cliente */}
+                {/* ====== SEÇÃO 4: STATUS ALERTS ====== */}
                 {currentStatus === 'waiting_approval' && (
                     <Alert variant="warning" className="border-yellow-500 bg-yellow-50 dark:bg-yellow-950">
                         <Clock className="h-5 w-5 text-yellow-600" />
                         <AlertTitle className="text-yellow-800 dark:text-yellow-200">
-                            Aguardando Aprovação do Cliente
+                            Aguardando Aprovação
                         </AlertTitle>
                         <AlertDescription className="text-yellow-700 dark:text-yellow-300">
-                            O orçamento foi enviado. Aguarde o cliente aprovar ou reprovar para continuar.
+                            O orçamento foi enviado. Aguarde o cliente aprovar ou reprovar.
                         </AlertDescription>
                     </Alert>
                 )}
 
-                {/* Status: WAITING_PARTS → Alert info */}
                 {currentStatus === 'waiting_parts' && (
                     <Alert variant="info" className="border-blue-500 bg-blue-50 dark:bg-blue-950">
                         <Package className="h-5 w-5 text-blue-600" />
                         <AlertTitle className="text-blue-800 dark:text-blue-200">
-                            Aguardando Peças do Cliente
+                            Aguardando Peças
                         </AlertTitle>
                         <AlertDescription className="text-blue-700 dark:text-blue-300">
                             O cliente precisa comprar e entregar as peças.
@@ -331,7 +329,6 @@ export default function OrderActions({
                     </Alert>
                 )}
 
-                {/* Status: FINISHED ou CANCELED → Mensagem final */}
                 {(currentStatus === 'finished' || currentStatus === 'canceled') && (
                     <Alert variant={currentStatus === 'finished' ? 'success' : 'destructive'}>
                         {currentStatus === 'finished' ? (
@@ -345,28 +342,28 @@ export default function OrderActions({
                     </Alert>
                 )}
 
-                {/* ZONA DE PERIGO */}
-                <div className="pt-8 mt-8 border-t">
-                    <div className="bg-red-50 dark:bg-red-950/20 p-4 rounded-lg border border-red-100 dark:border-red-900/50">
-                        <h4 className="text-sm font-semibold text-red-800 dark:text-red-400 mb-2 flex items-center gap-2">
-                            <AlertCircle className="h-4 w-4" />
-                            Zona de Perigo
-                        </h4>
-                        <p className="text-xs text-red-600 dark:text-red-400 mb-4">
-                            Ações destrutivas que não podem ser desfeitas.
+                {/* ====== SEÇÃO 5: ZONA DE PERIGO (Colapsável) ====== */}
+                <details className="pt-4 border-t group">
+                    <summary className="cursor-pointer text-sm text-muted-foreground hover:text-red-600 flex items-center gap-2">
+                        <AlertCircle className="h-4 w-4" />
+                        <span>Zona de Perigo</span>
+                    </summary>
+                    <div className="mt-3 p-4 rounded-lg bg-red-50 dark:bg-red-950/20 border border-red-100 dark:border-red-900/50">
+                        <p className="text-xs text-red-600 dark:text-red-400 mb-3">
+                            Ação irreversível. Esta OS será permanentemente excluída.
                         </p>
                         <Button
                             variant="destructive"
                             size="sm"
-                            className="w-full bg-red-600 hover:bg-red-700"
+                            className="w-full"
                             onClick={handleDelete}
                             disabled={isPending}
                         >
                             <Trash2 className="mr-2 h-4 w-4" />
-                            Excluir esta OS Definitivamente
+                            Excluir Permanentemente
                         </Button>
                     </div>
-                </div>
+                </details>
 
                 <BudgetModal
                     orderId={orderId}
