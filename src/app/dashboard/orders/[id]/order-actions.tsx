@@ -148,110 +148,122 @@ export default function OrderActions({
     return (
         <>
             <div className="space-y-4">
-                {/* TOOLBAR: Ações Principais - Mobile-first vertical stack */}
-                <div className="flex flex-col gap-3">
+                {/* TOOLBAR: Ações Principais + Compartilhar */}
+                <div className="flex flex-wrap items-center justify-start md:justify-end gap-2 w-full">
+                    {/* Botões de Ação por Status */}
 
-                    {/* Status-based Action Buttons */}
-                    <div className="flex flex-col gap-2">
-
-                        {/* Status: OPEN → Iniciar Diagnóstico */}
-                        {currentStatus === 'open' && (
-                            <>
-                                <Button
-                                    onClick={() => handleStatusChange('analyzing')}
-                                    disabled={isPending}
-                                    className="w-full bg-primary shadow-sm"
-                                >
-                                    {isPending ? (
-                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                    ) : (
-                                        <Play className="mr-2 h-4 w-4" />
-                                    )}
-                                    Iniciar Análise
-                                </Button>
-                                <Button
-                                    className="w-full"
-                                    variant="outline"
-                                    onClick={() => router.push(`/os/${displayId}/checkin`)}
-                                >
+                    {/* Status: OPEN → Iniciar Diagnóstico */}
+                    {currentStatus === 'open' && (
+                        <div className="flex flex-col xs:flex-row gap-2 w-full md:w-auto">
+                            <Link href={`/os/${displayId}/checkin`} passHref className="w-full xs:w-auto">
+                                <Button className="w-full" variant="outline">
                                     <Package className="mr-2 h-4 w-4" />
-                                    Check-in / Retirar
+                                    Retirar
                                 </Button>
-                            </>
-                        )}
-
-                        {/* Status: ANALYZING → Finalizar Diagnóstico */}
-                        {currentStatus === 'analyzing' && (
-                            <>
-                                <Button
-                                    onClick={() => setIsBudgetOpen(true)}
-                                    disabled={isPending}
-                                    className="w-full bg-green-600 hover:bg-green-700 shadow-sm"
-                                >
-                                    <FileText className="mr-2 h-4 w-4" />
-                                    Finalizar Diagnóstico
-                                </Button>
-                                <Button
-                                    onClick={() => handleStatusChange('canceled')}
-                                    disabled={isPending}
-                                    variant="ghost"
-                                    className="w-full text-muted-foreground hover:text-destructive"
-                                >
-                                    <XCircle className="mr-2 h-4 w-4" />
-                                    Cancelar OS
-                                </Button>
-                            </>
-                        )}
-
-                        {/* Status: WAITING_PARTS → Confirmar Chegada da Peça */}
-                        {currentStatus === 'waiting_parts' && (
+                            </Link>
                             <Button
-                                onClick={handleConfirmPartArrival}
+                                onClick={() => handleStatusChange('analyzing')}
                                 disabled={isPending}
-                                variant="secondary"
-                                className="w-full border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800 border"
+                                className="w-full xs:w-auto shadow-sm"
                             >
                                 {isPending ? (
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                 ) : (
-                                    <PackageCheck className="mr-2 h-4 w-4" />
+                                    <Play className="mr-2 h-4 w-4" />
                                 )}
-                                🔓 Confirmar Peças
+                                Iniciar Análise
                             </Button>
-                        )}
+                        </div>
+                    )}
 
-                        {/* Status: IN_PROGRESS → Finalizar Serviço */}
-                        {currentStatus === 'in_progress' && (
+                    {/* Status: ANALYZING → Finalizar Diagnóstico */}
+                    {currentStatus === 'analyzing' && (
+                        <div className="flex flex-col xs:flex-row gap-2 w-full md:w-auto">
+                            <Button
+                                onClick={() => setIsBudgetOpen(true)}
+                                disabled={isPending}
+                                className="w-full xs:w-auto bg-green-600 hover:bg-green-700 shadow-md shadow-green-600/10"
+                            >
+                                <FileText className="mr-2 h-4 w-4" />
+                                Finalizar Diagnóstico
+                            </Button>
+                            <Button
+                                onClick={() => handleStatusChange('canceled')}
+                                disabled={isPending}
+                                variant="destructive"
+                                className="w-full xs:w-auto"
+                            >
+                                {isPending ? (
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                ) : (
+                                    <XCircle className="mr-2 h-4 w-4" />
+                                )}
+                                Cancelar
+                            </Button>
+                        </div>
+                    )}
+
+                    {/* Status: WAITING_PARTS → Confirmar Chegada da Peça */}
+                    {currentStatus === 'waiting_parts' && (
+                        <Button
+                            onClick={handleConfirmPartArrival}
+                            disabled={isPending}
+                            variant="secondary"
+                            className="w-full md:w-auto border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800 border"
+                        >
+                            {isPending ? (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
+                                <PackageCheck className="mr-2 h-4 w-4" />
+                            )}
+                            🔓 Confirmar Peças
+                        </Button>
+                    )}
+
+                    {/* Status: IN_PROGRESS → Finalizar Serviço */}
+                    {currentStatus === 'in_progress' && (
+                        <Button
+                            onClick={() => setIsFinishOpen(true)}
+                            disabled={isPending}
+                            className="w-full md:w-auto bg-green-600 hover:bg-green-700 shadow-md shadow-green-600/10"
+                        >
+                            <Receipt className="mr-2 h-4 w-4" />
+                            Finalizar Serviço
+                        </Button>
+                    )}
+
+                    {/* Status: READY → Entregar ao Cliente */}
+                    {currentStatus === 'ready' && (
+                        <div className="flex flex-col xs:flex-row gap-2 w-full md:w-auto">
                             <Button
                                 onClick={() => setIsFinishOpen(true)}
                                 disabled={isPending}
-                                className="w-full bg-green-600 hover:bg-green-700 shadow-sm"
+                                className="w-full xs:w-auto bg-green-600 hover:bg-green-700 shadow-md shadow-green-600/10"
                             >
                                 <Receipt className="mr-2 h-4 w-4" />
-                                Finalizar Serviço
+                                Finalizar
                             </Button>
-                        )}
+                            <PdfButtonWrapper orderData={orderData!} storeSettings={storeSettings!} />
+                        </div>
+                    )}
 
-                        {/* Status: READY → Entregar ao Cliente */}
-                        {currentStatus === 'ready' && (
-                            <>
-                                <Button
-                                    onClick={() => setIsFinishOpen(true)}
-                                    disabled={isPending}
-                                    className="w-full bg-green-600 hover:bg-green-700 shadow-sm"
-                                >
-                                    <Receipt className="mr-2 h-4 w-4" />
-                                    Finalizar Entrega
-                                </Button>
-                                <PdfButtonWrapper orderData={orderData!} storeSettings={storeSettings!} className="w-full" />
-                            </>
-                        )}
+                    {/* Status: FINISHED ou CANCELED -> Ações Finais */}
+                    {(currentStatus === 'finished' || currentStatus === 'canceled') && (
+                        <div className="flex flex-col xs:flex-row gap-2 w-full md:w-auto">
+                            <Button variant="outline" onClick={handleReopen} disabled={isPending} className="w-full xs:w-auto">
+                                <RefreshCcw className="mr-2 h-4 w-4" />
+                                Reabrir
+                            </Button>
 
-                        {/* Status: FINISHED → Ações Finais */}
-                        {currentStatus === 'finished' && (
-                            <>
+                            {currentStatus === 'finished' && (
+                                <PdfButtonWrapper orderData={orderData!} storeSettings={storeSettings!} />
+                            )}
+
+                            {/* Button to Send Feedback Link via WhatsApp */}
+                            {currentStatus === 'finished' && (
                                 <Button
-                                    className="w-full bg-green-600 hover:bg-green-700 text-white shadow-sm"
+                                    variant="secondary"
+                                    className="w-full xs:w-auto bg-green-50 text-green-700 border border-green-200 hover:bg-green-100 dark:bg-green-900/20 dark:text-green-300 dark:border-green-800"
                                     onClick={() => {
                                         const phone = orderData?.customerPhone?.replace(/\D/g, '') || ''
                                         if (!phone) {
@@ -261,47 +273,26 @@ export default function OrderActions({
                                         const whatsappUrl = new URL('https://api.whatsapp.com/send')
                                         whatsappUrl.searchParams.append('phone', `55${phone}`)
                                         whatsappUrl.searchParams.append('text', `Olá ${customerName}! 👋\n\nSua ordem de serviço #${displayId} foi finalizada. Poderia avaliar nosso atendimento rapidinho? Leva menos de 1 minuto e nos ajuda muito!\n\n👉 ${window.location.origin}/feedback/${orderId}\n\nObrigado!`)
+
                                         window.open(whatsappUrl.toString(), '_blank')
                                     }}
                                 >
                                     <MessageCircle className="mr-2 h-4 w-4" />
-                                    Pedir Avaliação
+                                    Enviar Link de Avaliação
                                 </Button>
-                                <PdfButtonWrapper orderData={orderData!} storeSettings={storeSettings!} className="w-full" />
-                                <Button
-                                    variant="outline"
-                                    onClick={handleReopen}
-                                    disabled={isPending}
-                                    className="w-full border-dashed text-muted-foreground"
-                                >
-                                    <RefreshCcw className="mr-2 h-4 w-4" />
-                                    Reabrir OS
-                                </Button>
-                            </>
-                        )}
+                            )}
+                        </div>
+                    )}
 
-                        {/* Status: CANCELED → Reabrir */}
-                        {currentStatus === 'canceled' && (
-                            <Button
-                                variant="outline"
-                                onClick={handleReopen}
-                                disabled={isPending}
-                                className="w-full border-dashed text-muted-foreground"
-                            >
-                                <RefreshCcw className="mr-2 h-4 w-4" />
-                                Reabrir OS
-                            </Button>
-                        )}
+                    {/* Compartilhar */}
+                    <div className="w-full sm:w-auto">
+                        <ShareActions
+                            orderId={orderId}
+                            displayId={displayId}
+                            customerName={customerName}
+                            storeName={storeSettings?.trade_name}
+                        />
                     </div>
-
-                    {/* Compartilhar - Always visible */}
-                    <ShareActions
-                        orderId={orderId}
-                        displayId={displayId}
-                        customerName={customerName}
-                        storeName={storeSettings?.trade_name}
-                        className="w-full"
-                    />
                 </div>
 
                 {/* Feedback Alert */}
@@ -346,39 +337,37 @@ export default function OrderActions({
 
                 {/* Status: FINISHED ou CANCELED → Mensagem final */}
                 {(currentStatus === 'finished' || currentStatus === 'canceled') && (
-                    <Alert variant={currentStatus === 'finished' ? 'success' : 'destructive'} className="my-6">
+                    <Alert variant={currentStatus === 'finished' ? 'success' : 'destructive'}>
                         {currentStatus === 'finished' ? (
                             <CheckCircle className="h-4 w-4" />
                         ) : (
                             <XCircle className="h-4 w-4" />
                         )}
-                        <AlertDescription className="font-medium">
+                        <AlertDescription>
                             Esta OS está {currentStatus === 'finished' ? 'finalizada' : 'cancelada'}.
                         </AlertDescription>
                     </Alert>
                 )}
 
                 {/* ZONA DE PERIGO */}
-                <div className="pt-6 border-t">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-lg bg-red-50 dark:bg-red-950/10 border border-red-100 dark:border-red-900/20">
-                        <div className="space-y-1">
-                            <h4 className="text-sm font-medium text-red-800 dark:text-red-400 flex items-center gap-2">
-                                <AlertCircle className="h-4 w-4" />
-                                Zona de Perigo
-                            </h4>
-                            <p className="text-xs text-red-600/80 dark:text-red-400/80">
-                                Ações irreversíveis. Cuidado.
-                            </p>
-                        </div>
+                <div className="pt-8 mt-8 border-t">
+                    <div className="bg-red-50 dark:bg-red-950/20 p-4 rounded-lg border border-red-100 dark:border-red-900/50">
+                        <h4 className="text-sm font-semibold text-red-800 dark:text-red-400 mb-2 flex items-center gap-2">
+                            <AlertCircle className="h-4 w-4" />
+                            Zona de Perigo
+                        </h4>
+                        <p className="text-xs text-red-600 dark:text-red-400 mb-4">
+                            Ações destrutivas que não podem ser desfeitas.
+                        </p>
                         <Button
-                            variant="ghost"
+                            variant="destructive"
                             size="sm"
-                            className="w-full sm:w-auto text-red-700 hover:text-red-800 hover:bg-red-100 dark:text-red-400 dark:hover:bg-red-900/30"
+                            className="w-full bg-red-600 hover:bg-red-700"
                             onClick={handleDelete}
                             disabled={isPending}
                         >
                             <Trash2 className="mr-2 h-4 w-4" />
-                            Excluir OS
+                            Excluir esta OS Definitivamente
                         </Button>
                     </div>
                 </div>
@@ -401,7 +390,7 @@ export default function OrderActions({
                     storeSettings={storeSettings}
                     discountAmount={discountAmount}
                 />
-            </div >
+            </div>
         </>
     )
 }

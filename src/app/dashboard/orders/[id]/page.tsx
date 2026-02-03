@@ -173,11 +173,11 @@ export default async function OrderDetailPage({ params }: PageProps) {
     return (
         <div className="container mx-auto max-w-7xl py-6 px-4 space-y-6">
             {/* Header + Actions */}
-            <div className="flex flex-col gap-4">
-                <div>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div className="w-full md:w-auto">
+                    <div className="flex items-center gap-2 text-xs md:text-sm text-muted-foreground mb-2">
                         <Link href="/dashboard/orders" className="underline underline-offset-4 hover:text-foreground flex items-center gap-1">
-                            <ArrowLeft className="h-3 w-3" />
+                            <ArrowLeft className="h-3 w-3 md:h-4 md:w-4" />
                             Ordens
                         </Link>
                         <span>/</span>
@@ -189,14 +189,13 @@ export default async function OrderDetailPage({ params }: PageProps) {
                             {statusLabels[order.status as OrderStatus]}
                         </Badge>
                     </div>
-                    <p className="text-muted-foreground mt-2 text-xs flex items-center gap-2">
-                        <Clock className="w-3.5 h-3.5 text-blue-500" />
+                    <p className="text-muted-foreground mt-2 text-xs md:text-sm flex items-center gap-2">
+                        <Clock className="w-3.5 h-3.5 md:w-4 md:h-4 text-blue-500" />
                         Aberta em {formatDate(order.created_at)}
                     </p>
                 </div>
 
-                {/* Actions - Full width on mobile */}
-                <div className="w-full">
+                <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
                     <OrderActions
                         orderId={order.id}
                         currentStatus={order.status}
@@ -231,20 +230,20 @@ export default async function OrderDetailPage({ params }: PageProps) {
             </div>
 
             {/* TABBED LAYOUT */}
-            <Tabs defaultValue="overview" className="w-full space-y-4">
-                <div className="w-full overflow-x-auto -mx-4 px-4" style={{ WebkitOverflowScrolling: 'touch' }}>
-                    <TabsList className="inline-flex w-max min-w-full bg-muted/50 p-1 border">
-                        <TabsTrigger value="overview" className="text-xs sm:text-sm px-3">Visão Geral</TabsTrigger>
-                        <TabsTrigger value="technical" className="text-xs sm:text-sm px-3">Técnico</TabsTrigger>
-                        <TabsTrigger value="execution" className="text-xs sm:text-sm px-3">Execução</TabsTrigger>
-                        <TabsTrigger value="telemetry" className="text-xs sm:text-sm px-3">Hardware</TabsTrigger>
-                        <TabsTrigger value="evidence" className="text-xs sm:text-sm px-3">Anexos</TabsTrigger>
+            <Tabs defaultValue="overview" className="w-full space-y-6">
+                <div className="w-full overflow-x-auto pb-1 scrollbar-hide">
+                    <TabsList className="inline-flex w-full sm:w-auto min-w-full sm:min-w-0 bg-muted/50 p-1 border">
+                        <TabsTrigger value="overview" className="flex-1 sm:flex-none">Visão Geral</TabsTrigger>
+                        <TabsTrigger value="technical" className="flex-1 sm:flex-none">Técnico</TabsTrigger>
+                        <TabsTrigger value="execution" className="flex-1 sm:flex-none">Execução</TabsTrigger>
+                        <TabsTrigger value="telemetry" className="flex-1 sm:flex-none">Hardware</TabsTrigger>
+                        <TabsTrigger value="evidence" className="flex-1 sm:flex-none">Anexos</TabsTrigger>
                     </TabsList>
                 </div>
 
                 {/* 1. Visão Geral */}
-                <TabsContent value="overview" className="space-y-4">
-                    <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                <TabsContent value="overview" className="space-y-6">
+                    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                         {/* Summary Card: Customer */}
                         <Card>
                             <CardHeader className="pb-2">
@@ -351,8 +350,8 @@ export default async function OrderDetailPage({ params }: PageProps) {
                 </TabsContent>
 
                 {/* 2. Técnico */}
-                <TabsContent value="technical" className="space-y-4">
-                    <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
+                <TabsContent value="technical" className="space-y-6">
+                    <div className="grid gap-6 lg:grid-cols-2">
                         {/* Left: AI Budget Assistant & Current Diagnosis */}
                         <div className="space-y-6">
                             <Card>
@@ -421,8 +420,8 @@ export default async function OrderDetailPage({ params }: PageProps) {
                 </TabsContent>
 
                 {/* 3. Execução */}
-                <TabsContent value="execution" className="space-y-4">
-                    <div className="grid gap-4 grid-cols-1 lg:grid-cols-3">
+                <TabsContent value="execution" className="space-y-6">
+                    <div className="grid gap-6 lg:grid-cols-3">
                         <div className="lg:col-span-2">
                             {['in_progress', 'waiting_parts', 'analyzing'].includes(order.status) ? (
                                 <ExecutionChecklist
