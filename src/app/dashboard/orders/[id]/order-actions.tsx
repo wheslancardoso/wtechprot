@@ -149,14 +149,14 @@ export default function OrderActions({
         <>
             <div className="space-y-4">
                 {/* TOOLBAR: Ações Principais + Compartilhar */}
-                <div className="flex flex-wrap items-center justify-start md:justify-end gap-2 w-full">
+                <div className="flex flex-wrap items-center gap-2">
                     {/* Botões de Ação por Status */}
 
                     {/* Status: OPEN → Iniciar Diagnóstico */}
                     {currentStatus === 'open' && (
-                        <div className="flex flex-col xs:flex-row gap-2 w-full md:w-auto">
-                            <Link href={`/os/${displayId}/checkin`} passHref className="w-full xs:w-auto">
-                                <Button className="w-full" variant="outline">
+                        <div className="flex flex-wrap gap-2">
+                            <Link href={`/os/${displayId}/checkin`} passHref>
+                                <Button variant="outline">
                                     <Package className="mr-2 h-4 w-4" />
                                     Retirar
                                 </Button>
@@ -164,7 +164,6 @@ export default function OrderActions({
                             <Button
                                 onClick={() => handleStatusChange('analyzing')}
                                 disabled={isPending}
-                                className="w-full xs:w-auto shadow-sm"
                             >
                                 {isPending ? (
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -178,11 +177,11 @@ export default function OrderActions({
 
                     {/* Status: ANALYZING → Finalizar Diagnóstico */}
                     {currentStatus === 'analyzing' && (
-                        <div className="flex flex-col xs:flex-row gap-2 w-full md:w-auto">
+                        <div className="flex flex-wrap gap-2">
                             <Button
                                 onClick={() => setIsBudgetOpen(true)}
                                 disabled={isPending}
-                                className="w-full xs:w-auto bg-green-600 hover:bg-green-700 shadow-md shadow-green-600/10"
+                                className="bg-green-600 hover:bg-green-700"
                             >
                                 <FileText className="mr-2 h-4 w-4" />
                                 Finalizar Diagnóstico
@@ -191,7 +190,6 @@ export default function OrderActions({
                                 onClick={() => handleStatusChange('canceled')}
                                 disabled={isPending}
                                 variant="destructive"
-                                className="w-full xs:w-auto"
                             >
                                 {isPending ? (
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -209,7 +207,7 @@ export default function OrderActions({
                             onClick={handleConfirmPartArrival}
                             disabled={isPending}
                             variant="secondary"
-                            className="w-full md:w-auto border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800 border"
+                            className="border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800 border"
                         >
                             {isPending ? (
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -225,7 +223,7 @@ export default function OrderActions({
                         <Button
                             onClick={() => setIsFinishOpen(true)}
                             disabled={isPending}
-                            className="w-full md:w-auto bg-green-600 hover:bg-green-700 shadow-md shadow-green-600/10"
+                            className="bg-green-600 hover:bg-green-700"
                         >
                             <Receipt className="mr-2 h-4 w-4" />
                             Finalizar Serviço
@@ -234,11 +232,11 @@ export default function OrderActions({
 
                     {/* Status: READY → Entregar ao Cliente */}
                     {currentStatus === 'ready' && (
-                        <div className="flex flex-col xs:flex-row gap-2 w-full md:w-auto">
+                        <div className="flex flex-wrap gap-2">
                             <Button
                                 onClick={() => setIsFinishOpen(true)}
                                 disabled={isPending}
-                                className="w-full xs:w-auto bg-green-600 hover:bg-green-700 shadow-md shadow-green-600/10"
+                                className="bg-green-600 hover:bg-green-700"
                             >
                                 <Receipt className="mr-2 h-4 w-4" />
                                 Finalizar
@@ -249,8 +247,8 @@ export default function OrderActions({
 
                     {/* Status: FINISHED ou CANCELED -> Ações Finais */}
                     {(currentStatus === 'finished' || currentStatus === 'canceled') && (
-                        <div className="flex flex-col xs:flex-row gap-2 w-full md:w-auto">
-                            <Button variant="outline" onClick={handleReopen} disabled={isPending} className="w-full xs:w-auto">
+                        <div className="flex flex-wrap gap-2">
+                            <Button variant="outline" onClick={handleReopen} disabled={isPending}>
                                 <RefreshCcw className="mr-2 h-4 w-4" />
                                 Reabrir
                             </Button>
@@ -263,7 +261,7 @@ export default function OrderActions({
                             {currentStatus === 'finished' && (
                                 <Button
                                     variant="secondary"
-                                    className="w-full xs:w-auto bg-green-50 text-green-700 border border-green-200 hover:bg-green-100 dark:bg-green-900/20 dark:text-green-300 dark:border-green-800"
+                                    className="bg-green-50 text-green-700 border border-green-200 hover:bg-green-100 dark:bg-green-900/20 dark:text-green-300 dark:border-green-800"
                                     onClick={() => {
                                         const phone = orderData?.customerPhone?.replace(/\D/g, '') || ''
                                         if (!phone) {
@@ -285,14 +283,12 @@ export default function OrderActions({
                     )}
 
                     {/* Compartilhar */}
-                    <div className="w-full sm:w-auto">
-                        <ShareActions
-                            orderId={orderId}
-                            displayId={displayId}
-                            customerName={customerName}
-                            storeName={storeSettings?.trade_name}
-                        />
-                    </div>
+                    <ShareActions
+                        orderId={orderId}
+                        displayId={displayId}
+                        customerName={customerName}
+                        storeName={storeSettings?.trade_name}
+                    />
                 </div>
 
                 {/* Feedback Alert */}
