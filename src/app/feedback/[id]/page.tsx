@@ -6,7 +6,7 @@ import { Star, Copy, CheckCircle, Store, ExternalLink } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
-import { submitFeedback } from '@/app/actions/nps-actions'
+import { submitFeedback, trackGoogleReviewClick } from '@/app/actions/nps-actions'
 
 export default function FeedbackPage({ params }: { params: Promise<{ id: string }> }) {
     const [score, setScore] = useState<number | null>(null)
@@ -87,12 +87,17 @@ export default function FeedbackPage({ params }: { params: Promise<{ id: string 
                         )}
 
                         <div className="pt-4 border-t border-gray-800">
-                            <Button variant="outline" className="w-full gap-2 bg-gray-800 hover:bg-gray-700 border-gray-700 text-gray-200" asChild>
-                                <a href="https://search.google.com/local/writereview?placeid=YOUR_PLACE_ID" target="_blank" rel="noopener noreferrer">
-                                    <Store className="w-4 h-4" />
-                                    Avaliar também no Google
-                                    <ExternalLink className="w-3 h-3 ml-1" />
-                                </a>
+                            <Button
+                                variant="outline"
+                                className="w-full gap-2 bg-gray-800 hover:bg-gray-700 border-gray-700 text-gray-200"
+                                onClick={async () => {
+                                    await trackGoogleReviewClick(id)
+                                    window.open('https://search.google.com/local/writereview?placeid=YOUR_PLACE_ID', '_blank')
+                                }}
+                            >
+                                <Store className="w-4 h-4" />
+                                Avaliar também no Google
+                                <ExternalLink className="w-3 h-3 ml-1" />
                             </Button>
                         </div>
                     </CardContent>

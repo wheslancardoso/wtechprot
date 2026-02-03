@@ -138,3 +138,17 @@ export async function getAvailableCouponForOrder(orderId: string): Promise<strin
     }
     return null
 }
+
+// Track when customer clicks Google Review link
+export async function trackGoogleReviewClick(orderId: string): Promise<void> {
+    try {
+        const supabase = await createAdminClient()
+
+        await supabase
+            .from('nps_feedbacks')
+            .update({ clicked_google_review: true, clicked_google_review_at: new Date().toISOString() })
+            .eq('order_id', orderId)
+    } catch (error) {
+        console.error('Error tracking Google review click:', error)
+    }
+}
