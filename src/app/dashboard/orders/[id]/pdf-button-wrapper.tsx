@@ -18,9 +18,10 @@ const WarrantyPdfButton = dynamic(
 
 interface PdfButtonWrapperProps {
     orderData: OrderData
-    storeSettings: any // Usando any temporariamente para evitar conflito de importação circular ou duplicada, idealmente importar de warranty-pdf
+    storeSettings: any
+    className?: string
 }
 
-export default function PdfButtonWrapper({ orderData, storeSettings }: PdfButtonWrapperProps) {
-    return <WarrantyPdfButton orderData={orderData} storeSettings={storeSettings} />
+export default function PdfButtonWrapper({ orderData, storeSettings, className }: PdfButtonWrapperProps) {
+    return <WarrantyPdfButton orderData={orderData} storeSettings={storeSettings} className={className} />
 }

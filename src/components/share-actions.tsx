@@ -21,6 +21,7 @@ interface ShareActionsProps {
     displayId: number | string
     customerName: string
     storeName?: string
+    className?: string
 }
 
 // ==================================================
@@ -31,6 +32,7 @@ export default function ShareActions({
     displayId,
     customerName,
     storeName = 'WTECH',
+    className,
 }: ShareActionsProps) {
     const [copied, setCopied] = useState(false)
     const { toast } = useToast()
@@ -77,7 +79,7 @@ ${storeName}`
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" className={className}>
                     <Share2 className="mr-2 h-4 w-4" />
                     Compartilhar
                 </Button>
