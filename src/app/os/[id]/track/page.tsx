@@ -152,9 +152,30 @@ export default async function TrackingPage({ params }: PageProps) {
                 {['ready', 'finished'].includes(order.status) && (
                     <Alert className="bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800">
                         <CheckCircle2 className="h-4 w-4 text-green-600" />
-                        <AlertTitle className="text-green-700 dark:text-green-300">Pronto para Retirada!</AlertTitle>
-                        <AlertDescription className="text-green-600 dark:text-green-400">
-                            Seu equipamento está pronto. Venha buscar em horário comercial.
+                        <AlertTitle className="text-green-700 dark:text-green-300">
+                            {order.status === 'finished' ? 'Serviço Finalizado!' : 'Pronto para Retirada!'}
+                        </AlertTitle>
+                        <AlertDescription className="text-green-600 dark:text-green-400 space-y-3">
+                            <p>
+                                {order.status === 'finished'
+                                    ? 'O serviço foi concluído. Obrigado pela confiança!'
+                                    : 'Seu equipamento está pronto. Venha buscar em horário comercial.'}
+                            </p>
+
+                            {/* CTA para Avaliação se Finalizado */}
+                            {order.status === 'finished' && (
+                                <Button
+                                    size="sm"
+                                    className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold shadow-sm"
+                                    asChild
+                                >
+                                    <Link href={`/feedback/${order.id}`}>
+                                        <div className="flex items-center justify-center gap-2">
+                                            <span>\u2B50 AVALIAR SERVIÇO AGORA</span>
+                                        </div>
+                                    </Link>
+                                </Button>
+                            )}
                         </AlertDescription>
                     </Alert>
                 )}

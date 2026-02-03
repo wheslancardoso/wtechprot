@@ -88,7 +88,7 @@ export default function FeedbackPage({ params }: { params: Promise<{ id: string 
 
                         <div className="pt-4 border-t">
                             <Button variant="outline" className="w-full gap-2" asChild>
-                                <a href="https://g.page/r/YOUR_GOOGLE_LINK_HERE/review" target="_blank" rel="noopener noreferrer">
+                                <a href="https://search.google.com/local/writereview?placeid=YOUR_PLACE_ID" target="_blank" rel="noopener noreferrer">
                                     <Store className="w-4 h-4" />
                                     Avaliar também no Google
                                     <ExternalLink className="w-3 h-3 ml-1" />

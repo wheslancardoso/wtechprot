@@ -69,7 +69,7 @@ export async function generateMetadata() {
 export default async function Home() {
   const { whatsappNumber, formattedPhone, brandName } = await getTenantData()
 
-  const whatsappLink = `https://wa.me/${whatsappNumber}`
+  const whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}`
 
   return (
     <div className="dark flex min-h-screen flex-col bg-slate-950 text-slate-50 selection:bg-primary selection:text-primary-foreground">

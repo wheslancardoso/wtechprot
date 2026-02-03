@@ -41,7 +41,7 @@ export function generateWhatsAppLink(phone: string, message: string): string {
     // Encode da mensagem
     const encodedMessage = encodeURIComponent(message)
 
-    return `https://wa.me/${phoneWithCountry}?text=${encodedMessage}`
+    return `https://api.whatsapp.com/send?phone=${phoneWithCountry}&text=${encodedMessage}`
 }
 
 // ==================================================

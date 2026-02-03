@@ -127,7 +127,7 @@ export default function WhatsAppButton(props: WhatsAppButtonProps) {
         const encodedMessage = encodeURIComponent(message)
 
         // Abrir WhatsApp Web ou App
-        const url = `https://wa.me/${formattedPhone}?text=${encodedMessage}`
+        const url = `https://api.whatsapp.com/send?phone=${formattedPhone}&text=${encodedMessage}`
         window.open(url, '_blank')
     }
 

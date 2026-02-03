@@ -35,6 +35,7 @@ import {
     Receipt,
     Trash2,
     RefreshCcw,
+    MessageCircle,
 } from 'lucide-react'
 
 interface OrderActionsProps {
@@ -256,6 +257,29 @@ export default function OrderActions({
 
                             {currentStatus === 'finished' && (
                                 <PdfButtonWrapper orderData={orderData!} storeSettings={storeSettings!} />
+                            )}
+
+                            {/* Button to Send Feedback Link via WhatsApp */}
+                            {currentStatus === 'finished' && (
+                                <Button
+                                    variant="secondary"
+                                    className="w-full xs:w-auto bg-green-50 text-green-700 border border-green-200 hover:bg-green-100 dark:bg-green-900/20 dark:text-green-300 dark:border-green-800"
+                                    onClick={() => {
+                                        const phone = orderData?.customerPhone?.replace(/\D/g, '') || ''
+                                        if (!phone) {
+                                            alert('Cliente sem telefone cadastrado.')
+                                            return
+                                        }
+                                        const whatsappUrl = new URL('https://api.whatsapp.com/send')
+                                        whatsappUrl.searchParams.append('phone', `55${phone}`)
+                                        whatsappUrl.searchParams.append('text', `Olá ${customerName}! 👋\n\nSua ordem de serviço #${displayId} foi finalizada. Poderia avaliar nosso atendimento rapidinho? Leva menos de 1 minuto e nos ajuda muito!\n\n👉 ${window.location.origin}/feedback/${orderId}\n\nObrigado!`)
+
+                                        window.open(whatsappUrl.toString(), '_blank')
+                                    }}
+                                >
+                                    <MessageCircle className="mr-2 h-4 w-4" />
+                                    Enviar Link de Avaliação
+                                </Button>
                             )}
                         </div>
                     )}

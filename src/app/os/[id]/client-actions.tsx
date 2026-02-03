@@ -85,7 +85,7 @@ export default function ClientActions({ orderId, displayId, hasParts, status, cu
                 // Redirecionar para WhatsApp
                 if (techPhone) {
                     const message = encodeURIComponent(`Olá! Confirmo que as peças da OS #${trackingId} já chegaram no meu endereço. Podemos agendar a visita técnica para instalação?`)
-                    const whatsappUrl = `https://wa.me/55${techPhone.replace(/\D/g, '')}?text=${message}`
+                    const whatsappUrl = `https://api.whatsapp.com/send?phone=55${techPhone.replace(/\D/g, '')}&text=${message}`
                     window.location.href = whatsappUrl
                 } else {
                     router.refresh()
@@ -246,20 +246,31 @@ export default function ClientActions({ orderId, displayId, hasParts, status, cu
                     <p className="text-sm text-muted-foreground">
                         {status === 'in_progress' && 'Acompanhe a evolução do serviço:'}
                         {status === 'ready' && 'Seu aparelho já está pronto. Venha buscar em horário comercial.'}
-                        {status === 'finished' && 'O serviço foi concluído. Obrigado pela confiança!'}
+                        {status === 'finished' && 'Serviço concluído. Que tal avaliar nossa loja?'}
                         {!['in_progress', 'ready', 'finished'].includes(status) && 'O técnico já recebeu sua confirmação.'}
                     </p>
 
-                    <Button
-                        size="lg"
-                        className="w-full h-14 text-lg font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all animate-pulse-slow"
-                        onClick={() => router.push(`/os/${trackingId}/track`)}
-                    >
-                        <Wrench className="mr-2 h-5 w-5" />
-                        ACOMPANHAR EM TEMPO REAL
-                    </Button>
+                    {status === 'finished' ? (
+                        <Button
+                            size="lg"
+                            className="w-full h-14 text-lg font-bold bg-yellow-500 hover:bg-yellow-600 text-white shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all animate-pulse-slow"
+                            onClick={() => router.push(`/feedback/${orderId}`)}
+                        >
+                            <PartyPopper className="mr-2 h-5 w-5" />
+                            AVALIAR SERVIÇO AGORA
+                        </Button>
+                    ) : (
+                        <Button
+                            size="lg"
+                            className="w-full h-14 text-lg font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all animate-pulse-slow"
+                            onClick={() => router.push(`/os/${trackingId}/track`)}
+                        >
+                            <Wrench className="mr-2 h-5 w-5" />
+                            ACOMPANHAR EM TEMPO REAL
+                        </Button>
+                    )}
                 </div>
-            </div>
+            </div >
         )
     }
 

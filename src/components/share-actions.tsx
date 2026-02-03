@@ -71,7 +71,7 @@ Atenciosamente,
 ${storeName}`
 
         const encodedMessage = encodeURIComponent(message)
-        window.open(`https://wa.me/?text=${encodedMessage}`, '_blank')
+        window.open(`https://api.whatsapp.com/send?text=${encodedMessage}`, '_blank')
     }
 
     return (
@@ -145,7 +145,7 @@ Atenciosamente,
 ${storeName}`
 
         const encodedMessage = encodeURIComponent(message)
-        window.open(`https://wa.me/?text=${encodedMessage}`, '_blank')
+        window.open(`https://api.whatsapp.com/send?text=${encodedMessage}`, '_blank')
     }
 
     return (
