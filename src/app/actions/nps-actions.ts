@@ -3,12 +3,12 @@
 import { createAdminClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
-// Submit NPS Feedback
+// Submit NPS Feedback (for internal quality filtering only, no auto-coupon)
 export async function submitFeedback(
     orderId: string,
     score: number,
     comment: string
-): Promise<{ success: boolean; discountCode?: string | null; error?: string }> {
+): Promise<{ success: boolean; error?: string }> {
     try {
         const supabase = await createAdminClient()
 
@@ -23,22 +23,12 @@ export async function submitFeedback(
             return { success: false, error: 'Ordem de serviço não encontrada.' }
         }
 
-        // 2. Generate Discount Code if Score >= 9
-        let discountCode: string | null = null
-
-        if (score === 5) {
-            const randomSuffix = Math.random().toString(36).substring(2, 6).toUpperCase()
-            discountCode = `VIP20-${randomSuffix}`
-        }
-
-        // 3. Save Feedback
+        // 2. Save Feedback (no coupon - just internal quality tracking)
         const { error: insertError } = await supabase.from('nps_feedbacks').insert({
             order_id: orderId,
-            customer_id: order.customer_id!, // Assuming order usually has customer, even if TS marks nullable
+            customer_id: order.customer_id!,
             score,
             comment,
-            discount_code: discountCode,
-            is_redeemed: false,
         })
 
         if (insertError) {
@@ -49,7 +39,7 @@ export async function submitFeedback(
             throw insertError
         }
 
-        return { success: true, discountCode }
+        return { success: true }
     } catch (error) {
         console.error('Error submitting feedback:', error)
         return { success: false, error: 'Erro ao salvar feedback.' }

@@ -1,8 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { Star, Copy, CheckCircle, Store, ExternalLink } from 'lucide-react'
+import { Star, CheckCircle, Store, ExternalLink } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
@@ -13,8 +12,7 @@ export default function FeedbackPage({ params }: { params: Promise<{ id: string 
     const [comment, setComment] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [submitted, setSubmitted] = useState(false)
-    const [couponCode, setCouponCode] = useState<string | null>(null)
-    const [copied, setCopied] = useState(false)
+    const [finalScore, setFinalScore] = useState<number>(0)
 
     // Unpack params
     const { id } = React.use(params)
@@ -26,10 +24,8 @@ export default function FeedbackPage({ params }: { params: Promise<{ id: string 
         try {
             const result = await submitFeedback(id, score, comment)
             if (result.success) {
+                setFinalScore(score)
                 setSubmitted(true)
-                if (result.discountCode) {
-                    setCouponCode(result.discountCode)
-                }
             } else {
                 alert(result.error || 'Erro ao enviar avaliação.')
             }
@@ -38,14 +34,6 @@ export default function FeedbackPage({ params }: { params: Promise<{ id: string 
             alert('Erro inesperado.')
         } finally {
             setIsSubmitting(false)
-        }
-    }
-
-    function handleCopy() {
-        if (couponCode) {
-            navigator.clipboard.writeText(couponCode)
-            setCopied(true)
-            setTimeout(() => setCopied(false), 2000)
         }
     }
 
@@ -63,43 +51,27 @@ export default function FeedbackPage({ params }: { params: Promise<{ id: string 
                     </CardHeader>
 
                     <CardContent className="space-y-6 pt-4">
-                        {couponCode ? (
-                            <div className="bg-gray-800 border-2 border-dashed border-green-700/50 rounded-xl p-6 text-center space-y-3 relative overflow-hidden">
-                                <h3 className="text-lg font-semibold text-gray-100">Parabéns! Você ganhou!</h3>
-                                <p className="text-sm text-gray-400">
-                                    Use este cupom na sua próxima visita e ganhe <span className="font-bold text-green-400">20% de desconto</span> na mão de obra.
-                                </p>
+                        <div className="text-center text-gray-400 p-4 bg-gray-800/50 rounded-lg">
+                            Agradecemos seu feedback. Trabalhamos todos os dias para melhorar nosso atendimento!
+                        </div>
 
-                                <div className="flex items-center gap-2 mt-4 bg-gray-900 border border-gray-700 rounded-lg p-3">
-                                    <code className="text-xl font-mono font-bold text-green-400 flex-1 tracking-wider">
-                                        {couponCode}
-                                    </code>
-                                    <Button size="icon" variant="ghost" onClick={handleCopy} className="hover:bg-gray-800 text-gray-400">
-                                        {copied ? <CheckCircle className="h-5 w-5 text-green-500" /> : <Copy className="h-5 w-5" />}
-                                    </Button>
-                                </div>
-                                {copied && <p className="text-xs text-green-500 font-medium">Copiado!</p>}
-                            </div>
-                        ) : (
-                            <div className="text-center text-gray-400 p-4 bg-gray-800/50 rounded-lg">
-                                Agradecemos seu feedback. Trabalhamos todos os dias para melhorar nosso atendimento!
+                        {/* Only show Google review button for high ratings (4-5 stars) */}
+                        {finalScore >= 4 && (
+                            <div className="pt-4 border-t border-gray-800">
+                                <Button
+                                    variant="outline"
+                                    className="w-full gap-2 bg-gray-800 hover:bg-gray-700 border-gray-700 text-gray-200"
+                                    onClick={async () => {
+                                        await trackGoogleReviewClick(id)
+                                        window.open('https://search.google.com/local/writereview?placeid=YOUR_PLACE_ID', '_blank')
+                                    }}
+                                >
+                                    <Store className="w-4 h-4" />
+                                    Avaliar também no Google
+                                    <ExternalLink className="w-3 h-3 ml-1" />
+                                </Button>
                             </div>
                         )}
-
-                        <div className="pt-4 border-t border-gray-800">
-                            <Button
-                                variant="outline"
-                                className="w-full gap-2 bg-gray-800 hover:bg-gray-700 border-gray-700 text-gray-200"
-                                onClick={async () => {
-                                    await trackGoogleReviewClick(id)
-                                    window.open('https://search.google.com/local/writereview?placeid=YOUR_PLACE_ID', '_blank')
-                                }}
-                            >
-                                <Store className="w-4 h-4" />
-                                Avaliar também no Google
-                                <ExternalLink className="w-3 h-3 ml-1" />
-                            </Button>
-                        </div>
                     </CardContent>
                 </Card>
             </div>
