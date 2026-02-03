@@ -196,3 +196,48 @@ export function getTemplateByStatus(
             }
     }
 }
+
+// ==================================================
+// Template: Follow-up Pós-Entrega (7 dias depois)
+// ==================================================
+export function templateFollowUpPosEntrega(
+    customerName: string,
+    displayId: number,
+    deviceType: string | null,
+    settings: TenantSettings
+): string {
+    const osNumber = String(displayId).padStart(4, '0')
+    const firstName = customerName.split(' ')[0]
+    const device = deviceType || 'equipamento'
+
+    let message = `Olá ${firstName}! 👋\n\n`
+    message += `Aqui é da *${settings.trade_name}*.\n\n`
+    message += `Passando para saber como está seu *${device}* após o reparo da OS #${osNumber}.\n\n`
+    message += `✅ Está tudo funcionando corretamente?\n\n`
+    message += `Se tiver qualquer dúvida ou problema, estamos à disposição! 😊`
+
+    return message
+}
+
+// ==================================================
+// Template: Garantia Próxima do Vencimento
+// ==================================================
+export function templateGarantiaVencendo(
+    customerName: string,
+    displayId: number,
+    deviceType: string | null,
+    daysRemaining: number,
+    settings: TenantSettings
+): string {
+    const osNumber = String(displayId).padStart(4, '0')
+    const firstName = customerName.split(' ')[0]
+    const device = deviceType || 'equipamento'
+
+    let message = `Olá ${firstName}! 👋\n\n`
+    message += `Aqui é da *${settings.trade_name}*.\n\n`
+    message += `📋 Passando para informar que a garantia da OS #${osNumber} (${device}) vence em *${daysRemaining} dias*.\n\n`
+    message += `Está tudo funcionando bem? Se houver qualquer problema relacionado ao reparo, entre em contato conosco antes do vencimento!\n\n`
+    message += `Estamos à disposição! 🔧`
+
+    return message
+}

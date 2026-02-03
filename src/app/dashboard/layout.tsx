@@ -10,6 +10,7 @@ import {
     Home,
     Tags,
     MessageSquare,
+    Bell,
 } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
@@ -42,6 +43,7 @@ const menuItems = [
     { href: '/dashboard/orders', label: 'Ordens de Serviço', icon: ClipboardList },
     { href: '/dashboard/customers', label: 'Clientes', icon: Users },
     { href: '/dashboard/feedbacks', label: 'Feedbacks', icon: MessageSquare },
+    { href: '/dashboard/follow-ups', label: 'Follow-ups', icon: Bell },
     { href: '/dashboard/metrics', label: 'Métricas', icon: BarChart3 },
     { href: '/dashboard/services', label: 'Catálogo', icon: Tags },
     { href: '/dashboard/settings', label: 'Configurações', icon: Settings },
