@@ -17,7 +17,7 @@ export interface FollowUp {
     order: {
         display_id: string
         warranty_end_date: string | null
-        equipment: {
+        equipments: {
             brand: string | null
             model: string | null
         } | null
@@ -55,7 +55,7 @@ export async function getFollowUps(filter: 'pending' | 'completed' | 'all' = 'pe
             order:orders(
                 display_id,
                 warranty_end_date,
-                equipment:equipment(brand, model),
+                equipments:equipments(brand, model),
                 customer:customers(name, phone)
             )
         `)
@@ -89,7 +89,7 @@ export async function getActiveWarranties() {
             warranty_start_date,
             warranty_end_date,
             finished_at,
-            equipment:equipment(brand, model),
+            equipments:equipments(brand, model),
             customer:customers(name, phone)
         `)
         .eq('status', 'finished')
