@@ -80,10 +80,6 @@ export default async function Home() {
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-400">
             <Link href="#como-funciona" className="hover:text-white transition-colors">Como Funciona</Link>
             <Link href="#diferenciais" className="hover:text-white transition-colors">Diferenciais</Link>
-            <Link href="/login" className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 hover:bg-white/5 hover:text-white transition-all">
-              Login Técnico
-              <ArrowRight className="w-4 h-4" />
-            </Link>
           </nav>
         </div>
       </header>
@@ -379,12 +375,7 @@ export default async function Home() {
               </ul>
             </div>
 
-            <div>
-              <h4 className="font-bold text-white mb-4">Links</h4>
-              <ul className="space-y-2">
-                <li><Link href="/login" className="hover:text-primary">Área Restrita (Serviço)</Link></li>
-              </ul>
-            </div>
+
 
             <div>
               <h4 className="font-bold text-white mb-4">Contato</h4>
