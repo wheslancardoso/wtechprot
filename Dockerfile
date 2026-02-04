@@ -11,7 +11,7 @@ WORKDIR /app
 COPY package.json package-lock.json* .npmrc* ./
 
 # Install dependencies
-RUN npm ci
+RUN npm install
 
 # Stage 2: Build the application
 FROM node:20-alpine AS builder
