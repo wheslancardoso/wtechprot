@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Server, Network, TrendingUp, Building2, ShieldCheck, Clock, FileText, CheckCircle2 } from 'lucide-react'
+import { Server, Shield, Zap, Building2, FileCheck, Clock, Users, CheckCircle2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -11,41 +11,41 @@ import { Textarea } from '@/components/ui/textarea'
 const services = [
     {
         icon: Server,
-        title: 'Gestão de Ciclo de Vida de Hardware',
-        description: 'Manutenção preventiva e otimização de estações de trabalho para máxima performance e longevidade dos equipamentos corporativos.'
+        title: 'Gestão do Ciclo de Vida de Ativos',
+        description: 'Administramos todo o ciclo de vida dos equipamentos de TI da sua empresa, desde a aquisição até a desativação, garantindo máxima eficiência operacional.'
     },
     {
-        icon: Network,
-        title: 'Infraestrutura de Redes',
-        description: 'Configuração, segurança e monitoramento para conectividade estável e protegida do seu escritório ou ambiente corporativo.'
+        icon: Zap,
+        title: 'Otimização de Performance de Hardware',
+        description: 'Diagnóstico avançado e implementação de melhorias para que seus equipamentos operem com desempenho máximo e maior vida útil.'
     },
     {
-        icon: TrendingUp,
-        title: 'Consultoria em Performance',
-        description: 'Diagnóstico avançado e recomendações estratégicas para upgrades e otimização de equipamentos de TI.'
+        icon: Shield,
+        title: 'Consultoria em Conectividade e Redes',
+        description: 'Análise, configuração e segurança da infraestrutura de rede corporativa para garantir conectividade estável e protegida.'
     }
 ]
 
-const benefits = [
+const differentials = [
     {
         icon: Clock,
-        title: 'Agilidade no Atendimento',
-        description: 'SLA definido com resposta rápida para minimizar tempo de parada.'
+        title: 'Agilidade',
+        description: 'SLA definido com tempo de resposta reduzido para minimizar impacto operacional.'
     },
     {
-        icon: FileText,
-        title: 'Nota Fiscal e Contrato',
-        description: 'Documentação completa para controle fiscal e contábil da sua empresa.'
-    },
-    {
-        icon: ShieldCheck,
-        title: 'Garantia Corporativa',
-        description: 'Garantia estendida em todos os serviços com suporte pós-atendimento.'
+        icon: FileCheck,
+        title: 'Nota Fiscal',
+        description: 'Documentação fiscal completa para controle contábil e transparência.'
     },
     {
         icon: Building2,
         title: 'Atendimento In-Loco',
-        description: 'Opção de suporte presencial no seu escritório ou laboratório especializado.'
+        description: 'Suporte presencial no seu escritório ou em nosso laboratório especializado.'
+    },
+    {
+        icon: Users,
+        title: 'Equipe Especializada',
+        description: 'Profissionais certificados com foco em infraestrutura corporativa.'
     }
 ]
 
@@ -54,7 +54,7 @@ export default function ConsultoriaPage() {
         nome: '',
         email: '',
         empresa: '',
-        mensagem: ''
+        necessidade: ''
     })
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [isSubmitted, setIsSubmitted] = useState(false)
@@ -63,7 +63,10 @@ export default function ConsultoriaPage() {
         e.preventDefault()
         setIsSubmitting(true)
 
-        // Simular envio (substituir por integração real)
+        // TODO: Integrar com backend real (Supabase, email, etc.)
+        // Os dados do formulário estão em: formData
+        console.log('Dados do formulário:', formData)
+
         await new Promise(resolve => setTimeout(resolve, 1500))
 
         setIsSubmitting(false)
@@ -78,63 +81,63 @@ export default function ConsultoriaPage() {
         <div className="bg-slate-950">
             {/* HERO SECTION */}
             <section className="relative py-24 lg:py-32 overflow-hidden">
-                {/* Background Gradient */}
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-950 via-slate-950 to-slate-900" />
-                <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5" />
+                {/* Background - Azul Navy/Cinza Sóbrio */}
+                <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900" />
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-slate-800/20 via-transparent to-transparent" />
 
                 <div className="container relative mx-auto px-4">
                     <div className="max-w-3xl mx-auto text-center">
-                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-medium mb-8">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700/50 text-slate-300 text-sm font-medium mb-8">
                             <Building2 className="w-4 h-4" />
-                            Soluções Corporativas em TI
+                            Soluções para PMEs
                         </div>
 
-                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
-                            Soluções de Infraestrutura de TI e Gestão de Ativos para Sua Empresa
+                        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6 text-slate-100 leading-tight">
+                            Gestão Inteligente de Infraestrutura de TI para Pequenas e Médias Empresas
                         </h1>
 
                         <p className="text-lg md:text-xl text-slate-400 mb-10 max-w-2xl mx-auto leading-relaxed">
-                            Garanta a continuidade do seu negócio com suporte especializado,
-                            redução de custos operacionais e gestão inteligente de recursos de tecnologia.
+                            Reduza custos e aumente a produtividade da sua equipe com nosso
+                            suporte especializado em gestão de ativos e infraestrutura corporativa.
                         </p>
 
                         <Button
                             size="lg"
                             onClick={scrollToForm}
-                            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 text-lg font-semibold rounded-xl shadow-lg shadow-blue-600/25 transition-all hover:shadow-xl hover:shadow-blue-600/30"
+                            className="bg-slate-100 hover:bg-white text-slate-900 px-8 py-6 text-lg font-semibold rounded-lg shadow-lg transition-all hover:shadow-xl"
                         >
-                            Solicitar Proposta Comercial
+                            Solicitar Análise de Infraestrutura
                         </Button>
                     </div>
                 </div>
             </section>
 
             {/* SERVIÇOS */}
-            <section className="py-20 bg-slate-900/50">
+            <section className="py-20 bg-slate-900/30">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-16">
-                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                            Nossos Serviços Corporativos
+                        <h2 className="text-2xl md:text-3xl font-bold text-slate-100 mb-4">
+                            Nossas Soluções Corporativas
                         </h2>
                         <p className="text-slate-400 text-lg max-w-2xl mx-auto">
-                            Soluções completas para gestão de infraestrutura e ativos de TI da sua empresa.
+                            Serviços especializados para otimizar a infraestrutura de TI do seu negócio.
                         </p>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                    <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
                         {services.map((service, index) => (
                             <Card
                                 key={index}
-                                className="bg-slate-800/50 border-slate-700/50 hover:border-blue-500/30 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/5"
+                                className="bg-slate-900/50 border-slate-800 hover:border-slate-700 transition-all duration-300"
                             >
                                 <CardHeader>
-                                    <div className="w-14 h-14 rounded-xl bg-blue-500/10 flex items-center justify-center mb-4">
-                                        <service.icon className="w-7 h-7 text-blue-400" />
+                                    <div className="w-14 h-14 rounded-lg bg-slate-800 flex items-center justify-center mb-4 border border-slate-700">
+                                        <service.icon className="w-7 h-7 text-slate-300" />
                                     </div>
-                                    <CardTitle className="text-white text-xl">{service.title}</CardTitle>
+                                    <CardTitle className="text-slate-100 text-lg">{service.title}</CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <CardDescription className="text-slate-400 text-base leading-relaxed">
+                                    <CardDescription className="text-slate-400 text-sm leading-relaxed">
                                         {service.description}
                                     </CardDescription>
                                 </CardContent>
@@ -144,125 +147,138 @@ export default function ConsultoriaPage() {
                 </div>
             </section>
 
-            {/* POR QUE NÓS */}
+            {/* SOBRE / DIFERENCIAIS */}
             <section className="py-20">
                 <div className="container mx-auto px-4">
-                    <div className="text-center mb-16">
-                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                            Por Que Escolher a WTECH?
-                        </h2>
-                        <p className="text-slate-400 text-lg max-w-2xl mx-auto">
-                            Comprometimento com excelência e resultados mensuráveis para o seu negócio.
-                        </p>
-                    </div>
+                    <div className="max-w-4xl mx-auto">
+                        <div className="text-center mb-12">
+                            <h2 className="text-2xl md:text-3xl font-bold text-slate-100 mb-4">
+                                Por Que Empresas Escolhem a WTECH
+                            </h2>
+                            <p className="text-slate-400 text-lg max-w-2xl mx-auto">
+                                Comprometimento com resultados e atendimento profissional para o segmento corporativo.
+                            </p>
+                        </div>
 
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-                        {benefits.map((benefit, index) => (
-                            <div
-                                key={index}
-                                className="p-6 rounded-2xl bg-slate-800/30 border border-slate-700/30 text-center hover:bg-slate-800/50 transition-all"
-                            >
-                                <div className="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center mx-auto mb-4">
-                                    <benefit.icon className="w-6 h-6 text-blue-400" />
+                        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                            {differentials.map((item, index) => (
+                                <div
+                                    key={index}
+                                    className="p-6 rounded-xl bg-slate-900/40 border border-slate-800/50 text-center"
+                                >
+                                    <div className="w-12 h-12 rounded-lg bg-slate-800 flex items-center justify-center mx-auto mb-4">
+                                        <item.icon className="w-5 h-5 text-slate-300" />
+                                    </div>
+                                    <h3 className="text-slate-100 font-semibold mb-2">{item.title}</h3>
+                                    <p className="text-slate-500 text-sm leading-relaxed">{item.description}</p>
                                 </div>
-                                <h3 className="text-white font-semibold text-lg mb-2">{benefit.title}</h3>
-                                <p className="text-slate-400 text-sm leading-relaxed">{benefit.description}</p>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
+
+                        {/* Texto Corporativo */}
+                        <div className="mt-16 p-8 rounded-2xl bg-slate-900/50 border border-slate-800">
+                            <p className="text-slate-300 text-center leading-relaxed max-w-3xl mx-auto">
+                                A <strong className="text-slate-100">WTECH Solutions</strong> atua com foco em
+                                pequenas e médias empresas, oferecendo consultoria especializada em gestão de
+                                infraestrutura de TI. Nosso modelo de atendimento contempla tanto o suporte
+                                in-loco quanto laboratorial, sempre com emissão de <strong className="text-slate-100">nota fiscal</strong> e
+                                relatórios detalhados para seu controle gerencial.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </section>
 
             {/* FORMULÁRIO DE CONTATO */}
-            <section id="contato" className="py-20 bg-slate-900/50">
+            <section id="contato" className="py-20 bg-slate-900/30">
                 <div className="container mx-auto px-4">
-                    <div className="max-w-xl mx-auto">
+                    <div className="max-w-lg mx-auto">
                         <div className="text-center mb-10">
-                            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                                Solicite uma Proposta
+                            <h2 className="text-2xl md:text-3xl font-bold text-slate-100 mb-4">
+                                Solicite uma Análise
                             </h2>
-                            <p className="text-slate-400 text-lg">
-                                Preencha o formulário e nossa equipe entrará em contato em até 24 horas úteis.
+                            <p className="text-slate-400">
+                                Preencha o formulário e nossa equipe comercial entrará em contato.
                             </p>
                         </div>
 
                         {isSubmitted ? (
-                            <Card className="bg-slate-800/50 border-green-500/30">
-                                <CardContent className="pt-8 pb-8 text-center">
-                                    <div className="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center mx-auto mb-4">
+                            <Card className="bg-slate-900/50 border-green-800/50">
+                                <CardContent className="pt-10 pb-10 text-center">
+                                    <div className="w-16 h-16 rounded-full bg-green-900/30 flex items-center justify-center mx-auto mb-4">
                                         <CheckCircle2 className="w-8 h-8 text-green-400" />
                                     </div>
-                                    <h3 className="text-xl font-semibold text-white mb-2">
-                                        Proposta Solicitada!
+                                    <h3 className="text-xl font-semibold text-slate-100 mb-2">
+                                        Solicitação Recebida
                                     </h3>
                                     <p className="text-slate-400">
-                                        Recebemos sua solicitação. Nossa equipe comercial entrará em contato em breve.
+                                        Nossa equipe analisará sua solicitação e retornará em até 24 horas úteis.
                                     </p>
                                 </CardContent>
                             </Card>
                         ) : (
-                            <Card className="bg-slate-800/50 border-slate-700/50">
+                            <Card className="bg-slate-900/50 border-slate-800">
                                 <CardContent className="pt-8">
-                                    <form onSubmit={handleSubmit} className="space-y-6">
+                                    <form onSubmit={handleSubmit} className="space-y-5">
                                         <div className="space-y-2">
-                                            <Label htmlFor="nome" className="text-slate-300">Nome Completo</Label>
+                                            <Label htmlFor="nome" className="text-slate-300 text-sm">Nome Completo</Label>
                                             <Input
                                                 id="nome"
                                                 placeholder="Seu nome"
                                                 required
                                                 value={formData.nome}
                                                 onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
-                                                className="bg-slate-900/50 border-slate-700 text-white placeholder:text-slate-500 focus:border-blue-500"
+                                                className="bg-slate-950 border-slate-700 text-slate-100 placeholder:text-slate-600 focus:border-slate-500 focus:ring-slate-500"
                                             />
                                         </div>
 
                                         <div className="space-y-2">
-                                            <Label htmlFor="email" className="text-slate-300">Email Corporativo</Label>
+                                            <Label htmlFor="email" className="text-slate-300 text-sm">Email Corporativo</Label>
                                             <Input
                                                 id="email"
                                                 type="email"
-                                                placeholder="contato@suaempresa.com.br"
+                                                placeholder="seu.email@empresa.com.br"
                                                 required
                                                 value={formData.email}
                                                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                                className="bg-slate-900/50 border-slate-700 text-white placeholder:text-slate-500 focus:border-blue-500"
+                                                className="bg-slate-950 border-slate-700 text-slate-100 placeholder:text-slate-600 focus:border-slate-500 focus:ring-slate-500"
                                             />
                                         </div>
 
                                         <div className="space-y-2">
-                                            <Label htmlFor="empresa" className="text-slate-300">Nome da Empresa</Label>
+                                            <Label htmlFor="empresa" className="text-slate-300 text-sm">Empresa</Label>
                                             <Input
                                                 id="empresa"
-                                                placeholder="Razão Social ou Nome Fantasia"
+                                                placeholder="Nome da sua empresa"
                                                 required
                                                 value={formData.empresa}
                                                 onChange={(e) => setFormData({ ...formData, empresa: e.target.value })}
-                                                className="bg-slate-900/50 border-slate-700 text-white placeholder:text-slate-500 focus:border-blue-500"
+                                                className="bg-slate-950 border-slate-700 text-slate-100 placeholder:text-slate-600 focus:border-slate-500 focus:ring-slate-500"
                                             />
                                         </div>
 
                                         <div className="space-y-2">
-                                            <Label htmlFor="mensagem" className="text-slate-300">Mensagem (Opcional)</Label>
+                                            <Label htmlFor="necessidade" className="text-slate-300 text-sm">Necessidade</Label>
                                             <Textarea
-                                                id="mensagem"
-                                                placeholder="Descreva brevemente sua necessidade..."
+                                                id="necessidade"
+                                                placeholder="Descreva brevemente sua necessidade de infraestrutura..."
                                                 rows={4}
-                                                value={formData.mensagem}
-                                                onChange={(e) => setFormData({ ...formData, mensagem: e.target.value })}
-                                                className="bg-slate-900/50 border-slate-700 text-white placeholder:text-slate-500 focus:border-blue-500 resize-none"
+                                                value={formData.necessidade}
+                                                onChange={(e) => setFormData({ ...formData, necessidade: e.target.value })}
+                                                className="bg-slate-950 border-slate-700 text-slate-100 placeholder:text-slate-600 focus:border-slate-500 focus:ring-slate-500 resize-none"
                                             />
                                         </div>
 
                                         <Button
                                             type="submit"
                                             size="lg"
-                                            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-6 text-lg font-semibold"
+                                            className="w-full bg-slate-100 hover:bg-white text-slate-900 py-6 font-semibold"
                                             disabled={isSubmitting}
                                         >
-                                            {isSubmitting ? 'Enviando...' : 'Enviar Solicitação'}
+                                            {isSubmitting ? 'Enviando...' : 'Solicitar Análise de Infraestrutura'}
                                         </Button>
 
-                                        <p className="text-xs text-slate-500 text-center">
+                                        <p className="text-xs text-slate-600 text-center pt-2">
                                             Ao enviar, você concorda com nossa política de privacidade.
                                         </p>
                                     </form>
