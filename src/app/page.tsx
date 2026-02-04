@@ -6,6 +6,9 @@ import Image from 'next/image'
 import { createAdminClient } from '@/lib/supabase/server'
 import { unstable_cache } from 'next/cache'
 
+// Forçar execução em runtime (não build time) para ter acesso às env vars do Railway
+export const dynamic = 'force-dynamic'
+
 // Cache de dados do tenant por 1 hora para evitar stale data no Edge Cache
 const getTenantData = unstable_cache(
   async () => {
