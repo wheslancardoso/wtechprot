@@ -3,19 +3,17 @@
 import { usePathname } from 'next/navigation'
 import Script from 'next/script'
 
-// Rotas operacionais onde o GTM NÃO deve ser carregado
-const OPERATIONAL_ROUTES = ['/dashboard', '/os/', '/login', '/signup']
+// Rotas onde o GTM DEVE ser carregado (vitrine/ads)
+const ALLOWED_ROUTES = ['/', '/consultoria-para-empresas']
 
 export function GoogleTagManager() {
     const pathname = usePathname()
 
-    // Verifica se está em rota operacional
-    const isOperationalRoute = OPERATIONAL_ROUTES.some(route =>
-        pathname.startsWith(route)
-    )
+    // Verifica se está em rota permitida
+    const isAllowedRoute = ALLOWED_ROUTES.includes(pathname)
 
-    // Não renderiza GTM em rotas operacionais
-    if (isOperationalRoute) {
+    // Não renderiza GTM em rotas não permitidas
+    if (!isAllowedRoute) {
         return null
     }
 
@@ -37,11 +35,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 export function GoogleTagManagerNoScript() {
     const pathname = usePathname()
 
-    const isOperationalRoute = OPERATIONAL_ROUTES.some(route =>
-        pathname.startsWith(route)
-    )
+    // Verifica se está em rota permitida
+    const isAllowedRoute = ALLOWED_ROUTES.includes(pathname)
 
-    if (isOperationalRoute) {
+    // Não renderiza GTM em rotas não permitidas
+    if (!isAllowedRoute) {
         return null
     }
 
