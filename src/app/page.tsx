@@ -4,60 +4,66 @@ import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 // import OrderTrackerInput from '@/components/landing/order-tracker-input'
 import { createAdminClient } from '@/lib/supabase/server'
+import { unstable_cache } from 'next/cache'
 
-async function getTenantData() {
-  let whatsappNumber = '5561999999999' // Fallback
-  let formattedPhone = '(61) 99999-9999'
-  let brandName = 'LAN.TECH' // Fallback Brand
+// Cache de dados do tenant por 1 hora para evitar stale data no Edge Cache
+const getTenantData = unstable_cache(
+  async () => {
+    let whatsappNumber = '5561999999999' // Fallback
+    let formattedPhone = '(61) 99999-9999'
+    let brandName = 'LAN.TECH' // Fallback Brand
 
-  try {
-    const supabase = await createAdminClient()
+    try {
+      const supabase = await createAdminClient()
 
-    // Lógica para pegar o tenant do último usuário logado
-    const { data: { users }, error: usersError } = await supabase.auth.admin.listUsers()
+      // Lógica para pegar o tenant do último usuário logado
+      const { data: { users }, error: usersError } = await supabase.auth.admin.listUsers()
 
-    let tenantEmail = null
+      let tenantEmail = null
 
-    if (!usersError && users?.length > 0) {
-      // Ordenar por último login (mais recente primeiro)
-      const lastUser = users.sort((a, b) => {
-        const dateA = new Date(a.last_sign_in_at || 0).getTime()
-        const dateB = new Date(b.last_sign_in_at || 0).getTime()
-        return dateB - dateA
-      })[0]
+      if (!usersError && users?.length > 0) {
+        // Ordenar por último login (mais recente primeiro)
+        const lastUser = users.sort((a, b) => {
+          const dateA = new Date(a.last_sign_in_at || 0).getTime()
+          const dateB = new Date(b.last_sign_in_at || 0).getTime()
+          return dateB - dateA
+        })[0]
 
-      if (lastUser && lastUser.email) {
-        tenantEmail = lastUser.email
+        if (lastUser && lastUser.email) {
+          tenantEmail = lastUser.email
+        }
       }
+
+      let query = supabase.from('tenants').select('phone, trade_name')
+
+      if (tenantEmail) {
+        query = query.eq('email', tenantEmail)
+      } else {
+        // Fallback: mais recente atualizado
+        query = query.order('updated_at', { ascending: false }).limit(1)
+      }
+
+      const { data: tenant } = await query.single()
+
+      if (tenant) {
+        if (tenant.phone) {
+          const cleanPhone = tenant.phone.replace(/\D/g, '')
+          whatsappNumber = `55${cleanPhone}`
+          formattedPhone = tenant.phone
+        }
+        if (tenant.trade_name && tenant.trade_name !== 'Minha Assistência') {
+          brandName = tenant.trade_name
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao buscar dados da home:', error)
     }
 
-    let query = supabase.from('tenants').select('phone, trade_name')
-
-    if (tenantEmail) {
-      query = query.eq('email', tenantEmail)
-    } else {
-      // Fallback: mais recente atualizado
-      query = query.order('updated_at', { ascending: false }).limit(1)
-    }
-
-    const { data: tenant } = await query.single()
-
-    if (tenant) {
-      if (tenant.phone) {
-        const cleanPhone = tenant.phone.replace(/\D/g, '')
-        whatsappNumber = `55${cleanPhone}`
-        formattedPhone = tenant.phone
-      }
-      if (tenant.trade_name && tenant.trade_name !== 'Minha Assistência') {
-        brandName = tenant.trade_name
-      }
-    }
-  } catch (error) {
-    console.error('Erro ao buscar dados da home:', error)
-  }
-
-  return { whatsappNumber, formattedPhone, brandName }
-}
+    return { whatsappNumber, formattedPhone, brandName }
+  },
+  ['tenant-data'],
+  { revalidate: 3600, tags: ['tenant'] }
+)
 
 export async function generateMetadata() {
   const { brandName } = await getTenantData()
