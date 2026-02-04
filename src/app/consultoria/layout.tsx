@@ -40,7 +40,7 @@ export default function ConsultoriaLayout({
                     </p>
                     <p className="text-xs text-slate-500 mb-3">
                         {/* TODO: Inserir CNPJ real abaixo */}
-                        CNPJ: XX.XXX.XXX/0001-XX
+                        CNPJ: 64.928.869/0001-83
                     </p>
                     <p className="text-xs text-slate-600">
                         Atendimento exclusivo para Pessoa Jurídica (PJ)

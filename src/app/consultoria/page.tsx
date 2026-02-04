@@ -49,6 +49,10 @@ const differentials = [
     }
 ]
 
+import { createClient } from '@/lib/supabase/client'
+
+// ... imports remain the same
+
 export default function ConsultoriaPage() {
     const [formData, setFormData] = useState({
         nome: '',
@@ -58,19 +62,37 @@ export default function ConsultoriaPage() {
     })
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [isSubmitted, setIsSubmitted] = useState(false)
+    const [error, setError] = useState('')
+
+    const supabase = createClient()
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setIsSubmitting(true)
+        setError('')
 
-        // TODO: Integrar com backend real (Supabase, email, etc.)
-        // Os dados do formulário estão em: formData
-        console.log('Dados do formulário:', formData)
+        try {
+            const { error: insertError } = await supabase
+                .from('leads')
+                .insert([
+                    {
+                        name: formData.nome,
+                        email: formData.email,
+                        company: formData.empresa,
+                        message: formData.necessidade,
+                        source: 'ads_bridge_page'
+                    }
+                ])
 
-        await new Promise(resolve => setTimeout(resolve, 1500))
+            if (insertError) throw insertError
 
-        setIsSubmitting(false)
-        setIsSubmitted(true)
+            setIsSubmitted(true)
+        } catch (err) {
+            console.error('Erro ao salvar lead:', err)
+            setError('Ocorreu um erro ao enviar. Por favor, tente novamente ou entre em contato pelo telefone.')
+        } finally {
+            setIsSubmitting(false)
+        }
     }
 
     const scrollToForm = () => {
@@ -282,6 +304,11 @@ export default function ConsultoriaPage() {
                                             Ao enviar, você concorda com nossa política de privacidade.
                                         </p>
                                     </form>
+                                    {error && (
+                                        <p className="text-sm text-red-500 text-center mt-4">
+                                            {error}
+                                        </p>
+                                    )}
                                 </CardContent>
                             </Card>
                         )}
