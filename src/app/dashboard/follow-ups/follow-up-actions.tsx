@@ -44,7 +44,7 @@ export function FollowUpActions({
     type,
     daysRemaining = 7
 }: FollowUpActionsProps) {
-    const settings = useSettings()
+    const { settings } = useSettings()
     const [isCompleting, setIsCompleting] = useState(false)
     const [showNotesDialog, setShowNotesDialog] = useState(false)
     const [notes, setNotes] = useState('')
@@ -52,6 +52,8 @@ export function FollowUpActions({
 
     // Generate WhatsApp message based on type
     function getWhatsAppLink() {
+        if (!settings) return '#'
+
         let message = ''
 
         if (type === 'warranty_expiring') {
