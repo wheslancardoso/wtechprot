@@ -298,13 +298,17 @@ export async function saveBudget(
     orderId: string,
     diagnosisText: string,
     laborCost: number,
-    parts: ExternalPart[]
+    parts: ExternalPart[],
+    discountAmount?: number,
+    couponCode?: string | null
 ): Promise<ActionResult> {
     console.log("🔧 Iniciando saveBudget", {
         orderId,
         diagnosisText: diagnosisText.substring(0, 50) + '...',
         laborCost,
         partsCount: parts.length,
+        discountAmount,
+        couponCode,
         targetStatus: 'waiting_approval'
     })
 
@@ -344,6 +348,8 @@ export async function saveBudget(
             labor_cost: laborCost,
             parts_cost_external: 0,
             status: 'waiting_approval' as const, // CRÍTICO: Forçar mudança de status
+            discount_amount: discountAmount || 0,
+            coupon_code: couponCode || null,
         }
         console.log("📝 saveBudget: Payload de update:", updatePayload)
 
@@ -526,16 +532,24 @@ export async function finishOrderWithPayment(
             address: tenant.address
         } : null
 
-        // 4. Atualizar ordem com dados do pagamento e SNAPSHOT
+        const warrantyDays = tenant?.warranty_days || 90
+        const now = new Date()
+        const warrantyEndDate = new Date(now.getTime() + warrantyDays * 24 * 60 * 60 * 1000)
+
+        // 4. Atualizar ordem com dados do pagamento, SNAPSHOT e GARANTIA
         const { error: updateError } = await supabase
             .from('orders')
             .update({
                 status: 'finished',
                 payment_method: paymentMethod,
                 amount_received: amountReceived,
-                payment_received_at: new Date().toISOString(),
-                finished_at: new Date().toISOString(),
-                store_snapshot: storeSnapshot, // SALVA O SNAPSHOT
+                payment_received_at: now.toISOString(),
+                finished_at: now.toISOString(),
+                store_snapshot: storeSnapshot,
+                // Warranty fields
+                warranty_days: warrantyDays,
+                warranty_start_date: now.toISOString(),
+                warranty_end_date: warrantyEndDate.toISOString(),
             })
             .eq('id', orderId)
             .in('status', ['in_progress', 'ready'])
@@ -545,10 +559,41 @@ export async function finishOrderWithPayment(
             return { success: false, message: `Erro: ${updateError.message}` }
         }
 
-        // 4. Revalidar caches
+        // 5. Buscar customer_id da ordem para os follow-ups
+        const { data: order } = await supabase
+            .from('orders')
+            .select('customer_id')
+            .eq('id', orderId)
+            .single()
+
+        // 6. Criar follow-ups automáticos
+        if (order?.customer_id) {
+            const postDeliveryDate = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000) // 7 dias depois
+            const warrantyExpiringDate = new Date(warrantyEndDate.getTime() - 7 * 24 * 60 * 60 * 1000) // 7 dias antes do fim
+
+            await supabase.from('follow_ups').insert([
+                {
+                    order_id: orderId,
+                    customer_id: order.customer_id,
+                    type: 'post_delivery',
+                    status: 'pending',
+                    scheduled_for: postDeliveryDate.toISOString().split('T')[0]
+                },
+                {
+                    order_id: orderId,
+                    customer_id: order.customer_id,
+                    type: 'warranty_expiring',
+                    status: 'pending',
+                    scheduled_for: warrantyExpiringDate.toISOString().split('T')[0]
+                }
+            ])
+        }
+
+        // 7. Revalidar caches
         revalidatePath('/dashboard/orders')
         revalidatePath(`/dashboard/orders/${orderId}`)
         revalidatePath(`/os/${orderId}`)
+        revalidatePath('/dashboard/follow-ups')
 
         console.log('🎉 finishOrderWithPayment SUCESSO!')
         return {

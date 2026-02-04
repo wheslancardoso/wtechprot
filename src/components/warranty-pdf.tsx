@@ -418,9 +418,10 @@ function WarrantyDocument({ data, settings }: { data: OrderData; settings: Store
 interface WarrantyPdfButtonProps {
     orderData: OrderData
     storeSettings: StoreSettings
+    className?: string
 }
 
-export default function WarrantyPdfButton({ orderData, storeSettings }: WarrantyPdfButtonProps) {
+export default function WarrantyPdfButton({ orderData, storeSettings, className }: WarrantyPdfButtonProps) {
     const osNumber = String(orderData.displayId).padStart(4, '0')
     const storeName = storeSettings.trade_name.replace(/\s+/g, '_').toUpperCase()
     const fileName = `${storeName}_OS_${osNumber}_Garantia.pdf`
@@ -429,9 +430,10 @@ export default function WarrantyPdfButton({ orderData, storeSettings }: Warranty
         <PDFDownloadLink
             document={<WarrantyDocument data={orderData} settings={storeSettings} />}
             fileName={fileName}
+            className={className}
         >
             {({ loading }: { loading: boolean }) => (
-                <Button variant="outline" disabled={loading}>
+                <Button variant="outline" disabled={loading} className="w-full">
                     {loading ? (
                         <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />

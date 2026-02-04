@@ -252,7 +252,7 @@ export default function TechnicalReportForm({
                             const message = `Olá, *${orderData.customerName}*!\nSeu equipamento já foi analisado.\nConfira o Laudo Técnico com o diagnóstico e as fotos do serviço no link seguro abaixo:\n${link}\n\nAtt, Equipe ${storeSettings.trade_name}.`
 
                             const target = phone.length >= 10 ? `55${phone}` : ''
-                            window.open(`https://wa.me/${target}?text=${encodeURIComponent(message)}`, '_blank')
+                            window.open(`https://api.whatsapp.com/send?phone=${target}&text=${encodeURIComponent(message)}`, '_blank')
                         }}
                     >
                         <MessageCircle className="h-4 w-4" />

@@ -11,6 +11,7 @@ import type { TechnicalReport } from '@/types/technical-report'
 // Server Action
 import { saveBudget } from '../actions'
 import { generateBudget } from '@/app/actions/generate-budget'
+import { validateCoupon, getAvailableCouponForOrder } from '@/app/actions/nps-actions'
 
 // UI Components
 import { Button } from '@/components/ui/button'
@@ -82,6 +83,12 @@ export default function BudgetModal({ orderId, displayId, open, onOpenChange, te
     const [publicLink, setPublicLink] = useState('')
     const [copied, setCopied] = useState(false)
 
+    // Coupon State
+    const [couponCode, setCouponCode] = useState('')
+    const [discountAmount, setDiscountAmount] = useState(0)
+    const [couponError, setCouponError] = useState('')
+    const [couponSuccess, setCouponSuccess] = useState(false)
+
     const {
         register,
         control,
@@ -117,6 +124,51 @@ export default function BudgetModal({ orderId, displayId, open, onOpenChange, te
 
     const laborCost = watch('laborCost') || 0
 
+    // Auto-check for coupons on mount
+    useEffect(() => {
+        let mounted = true
+        async function checkCoupon() {
+            if (!orderId || !open) return
+            // If already has code, don't overwrite
+            if (couponCode) return
+
+            const code = await getAvailableCouponForOrder(orderId)
+            if (code && mounted) {
+                setCouponCode(code)
+                // If labor cost is already defined, try to validate immediately
+                const currentLabor = watch('laborCost')
+                if (currentLabor && currentLabor > 0) {
+                    const result = await validateCoupon(code, currentLabor)
+                    if (result.success && mounted) {
+                        setDiscountAmount(result.discountAmount)
+                        setCouponSuccess(true)
+                    }
+                }
+            }
+        }
+        checkCoupon()
+        return () => { mounted = false }
+    }, [open, orderId]) // Run once when opened
+
+    // Auto-apply if coupon filled but labor changed? 
+    // Maybe too aggressive. Let's stick to "on load" for now as requested "já fica aplicado".
+    // If user changes labor, they might need to re-click Apply or we add usage in `laborCost` watcher.
+    // Ideally, if `couponSuccess` is true, we should update discount when labor changes.
+    useEffect(() => {
+        if (couponSuccess && couponCode && laborCost > 0) {
+            // Simple recalc without server trip if we trust the percentage, 
+            // but validating again is safer.
+            // Debouncing would be good, but for now let's just use the server action
+            const timeout = setTimeout(async () => {
+                const result = await validateCoupon(couponCode, laborCost)
+                if (result.success) {
+                    setDiscountAmount(result.discountAmount)
+                }
+            }, 500)
+            return () => clearTimeout(timeout)
+        }
+    }, [laborCost, couponCode, couponSuccess])
+
     async function onSubmit(data: BudgetFormData) {
         setIsSubmitting(true)
         setFeedback(null)
@@ -129,7 +181,9 @@ export default function BudgetModal({ orderId, displayId, open, onOpenChange, te
                 data.externalParts.map(part => ({
                     name: part.name,
                     purchaseUrl: part.purchaseUrl,
-                }))
+                })),
+                discountAmount,
+                couponSuccess ? couponCode : null
             )
 
             if (result.success) {
@@ -205,6 +259,27 @@ export default function BudgetModal({ orderId, displayId, open, onOpenChange, te
         setPublicLink('')
         setCopied(false)
         onOpenChange(false)
+    }
+
+    async function handleApplyCoupon() {
+        if (!couponCode) return
+        setCouponError('')
+        setCouponSuccess(false)
+        setDiscountAmount(0)
+
+        const currentLabor = watch('laborCost')
+        if (!currentLabor || currentLabor <= 0) {
+            setCouponError('Defina o valor da Mão de Obra primeiro.')
+            return
+        }
+
+        const result = await validateCoupon(couponCode, currentLabor)
+        if (result.success) {
+            setDiscountAmount(result.discountAmount)
+            setCouponSuccess(true)
+        } else {
+            setCouponError(result.error || 'Cupom inválido')
+        }
     }
 
     function formatCurrency(value: number): string {
@@ -363,6 +438,51 @@ export default function BudgetModal({ orderId, displayId, open, onOpenChange, te
                                 )}
                             </div>
 
+                            {/* Cupom de Desconto */}
+                            <div className="space-y-2 p-4 bg-muted/30 rounded-lg border border-dashed border-primary/20">
+                                <Label htmlFor="couponCode" className="text-foreground">Cupom de Desconto (NPS)</Label>
+                                <div className="flex gap-2">
+                                    <Input
+                                        id="couponCode"
+                                        placeholder="VIP20-XXXX"
+                                        value={couponCode}
+                                        onChange={(e) => {
+                                            setCouponCode(e.target.value.toUpperCase())
+                                            setCouponSuccess(false)
+                                            setDiscountAmount(0)
+                                            setCouponError('')
+                                        }}
+                                        disabled={isSubmitting || couponSuccess}
+                                        className="uppercase font-mono tracking-wide"
+                                    />
+                                    {couponSuccess ? (
+                                        <Button type="button" variant="ghost" className="text-muted-foreground hover:text-destructive" onClick={() => {
+                                            setCouponSuccess(false)
+                                            setDiscountAmount(0)
+                                            setCouponCode('')
+                                        }}>
+                                            <X className="h-4 w-4" />
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            onClick={handleApplyCoupon}
+                                            disabled={!couponCode || isSubmitting}
+                                        >
+                                            Aplicar
+                                        </Button>
+                                    )}
+                                </div>
+                                {couponError && <p className="text-sm text-destructive">{couponError}</p>}
+                                {couponSuccess && (
+                                    <div className="flex items-center gap-2 text-sm text-green-600 font-medium">
+                                        <CheckCircle className="h-4 w-4" />
+                                        <span>Cupom aplicado! Desconto de {formatCurrency(discountAmount)}</span>
+                                    </div>
+                                )}
+                            </div>
+
                             {/* Peças Externas */}
                             <div className="space-y-4">
                                 <div className="flex items-center justify-between">
@@ -448,7 +568,16 @@ export default function BudgetModal({ orderId, displayId, open, onOpenChange, te
                             <div className="border-t pt-4">
                                 <div className="flex items-center justify-between text-lg font-semibold">
                                     <span>Total (Mão de Obra):</span>
-                                    <span className="text-primary">{formatCurrency(laborCost)}</span>
+                                    <div className="text-right">
+                                        {discountAmount > 0 && (
+                                            <div className="text-sm text-muted-foreground line-through">
+                                                {formatCurrency(laborCost)}
+                                            </div>
+                                        )}
+                                        <span className="text-primary text-xl">
+                                            {formatCurrency(laborCost - discountAmount)}
+                                        </span>
+                                    </div>
                                 </div>
                                 <p className="text-xs text-muted-foreground mt-1">
                                     * O valor das peças será pago diretamente pelo cliente nos links indicados.

@@ -4,60 +4,53 @@ import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 // import OrderTrackerInput from '@/components/landing/order-tracker-input'
 import { createAdminClient } from '@/lib/supabase/server'
+import { unstable_cache } from 'next/cache'
 
-async function getTenantData() {
-  let whatsappNumber = '5561999999999' // Fallback
-  let formattedPhone = '(61) 99999-9999'
-  let brandName = 'LAN.TECH' // Fallback Brand
+// Forçar execução em runtime (não build time) para ter acesso às env vars do Railway
+export const dynamic = 'force-dynamic'
 
-  try {
-    const supabase = await createAdminClient()
+// Cache de dados do tenant por 1 hora para evitar stale data no Edge Cache
+const getTenantData = unstable_cache(
+  async () => {
+    let whatsappNumber = '5561999999999' // Fallback
+    let formattedPhone = '(61) 99999-9999'
+    let brandName = 'LAN.TECH' // Fallback Brand
 
-    // Lógica para pegar o tenant do último usuário logado
-    const { data: { users }, error: usersError } = await supabase.auth.admin.listUsers()
+    try {
+      const supabase = await createAdminClient()
 
-    let tenantEmail = null
+      // Buscar tenant padrão diretamente pelo ID
+      const DEFAULT_TENANT_ID = '8132d666-06c0-46a7-b362-a30393be96c0'
 
-    if (!usersError && users?.length > 0) {
-      // Ordenar por último login (mais recente primeiro)
-      const lastUser = users.sort((a, b) => {
-        const dateA = new Date(a.last_sign_in_at || 0).getTime()
-        const dateB = new Date(b.last_sign_in_at || 0).getTime()
-        return dateB - dateA
-      })[0]
+      const { data: tenant, error } = await supabase
+        .from('tenants')
+        .select('phone, trade_name')
+        .eq('id', DEFAULT_TENANT_ID)
+        .single()
 
-      if (lastUser && lastUser.email) {
-        tenantEmail = lastUser.email
+      if (error) {
+        console.error('Erro ao buscar tenant padrão:', error)
       }
+
+      if (tenant) {
+        if (tenant.phone) {
+          const cleanPhone = tenant.phone.replace(/\D/g, '')
+          whatsappNumber = `55${cleanPhone}`
+          formattedPhone = tenant.phone
+        }
+        if (tenant.trade_name && tenant.trade_name !== 'Minha Assistência') {
+          brandName = tenant.trade_name
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao buscar dados da home:', error)
     }
 
-    let query = supabase.from('tenants').select('phone, trade_name')
-
-    if (tenantEmail) {
-      query = query.eq('email', tenantEmail)
-    } else {
-      // Fallback: mais recente atualizado
-      query = query.order('updated_at', { ascending: false }).limit(1)
-    }
-
-    const { data: tenant } = await query.single()
-
-    if (tenant) {
-      if (tenant.phone) {
-        const cleanPhone = tenant.phone.replace(/\D/g, '')
-        whatsappNumber = `55${cleanPhone}`
-        formattedPhone = tenant.phone
-      }
-      if (tenant.trade_name && tenant.trade_name !== 'Minha Assistência') {
-        brandName = tenant.trade_name
-      }
-    }
-  } catch (error) {
-    console.error('Erro ao buscar dados da home:', error)
-  }
-
-  return { whatsappNumber, formattedPhone, brandName }
-}
+    return { whatsappNumber, formattedPhone, brandName }
+  },
+  ['tenant-data'],
+  { revalidate: 3600, tags: ['tenant'] }
+)
 
 export async function generateMetadata() {
   const { brandName } = await getTenantData()
@@ -69,7 +62,7 @@ export async function generateMetadata() {
 export default async function Home() {
   const { whatsappNumber, formattedPhone, brandName } = await getTenantData()
 
-  const whatsappLink = `https://wa.me/${whatsappNumber}`
+  const whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}`
 
   return (
     <div className="dark flex min-h-screen flex-col bg-slate-950 text-slate-50 selection:bg-primary selection:text-primary-foreground">
@@ -87,10 +80,6 @@ export default async function Home() {
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-400">
             <Link href="#como-funciona" className="hover:text-white transition-colors">Como Funciona</Link>
             <Link href="#diferenciais" className="hover:text-white transition-colors">Diferenciais</Link>
-            <Link href="/login" className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 hover:bg-white/5 hover:text-white transition-all">
-              Login Técnico
-              <ArrowRight className="w-4 h-4" />
-            </Link>
           </nav>
         </div>
       </header>
@@ -386,12 +375,7 @@ export default async function Home() {
               </ul>
             </div>
 
-            <div>
-              <h4 className="font-bold text-white mb-4">Links</h4>
-              <ul className="space-y-2">
-                <li><Link href="/login" className="hover:text-primary">Área Restrita (Serviço)</Link></li>
-              </ul>
-            </div>
+
 
             <div>
               <h4 className="font-bold text-white mb-4">Contato</h4>

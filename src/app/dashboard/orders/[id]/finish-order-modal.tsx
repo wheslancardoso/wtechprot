@@ -63,12 +63,13 @@ interface FinishOrderModalProps {
     onOpenChange: (open: boolean) => void
     orderData?: OrderData
     storeSettings?: StoreSettings
+    discountAmount?: number
 }
 
 // ==================================================
 // Component
 // ==================================================
-export default function FinishOrderModal({ orderId, open, onOpenChange, orderData, storeSettings }: FinishOrderModalProps) {
+export default function FinishOrderModal({ orderId, open, onOpenChange, orderData, storeSettings, discountAmount = 0 }: FinishOrderModalProps) {
     const router = useRouter()
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [showSuccess, setShowSuccess] = useState(false)
@@ -80,6 +81,9 @@ export default function FinishOrderModal({ orderId, open, onOpenChange, orderDat
         date: string
     } | null>(null)
 
+    // Calculate initial amount (Labor - Discount)
+    const initialAmount = Math.max(0, (orderData?.laborCost || 0) - discountAmount)
+
     const {
         register,
         handleSubmit,
@@ -90,7 +94,7 @@ export default function FinishOrderModal({ orderId, open, onOpenChange, orderDat
     } = useForm<FinishFormData>({
         resolver: zodResolver(finishSchema),
         defaultValues: {
-            amountReceived: 0,
+            amountReceived: initialAmount,
             paymentMethod: undefined,
         },
     })
@@ -302,7 +306,7 @@ conforme CDC.
                                         type="number"
                                         step="0.01"
                                         min="0"
-                                        placeholder={orderData?.laborCost ? orderData.laborCost.toFixed(2) : "0,00"}
+                                        placeholder={initialAmount.toFixed(2)}
                                         className="pl-10"
                                         {...register('amountReceived', { valueAsNumber: true })}
                                         disabled={isSubmitting}

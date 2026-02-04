@@ -73,6 +73,19 @@ export interface Order {
     // Relacionamentos opcionais (joins)
     customer?: Pick<Customer, 'name'> | null
     equipment?: Pick<Equipment, 'type' | 'model' | 'serial_number'> | null
+    discount_amount?: number
+    coupon_code?: string | null
+}
+
+export interface NpsFeedback {
+    id: string
+    order_id: string
+    customer_id: string
+    score: number
+    comment: string | null
+    discount_code: string | null
+    is_redeemed: boolean
+    created_at: string
 }
 
 export interface OrderItem {
@@ -130,6 +143,18 @@ export interface OrderInsert {
     custody_geo_lng?: number | null
     custody_integrity_hash?: string | null
     collected_by?: string | null
+    discount_amount?: number
+    coupon_code?: string | null
+}
+
+export interface NpsFeedbackInsert {
+    id?: string
+    order_id: string
+    customer_id: string
+    score: number
+    comment?: string | null
+    discount_code?: string | null
+    is_redeemed?: boolean
 }
 
 export interface OrderItemInsert {
@@ -150,6 +175,7 @@ export type CustomerUpdate = Partial<Omit<CustomerInsert, 'user_id'>>
 export type EquipmentUpdate = Partial<Omit<EquipmentInsert, 'customer_id'>>
 export type OrderUpdate = Partial<Omit<OrderInsert, 'user_id'>>
 export type OrderItemUpdate = Partial<Omit<OrderItemInsert, 'order_id'>>
+export type NpsFeedbackUpdate = Partial<NpsFeedbackInsert>
 
 // ==================================================
 // Database Schema (para tipagem do Supabase Client)
@@ -177,6 +203,11 @@ export interface Database {
                 Row: OrderItem
                 Insert: OrderItemInsert
                 Update: OrderItemUpdate
+            }
+            nps_feedbacks: {
+                Row: NpsFeedback
+                Insert: NpsFeedbackInsert
+                Update: NpsFeedbackUpdate
             }
         }
         Views: {

@@ -211,13 +211,29 @@ export default async function ClientOrderPage({ params }: PageProps) {
                         {/* Status Info */}
                         <Alert>
                             <AlertTriangle className="h-4 w-4" />
-                            <AlertDescription>
-                                <strong>OS #{order.display_id}</strong>
-                                <br />
-                                {statusDescriptions[order.status as OrderStatus]}
+                            <AlertDescription className="space-y-3">
+                                <div>
+                                    <strong>OS #{order.display_id}</strong>
+                                    <br />
+                                    {statusDescriptions[order.status as OrderStatus]}
+                                </div>
 
-                                {/* Botão de Rastreamento (Pós Aprovação) */}
-
+                                {/* Banner de Avaliação (Aparece apenas quando Finalizado) */}
+                                {(order.status === 'finished' || order.status === 'ready' || order.status === 'delivered') && (
+                                    <div className="bg-muted/50 border border-primary/20 p-4 mt-4 rounded-lg">
+                                        <div className="flex justify-between items-center flex-wrap gap-2">
+                                            <div>
+                                                <p className="font-semibold text-foreground">Avalie nosso serviço!</p>
+                                                <p className="text-sm text-muted-foreground">Sua opinião é importante e você pode ganhar um cupom.</p>
+                                            </div>
+                                            <Button size="sm" variant="outline" className="shrink-0 border-primary/20 hover:bg-primary/5" asChild>
+                                                <Link href={`/feedback/${order.id}`}>
+                                                    Avaliar Agora
+                                                </Link>
+                                            </Button>
+                                        </div>
+                                    </div>
+                                )}
                             </AlertDescription>
                         </Alert>
 
@@ -329,6 +345,17 @@ export default async function ClientOrderPage({ params }: PageProps) {
                                     <span className="font-medium">{formatCurrency(order.labor_cost || 0)}</span>
                                 </div>
 
+                                {/* Discount Section */}
+                                {order.discount_amount > 0 && (
+                                    <div className="flex justify-between text-sm text-green-600">
+                                        <span className="flex items-center gap-1">
+                                            Desconto
+                                            {order.coupon_code && <span className="text-xs border border-green-200 bg-green-50 px-1 rounded uppercase">{order.coupon_code}</span>}
+                                        </span>
+                                        <span className="font-medium">- {formatCurrency(order.discount_amount)}</span>
+                                    </div>
+                                )}
+
                                 {hasParts && (
                                     <div className="flex justify-between text-sm">
                                         <span className="text-muted-foreground">Peças (você compra)</span>
@@ -340,7 +367,9 @@ export default async function ClientOrderPage({ params }: PageProps) {
 
                                 <div className="flex justify-between text-lg font-bold">
                                     <span>Total a Pagar</span>
-                                    <span className="text-primary">{formatCurrency(order.labor_cost || 0)}</span>
+                                    <span className="text-primary">
+                                        {formatCurrency((order.labor_cost || 0) - (order.discount_amount || 0))}
+                                    </span>
                                 </div>
 
                                 <p className="text-xs text-muted-foreground text-center pt-2">

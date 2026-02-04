@@ -31,6 +31,30 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        {/* Speculation Rules API para navegação instantânea */}
+        <script
+          type="speculationrules"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              prerender: [
+                {
+                  where: {
+                    href_matches: ["/login", "/signup/*"]
+                  },
+                  eagerness: "moderate"
+                }
+              ],
+              prefetch: [
+                {
+                  where: {
+                    href_matches: "/os/*"
+                  },
+                  eagerness: "moderate"
+                }
+              ]
+            })
+          }}
+        />
       </body>
     </html>
   );

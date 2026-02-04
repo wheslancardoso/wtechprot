@@ -387,7 +387,7 @@ function CheckinPageContent({ params }: { params: Promise<{ id: string }> }) {
                                             className="w-full h-12 text-base bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-900/10"
                                             onClick={() => {
                                                 const text = `Olá! Clique aqui para assinar o termo de retirada do seu equipamento: ${publicSignUrl}`
-                                                window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank')
+                                                window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank')
                                             }}
                                         >
                                             <Share2 className="mr-2 h-5 w-5" />
