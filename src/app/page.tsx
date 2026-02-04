@@ -16,34 +16,18 @@ const getTenantData = unstable_cache(
     try {
       const supabase = await createAdminClient()
 
-      // Lógica para pegar o tenant do último usuário logado
-      const { data: { users }, error: usersError } = await supabase.auth.admin.listUsers()
+      // Buscar tenant padrão diretamente pelo ID
+      const DEFAULT_TENANT_ID = '8132d666-06c0-46a7-b362-a30393be96c0'
 
-      let tenantEmail = null
+      const { data: tenant, error } = await supabase
+        .from('tenants')
+        .select('phone, trade_name')
+        .eq('id', DEFAULT_TENANT_ID)
+        .single()
 
-      if (!usersError && users?.length > 0) {
-        // Ordenar por último login (mais recente primeiro)
-        const lastUser = users.sort((a, b) => {
-          const dateA = new Date(a.last_sign_in_at || 0).getTime()
-          const dateB = new Date(b.last_sign_in_at || 0).getTime()
-          return dateB - dateA
-        })[0]
-
-        if (lastUser && lastUser.email) {
-          tenantEmail = lastUser.email
-        }
+      if (error) {
+        console.error('Erro ao buscar tenant padrão:', error)
       }
-
-      let query = supabase.from('tenants').select('phone, trade_name')
-
-      if (tenantEmail) {
-        query = query.eq('email', tenantEmail)
-      } else {
-        // Fallback: mais recente atualizado
-        query = query.order('updated_at', { ascending: false }).limit(1)
-      }
-
-      const { data: tenant } = await query.single()
 
       if (tenant) {
         if (tenant.phone) {
