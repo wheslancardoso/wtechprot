@@ -18,6 +18,10 @@ export const metadata: Metadata = {
     default: 'WTech',
   },
   description: "Gerenciamento inteligente de Ordens de Serviço",
+  icons: {
+    icon: '/favicon.jpg',
+    apple: '/favicon.jpg',
+  }
 };
 
 export default function RootLayout({
