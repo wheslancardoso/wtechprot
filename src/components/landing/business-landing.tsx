@@ -135,8 +135,6 @@ export function BusinessLanding() {
 
                     <div className="container relative mx-auto px-4">
                         <div className="max-w-3xl mx-auto text-center">
-                            <Shield className="w-4 h-4 text-blue-400" />
-                            Laboratório Técnico Especializado
                             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700/50 text-slate-300 text-sm font-medium mb-8">
                                 <Shield className="w-4 h-4 text-blue-400" />
                                 Laboratório Técnico Especializado
