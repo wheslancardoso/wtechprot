@@ -125,12 +125,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </div>
 
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 bg-gradient-to-br from-white via-white to-slate-500 bg-clip-text text-transparent animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
-              Seu PC, Notebook ou <br />
-              Impressora travou?
+              Assistência técnica para <br />
+              PC, Notebook e Impressora
             </h1>
 
             <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200">
-              Esqueça a assistência técnica genérica. Tenha um especialista focado em <b>Desktops, Notebooks e Impressoras</b> cuidando do seu equipamento.
+              Atendimento técnico especializado em <b>Desktops, Notebooks e Impressoras</b>. Diagnóstico profissional e suporte personalizado para seu equipamento.
             </p>
 
             <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
@@ -176,11 +176,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <div className="flex-1 space-y-6 text-center lg:text-left">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs font-medium text-blue-400 mb-2">
                   <Clock className="w-3 h-3" />
-                  Inovação Exclusiva
+                  Acompanhamento Online
                 </div>
                 <h2 className="text-3xl md:text-5xl font-bold leading-tight">
-                  Chega de ligar para <br />
-                  saber se está pronto.
+                  Acompanhe o status <br />
+                  do seu equipamento online.
                 </h2>
                 <p className="text-lg text-slate-400 leading-relaxed max-w-xl mx-auto lg:mx-0">
                   Nosso sistema de <b>Rastreamento em Tempo Real</b> permite que você acompanhe cada etapa do conserto pelo seu celular. Fotos do diagnóstico, aprovação de orçamento e aviso de conclusão.
@@ -303,8 +303,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 },
                 {
                   icon: ShieldCheck,
-                  title: 'Segurança Total',
-                  desc: 'Seus dados são sagrados. Utilizo protocolos de segurança e mantenho total sigilo sobre seus arquivos e senhas.'
+                  title: 'Proteção de Dados',
+                  desc: 'Seus dados são tratados com cuidado. Utilizo protocolos de segurança e privacidade para proteger seus arquivos e informações.'
                 }
               ].map((item, i) => (
                 <div key={i} className="group p-8 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-primary/50 hover:bg-white/[0.08] transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10">
@@ -359,7 +359,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         {/* CTA FINAL */}
         <section className="py-24 text-center">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">Seu computador precisa de ajuda?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">Entre em contato para um orçamento</h2>
             <p className="text-xl text-slate-400 mb-8 max-w-2xl mx-auto">
               Atendimento ágil, preço justo e transparência total.
             </p>
