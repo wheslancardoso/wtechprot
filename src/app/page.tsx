@@ -409,10 +409,21 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </li>
               </ul>
             </div>
+
+            <div>
+              <h4 className="font-bold text-white mb-4">Institucional</h4>
+              <ul className="space-y-2">
+                <li><Link href="/politica-privacidade" className="hover:text-primary">Política de Privacidade</Link></li>
+                <li><Link href="/termos-uso" className="hover:text-primary">Termos de Uso</Link></li>
+              </ul>
+            </div>
           </div>
 
           <div className="border-t border-white/5 pt-8 text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-4">
-            <p>© {new Date().getFullYear()} {brandName}. Todos os direitos reservados.</p>
+            <div className="space-y-1">
+              <p>© {new Date().getFullYear()} {brandName}. Todos os direitos reservados.</p>
+              <p className="text-xs text-slate-600">CNPJ: 64.928.869/0001-83</p>
+            </div>
           </div>
         </div>
       </footer>
