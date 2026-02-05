@@ -1,22 +1,10 @@
 'use client'
 
-import { usePathname } from 'next/navigation'
 import Script from 'next/script'
 
-// Rotas onde o GTM DEVE ser carregado (vitrine/ads)
-const ALLOWED_ROUTES = ['/', '/consultoria-para-empresas']
-
+// Componente simples sem verificação de rota
+// Será usado apenas nas páginas específicas que precisam de GTM
 export function GoogleTagManager() {
-    const pathname = usePathname()
-
-    // Verifica se está em rota permitida
-    const isAllowedRoute = ALLOWED_ROUTES.includes(pathname)
-
-    // Não renderiza GTM em rotas não permitidas
-    if (!isAllowedRoute) {
-        return null
-    }
-
     return (
         <Script
             id="gtm-script"
@@ -33,16 +21,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 }
 
 export function GoogleTagManagerNoScript() {
-    const pathname = usePathname()
-
-    // Verifica se está em rota permitida
-    const isAllowedRoute = ALLOWED_ROUTES.includes(pathname)
-
-    // Não renderiza GTM em rotas não permitidas
-    if (!isAllowedRoute) {
-        return null
-    }
-
     return (
         <noscript>
             <iframe
