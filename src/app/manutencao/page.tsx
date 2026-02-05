@@ -15,7 +15,7 @@ const getTenantData = unstable_cache(
   async () => {
     let whatsappNumber = '5561999999999' // Fallback
     let formattedPhone = '(61) 99999-9999'
-    let brandName = 'LAN.TECH' // Fallback Brand
+    let brandName = 'WFIX Tech' // Fallback Brand
 
     try {
       const supabase = await createAdminClient()

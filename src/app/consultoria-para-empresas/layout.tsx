@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Script from 'next/script'
 
 export const metadata: Metadata = {
-    title: 'WTECH Solutions | Gestão de TI e Infraestrutura Corporativa',
+    title: 'WFIX Tech Solutions | Gestão de TI e Infraestrutura Corporativa',
     description: 'Soluções corporativas de gestão de infraestrutura de TI para pequenas e médias empresas. Reduza custos e aumente produtividade com suporte especializado.',
     robots: 'noindex, nofollow', // Página ponte - não indexar
 }
@@ -46,7 +46,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                 W
                             </div>
                             <span className="font-bold text-xl tracking-tight text-slate-100">
-                                WTECH <span className="text-slate-400 font-normal">Solutions</span>
+                                WFIX Tech <span className="text-slate-400 font-normal">Solutions</span>
                             </span>
                         </div>
                     </div>
@@ -61,7 +61,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <footer className="bg-slate-900 border-t border-slate-800 py-10">
                     <div className="container mx-auto px-4 text-center">
                         <p className="text-sm text-slate-300 font-medium mb-2">
-                            WTECH Solutions Corporate - Soluções em Tecnologia
+                            WFIX Tech Solutions Corporate - Soluções em Tecnologia
                         </p>
                         <p className="text-xs text-slate-500 mb-3">
                             CNPJ: 64.928.869/0001-83

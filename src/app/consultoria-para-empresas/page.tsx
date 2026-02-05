@@ -175,7 +175,7 @@ export default function ConsultoriaPage() {
                     <div className="max-w-4xl mx-auto">
                         <div className="text-center mb-12">
                             <h2 className="text-2xl md:text-3xl font-bold text-slate-100 mb-4">
-                                Por Que Empresas Escolhem a WTECH
+                                Por Que Empresas Escolhem a WFIX Tech
                             </h2>
                             <p className="text-slate-400 text-lg max-w-2xl mx-auto">
                                 Comprometimento com resultados e atendimento profissional para o segmento corporativo.
@@ -200,7 +200,7 @@ export default function ConsultoriaPage() {
                         {/* Texto Corporativo */}
                         <div className="mt-16 p-8 rounded-2xl bg-slate-900/50 border border-slate-800">
                             <p className="text-slate-300 text-center leading-relaxed max-w-3xl mx-auto">
-                                A <strong className="text-slate-100">WTECH Solutions</strong> atua com foco em
+                                A <strong className="text-slate-100">WFIX Tech Solutions</strong> atua com foco em
                                 pequenas e médias empresas, oferecendo consultoria especializada em gestão de
                                 infraestrutura de TI. Nosso modelo de atendimento contempla tanto o suporte
                                 in-loco quanto laboratorial, sempre com emissão de <strong className="text-slate-100">nota fiscal</strong> e

@@ -109,7 +109,7 @@ export function BusinessLanding() {
                             {/* Fallback icon se não tiver logo */}
                             <Building2 className="w-6 h-6 text-blue-400" />
                         </div>
-                        <span>WTECH <span className="text-slate-500 text-sm font-normal">Corporativo</span></span>
+                        <span>WFIX Tech <span className="text-slate-500 text-sm font-normal">Corporativo</span></span>
                     </div>
 
                     <div className="flex items-center gap-4">
@@ -213,7 +213,7 @@ export function BusinessLanding() {
                         <div className="max-w-4xl mx-auto">
                             <div className="text-center mb-12">
                                 <h2 className="text-2xl md:text-3xl font-bold text-slate-100 mb-4">
-                                    Por Que Empresas Escolhem a WTECH
+                                    Por Que Empresas Escolhem a WFIX Tech
                                 </h2>
                                 <p className="text-slate-400 text-lg max-w-2xl mx-auto">
                                     Comprometimento com resultados e atendimento profissional para o segmento corporativo.
@@ -238,7 +238,7 @@ export function BusinessLanding() {
                             {/* Texto Corporativo */}
                             <div className="mt-16 p-8 rounded-2xl bg-slate-900/50 border border-slate-800">
                                 <p className="text-slate-300 text-center leading-relaxed max-w-3xl mx-auto">
-                                    A <strong className="text-slate-100">WTECH Solutions</strong> atua com foco em
+                                    A <strong className="text-slate-100">WFIX Tech Solutions</strong> atua com foco em
                                     pequenas e médias empresas, oferecendo consultoria especializada em gestão de
                                     infraestrutura de TI. Nosso modelo de atendimento contempla tanto o suporte
                                     in-loco quanto laboratorial, sempre com emissão de <strong className="text-slate-100">nota fiscal</strong> e
@@ -357,7 +357,7 @@ export function BusinessLanding() {
 
             <footer className="py-8 border-t border-white/5 bg-slate-950 text-slate-500 text-center text-sm">
                 <div className="container mx-auto px-4">
-                    <p>© {new Date().getFullYear()} WTECH Solutions. CNPJ: 64.928.869/0001-83</p>
+                    <p>© {new Date().getFullYear()} WFIX Tech Solutions. CNPJ: 64.928.869/0001-83</p>
                     <div className="flex justify-center gap-4 mt-4">
                         <Link href="/politica-privacidade" className="hover:text-white">Política de Privacidade</Link>
                         <Link href="/termos-uso" className="hover:text-white">Termos de Uso</Link>
