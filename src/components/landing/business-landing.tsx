@@ -11,46 +11,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 
-const services = [
-    {
-        icon: Server,
-        title: 'Gestão do Ciclo de Vida de Ativos',
-        description: 'Administramos todo o ciclo de vida dos equipamentos de TI da sua empresa, desde a aquisição até a desativação, garantindo máxima eficiência operacional.'
-    },
-    {
-        icon: Zap,
-        title: 'Otimização de Performance de Hardware',
-        description: 'Diagnóstico avançado e implementação de melhorias para que seus equipamentos operem com desempenho máximo e maior vida útil.'
-    },
-    {
-        icon: Shield,
-        title: 'Consultoria em Conectividade e Redes',
-        description: 'Análise, configuração e segurança da infraestrutura de rede corporativa para garantir conectividade estável e protegida.'
-    }
-]
 
-const differentials = [
-    {
-        icon: Clock,
-        title: 'Agilidade',
-        description: 'SLA definido com tempo de resposta reduzido para minimizar impacto operacional.'
-    },
-    {
-        icon: FileCheck,
-        title: 'Nota Fiscal',
-        description: 'Documentação fiscal completa para controle contábil e transparência.'
-    },
-    {
-        icon: Building2,
-        title: 'Atendimento In-Loco',
-        description: 'Suporte presencial no seu escritório ou em nosso laboratório especializado.'
-    },
-    {
-        icon: Users,
-        title: 'Equipe Especializada',
-        description: 'Profissionais certificados com foco em infraestrutura corporativa.'
-    }
-]
 
 export function BusinessLanding() {
     const [formData, setFormData] = useState({
