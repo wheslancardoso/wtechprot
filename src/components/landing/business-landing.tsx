@@ -134,19 +134,19 @@ export function BusinessLanding() {
                     <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-transparent" />
 
                     <div className="container relative mx-auto px-4">
-                        <div className="max-w-3xl mx-auto text-center">
+                        <div className="max-w-4xl mx-auto text-center">
                             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700/50 text-slate-300 text-sm font-medium mb-8">
                                 <Shield className="w-4 h-4 text-blue-400" />
-                                Laboratório Técnico Especializado
+                                Gestão de Ativos e Infraestrutura de TI
                             </div>
 
-                            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6 text-slate-100 leading-tight">
-                                Soluções Técnicas em Informática e Infraestrutura de TI
+                            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-8 text-slate-100 leading-tight">
+                                Soluções Avançadas para Gestão de Hardware e Sustentação Tecnológica
                             </h1>
 
                             <p className="text-lg md:text-xl text-slate-400 mb-10 max-w-2xl mx-auto leading-relaxed">
-                                Diagnóstico avançado, manutenção de hardware de alta performance e consultoria em sistemas.
-                                Atendimento especializado em laboratório ou presencial para demandas críticas.
+                                Diagnóstico laboratorial, restauração de performance e consultoria em ciclo de vida de equipamentos.
+                                Atuamos na resolução de incidentes críticos para infraestruturas corporativas e home office.
                             </p>
 
                             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -158,7 +158,7 @@ export function BusinessLanding() {
                                 >
                                     <Link href="/manutencao">
                                         <Zap className="mr-2 w-5 h-5" />
-                                        Atendimento Imediato
+                                        Agendar Diagnóstico Técnico
                                     </Link>
                                 </Button>
                                 <Button
@@ -167,84 +167,122 @@ export function BusinessLanding() {
                                     onClick={scrollToForm}
                                     className="border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white px-8 py-6 text-lg rounded-lg w-full sm:w-auto"
                                 >
-                                    Falar com um Consultor
+                                    Falar com um Especialista
                                 </Button>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                {/* SERVIÇOS */}
+                {/* SERVIÇOS - Transformação Semântica */}
                 <section className="py-20 bg-slate-900/30 border-y border-white/5">
                     <div className="container mx-auto px-4">
                         <div className="text-center mb-16">
                             <h2 className="text-2xl md:text-3xl font-bold text-slate-100 mb-4">
-                                Nossas Soluções Corporativas
+                                Catálogo de Soluções Técnicas
                             </h2>
                             <p className="text-slate-400 text-lg max-w-2xl mx-auto">
-                                Serviços especializados para otimizar a infraestrutura de TI do seu negócio.
+                                Metodologia proprietária WFIX Tech para maximizar a disponibilidade dos seus ativos digitais.
                             </p>
                         </div>
 
                         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                            {services.map((service, index) => (
-                                <Card
-                                    key={index}
-                                    className="bg-slate-900/50 border-slate-800 hover:border-blue-900/50 transition-all duration-300 hover:-translate-y-1"
-                                >
-                                    <CardHeader>
-                                        <div className="w-14 h-14 rounded-lg bg-slate-800/50 flex items-center justify-center mb-4 border border-slate-700">
-                                            <service.icon className="w-7 h-7 text-blue-400" />
-                                        </div>
-                                        <CardTitle className="text-slate-100 text-lg">{service.title}</CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <CardDescription className="text-slate-400 text-sm leading-relaxed">
-                                            {service.description}
-                                        </CardDescription>
-                                    </CardContent>
-                                </Card>
-                            ))}
+                            <Card className="bg-slate-900/50 border-slate-800 hover:border-blue-900/50 transition-all duration-300 hover:-translate-y-1">
+                                <CardHeader>
+                                    <div className="w-14 h-14 rounded-lg bg-slate-800/50 flex items-center justify-center mb-4 border border-slate-700">
+                                        <Server className="w-7 h-7 text-blue-400" />
+                                    </div>
+                                    <CardTitle className="text-slate-100 text-lg">Otimização de Sistemas e Performance</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <CardDescription className="text-slate-400 text-sm leading-relaxed">
+                                        Restauramos a eficiência operacional de estações de trabalho através de reinstalação limpa de imagem corporativa, remoção de bloatware e calibração de drivers.
+                                    </CardDescription>
+                                </CardContent>
+                            </Card>
+
+                            <Card className="bg-slate-900/50 border-slate-800 hover:border-blue-900/50 transition-all duration-300 hover:-translate-y-1">
+                                <CardHeader>
+                                    <div className="w-14 h-14 rounded-lg bg-slate-800/50 flex items-center justify-center mb-4 border border-slate-700">
+                                        <Zap className="w-7 h-7 text-blue-400" />
+                                    </div>
+                                    <CardTitle className="text-slate-100 text-lg">Upgrade e Substituição de Hardware</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <CardDescription className="text-slate-400 text-sm leading-relaxed">
+                                        Substituição de componentes críticos (Armazenamento, Memória, Fontes) para estender a vida útil do equipamento e evitar CAPEX desnecessário com máquinas novas.
+                                    </CardDescription>
+                                </CardContent>
+                            </Card>
+
+                            <Card className="bg-slate-900/50 border-slate-800 hover:border-blue-900/50 transition-all duration-300 hover:-translate-y-1">
+                                <CardHeader>
+                                    <div className="w-14 h-14 rounded-lg bg-slate-800/50 flex items-center justify-center mb-4 border border-slate-700">
+                                        <Shield className="w-7 h-7 text-blue-400" />
+                                    </div>
+                                    <CardTitle className="text-slate-100 text-lg">Manutenção Preventiva e Higienização</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <CardDescription className="text-slate-400 text-sm leading-relaxed">
+                                        Limpeza química de componentes internos, troca de pasta térmica de alta condutividade e checklist de integridade para prevenção de falhas térmicas.
+                                    </CardDescription>
+                                </CardContent>
+                            </Card>
                         </div>
                     </div>
                 </section>
 
-                {/* SOBRE / DIFERENCIAIS */}
+                {/* DIFERENCIAIS */}
                 <section className="py-20">
                     <div className="container mx-auto px-4">
                         <div className="max-w-4xl mx-auto">
                             <div className="text-center mb-12">
                                 <h2 className="text-2xl md:text-3xl font-bold text-slate-100 mb-4">
-                                    Por Que Empresas Escolhem a WFIX Tech
+                                    Por Que Escolher a WFIX Tech
                                 </h2>
                                 <p className="text-slate-400 text-lg max-w-2xl mx-auto">
-                                    Comprometimento com resultados e atendimento profissional para o segmento corporativo.
+                                    Segurança jurídica, técnica e fiscal para sua demanda.
                                 </p>
                             </div>
 
                             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                                {differentials.map((item, index) => (
-                                    <div
-                                        key={index}
-                                        className="p-6 rounded-xl bg-slate-900/40 border border-slate-800/50 text-center hover:bg-slate-800/40 transition-colors"
-                                    >
-                                        <div className="w-12 h-12 rounded-lg bg-slate-800 flex items-center justify-center mx-auto mb-4">
-                                            <item.icon className="w-5 h-5 text-blue-400" />
-                                        </div>
-                                        <h3 className="text-slate-100 font-semibold mb-2">{item.title}</h3>
-                                        <p className="text-slate-500 text-sm leading-relaxed">{item.description}</p>
+                                <div className="p-6 rounded-xl bg-slate-900/40 border border-slate-800/50 text-center hover:bg-slate-800/40 transition-colors">
+                                    <div className="w-12 h-12 rounded-lg bg-slate-800 flex items-center justify-center mx-auto mb-4">
+                                        <Clock className="w-5 h-5 text-blue-400" />
                                     </div>
-                                ))}
+                                    <h3 className="text-slate-100 font-semibold mb-2">SLA Ágil</h3>
+                                    <p className="text-slate-500 text-sm leading-relaxed">Diagnóstico rápido para minimizar downtime.</p>
+                                </div>
+                                <div className="p-6 rounded-xl bg-slate-900/40 border border-slate-800/50 text-center hover:bg-slate-800/40 transition-colors">
+                                    <div className="w-12 h-12 rounded-lg bg-slate-800 flex items-center justify-center mx-auto mb-4">
+                                        <FileCheck className="w-5 h-5 text-blue-400" />
+                                    </div>
+                                    <h3 className="text-slate-100 font-semibold mb-2">Nota Fiscal</h3>
+                                    <p className="text-slate-500 text-sm leading-relaxed">Total transparência e compliance fiscal.</p>
+                                </div>
+                                <div className="p-6 rounded-xl bg-slate-900/40 border border-slate-800/50 text-center hover:bg-slate-800/40 transition-colors">
+                                    <div className="w-12 h-12 rounded-lg bg-slate-800 flex items-center justify-center mx-auto mb-4">
+                                        <Building2 className="w-5 h-5 text-blue-400" />
+                                    </div>
+                                    <h3 className="text-slate-100 font-semibold mb-2">Laboratório Próprio</h3>
+                                    <p className="text-slate-500 text-sm leading-relaxed">Ambiente controlado anti-estático (ESD).</p>
+                                </div>
+                                <div className="p-6 rounded-xl bg-slate-900/40 border border-slate-800/50 text-center hover:bg-slate-800/40 transition-colors">
+                                    <div className="w-12 h-12 rounded-lg bg-slate-800 flex items-center justify-center mx-auto mb-4">
+                                        <CheckCircle2 className="w-5 h-5 text-blue-400" />
+                                    </div>
+                                    <h3 className="text-slate-100 font-semibold mb-2">Peças Originais</h3>
+                                    <p className="text-slate-500 text-sm leading-relaxed">Procedência garantida e garantia balcão.</p>
+                                </div>
                             </div>
 
                             {/* Texto Corporativo */}
                             <div className="mt-16 p-8 rounded-2xl bg-slate-900/50 border border-slate-800">
                                 <p className="text-slate-300 text-center leading-relaxed max-w-3xl mx-auto">
-                                    A <strong className="text-slate-100">WFIX Tech Solutions</strong> atua com foco em
-                                    pequenas e médias empresas, oferecendo consultoria especializada em gestão de
-                                    infraestrutura de TI. Nosso modelo de atendimento contempla tanto o suporte
-                                    in-loco quanto laboratorial, sempre com emissão de <strong className="text-slate-100">nota fiscal</strong> e
-                                    relatórios detalhados para seu controle gerencial.
+                                    A <strong className="text-slate-100">WFIX Tech Solutions</strong> oferece consultoria técnica especializada em hardware.
+                                    Atendemos demandas de <strong className="text-slate-100">manutenção corretiva e evolutiva</strong> para
+                                    Pequenas Empresas e profissionais em regime de <strong className="text-slate-100">Home Office</strong>.
+                                    Todo serviço acompanha laudo técnico e garantia legal.
                                 </p>
                             </div>
                         </div>
