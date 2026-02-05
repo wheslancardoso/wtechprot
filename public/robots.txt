@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Allow: /manutencao
+Allow: /consultoria-para-empresas
+Allow: /politica-privacidade
+Allow: /termos-uso
+Disallow: /dashboard/
+Disallow: /os/
+Disallow: /api/
+Disallow: /auth/
+Disallow: /_next/

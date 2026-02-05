@@ -15,9 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: {
     template: '%s',
-    default: 'WTech',
+    default: 'WFIX Tech',
   },
-  description: "Gerenciamento inteligente de Ordens de Serviço",
+  description: "Consultoria e Soluções em Tecnologia da Informação",
 };
 
 export default function RootLayout({
