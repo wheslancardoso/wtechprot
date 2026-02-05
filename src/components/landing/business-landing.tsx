@@ -109,7 +109,7 @@ export function BusinessLanding() {
                             {/* Fallback icon se não tiver logo */}
                             <Building2 className="w-6 h-6 text-blue-400" />
                         </div>
-                        <span>WFIX Tech <span className="text-slate-500 text-sm font-normal">Corporativo</span></span>
+                        <span>WFIX Tech <span className="text-slate-500 text-sm font-normal">Solutions</span></span>
                     </div>
 
                     <div className="flex items-center gap-4">
@@ -135,37 +135,38 @@ export function BusinessLanding() {
 
                     <div className="container relative mx-auto px-4">
                         <div className="max-w-3xl mx-auto text-center">
-                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700/50 text-slate-300 text-sm font-medium mb-8">
-                                <Building2 className="w-4 h-4 text-blue-400" />
-                                Soluções para PMEs
+                                <Shield className="w-4 h-4 text-blue-400" />
+                                Laboratório Técnico Especializado
                             </div>
 
                             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6 text-slate-100 leading-tight">
-                                Gestão Inteligente de Infraestrutura de TI para Pequenas e Médias Empresas
+                                Soluções Técnicas em Informática e Infraestrutura de TI
                             </h1>
 
                             <p className="text-lg md:text-xl text-slate-400 mb-10 max-w-2xl mx-auto leading-relaxed">
-                                Reduza custos e aumente a produtividade da sua equipe com nosso
-                                suporte especializado em gestão de ativos e infraestrutura corporativa.
+                                Diagnóstico avançado, manutenção de hardware de alta performance e consultoria em sistemas.
+                                Atendimento especializado em laboratório ou presencial para demandas críticas.
                             </p>
 
                             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                                 <Button
                                     size="lg"
-                                    onClick={scrollToForm}
-                                    className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-6 text-lg font-semibold rounded-lg shadow-lg shadow-blue-900/20 transition-all hover:shadow-xl w-full sm:w-auto"
+                                    asChild
+                                    className="bg-green-600 hover:bg-green-500 text-white px-8 py-6 text-lg font-semibold rounded-lg shadow-lg shadow-green-900/20 transition-all hover:shadow-xl w-full sm:w-auto"
+                                    id="cta-whatsapp"
                                 >
-                                    Solicitar Análise de Infraestrutura
+                                    <Link href="/manutencao">
+                                        <Zap className="mr-2 w-5 h-5" />
+                                        Atendimento Imediato
+                                    </Link>
                                 </Button>
                                 <Button
                                     variant="outline"
                                     size="lg"
-                                    asChild
+                                    onClick={scrollToForm}
                                     className="border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white px-8 py-6 text-lg rounded-lg w-full sm:w-auto"
                                 >
-                                    <Link href="/manutencao">
-                                        Serviços Residenciais <ArrowRight className="ml-2 w-4 h-4" />
-                                    </Link>
+                                    Falar com um Consultor
                                 </Button>
                             </div>
                         </div>
@@ -365,6 +366,6 @@ export function BusinessLanding() {
                     </div>
                 </div>
             </footer>
-        </div>
+        </div >
     )
 }
