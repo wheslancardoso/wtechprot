@@ -136,7 +136,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Button size="lg" className="h-14 px-8 text-lg rounded-full w-full sm:w-auto shadow-xl shadow-primary/20 bg-primary hover:bg-primary/90 text-primary-foreground transition-all transform hover:scale-105" asChild>
-                  <Link href={whatsappLink} target="_blank">
+                  <Link href={whatsappLink} target="_blank" id="cta-whatsapp-hero">
                     <MessageCircle className="mr-2 h-5 w-5" />
                     Falar com Técnico no WhatsApp
                   </Link>
@@ -365,7 +365,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button size="lg" className="h-14 px-8 text-lg rounded-full w-full sm:w-auto shadow-xl shadow-primary/20" asChild>
-                <Link href={whatsappLink} target="_blank">
+                <Link href={whatsappLink} target="_blank" id="cta-whatsapp-footer">
                   <MessageCircle className="mr-2 h-5 w-5" />
                   Falar com o Técnico
                 </Link>
