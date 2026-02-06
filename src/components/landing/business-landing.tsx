@@ -169,11 +169,11 @@ export function BusinessLanding() {
                                     <div className="w-14 h-14 rounded-lg bg-slate-800/50 flex items-center justify-center mb-4 border border-slate-700">
                                         <Zap className="w-7 h-7 text-blue-400" />
                                     </div>
-                                    <CardTitle className="text-slate-100 text-lg">Upgrade e Substituição de Hardware</CardTitle>
+                                    <CardTitle className="text-slate-100 text-lg">Modernização de Infraestrutura de Hardware</CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <CardDescription className="text-slate-400 text-sm leading-relaxed">
-                                        Substituição de componentes críticos (Armazenamento, Memória, Fontes) para estender a vida útil do equipamento e evitar CAPEX desnecessário com máquinas novas.
+                                        Atualização de componentes críticos para estender o ciclo de vida dos ativos e evitar CAPEX desnecessário com novas aquisições.
                                     </CardDescription>
                                 </CardContent>
                             </Card>
@@ -187,7 +187,7 @@ export function BusinessLanding() {
                                 </CardHeader>
                                 <CardContent>
                                     <CardDescription className="text-slate-400 text-sm leading-relaxed">
-                                        Limpeza química de componentes internos, troca de pasta térmica de alta condutividade e checklist de integridade para prevenção de falhas térmicas.
+                                        Procedimentos técnicos para componentes internos, aplicação de condutores térmicos de alta performance e checklist de integridade.
                                     </CardDescription>
                                 </CardContent>
                             </Card>
@@ -234,7 +234,7 @@ export function BusinessLanding() {
                                     <div className="w-12 h-12 rounded-lg bg-slate-800 flex items-center justify-center mx-auto mb-4">
                                         <CheckCircle2 className="w-5 h-5 text-blue-400" />
                                     </div>
-                                    <h3 className="text-slate-100 font-semibold mb-2">Peças Originais</h3>
+                                    <h3 className="text-slate-100 font-semibold mb-2">Hardware Certificado</h3>
                                     <p className="text-slate-500 text-sm leading-relaxed">Procedência garantida e garantia balcão.</p>
                                 </div>
                             </div>
@@ -243,7 +243,7 @@ export function BusinessLanding() {
                             <div className="mt-16 p-8 rounded-2xl bg-slate-900/50 border border-slate-800">
                                 <p className="text-slate-300 text-center leading-relaxed max-w-3xl mx-auto">
                                     A <strong className="text-slate-100">WFIX Tech Solutions</strong> oferece consultoria técnica especializada em hardware.
-                                    Atendemos demandas de <strong className="text-slate-100">manutenção corretiva e evolutiva</strong> para
+                                    Atendemos demandas de <strong className="text-slate-100">sustentação e modernização</strong> para
                                     Pequenas Empresas e profissionais em regime de <strong className="text-slate-100">Home Office</strong>.
                                     Todo serviço acompanha laudo técnico e garantia legal.
                                 </p>
@@ -361,10 +361,11 @@ export function BusinessLanding() {
             <footer className="py-8 border-t border-white/5 bg-slate-950 text-slate-500 text-center text-sm">
                 <div className="container mx-auto px-4">
                     <p>© {new Date().getFullYear()} WFIX Tech Solutions. CNPJ: 64.928.869/0001-83</p>
+                    <p className="text-xs text-slate-600 mt-2 italic">Atendimento exclusivo para Soluções Corporativas (B2B)</p>
                     <div className="flex justify-center gap-4 mt-4">
                         <Link href="/politica-privacidade" className="hover:text-white">Política de Privacidade</Link>
                         <Link href="/termos-uso" className="hover:text-white">Termos de Uso</Link>
-                        <Link href="/manutencao" className="hover:text-white">Manutenção Residencial</Link>
+                        {/* <Link href="/manutencao" className="hover:text-white">Manutenção Residencial</Link> */}
                     </div>
                 </div>
             </footer>
