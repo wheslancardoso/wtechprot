@@ -254,6 +254,52 @@ export function BusinessLanding() {
                     </div>
                 </section>
 
+                {/* PERGUNTAS FREQUENTES */}
+                <section className="py-20 bg-slate-900/30">
+                    <div className="container mx-auto px-4">
+                        <div className="max-w-3xl mx-auto">
+                            <div className="text-center mb-12">
+                                <h2 className="text-2xl md:text-3xl font-bold text-slate-100 mb-4">
+                                    Perguntas Frequentes
+                                </h2>
+                                <p className="text-slate-400 text-lg max-w-2xl mx-auto">
+                                    Dúvidas comuns sobre nosso modelo de atuação corporativa.
+                                </p>
+                            </div>
+
+                            <div className="space-y-6">
+                                <div className="p-6 rounded-xl bg-slate-950 border border-slate-800">
+                                    <h3 className="text-slate-100 font-semibold mb-2">Qual o SLA para atendimento crítico?</h3>
+                                    <p className="text-slate-400 text-sm leading-relaxed">
+                                        Para contratos corporativos, garantimos atendimento in-loco ou remoto em até 4 horas úteis para paradas críticas, assegurando a continuidade do seu negócio.
+                                    </p>
+                                </div>
+
+                                <div className="p-6 rounded-xl bg-slate-950 border border-slate-800">
+                                    <h3 className="text-slate-100 font-semibold mb-2">Vocês atendem por demanda ou apenas contrato?</h3>
+                                    <p className="text-slate-400 text-sm leading-relaxed">
+                                        Trabalhamos com ambos os modelos. Oferecemos tanto gestão mensal de parque tecnológico (MSP) quanto atendimentos pontuais para diagnósticos e correções específicas, sempre com faturamento PJ.
+                                    </p>
+                                </div>
+
+                                <div className="p-6 rounded-xl bg-slate-950 border border-slate-800">
+                                    <h3 className="text-slate-100 font-semibold mb-2">Emitem Nota Fiscal e Laudo Técnico?</h3>
+                                    <p className="text-slate-400 text-sm leading-relaxed">
+                                        Sim. Todos os serviços são faturados com Nota Fiscal de Serviço (NFS-e) e acompanham Laudo Técnico detalhado sobre os procedimentos realizados para fins de auditoria e compliance.
+                                    </p>
+                                </div>
+
+                                <div className="p-6 rounded-xl bg-slate-950 border border-slate-800">
+                                    <h3 className="text-slate-100 font-semibold mb-2">Atendem a Lei Geral de Proteção de Dados (LGPD)?</h3>
+                                    <p className="text-slate-400 text-sm leading-relaxed">
+                                        Absolutamente. Nossos processos de recuperação e migração de dados seguem estritos protocolos de confidencialidade e segurança, garantindo a integridade das informações da sua empresa.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
                 {/* FORMULÁRIO DE CONTATO */}
                 <section id="contato" className="py-20 bg-slate-900/30 border-t border-white/5">
                     <div className="container mx-auto px-4">
