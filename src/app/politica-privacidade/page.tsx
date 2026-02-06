@@ -2,8 +2,8 @@ import { ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
 
 export const metadata = {
-    title: 'Política de Privacidade | WTECH',
-    description: 'Política de Privacidade da WTECH - Assistência técnica especializada em computadores, notebooks e impressoras.',
+    title: 'Política de Privacidade | WFIX Tech',
+    description: 'Política de Privacidade da WFIX Tech - Soluções em Gestão de TI e Consultoria Corporativa.',
 }
 
 export default function PoliticaPrivacidadePage() {
@@ -25,7 +25,7 @@ export default function PoliticaPrivacidadePage() {
                     <section className="space-y-4">
                         <h2 className="text-xl font-semibold text-white">1. Informações que coletamos</h2>
                         <p className="text-slate-300 leading-relaxed">
-                            Coletamos informações que você nos fornece diretamente, como nome, telefone, e-mail e dados sobre seu equipamento quando você solicita um orçamento ou serviço de assistência técnica.
+                            Coletamos informações que você nos fornece diretamente, como nome, telefone, e-mail e dados sobre seu equipamento quando você solicita uma proposta ou serviço de suporte corporativo.
                         </p>
                     </section>
 
@@ -35,9 +35,9 @@ export default function PoliticaPrivacidadePage() {
                             Utilizamos suas informações para:
                         </p>
                         <ul className="list-disc list-inside text-slate-300 space-y-2 ml-4">
-                            <li>Prestar os serviços de assistência técnica solicitados</li>
-                            <li>Entrar em contato sobre o andamento do seu equipamento</li>
-                            <li>Enviar orçamentos e documentação relacionada ao serviço</li>
+                            <li>Prestar os serviços de suporte e gestão de TI contratados</li>
+                            <li>Entrar em contato sobre o status das solicitações</li>
+                            <li>Enviar propostas e documentação técnica relacionada</li>
                             <li>Melhorar nossos serviços e atendimento</li>
                         </ul>
                     </section>
@@ -52,7 +52,7 @@ export default function PoliticaPrivacidadePage() {
                     <section className="space-y-4">
                         <h2 className="text-xl font-semibold text-white">4. Compartilhamento de informações</h2>
                         <p className="text-slate-300 leading-relaxed">
-                            Não vendemos, alugamos ou compartilhamos suas informações pessoais com terceiros para fins de marketing. Podemos compartilhar informações quando necessário para a prestação do serviço (ex: envio de peças) ou quando exigido por lei.
+                            Não vendemos, alugamos ou compartilhamos suas informações pessoais com terceiros para fins de marketing. Podemos compartilhar informações quando necessário para a prestação do serviço (ex: logística de hardware) ou quando exigido por lei.
                         </p>
                     </section>
 
@@ -72,7 +72,7 @@ export default function PoliticaPrivacidadePage() {
                 </div>
 
                 <div className="mt-12 pt-8 border-t border-white/10 text-sm text-slate-500">
-                    <p>WTECH - CNPJ: 64.928.869/0001-83</p>
+                    <p>WFIX Tech - CNPJ: 64.928.869/0001-83</p>
                 </div>
             </div>
         </div>

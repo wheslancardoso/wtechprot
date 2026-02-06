@@ -7,7 +7,7 @@ DO $$
 DECLARE
     max_id INT;
 BEGIN
-    SELECT COALESCE(MAX(display_id), 0) INTO max_id FROM orders;
+    SELECT COALESCE(MAX(CAST(SUBSTRING(display_id FROM '[0-9]+$') AS INTEGER)), 0) INTO max_id FROM orders;
     
     -- 2. Atualiza a sequência para esse valor
     -- O próximo ID gerado será (max_id + 1)

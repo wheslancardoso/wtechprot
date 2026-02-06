@@ -2,8 +2,8 @@ import { ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
 
 export const metadata = {
-    title: 'Termos de Uso | WTECH',
-    description: 'Termos de Uso da WTECH - Assistência técnica especializada em computadores, notebooks e impressoras.',
+    title: 'Termos de Uso | WFIX Tech',
+    description: 'Termos de Uso da WFIX Tech - Soluções em Gestão de TI e Consultoria Corporativa.',
 }
 
 export default function TermosUsoPage() {
@@ -25,21 +25,21 @@ export default function TermosUsoPage() {
                     <section className="space-y-4">
                         <h2 className="text-xl font-semibold text-white">1. Aceitação dos Termos</h2>
                         <p className="text-slate-300 leading-relaxed">
-                            Ao utilizar nossos serviços de assistência técnica, você concorda com estes Termos de Uso. Se não concordar com algum termo, recomendamos que não utilize nossos serviços.
+                            Ao utilizar nossos serviços de gestão e suporte de TI, você concorda com estes Termos de Uso. Se não concordar com algum termo, recomendamos que não utilize nossos serviços.
                         </p>
                     </section>
 
                     <section className="space-y-4">
                         <h2 className="text-xl font-semibold text-white">2. Serviços Oferecidos</h2>
                         <p className="text-slate-300 leading-relaxed">
-                            A WTECH oferece serviços de assistência técnica para computadores, notebooks e impressoras, incluindo diagnóstico, manutenção preventiva e corretiva, upgrade de componentes e suporte técnico.
+                            A WFIX Tech oferece serviços de gestão de ativos para computadores, notebooks e impressoras, incluindo diagnóstico, monitoramento, suporte técnico e atualização de infraestrutura.
                         </p>
                     </section>
 
                     <section className="space-y-4">
-                        <h2 className="text-xl font-semibold text-white">3. Orçamentos e Aprovação</h2>
+                        <h2 className="text-xl font-semibold text-white">3. Propostas e Validação</h2>
                         <p className="text-slate-300 leading-relaxed">
-                            Os orçamentos são enviados por meios digitais e devem ser aprovados antes da execução do serviço. O cliente acompanha o andamento através do sistema de rastreamento online.
+                            As propostas comerciais são enviadas por meios digitais e devem ser aprovadas antes da execução do serviço. O cliente acompanha o andamento através do sistema de rastreamento online.
                         </p>
                     </section>
 
@@ -53,14 +53,14 @@ export default function TermosUsoPage() {
                     <section className="space-y-4">
                         <h2 className="text-xl font-semibold text-white">5. Responsabilidades do Cliente</h2>
                         <p className="text-slate-300 leading-relaxed">
-                            O cliente é responsável por fornecer informações corretas sobre o equipamento e o problema relatado, assim como realizar backup de seus dados antes de entregar o equipamento para manutenção.
+                            O cliente é responsável por fornecer informações corretas sobre o equipamento e a solicitação, assim como realizar backup de seus dados antes de entregar o equipamento para análise técnica.
                         </p>
                     </section>
 
                     <section className="space-y-4">
                         <h2 className="text-xl font-semibold text-white">6. Pagamento</h2>
                         <p className="text-slate-300 leading-relaxed">
-                            O pagamento é realizado no momento da entrega do equipamento. Aceitamos diversas formas de pagamento conforme informado no orçamento.
+                            O pagamento é realizado no momento da entrega/conclusão. Aceitamos diversas formas de pagamento conforme informado na proposta comercial.
                         </p>
                     </section>
 
@@ -80,7 +80,7 @@ export default function TermosUsoPage() {
                 </div>
 
                 <div className="mt-12 pt-8 border-t border-white/10 text-sm text-slate-500">
-                    <p>WTECH - CNPJ: 64.928.869/0001-83</p>
+                    <p>WFIX Tech - CNPJ: 64.928.869/0001-83</p>
                 </div>
             </div>
         </div>
