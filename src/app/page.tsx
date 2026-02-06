@@ -104,7 +104,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-400">
             <Link href="#solucoes" className="hover:text-white transition-colors">Soluções</Link>
             <Link href="#diferenciais" className="hover:text-white transition-colors">Diferenciais Corporativos</Link>
-            <Link href="/" className="hover:text-blue-400 transition-colors font-semibold border border-blue-500/30 rounded-full px-3 py-1 bg-blue-500/10">Área do Cliente</Link>
           </nav>
         </div>
       </header>
@@ -292,14 +291,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-              {/* Feature 1: Rastreamento */}
-              <div className="group p-6 rounded-2xl bg-gradient-to-br from-blue-500/10 to-transparent border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300 hover:-translate-y-1">
-                <div className="w-12 h-12 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <Clock className="w-6 h-6" />
+              {/* Feature 1: Check-in com Fotos */}
+              <div className="group p-6 rounded-2xl bg-gradient-to-br from-cyan-500/10 to-transparent border border-cyan-500/20 hover:border-cyan-500/40 transition-all duration-300 hover:-translate-y-1">
+                <div className="w-12 h-12 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <Smartphone className="w-6 h-6" />
                 </div>
-                <h3 className="text-lg font-bold text-white mb-2">Rastreamento ao Vivo</h3>
+                <h3 className="text-lg font-bold text-white mb-2">Check-in com Fotos</h3>
                 <p className="text-sm text-slate-400 leading-relaxed">
-                  Seu colaborador acessa uma timeline interativa e vê cada etapa do chamado: "Em Análise", "Em Execução", "Finalizado".
+                  Registro fotográfico obrigatório no recebimento e na entrega. Evidências para auditoria e prestação de contas.
                 </p>
               </div>
 
@@ -308,9 +307,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <div className="w-12 h-12 rounded-xl bg-green-500/20 text-green-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                   <CheckCircle2 className="w-6 h-6" />
                 </div>
-                <h3 className="text-lg font-bold text-white mb-2">Aprovação de Proposta</h3>
+                <h3 className="text-lg font-bold text-white mb-2">Aprovação Digital</h3>
                 <p className="text-sm text-slate-400 leading-relaxed">
-                  Antes de qualquer intervenção, o gestor recebe um link para revisar custos, aceitar os termos e aprovar digitalmente.
+                  Antes de qualquer intervenção, o gestor autoriza via link. Aceite de termos e confirmação digital registrados.
                 </p>
               </div>
 
