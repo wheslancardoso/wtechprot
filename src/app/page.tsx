@@ -281,6 +281,77 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           </div>
         </section>
 
+        {/* EXPERIÊNCIA DO CLIENTE (Client-Facing Features) */}
+        <section className="py-24 bg-slate-950 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
+
+          <div className="container relative mx-auto px-4">
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-xs font-medium text-primary mb-4">
+                <FileText className="w-3 h-3" /> Plataforma Digital
+              </div>
+              <h2 className="text-3xl font-bold mb-4">Transparência Total para Sua Empresa</h2>
+              <p className="text-slate-400">Seu gestor de TI acompanha todo o processo em tempo real. Sem surpresas, sem ligações desnecessárias.</p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+              {/* Feature 1: Rastreamento */}
+              <div className="group p-6 rounded-2xl bg-gradient-to-br from-blue-500/10 to-transparent border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300 hover:-translate-y-1">
+                <div className="w-12 h-12 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <Clock className="w-6 h-6" />
+                </div>
+                <h3 className="text-lg font-bold text-white mb-2">Rastreamento ao Vivo</h3>
+                <p className="text-sm text-slate-400 leading-relaxed">
+                  Seu colaborador acessa uma timeline interativa e vê cada etapa do chamado: "Em Análise", "Em Execução", "Finalizado".
+                </p>
+              </div>
+
+              {/* Feature 2: Aprovação Digital */}
+              <div className="group p-6 rounded-2xl bg-gradient-to-br from-green-500/10 to-transparent border border-green-500/20 hover:border-green-500/40 transition-all duration-300 hover:-translate-y-1">
+                <div className="w-12 h-12 rounded-xl bg-green-500/20 text-green-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <CheckCircle2 className="w-6 h-6" />
+                </div>
+                <h3 className="text-lg font-bold text-white mb-2">Aprovação de Orçamento</h3>
+                <p className="text-sm text-slate-400 leading-relaxed">
+                  Antes de qualquer intervenção, o gestor recebe um link para revisar custos, aceitar os termos e aprovar digitalmente.
+                </p>
+              </div>
+
+              {/* Feature 3: Assinatura Digital */}
+              <div className="group p-6 rounded-2xl bg-gradient-to-br from-purple-500/10 to-transparent border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300 hover:-translate-y-1">
+                <div className="w-12 h-12 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <UserCheck className="w-6 h-6" />
+                </div>
+                <h3 className="text-lg font-bold text-white mb-2">Assinatura Digital</h3>
+                <p className="text-sm text-slate-400 leading-relaxed">
+                  Na retirada, o cliente confirma o recebimento com assinatura digital no próprio celular. Tudo registrado e auditável.
+                </p>
+              </div>
+
+              {/* Feature 4: PDF Oficial */}
+              <div className="group p-6 rounded-2xl bg-gradient-to-br from-amber-500/10 to-transparent border border-amber-500/20 hover:border-amber-500/40 transition-all duration-300 hover:-translate-y-1">
+                <div className="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <FileText className="w-6 h-6" />
+                </div>
+                <h3 className="text-lg font-bold text-white mb-2">Laudo em PDF</h3>
+                <p className="text-sm text-slate-400 leading-relaxed">
+                  Download instantâneo do relatório com fotos, diagnóstico e termo de garantia. Perfeito para auditorias internas.
+                </p>
+              </div>
+            </div>
+
+            {/* Bottom CTA */}
+            <div className="mt-16 text-center">
+              <p className="text-slate-500 text-sm mb-4">Quer ver como funciona na prática?</p>
+              <Button variant="outline" size="lg" className="rounded-full border-white/10 hover:bg-white/5" asChild>
+                <Link href="#como-funciona">
+                  Ver Fluxo de Atendimento <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </section>
+
         {/* DIFERENCIAIS */}
         <section id="diferenciais" className="py-24 bg-slate-950">
           <div className="container mx-auto px-4">
