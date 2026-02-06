@@ -142,20 +142,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     Falar com Consultor
                   </Link>
                 </Button>
-
-                <Button variant="outline" size="lg" className="h-14 px-8 text-lg rounded-full w-full sm:w-auto border-white/10 hover:bg-white/5 hover:text-white transition-all backdrop-blur-sm" asChild>
-                  <Link href="#solucoes">
-                    Conhecer Soluções
-                  </Link>
-                </Button>
               </div>
 
-              <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div className="mt-12 grid grid-cols-3 gap-4 text-center max-w-lg mx-auto">
                 {[
                   { label: "Relatórios Técnicos", icon: FileText },
                   { label: "Gestão de Ativos", icon: Server },
                   { label: "SLA Garantido", icon: ShieldCheck },
-                  { label: "Faturamento PJ", icon: CreditCard },
                 ].map((feat, i) => (
                   <div key={i} className="flex flex-col items-center gap-2 p-3 rounded-lg bg-white/5 border border-white/5 backdrop-blur-sm">
                     <feat.icon className="h-5 w-5 text-primary/80" />
@@ -224,25 +217,29 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     </div>
                   </div>
 
-                  {/* Timeline Mock */}
+                  {/* Timeline Mock - Animated */}
                   <div className="space-y-6 relative pl-4 border-l border-white/10 ml-2">
                     {[
-                      { title: "Chamado Aberto", time: "10:30", active: true },
-                      { title: "Diagnóstico Técnico", time: "10:45", active: true },
-                      { title: "Componentes Substituídos", time: "14:20", active: true },
-                      { title: "Disponível para Entrega", time: "16:00", active: true }
-                    ].map((step, i) => (
-                      <div key={i} className={`relative pl-6 ${step.active ? 'opacity-100' : 'opacity-40'}`}>
-                        <div className="absolute -left-[21px] top-1 w-3 h-3 rounded-full bg-primary ring-4 ring-slate-900" />
+                      { title: "Chamado Aberto", time: "10:30", delay: "0s" },
+                      { title: "Diagnóstico Técnico", time: "10:45", delay: "0.5s" },
+                      { title: "Componentes Substituídos", time: "14:20", delay: "1s" },
+                      { title: "Disponível para Entrega", time: "16:00", delay: "1.5s" }
+                    ].map((step, i, arr) => (
+                      <div
+                        key={i}
+                        className="relative pl-6 opacity-0 animate-[fadeInUp_0.6s_ease-out_forwards]"
+                        style={{ animationDelay: step.delay }}
+                      >
+                        <div className={`absolute -left-[21px] top-1 w-3 h-3 rounded-full bg-primary ring-4 ring-slate-900 ${i === arr.length - 1 ? 'animate-pulse' : ''}`} />
                         <p className="text-sm font-bold text-white mb-1">{step.title}</p>
                         <p className="text-xs text-slate-500">{step.time}</p>
                       </div>
                     ))}
                   </div>
 
-                  {/* Bottom Action */}
-                  <div className="mt-8 pt-6 border-t border-white/5">
-                    <div className="w-full h-10 bg-primary/20 rounded border border-primary/20 flex items-center justify-center text-primary text-sm font-bold">
+                  {/* Bottom Action - Animated */}
+                  <div className="mt-8 pt-6 border-t border-white/5 opacity-0 animate-[fadeInUp_0.6s_ease-out_forwards]" style={{ animationDelay: '2s' }}>
+                    <div className="w-full h-10 bg-primary/20 rounded border border-primary/20 flex items-center justify-center text-primary text-sm font-bold hover:bg-primary/30 transition-colors cursor-pointer">
                       Download Laudo Técnico (PDF)
                     </div>
                   </div>
@@ -275,7 +272,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   <Printer className="w-6 h-6 animate-pulse" />
                 </div>
                 <h3 className="font-bold text-lg text-slate-200 mb-2">Impressão Corporativa</h3>
-                <p className="text-sm text-slate-400">Suporte para impressoras de rede, plotters e multifuncionais. Manutenção lógica e física.</p>
+                <p className="text-sm text-slate-400">Suporte para impressoras de rede, plotters e multifuncionais. Manutenção de Hardware.</p>
               </div>
             </div>
           </div>
@@ -311,7 +308,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <div className="w-12 h-12 rounded-xl bg-green-500/20 text-green-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                   <CheckCircle2 className="w-6 h-6" />
                 </div>
-                <h3 className="text-lg font-bold text-white mb-2">Aprovação de Orçamento</h3>
+                <h3 className="text-lg font-bold text-white mb-2">Aprovação de Proposta</h3>
                 <p className="text-sm text-slate-400 leading-relaxed">
                   Antes de qualquer intervenção, o gestor recebe um link para revisar custos, aceitar os termos e aprovar digitalmente.
                 </p>
@@ -408,7 +405,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
               {[
                 { icon: MessageCircle, title: '1. Abertura', desc: 'Sua equipe abre o chamado via WhatsApp ou Portal. Triagem imediata da urgência.' },
-                { icon: Wrench, title: '2. Diagnóstico', desc: 'Avaliação técnica do ativo e envio de orçamento formalizado para o gestor.' },
+                { icon: Wrench, title: '2. Diagnóstico', desc: 'Avaliação técnica do ativo e envio de proposta comercial para o gestor.' },
                 { icon: CheckCircle2, title: '3. Execução', desc: 'Intervenção técnica autorizada. Componentes homologados. Acompanhamento online.' },
                 { icon: Server, title: '4. Devolução', desc: 'Equipamento testado e reintegrado à rede da empresa.' },
               ].map((step, i) => (
