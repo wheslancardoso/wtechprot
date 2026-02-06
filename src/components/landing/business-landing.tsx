@@ -111,6 +111,7 @@ export function BusinessLanding() {
                             </p>
 
                             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                                {/* 
                                 <Button
                                     size="lg"
                                     asChild
@@ -121,7 +122,8 @@ export function BusinessLanding() {
                                         <Zap className="mr-2 w-5 h-5" />
                                         Agendar Diagnóstico Técnico
                                     </Link>
-                                </Button>
+                                </Button> 
+                                */}
                                 <Button
                                     variant="outline"
                                     size="lg"
