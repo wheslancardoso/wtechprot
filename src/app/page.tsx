@@ -229,7 +229,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     {[
                       { title: "Chamado Aberto", time: "10:30", active: true },
                       { title: "Diagnóstico Técnico", time: "10:45", active: true },
-                      { title: "Peças Substituídas", time: "14:20", active: true },
+                      { title: "Componentes Substituídos", time: "14:20", active: true },
                       { title: "Disponível para Entrega", time: "16:00", active: true }
                     ].map((step, i) => (
                       <div key={i} className={`relative pl-6 ${step.active ? 'opacity-100' : 'opacity-40'}`}>
@@ -268,14 +268,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   <Laptop className="w-6 h-6 animate-pulse" />
                 </div>
                 <h3 className="font-bold text-lg text-slate-200 mb-2">Parque de Notebooks</h3>
-                <p className="text-sm text-slate-400">Gestão de frota, upgrades em massa (SSD/RAM), troca de baterias e telas para manter sua equipe produtiva.</p>
+                <p className="text-sm text-slate-400">Gestão de frota, Upgrades de Performance, gestão de hardware e ciclo de vida para manter sua equipe produtiva.</p>
               </div>
               <div className="p-4 animate-in fade-in zoom-in duration-700 delay-300 hover:scale-105 transition-transform cursor-default">
                 <div className="mx-auto w-12 h-12 bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-400 mb-4 shadow-lg shadow-emerald-500/20">
                   <Printer className="w-6 h-6 animate-pulse" />
                 </div>
                 <h3 className="font-bold text-lg text-slate-200 mb-2">Impressão Corporativa</h3>
-                <p className="text-sm text-slate-400">Suporte para impressoras de rede, plotters e multifuncionais. Manutenção lógica e mecânica.</p>
+                <p className="text-sm text-slate-400">Suporte para impressoras de rede, plotters e multifuncionais. Manutenção lógica e física.</p>
               </div>
             </div>
           </div>
@@ -294,7 +294,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 {
                   icon: Building2,
                   title: 'Atendimento In-Company',
-                  desc: 'Deslocamento técnico até sua empresa. Reparos rápidos on-site ou retirada estratégica para laboratório.'
+                  desc: 'Deslocamento técnico até sua empresa. Intervenção rápida on-site ou retirada estratégica para Base Técnica.'
                 },
                 {
                   icon: UserCheck,
@@ -338,7 +338,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               {[
                 { icon: MessageCircle, title: '1. Abertura', desc: 'Sua equipe abre o chamado via WhatsApp ou Portal. Triagem imediata da urgência.' },
                 { icon: Wrench, title: '2. Diagnóstico', desc: 'Avaliação técnica do ativo e envio de orçamento formalizado para o gestor.' },
-                { icon: CheckCircle2, title: '3. Execução', desc: 'Reparo autorizado. Peças originais e homologadas. Acompanhamento online.' },
+                { icon: CheckCircle2, title: '3. Execução', desc: 'Intervenção técnica autorizada. Componentes homologados. Acompanhamento online.' },
                 { icon: Server, title: '4. Devolução', desc: 'Equipamento testado e reintegrado à rede da empresa.' },
               ].map((step, i) => (
                 <div key={i} className="relative z-10 text-center group">
@@ -394,7 +394,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <h4 className="font-bold text-white mb-4">Soluções</h4>
               <ul className="space-y-2">
                 <li><a href="#" className="hover:text-primary">Gestão de Workstations</a></li>
-                <li><a href="#" className="hover:text-primary">Manutenção de Notebooks</a></li>
+                <li><a href="#" className="hover:text-primary">Gestão de Notebooks</a></li>
                 <li><a href="#" className="hover:text-primary">Infraestrutura de Redes</a></li>
               </ul>
             </div>
