@@ -229,8 +229,8 @@ export function BusinessLanding() {
                                     <div className="w-12 h-12 rounded-lg bg-slate-800 flex items-center justify-center mx-auto mb-4">
                                         <Building2 className="w-5 h-5 text-blue-400" />
                                     </div>
-                                    <h3 className="text-slate-100 font-semibold mb-2">Laboratório Próprio</h3>
-                                    <p className="text-slate-500 text-sm leading-relaxed">Ambiente controlado anti-estático (ESD).</p>
+                                    <h3 className="text-slate-100 font-semibold mb-2">Centro Técnico Avançado</h3>
+                                    <p className="text-slate-500 text-sm leading-relaxed">Ambiente homologado para reparos de alta complexidade (ESD).</p>
                                 </div>
                                 <div className="p-6 rounded-xl bg-slate-900/40 border border-slate-800/50 text-center hover:bg-slate-800/40 transition-colors">
                                     <div className="w-12 h-12 rounded-lg bg-slate-800 flex items-center justify-center mx-auto mb-4">
