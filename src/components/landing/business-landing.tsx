@@ -77,12 +77,14 @@ export function BusinessLanding() {
                         <Button variant="ghost" size="sm" onClick={scrollToForm} className="hidden md:flex text-slate-400 hover:text-white hover:bg-white/5">
                             Falar com Consultor
                         </Button>
+                        {/* 
                         <Button size="sm" asChild className="bg-blue-600 text-white hover:bg-blue-500 shadow-lg shadow-blue-900/20">
                             <Link href="/manutencao">
                                 <Laptop className="w-4 h-4 mr-2" />
                                 Para Você (Pessoa Física)
                             </Link>
-                        </Button>
+                        </Button> 
+                        */}
                     </div>
                 </div>
             </header>
