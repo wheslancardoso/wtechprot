@@ -311,8 +311,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-xs font-medium text-primary mb-4">
                 <FileText className="w-3 h-3" /> Plataforma Digital
               </div>
-              <h2 className="text-3xl font-bold mb-4">Transparência Total para Sua Empresa</h2>
-              <p className="text-slate-400">Seu gestor de TI acompanha todo o processo em tempo real. Sem surpresas, sem ligações desnecessárias.</p>
+              <h2 className="text-3xl font-bold mb-4">Acompanhe seu Reparo em Tempo Real</h2>
+              <p className="text-slate-400">Receba fotos, laudos técnicos e status direto no seu WhatsApp. Sem surpresas, você sabe exatamente o que está acontecendo.</p>
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
