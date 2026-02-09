@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowRight, CheckCircle2, ShieldCheck, FileSearch, Smartphone, MessageCircle, Wrench, CreditCard, Laptop, Home as HomeIcon, UserCheck, Printer, Monitor, Clock, FileText, Server, Building2, Briefcase } from 'lucide-react'
+import { ArrowRight, CheckCircle2, ShieldCheck, FileSearch, Smartphone, MessageCircle, Wrench, CreditCard, Laptop, Home as HomeIcon, UserCheck, Printer, Monitor, Clock, FileText, Server, Building2, Briefcase, Wifi, Globe, Cpu, Settings } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 import Script from 'next/script'
@@ -124,13 +124,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               Suporte Técnico Empresarial
             </div>
 
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 bg-gradient-to-br from-white via-white to-slate-500 bg-clip-text text-transparent animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100 uppercase">
-              SEU PC OU NOTEBOOK <br />
-              PRECISA DE REPARO?
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 bg-gradient-to-br from-white via-white to-slate-500 bg-clip-text text-transparent animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
+              Precisando de um técnico <br />
+              para seu PC ou Notebook?
             </h1>
 
             <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200">
-              Diagnóstico preciso, troca de componentes e montagem de máquinas de alta performance. <b>Técnicos Especialistas à sua disposição.</b>
+              Fale agora mesmo com um especialista e resolva seu problema! <b>Atendimento presencial, retirada ou suporte online.</b>
             </p>
 
             <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
@@ -251,28 +251,53 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         {/* SOLUCOES */}
         <section id="solucoes" className="py-12 border-y border-white/5 bg-white/[0.02]">
           <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-white/5">
-              <div className="p-4 animate-in fade-in zoom-in duration-700 delay-100 hover:scale-105 transition-transform cursor-default">
-                <div className="mx-auto w-12 h-12 bg-blue-500/10 rounded-full flex items-center justify-center text-blue-400 mb-4 shadow-lg shadow-blue-500/20">
-                  <Monitor className="w-6 h-6 animate-pulse" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-center">
+              {[
+                {
+                  title: "Manutenção de Computadores",
+                  desc: "Consertamos Computadores de Mesa (Desktop), troca de peças, upgrades, diagnóstico e solução de problemas.",
+                  icon: Monitor,
+                  color: "blue"
+                },
+                {
+                  title: "Manutenção de Notebooks",
+                  desc: "Consertamos notebooks (No local ou à retirar), troca de tela, troca de teclado, reparo na carcaça e dobradiças.",
+                  icon: Laptop,
+                  color: "purple"
+                },
+                {
+                  title: "Configurações de Redes",
+                  desc: "Configuração de redes WI-FI, instalação de roteador, segurança e solução de conectividade.",
+                  icon: Wifi,
+                  color: "emerald"
+                },
+                {
+                  title: "Suporte Online e Configuração",
+                  desc: "Soluções rápidas de software e configurações via internet, sem necessidade de deslocamento físico.",
+                  icon: Globe,
+                  color: "cyan"
+                },
+                {
+                  title: "Montagem de PC Gamer",
+                  desc: "Desde a indicação de configuração até a montagem e organização (cable management) impecável.",
+                  icon: Cpu,
+                  color: "orange"
+                },
+                {
+                  title: "Impressoras e Multifuncionais",
+                  desc: "Manutenção de hardware, limpeza técnica de cabeçotes e solução de erros de tracionamento.",
+                  icon: Printer,
+                  color: "pink"
+                }
+              ].map((service, i) => (
+                <div key={i} className="group p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/50 hover:bg-white/[0.05] transition-all duration-300 hover:-translate-y-1">
+                  <div className={`mx-auto w-14 h-14 bg-${service.color}-500/10 rounded-full flex items-center justify-center text-${service.color}-400 mb-4 shadow-lg shadow-${service.color}-500/20 group-hover:scale-110 transition-transform`}>
+                    <service.icon className="w-7 h-7" />
+                  </div>
+                  <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">{service.title}</h3>
+                  <p className="text-sm text-slate-400 leading-relaxed">{service.desc}</p>
                 </div>
-                <h3 className="font-bold text-lg text-slate-200 mb-2">Computadores e PC Gamer</h3>
-                <p className="text-sm text-slate-400">Diagnóstico avançado de hardware, upgrades de performance e montagem de setups de alto desempenho.</p>
-              </div>
-              <div className="p-4 animate-in fade-in zoom-in duration-700 delay-200 hover:scale-105 transition-transform cursor-default">
-                <div className="mx-auto w-12 h-12 bg-purple-500/10 rounded-full flex items-center justify-center text-purple-400 mb-4 shadow-lg shadow-purple-500/20">
-                  <Laptop className="w-6 h-6 animate-pulse" />
-                </div>
-                <h3 className="font-bold text-lg text-slate-200 mb-2">Reparo de Notebooks</h3>
-                <p className="text-sm text-slate-400">Troca de componentes (Telas, Baterias, Teclados), reparo de carcaças e limpeza interna.</p>
-              </div>
-              <div className="p-4 animate-in fade-in zoom-in duration-700 delay-300 hover:scale-105 transition-transform cursor-default">
-                <div className="mx-auto w-12 h-12 bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-400 mb-4 shadow-lg shadow-emerald-500/20">
-                  <Printer className="w-6 h-6 animate-pulse" />
-                </div>
-                <h3 className="font-bold text-lg text-slate-200 mb-2">Impressoras e Multifuncionais</h3>
-                <p className="text-sm text-slate-400">Manutenção de hardware, limpeza técnica de cabeçotes e solução de erros de tracionamento.</p>
-              </div>
+              ))}
             </div>
           </div>
         </section>
