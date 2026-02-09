@@ -385,7 +385,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div className="grid md:grid-cols-3 gap-6">
               {[
                 { id: 1, image: "/setup-rgb-01.jpg" },
-                { id: 2, image: "/setup-clean-02.jpg" },
+                { id: 2, image: "/pc-gamer-1.jpg" },
                 { id: 3, image: "/workspace-tech-03.jpg" },
               ].map((setup) => (
                 <div key={setup.id} className="group relative aspect-video rounded-xl overflow-hidden border border-white/10 hover:border-primary/50 transition-all duration-500 shadow-lg hover:shadow-primary/20 bg-slate-950">
