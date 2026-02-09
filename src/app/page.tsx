@@ -5,7 +5,12 @@ import Image from 'next/image'
 import Script from 'next/script'
 import { createAdminClient } from '@/lib/supabase/server'
 import { unstable_cache } from 'next/cache'
+import type { Metadata } from 'next'
 
+export const metadata: Metadata = {
+  title: 'WFIX Tech | Soluções de TI para Empresas',
+  description: 'Consultoria e Soluções em Tecnologia da Informação para Empresas.',
+}
 // Forçar execução em runtime (não build time) para ter acesso às env vars do Railway
 export const dynamic = 'force-dynamic'
 
