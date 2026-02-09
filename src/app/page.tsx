@@ -527,6 +527,74 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           </div>
         </section>
 
+        {/* FAQ - PERGUNTAS FREQUENTES */}
+        <section className="py-24 bg-slate-900 border-t border-white/5">
+          <div className="container mx-auto px-4 max-w-3xl">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-bold mb-4">Dúvidas Frequentes</h2>
+              <p className="text-slate-400">Tudo o que você precisa saber antes de chamar um técnico.</p>
+            </div>
+
+            <div className="space-y-4">
+              <details className="group bg-white/[0.02] border border-white/5 rounded-2xl overflow-hidden [&_summary::-webkit-details-marker]:hidden open:bg-white/[0.04] transition-colors duration-300">
+                <summary className="flex cursor-pointer items-center justify-between gap-1.5 p-6 text-slate-200 font-bold hover:text-white transition-colors">
+                  <h3 className="text-lg">Vocês atendem em domicílio?</h3>
+                  <div className="white-space-nowrap text-primary group-open:-rotate-180 transition-transform duration-300">
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                  </div>
+                </summary>
+                <div className="px-6 pb-6 pt-2 text-slate-400 leading-relaxed border-t border-white/5 animate-in slide-in-from-top-2 fade-in duration-300">
+                  <p>
+                    Sim! Atendemos em domicílio em toda a região metropolitana. Para outras localidades ou problemas de software, oferecemos o <b>Suporte Online</b> seguro, sem necessidade de visita técnica.
+                  </p>
+                </div>
+              </details>
+
+              <details className="group bg-white/[0.02] border border-white/5 rounded-2xl overflow-hidden [&_summary::-webkit-details-marker]:hidden open:bg-white/[0.04] transition-colors duration-300">
+                <summary className="flex cursor-pointer items-center justify-between gap-1.5 p-6 text-slate-200 font-bold hover:text-white transition-colors">
+                  <h3 className="text-lg">Montam PC com peças que eu comprei na internet?</h3>
+                  <div className="white-space-nowrap text-primary group-open:-rotate-180 transition-transform duration-300">
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                  </div>
+                </summary>
+                <div className="px-6 pb-6 pt-2 text-slate-400 leading-relaxed border-t border-white/5 animate-in slide-in-from-top-2 fade-in duration-300">
+                  <p>
+                    Com certeza! Oferecemos o serviço de montagem técnica ("Bring Your Own Parts"). Organizamos os cabos (cable management), atualizamos a BIOS e configuramos o sistema para extrair o máximo das suas peças novas.
+                  </p>
+                </div>
+              </details>
+
+              <details className="group bg-white/[0.02] border border-white/5 rounded-2xl overflow-hidden [&_summary::-webkit-details-marker]:hidden open:bg-white/[0.04] transition-colors duration-300">
+                <summary className="flex cursor-pointer items-center justify-between gap-1.5 p-6 text-slate-200 font-bold hover:text-white transition-colors">
+                  <h3 className="text-lg">Qual a garantia do serviço?</h3>
+                  <div className="white-space-nowrap text-primary group-open:-rotate-180 transition-transform duration-300">
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                  </div>
+                </summary>
+                <div className="px-6 pb-6 pt-2 text-slate-400 leading-relaxed border-t border-white/5 animate-in slide-in-from-top-2 fade-in duration-300">
+                  <p>
+                    Oferecemos garantia legal de <b>90 dias</b> em toda mão de obra e peças substituídas por nós. Você recebe um laudo técnico detalhando tudo o que foi feito.
+                  </p>
+                </div>
+              </details>
+
+              <details className="group bg-white/[0.02] border border-white/5 rounded-2xl overflow-hidden [&_summary::-webkit-details-marker]:hidden open:bg-white/[0.04] transition-colors duration-300">
+                <summary className="flex cursor-pointer items-center justify-between gap-1.5 p-6 text-slate-200 font-bold hover:text-white transition-colors">
+                  <h3 className="text-lg">O orçamento é gratuito?</h3>
+                  <div className="white-space-nowrap text-primary group-open:-rotate-180 transition-transform duration-300">
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                  </div>
+                </summary>
+                <div className="px-6 pb-6 pt-2 text-slate-400 leading-relaxed border-t border-white/5 animate-in slide-in-from-top-2 fade-in duration-300">
+                  <p>
+                    A avaliação inicial e pré-orçamento via WhatsApp são gratuitos. Para diagnósticos complexos em bancada (que exigem desmontagem e testes de hardware), pode haver uma taxa técnica, que é abatida integralmente se você aprovar o conserto.
+                  </p>
+                </div>
+              </details>
+            </div>
+          </div>
+        </section>
+
 
 
         <a
