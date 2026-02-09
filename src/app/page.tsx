@@ -124,13 +124,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               Suporte Técnico Empresarial
             </div>
 
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 bg-gradient-to-br from-white via-white to-slate-500 bg-clip-text text-transparent animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
-              Assistência Técnica <br />
-              Especializada em Hardware
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 bg-gradient-to-br from-white via-white to-slate-500 bg-clip-text text-transparent animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100 uppercase">
+              SEU PC OU NOTEBOOK <br />
+              PRECISA DE REPARO?
             </h1>
 
             <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200">
-              Soluções completas para <b>Notebooks, PCs e Impressoras</b>. Atendimento rápido e garantido para Empresas e Home Office.
+              Diagnóstico preciso, troca de componentes e montagem de máquinas de alta performance. <b>Técnicos Especialistas à sua disposição.</b>
             </p>
 
             <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
@@ -344,6 +344,80 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   Ver Fluxo de Atendimento <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* GALERIA PC GAMER (Husky Inspired) */}
+        <section className="py-24 bg-slate-900 overflow-hidden relative border-t border-white/5">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-primary/10 via-slate-900 to-slate-900" />
+          <div className="container relative mx-auto px-4">
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Montagem de Setups de Alta Performance</h2>
+              <p className="text-slate-400">Qualidade de montagem, cable management impecável e hardware configurado para máximo desempenho.</p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-6">
+              {[1, 2, 3].map((item) => (
+                <div key={item} className="group relative aspect-video rounded-xl overflow-hidden border border-white/10 hover:border-primary/50 transition-all duration-500 shadow-2xl bg-slate-950">
+                  <div className={`absolute inset-0 bg-gradient-to-br ${item === 1 ? 'from-purple-600/20 to-blue-600/20' : item === 2 ? 'from-emerald-600/20 to-teal-600/20' : 'from-orange-600/20 to-red-600/20'} group-hover:scale-110 transition-transform duration-700 opacity-50`}></div>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/5 backdrop-blur-sm flex items-center justify-center border border-white/10 group-hover:scale-110 transition-transform duration-300">
+                        <Monitor className="w-8 h-8 text-white/50 group-hover:text-primary transition-colors" />
+                      </div>
+                      <span className="text-sm font-bold uppercase tracking-widest text-white/70 group-hover:text-white transition-colors">WFIX Custom Build {item}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-12 text-center">
+              <Button variant="outline" className="border-primary/50 text-primary hover:bg-primary/10 hover:text-white transition-all">
+                <Link href="#contato">Quero um PC Gamer WFIX</Link>
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* DEPOIMENTOS (Husky Inspired) */}
+        <section className="py-24 bg-slate-950 border-t border-white/5 relative">
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[100px] pointer-events-none" />
+          <div className="container mx-auto px-4 relative">
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <h2 className="text-3xl font-bold mb-4">O Que Dizem Nossos Clientes</h2>
+              <p className="text-slate-400">Confiança se conquista com transparência e resultado.</p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              {[
+                {
+                  name: "Rodrigo M.",
+                  msg: "Meu notebook gamer estava superaquecendo. Fizeram a limpeza e troca de pasta térmica. Ficou novo!",
+                  role: "Designer Gráfico"
+                },
+                {
+                  name: "Amanda S.",
+                  msg: "Montei meu PC completo com a WFIX. O cable management ficou perfeito, muito capricho na montagem.",
+                  role: "Arquiteta"
+                },
+                {
+                  name: "Dr. Carlos F.",
+                  msg: "Precisava recuperar dados de um HD antigo da clínica. Recuperaram tudo e com sigilo total. Recomendo.",
+                  role: "Médico"
+                }
+              ].map((depo, i) => (
+                <div key={i} className="p-8 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors hover:-translate-y-1 duration-300">
+                  <div className="flex gap-1 mb-4 text-yellow-500">
+                    {[1, 2, 3, 4, 5].map(star => <svg key={star} className="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>)}
+                  </div>
+                  <p className="text-slate-300 italic mb-6 leading-relaxed">"{depo.msg}"</p>
+                  <div>
+                    <p className="font-bold text-white">{depo.name}</p>
+                    <p className="text-xs text-slate-500 uppercase tracking-wider">{depo.role}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
