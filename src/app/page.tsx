@@ -312,7 +312,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <FileText className="w-3 h-3" /> Plataforma Digital
               </div>
               <h2 className="text-3xl font-bold mb-4">Acompanhe seu Projeto em Tempo Real</h2>
-              <p className="text-slate-400">Receba fotos, laudos técnicos e o status da sua configuração direto no seu WhatsApp.</p>
+              <p className="text-slate-400">Receba fotos, relatórios de evolução e o status da sua implementação direto no seu WhatsApp.</p>
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
@@ -334,7 +334,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">Aprovação Digital</h3>
                 <p className="text-sm text-slate-400 leading-relaxed">
-                  Receba o diagnóstico técnico no seu celular. Aprove ou recuse itens com um clique, sem ligações desnecessárias.
+                  Receba a análise técnica no seu celular. Aprove ou recuse itens com um clique, sem burocracia.
                 </p>
               </div>
 
@@ -354,9 +354,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <div className="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                   <FileText className="w-6 h-6" />
                 </div>
-                <h3 className="text-lg font-bold text-white mb-2">Laudo em PDF</h3>
+                <h3 className="text-lg font-bold text-white mb-2">Relatório em PDF</h3>
                 <p className="text-sm text-slate-400 leading-relaxed">
-                  Download instantâneo do relatório com fotos, diagnóstico e termo de garantia. Perfeito para auditorias internas.
+                  Download instantâneo do registro completo com fotos, especificações e termo de garantia. Perfeito para gestão de ativos.
                 </p>
               </div>
             </div>
@@ -456,7 +456,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <section id="diferenciais" className="py-24 bg-slate-950">
           <div className="container mx-auto px-4">
             <div className="text-center max-w-2xl mx-auto mb-16">
-              <h2 className="text-3xl font-bold mb-4">Atendimento Técnico de Confiança</h2>
+              <h2 className="text-3xl font-bold mb-4">Consultoria Especializada de Confiança</h2>
               <p className="text-slate-400">Transparência, agilidade e garantia em todos os serviços realizados.</p>
             </div>
 
@@ -587,7 +587,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </summary>
                 <div className="px-6 pb-6 pt-2 text-slate-400 leading-relaxed border-t border-white/5 animate-in slide-in-from-top-2 fade-in duration-300">
                   <p>
-                    A avaliação inicial e pré-orçamento via WhatsApp são gratuitos. Para diagnósticos complexos em bancada (que exigem desmontagem e testes de hardware), pode haver uma taxa técnica, que é abatida integralmente se você aprovar o serviço.
+                    A avaliação inicial e pré-orçamento via WhatsApp são gratuitos. Para análises avançadas em bancada (que exigem testes exaustivos de hardware), pode haver uma taxa técnica, que é abatida integralmente se você aprovar o serviço.
                   </p>
                 </div>
               </details>
