@@ -55,8 +55,8 @@ const getTenantData = unstable_cache(
 export async function generateMetadata() {
   const { brandName } = await getTenantData()
   return {
-    title: `${brandName} | Soluções de TI para Empresas`,
-    description: 'Suporte técnico especializado para empresas. Gestão de ativos de TI, manutenção de parque computacional e consultoria corporativa.',
+    title: `${brandName} | Gestão de Infraestrutura de TI`,
+    description: 'Gestão de ativos de TI e consultoria especializada para profissionais e empresas. Otimização de parque computacional e projetos corporativos.',
   }
 }
 
@@ -121,7 +121,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
               </span>
-              Suporte Técnico Empresarial
+              Gestão de Infraestrutura de TI
             </div>
 
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 bg-gradient-to-br from-white via-white to-slate-500 bg-clip-text text-transparent animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
@@ -130,7 +130,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </h1>
 
             <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200">
-              Fale agora mesmo com um especialista e resolva seu problema! <b>Atendimento presencial, retirada ou suporte online.</b>
+              Fale agora mesmo com um especialista. <b>Atendimento profissional, logística ou consultoria especializada.</b>
             </p>
 
             <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
@@ -170,14 +170,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <div className="flex-1 space-y-6 text-center lg:text-left">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs font-medium text-blue-400 mb-2">
                   <Clock className="w-3 h-3" />
-                  Service Desk Digital
+                  Gestão Digital de Ativos
                 </div>
                 <h2 className="text-3xl md:text-5xl font-bold leading-tight">
-                  Status de Chamados <br />
+                  Status de Projetos <br />
                   em Tempo Real.
                 </h2>
                 <p className="text-lg text-slate-400 leading-relaxed max-w-xl mx-auto lg:mx-0">
-                  Nosso portal de <b>Gestão de Chamados</b> permite que sua equipe de TI ou administrativa acompanhe cada etapa da manutenção. Transparência total para sua operação.
+                  Nosso portal de <b>Gestão de Projetos</b> permite que sua equipe ou gestor acompanhe cada etapa da otimização. Transparência total para sua operação.
                 </p>
 
                 <ul className="space-y-3 text-slate-300 max-w-sm mx-auto lg:mx-0 text-left">
@@ -185,7 +185,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     "Portal Corporativo Exclusivo",
                     "Evidências Fotográficas das Trocas",
                     "Aprovação de Budget Online",
-                    "Histórico de Manutenção por Ativo"
+                    "Histórico de Evolução por Ativo"
                   ].map((item, i) => (
                     <li key={i} className="flex items-center gap-3">
                       <CheckCircle2 className="w-5 h-5 text-primary shrink-0" />
@@ -219,10 +219,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   {/* Timeline Mock - Animated */}
                   <div className="space-y-6 relative pl-4 border-l border-white/10 ml-2">
                     {[
-                      { title: "Chamado Aberto", time: "10:30", delay: "0s" },
-                      { title: "Diagnóstico Técnico", time: "10:45", delay: "0.5s" },
-                      { title: "Componentes Substituídos", time: "14:20", delay: "1s" },
-                      { title: "Disponível para Entrega", time: "16:00", delay: "1.5s" }
+                      { title: "Projeto Iniciado", time: "10:30", delay: "0s" },
+                      { title: "Mapeamento Técnico", time: "10:45", delay: "0.5s" },
+                      { title: "Upgrades Implementados", time: "14:20", delay: "1s" },
+                      { title: "Pronto para Entrega", time: "16:00", delay: "1.5s" }
                     ].map((step, i, arr) => (
                       <div
                         key={i}
@@ -433,7 +433,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 },
                 {
                   name: "Dr. Carlos F.",
-                  msg: "Precisava recuperar dados de um HD antigo da clínica. Recuperaram tudo e com sigilo total. Recomendo.",
+                  msg: "Precisava de uma migração de dados e otimização de infraestrutura. Realizaram tudo com sigilo total. Recomendo.",
                   role: "Médico"
                 }
               ].map((depo, i) => (
@@ -464,8 +464,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               {[
                 {
                   icon: Building2,
-                  title: 'Suporte no Local ou Retirada',
-                  desc: 'Vamos até sua empresa ou residência. Avaliação técnica no local ou retirada segura para nossa Base Técnica.'
+                  title: 'Presencial ou Logística',
+                  desc: 'Vamos até sua empresa ou home-office. Coleta técnica no local ou logística segura para nossa Base de Performance.'
                 },
                 {
                   icon: UserCheck,
@@ -475,7 +475,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 {
                   icon: ShieldCheck,
                   title: 'Segurança e Privacidade',
-                  desc: 'Seus dados são sagrados. Processos rigorosos de confidencialidade e proteção de arquivos durante a manutenção.'
+                  desc: 'Seus dados são preservados. Processos rigorosos de confidencialidade e proteção de arquivos durante todo o projeto.'
                 }
               ].map((item, i) => (
                 <div key={i} className="group p-8 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-primary/50 hover:bg-white/[0.08] transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10">
@@ -507,10 +507,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <div className="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-primary/30 to-transparent -translate-y-1/2" />
 
               {[
-                { icon: MessageCircle, title: '1. Abertura', desc: 'Sua equipe abre o chamado via WhatsApp ou Portal. Triagem imediata da urgência.' },
-                { icon: Wrench, title: '2. Diagnóstico', desc: 'Avaliação técnica do ativo e envio de proposta comercial para o gestor.' },
-                { icon: CheckCircle2, title: '3. Execução', desc: 'Intervenção técnica autorizada. Componentes homologados. Acompanhamento online.' },
-                { icon: Server, title: '4. Devolução', desc: 'Equipamento testado e reintegrado à rede da empresa.' },
+                { icon: MessageCircle, title: '1. Solicitação', desc: 'Sua equipe inicia o projeto via WhatsApp ou Portal. Triagem imediata da necessidade.' },
+                { icon: Wrench, title: '2. Mapeamento', desc: 'Avaliação técnica da infraestrutura e envio de proposta comercial para o gestor.' },
+                { icon: CheckCircle2, title: '3. Implementação', desc: 'Intervenção técnica autorizada. Componentes homologados. Acompanhamento online.' },
+                { icon: Server, title: '4. Entrega', desc: 'Ativo otimizado e reintegrado à sua operação.' },
               ].map((step, i) => (
                 <div key={i} className="relative z-10 text-center group">
                   <div className="w-16 h-16 mx-auto rounded-full bg-slate-900 border-4 border-slate-950 flex items-center justify-center mb-6 shadow-xl group-hover:border-primary/50 group-hover:scale-110 group-hover:shadow-primary/20 transition-all duration-300">
@@ -545,7 +545,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </summary>
                 <div className="px-6 pb-6 pt-2 text-slate-400 leading-relaxed border-t border-white/5 animate-in slide-in-from-top-2 fade-in duration-300">
                   <p>
-                    Sim! Atendemos em domicílio em toda a região metropolitana. Para outras localidades ou projetos de software, oferecemos a <b>Consultoria Remota</b> segura, sem necessidade de visita técnica.
+                    Sim! Atendemos no local em toda a região metropolitana. Para outras localidades ou projetos avançados, oferecemos a <b>Consultoria Remota</b> segura.
                   </p>
                 </div>
               </details>
@@ -573,7 +573,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </summary>
                 <div className="px-6 pb-6 pt-2 text-slate-400 leading-relaxed border-t border-white/5 animate-in slide-in-from-top-2 fade-in duration-300">
                   <p>
-                    Oferecemos garantia legal de <b>90 dias</b> em toda mão de obra e peças substituídas por nós. Você recebe um laudo técnico detalhando tudo o que foi feito.
+                    Oferecemos garantia legal de <b>90 dias</b> em todos os serviços técnicos realizados. Você recebe um relatório detalhando o projeto.
                   </p>
                 </div>
               </details>
