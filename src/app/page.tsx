@@ -384,18 +384,20 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             <div className="grid md:grid-cols-3 gap-6">
               {[
-                { id: 1, image: "/manutencao1.jpg" },
-                { id: 2, image: "/manutencao3.jpg" },
-                { id: 3, image: "/manutencao4.jpg" },
+                { id: 1, image: "/setup-rgb-01.jpg" },
+                { id: 2, image: "/setup-clean-02.jpg" },
+                { id: 3, image: "/workspace-tech-03.jpg" },
               ].map((setup) => (
-                <div key={setup.id} className="group relative aspect-video rounded-xl overflow-hidden border border-white/10 hover:border-primary/50 transition-all duration-500 shadow-2xl bg-slate-950">
-                  <div className="absolute inset-0 bg-slate-800">
+                <div key={setup.id} className="group relative aspect-video rounded-xl overflow-hidden border border-white/10 hover:border-primary/50 transition-all duration-500 shadow-lg hover:shadow-primary/20 bg-slate-950">
+                  <div className="absolute inset-0 bg-slate-900">
                     <Image
                       src={setup.image}
-                      alt="WFIX Tech Manutenção"
+                      alt="Setup Personalizado WFIX"
                       fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                      className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-90 group-hover:opacity-100"
                     />
+                    {/* Gradient Overlay para integrar com o fundo dark */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500" />
                   </div>
                 </div>
               ))}
