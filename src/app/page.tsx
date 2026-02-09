@@ -383,16 +383,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
-              {[1, 2, 3].map((item) => (
-                <div key={item} className="group relative aspect-video rounded-xl overflow-hidden border border-white/10 hover:border-primary/50 transition-all duration-500 shadow-2xl bg-slate-950">
-                  <div className={`absolute inset-0 bg-gradient-to-br ${item === 1 ? 'from-purple-600/20 to-blue-600/20' : item === 2 ? 'from-emerald-600/20 to-teal-600/20' : 'from-orange-600/20 to-red-600/20'} group-hover:scale-110 transition-transform duration-700 opacity-50`}></div>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/5 backdrop-blur-sm flex items-center justify-center border border-white/10 group-hover:scale-110 transition-transform duration-300">
-                        <Monitor className="w-8 h-8 text-white/50 group-hover:text-primary transition-colors" />
-                      </div>
-                      <span className="text-sm font-bold uppercase tracking-widest text-white/70 group-hover:text-white transition-colors">WFIX Custom Build {item}</span>
-                    </div>
+              {[
+                { id: 1, image: "/manutencao1.jpg" },
+                { id: 2, image: "/manutencao3.jpg" },
+                { id: 3, image: "/manutencao4.jpg" },
+              ].map((setup) => (
+                <div key={setup.id} className="group relative aspect-video rounded-xl overflow-hidden border border-white/10 hover:border-primary/50 transition-all duration-500 shadow-2xl bg-slate-950">
+                  <div className="absolute inset-0 bg-slate-800">
+                    <Image
+                      src={setup.image}
+                      alt="WFIX Tech Manutenção"
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
                   </div>
                 </div>
               ))}
