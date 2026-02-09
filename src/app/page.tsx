@@ -522,23 +522,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           </div>
         </section>
 
-        {/* CTA FINAL */}
-        <section className="py-24 text-center">
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">Fale com um Especialista Agora</h2>
-            <p className="text-xl text-slate-400 mb-8 max-w-2xl mx-auto">
-              Garanta a estabilidade da sua infraestrutura com quem entende de TI Corporativa.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button size="lg" className="h-14 px-8 text-lg rounded-full w-full sm:w-auto shadow-xl shadow-primary/20" asChild>
-                <Link href={whatsappLink} target="_blank" id="cta-whatsapp-footer">
-                  <MessageCircle className="mr-2 h-5 w-5" />
-                  Iniciar Atendimento
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </section>
+
 
       </main>
 
@@ -559,9 +543,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div>
               <h4 className="font-bold text-white mb-4">Soluções</h4>
               <ul className="space-y-2">
-                <li><a href="#" className="hover:text-primary">Gestão de Workstations</a></li>
-                <li><a href="#" className="hover:text-primary">Gestão de Notebooks</a></li>
-                <li><a href="#" className="hover:text-primary">Infraestrutura de Redes</a></li>
+                <li><a href="#solucoes" className="hover:text-primary">Computadores e PCs</a></li>
+                <li><a href="#solucoes" className="hover:text-primary">Notebooks e Laptops</a></li>
+                <li><a href="#solucoes" className="hover:text-primary">Configuração de Redes</a></li>
               </ul>
             </div>
 
