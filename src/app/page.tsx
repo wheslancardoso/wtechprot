@@ -138,7 +138,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <Button size="lg" className="h-14 px-8 text-lg rounded-full w-full sm:w-auto shadow-xl shadow-primary/20 bg-primary hover:bg-primary/90 text-primary-foreground transition-all transform hover:scale-105" asChild>
                   <Link href={whatsappLink} target="_blank" id="cta-whatsapp-hero">
                     <Building2 className="mr-2 h-5 w-5" />
-                    Falar com Consultor
+                    Falar com Especialista
                   </Link>
                 </Button>
               </div>
@@ -603,7 +603,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               {/* Coluna 1: Info */}
               <div className="space-y-8">
                 <div>
-                  <h2 className="text-3xl font-bold mb-4">Atendimento em Goiânia</h2>
+                  <h2 className="text-3xl font-bold mb-4">Atendimento em Goiânia e Região</h2>
                   <p className="text-slate-400">
                     Nossa base técnica está pronta para receber seu equipamento ou agendar uma visita no seu endereço.
                   </p>
@@ -638,7 +638,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     <div>
                       <h3 className="font-bold text-white mb-1">Contato</h3>
                       <p className="text-slate-400 text-sm">{formattedPhone}</p>
-                      <p className="text-slate-400 text-sm">contato@wfix.com.br</p>
+                      <p className="text-slate-400 text-sm">wfixtech.contato@gmail.com</p>
                     </div>
                   </div>
                 </div>
