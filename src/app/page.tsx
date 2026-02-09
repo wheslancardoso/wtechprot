@@ -125,8 +125,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </div>
 
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 bg-gradient-to-br from-white via-white to-slate-500 bg-clip-text text-transparent animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
-              Precisando de um técnico <br />
-              para seu PC ou Notebook?
+              Precisando otimizar ou configurar <br />
+              seu PC ou Notebook?
             </h1>
 
             <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200">
@@ -254,26 +254,26 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-center">
               {[
                 {
-                  title: "Manutenção de Computadores",
-                  desc: "Consertamos Computadores de Mesa (Desktop), troca de peças, upgrades, diagnóstico e solução de problemas.",
+                  title: "Upgrade e Performance de PCs",
+                  desc: "Melhoramos o desempenho do seu Desktop com troca de peças, upgrades estratégicos e diagnóstico técnico.",
                   icon: Monitor,
                   color: "blue"
                 },
                 {
-                  title: "Manutenção de Notebooks",
-                  desc: "Consertamos notebooks (No local ou à retirar), troca de tela, troca de teclado, reparo na carcaça e dobradiças.",
+                  title: "Otimização de Notebooks",
+                  desc: "Serviços especializados para notebooks, incluindo upgrade de memória, SSD e reparos físicos estruturais.",
                   icon: Laptop,
                   color: "purple"
                 },
                 {
-                  title: "Configurações de Redes",
-                  desc: "Configuração de redes WI-FI, instalação de roteador, segurança e solução de conectividade.",
+                  title: "Infraestrutura de Redes",
+                  desc: "Projetos de conectividade WI-FI, configuração avançada de roteadores e segurança de rede.",
                   icon: Wifi,
                   color: "emerald"
                 },
                 {
-                  title: "Suporte Online e Configuração",
-                  desc: "Soluções rápidas de software e configurações via internet, sem necessidade de deslocamento físico.",
+                  title: "Consultoria Remota",
+                  desc: "Configurações de software e otimização de sistema via internet, com agilidade e total segurança.",
                   icon: Globe,
                   color: "cyan"
                 },
@@ -284,8 +284,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   color: "orange"
                 },
                 {
-                  title: "Impressoras e Multifuncionais",
-                  desc: "Manutenção de hardware, limpeza técnica de cabeçotes e solução de erros de tracionamento.",
+                  title: "Gestão de Impressão",
+                  desc: "Consultoria técnica e configuração de drivers, limpeza de cabeçotes e integração de periféricos.",
                   icon: Printer,
                   color: "pink"
                 }
@@ -311,8 +311,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-xs font-medium text-primary mb-4">
                 <FileText className="w-3 h-3" /> Plataforma Digital
               </div>
-              <h2 className="text-3xl font-bold mb-4">Acompanhe seu Reparo em Tempo Real</h2>
-              <p className="text-slate-400">Receba fotos, laudos técnicos e status direto no seu WhatsApp. Sem surpresas, você sabe exatamente o que está acontecendo.</p>
+              <h2 className="text-3xl font-bold mb-4">Acompanhe seu Projeto em Tempo Real</h2>
+              <p className="text-slate-400">Receba fotos, laudos técnicos e o status da sua configuração direto no seu WhatsApp.</p>
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
@@ -532,7 +532,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <div className="container mx-auto px-4 max-w-3xl">
             <div className="text-center mb-16">
               <h2 className="text-3xl font-bold mb-4">Dúvidas Frequentes</h2>
-              <p className="text-slate-400">Tudo o que você precisa saber antes de chamar um técnico.</p>
+              <p className="text-slate-400">O que você precisa saber antes de iniciar seu atendimento.</p>
             </div>
 
             <div className="space-y-4">
@@ -545,7 +545,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </summary>
                 <div className="px-6 pb-6 pt-2 text-slate-400 leading-relaxed border-t border-white/5 animate-in slide-in-from-top-2 fade-in duration-300">
                   <p>
-                    Sim! Atendemos em domicílio em toda a região metropolitana. Para outras localidades ou problemas de software, oferecemos o <b>Suporte Online</b> seguro, sem necessidade de visita técnica.
+                    Sim! Atendemos em domicílio em toda a região metropolitana. Para outras localidades ou projetos de software, oferecemos a <b>Consultoria Remota</b> segura, sem necessidade de visita técnica.
                   </p>
                 </div>
               </details>
@@ -587,7 +587,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </summary>
                 <div className="px-6 pb-6 pt-2 text-slate-400 leading-relaxed border-t border-white/5 animate-in slide-in-from-top-2 fade-in duration-300">
                   <p>
-                    A avaliação inicial e pré-orçamento via WhatsApp são gratuitos. Para diagnósticos complexos em bancada (que exigem desmontagem e testes de hardware), pode haver uma taxa técnica, que é abatida integralmente se você aprovar o conserto.
+                    A avaliação inicial e pré-orçamento via WhatsApp são gratuitos. Para diagnósticos complexos em bancada (que exigem desmontagem e testes de hardware), pode haver uma taxa técnica, que é abatida integralmente se você aprovar o serviço.
                   </p>
                 </div>
               </details>
@@ -605,7 +605,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <div>
                   <h2 className="text-3xl font-bold mb-4">Atendimento em Goiânia e Região</h2>
                   <p className="text-slate-400">
-                    Nossa base técnica está pronta para receber seu equipamento ou agendar uma visita no seu endereço.
+                    Nossa base técnica está pronta para receber seu equipamento ou agregar valor ao seu projeto no seu endereço.
                   </p>
                 </div>
 
