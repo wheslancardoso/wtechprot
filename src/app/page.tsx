@@ -595,6 +595,28 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           </div>
         </section>
 
+        {/* MAPA - ÁREA DE ATENDIMENTO */}
+        <section className="py-24 bg-slate-950 border-t border-white/5">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-bold mb-4">Atendemos em Goiânia e Região</h2>
+              <p className="text-slate-400">Visita técnica agendada ou retirada de equipamento em laboratório.</p>
+            </div>
+
+            <div className="w-full h-[400px] rounded-2xl overflow-hidden border border-white/10 shadow-2xl grayscale hover:grayscale-0 transition-all duration-700">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d122295.45493208575!2d-49.4058981!3d-16.6204683!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x935ef6b2f4f107f7%3A0xe54955b760a92f02!2sGoi%C3%A2nia%2C%20GO!5e0!3m2!1spt-BR!2sbr!4v1707238472911!5m2!1spt-BR!2sbr"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen={true}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </div>
+          </div>
+        </section>
+
 
 
         <a
