@@ -529,6 +529,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 
 
+        <a
+          href={whatsappLink}
+          target="_blank"
+          className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 bg-green-500 rounded-full shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:scale-110 hover:shadow-[0_0_30px_rgba(34,197,94,0.5)] transition-all duration-300 animate-in slide-in-from-bottom-10 fade-in delay-1000 group"
+        >
+          <MessageCircle className="w-8 h-8 text-white fill-white" />
+          <span className="absolute right-full mr-4 bg-white text-slate-900 px-3 py-1 rounded-lg text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg pointer-events-none">
+            Fale Conosco
+          </span>
+        </a>
       </main>
 
       {/* FOOTER */}
