@@ -264,7 +264,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   <Laptop className="w-6 h-6 animate-pulse" />
                 </div>
                 <h3 className="font-bold text-lg text-slate-200 mb-2">Reparo de Notebooks</h3>
-                <p className="text-sm text-slate-400">Troca de componentes (Telas, Baterias, Teclados), reparo de carcaças e otimização de sistema.</p>
+                <p className="text-sm text-slate-400">Troca de componentes (Telas, Baterias, Teclados), reparo de carcaças e limpeza interna.</p>
               </div>
               <div className="p-4 animate-in fade-in zoom-in duration-700 delay-300 hover:scale-105 transition-transform cursor-default">
                 <div className="mx-auto w-12 h-12 bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-400 mb-4 shadow-lg shadow-emerald-500/20">
