@@ -7,10 +7,7 @@ import { createAdminClient } from '@/lib/supabase/server'
 import { unstable_cache } from 'next/cache'
 import type { Metadata } from 'next'
 
-export const metadata: Metadata = {
-  title: 'WFIX Tech | Soluções de TI para Empresas',
-  description: 'Consultoria e Soluções em Tecnologia da Informação para Empresas.',
-}
+
 // Forçar execução em runtime (não build time) para ter acesso às env vars do Railway
 export const dynamic = 'force-dynamic'
 
@@ -60,8 +57,8 @@ const getTenantData = unstable_cache(
 export async function generateMetadata() {
   const { brandName } = await getTenantData()
   return {
-    title: `${brandName} | Soluções de TI para Empresas`,
-    description: 'Suporte técnico especializado para empresas. Gestão de ativos de TI, manutenção de parque computacional e consultoria corporativa.',
+    title: 'WFIX Tech | Soluções de TI para Empresas',
+    description: 'Consultoria e Soluções em Tecnologia da Informação para Empresas.',
   }
 }
 
