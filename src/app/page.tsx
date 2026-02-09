@@ -125,12 +125,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </div>
 
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 bg-gradient-to-br from-white via-white to-slate-500 bg-clip-text text-transparent animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
-              Gestão e Manutenção <br />
-              de Ativos de TI
+              Assistência Técnica <br />
+              Especializada em Hardware
             </h1>
 
             <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200">
-              Soluções completas para infraestrutura corporativa. <b>Notebooks, Workstations e Redes</b>. Suporte On-Site e Remoto para sua empresa fluir sem interrupções.
+              Soluções completas para <b>Notebooks, PCs e Impressoras</b>. Atendimento rápido e garantido para Empresas e Home Office.
             </p>
 
             <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
@@ -256,22 +256,22 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <div className="mx-auto w-12 h-12 bg-blue-500/10 rounded-full flex items-center justify-center text-blue-400 mb-4 shadow-lg shadow-blue-500/20">
                   <Monitor className="w-6 h-6 animate-pulse" />
                 </div>
-                <h3 className="font-bold text-lg text-slate-200 mb-2">Workstations Corporativas</h3>
-                <p className="text-sm text-slate-400">Manutenção preventiva e corretiva para estações de trabalho de alto desempenho (CAD, Design, Engenharia).</p>
+                <h3 className="font-bold text-lg text-slate-200 mb-2">Computadores e PC Gamer</h3>
+                <p className="text-sm text-slate-400">Diagnóstico avançado de hardware, upgrades de performance e montagem de setups de alto desempenho.</p>
               </div>
               <div className="p-4 animate-in fade-in zoom-in duration-700 delay-200 hover:scale-105 transition-transform cursor-default">
                 <div className="mx-auto w-12 h-12 bg-purple-500/10 rounded-full flex items-center justify-center text-purple-400 mb-4 shadow-lg shadow-purple-500/20">
                   <Laptop className="w-6 h-6 animate-pulse" />
                 </div>
-                <h3 className="font-bold text-lg text-slate-200 mb-2">Parque de Notebooks</h3>
-                <p className="text-sm text-slate-400">Gestão de frota, Upgrades de Performance, gestão de hardware e ciclo de vida para manter sua equipe produtiva.</p>
+                <h3 className="font-bold text-lg text-slate-200 mb-2">Reparo de Notebooks</h3>
+                <p className="text-sm text-slate-400">Troca de componentes (Telas, Baterias, Teclados), reparo de carcaças e otimização de sistema.</p>
               </div>
               <div className="p-4 animate-in fade-in zoom-in duration-700 delay-300 hover:scale-105 transition-transform cursor-default">
                 <div className="mx-auto w-12 h-12 bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-400 mb-4 shadow-lg shadow-emerald-500/20">
                   <Printer className="w-6 h-6 animate-pulse" />
                 </div>
-                <h3 className="font-bold text-lg text-slate-200 mb-2">Impressão Corporativa</h3>
-                <p className="text-sm text-slate-400">Suporte para impressoras de rede, plotters e multifuncionais. Manutenção de Hardware.</p>
+                <h3 className="font-bold text-lg text-slate-200 mb-2">Impressoras e Multifuncionais</h3>
+                <p className="text-sm text-slate-400">Manutenção de hardware, limpeza técnica de cabeçotes e solução de erros de tracionamento.</p>
               </div>
             </div>
           </div>
@@ -298,7 +298,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">Check-in com Fotos</h3>
                 <p className="text-sm text-slate-400 leading-relaxed">
-                  Registro fotográfico obrigatório no recebimento e na entrega. Evidências para auditoria e prestação de contas.
+                  Registro fotográfico detalhado do estado do equipamento na entrada e saída. Segurança total sobre o estado do seu ativo.
                 </p>
               </div>
 
@@ -309,7 +309,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">Aprovação Digital</h3>
                 <p className="text-sm text-slate-400 leading-relaxed">
-                  Antes de qualquer intervenção, o gestor autoriza via link. Aceite de termos e confirmação digital registrados.
+                  Receba o diagnóstico técnico no seu celular. Aprove ou recuse itens com um clique, sem ligações desnecessárias.
                 </p>
               </div>
 
@@ -320,7 +320,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">Assinatura Digital</h3>
                 <p className="text-sm text-slate-400 leading-relaxed">
-                  Na retirada, o cliente confirma o recebimento com assinatura digital no próprio celular. Tudo registrado e auditável.
+                  Confirmação de retirada segura via assinatura na tela do celular. Garantia de que o equipamento foi entregue a você.
                 </p>
               </div>
 
@@ -352,26 +352,26 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <section id="diferenciais" className="py-24 bg-slate-950">
           <div className="container mx-auto px-4">
             <div className="text-center max-w-2xl mx-auto mb-16">
-              <h2 className="text-3xl font-bold mb-4">Parceiro Estratégico de TI</h2>
-              <p className="text-slate-400">Focados em reduzir o downtime da sua empresa com soluções rápidas e eficientes.</p>
+              <h2 className="text-3xl font-bold mb-4">Atendimento Técnico de Confiança</h2>
+              <p className="text-slate-400">Transparência, agilidade e garantia em todos os serviços realizados.</p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-8">
               {[
                 {
                   icon: Building2,
-                  title: 'Atendimento In-Company',
-                  desc: 'Deslocamento técnico até sua empresa. Intervenção rápida on-site ou retirada estratégica para Base Técnica.'
+                  title: 'Suporte no Local ou Retirada',
+                  desc: 'Vamos até sua empresa ou residência. Avaliação técnica no local ou retirada segura para nossa Base Técnica.'
                 },
                 {
                   icon: UserCheck,
-                  title: 'Consultoria Dedicada',
-                  desc: 'Atendimento direto com especialistas. Sem scripts de call center. Focamos em resolver a demanda do negócio.'
+                  title: 'Fale com Especialistas',
+                  desc: 'Sem scripts de atendimento. Você conversa diretamente com quem entende do assunto para resolver seu problema.'
                 },
                 {
                   icon: ShieldCheck,
-                  title: 'Segurança e Compliance',
-                  desc: 'Respeitamos as políticas de dados da sua empresa. Processos auditáveis e sigilo garantido nas manutenções.'
+                  title: 'Segurança e Privacidade',
+                  desc: 'Seus dados são sagrados. Processos rigorosos de confidencialidade e proteção de arquivos durante a manutenção.'
                 }
               ].map((item, i) => (
                 <div key={i} className="group p-8 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-primary/50 hover:bg-white/[0.08] transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10">
