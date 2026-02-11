@@ -55,8 +55,8 @@ const getTenantData = unstable_cache(
 export async function generateMetadata() {
   const { brandName } = await getTenantData()
   return {
-    title: `${brandName} | Gestão de Infraestrutura de TI`,
-    description: 'Gestão de ativos de TI e consultoria especializada para profissionais e empresas. Otimização de parque computacional e projetos corporativos.',
+    title: `${brandName} | Plataforma de Gestão e Performance de Hardware`,
+    description: 'Plataforma de gestão de ativos de TI e consultoria especializada para profissionais e empresas. Engenharia de performance computacional e projetos corporativos.',
   }
 }
 
@@ -121,12 +121,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
               </span>
-              Gestão de Infraestrutura de TI
+              Plataforma de Gestão e Performance de Hardware
             </div>
 
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 bg-gradient-to-br from-white via-white to-slate-500 bg-clip-text text-transparent animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
-              Precisando otimizar ou configurar <br />
-              seu PC ou Notebook?
+              Soluções de Performance e <br />
+              Engenharia de Hardware
             </h1>
 
             <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200">
@@ -177,7 +177,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   em Tempo Real.
                 </h2>
                 <p className="text-lg text-slate-400 leading-relaxed max-w-xl mx-auto lg:mx-0">
-                  Nosso portal de <b>Gestão de Projetos</b> permite que sua equipe ou gestor acompanhe cada etapa da otimização. Transparência total para sua operação.
+                  Nosso portal de <b>Gestão de Projetos</b> permite que sua equipe ou gestor acompanhe cada etapa do projeto. Transparência total para sua operação.
                 </p>
 
                 <ul className="space-y-3 text-slate-300 max-w-sm mx-auto lg:mx-0 text-left">
@@ -254,38 +254,38 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-center">
               {[
                 {
-                  title: "Upgrade e Performance de PCs",
-                  desc: "Melhoramos o desempenho do seu Desktop com troca de peças, upgrades estratégicos e diagnóstico técnico.",
+                  title: "Projetos de Infraestrutura de Hardware",
+                  desc: "Engenharia de performance para estações de trabalho com upgrades estratégicos, componentes homologados e diagnóstico avançado.",
                   icon: Monitor,
                   color: "blue"
                 },
                 {
-                  title: "Otimização de Notebooks",
-                  desc: "Serviços especializados para notebooks, incluindo upgrade de memória, SSD e reparos físicos estruturais.",
+                  title: "Soluções de Desempenho Computacional",
+                  desc: "Análise e implementação de melhorias em notebooks corporativos, incluindo expansão de memória, armazenamento SSD e substituição de módulos de interface.",
                   icon: Laptop,
                   color: "purple"
                 },
                 {
                   title: "Infraestrutura de Redes",
-                  desc: "Projetos de conectividade WI-FI, configuração avançada de roteadores e segurança de rede.",
+                  desc: "Projetos de conectividade corporativa, gestão de conectividade e segurança de endpoint.",
                   icon: Wifi,
                   color: "emerald"
                 },
                 {
                   title: "Consultoria Remota",
-                  desc: "Configurações de software e otimização de sistema via internet, com agilidade e total segurança.",
+                  desc: "Consultoria técnica e suporte remoto seguro para ambientes de trabalho, com agilidade e total segurança.",
                   icon: Globe,
                   color: "cyan"
                 },
                 {
                   title: "Montagem de PC Gamer",
-                  desc: "Desde a indicação de configuração até a montagem e organização (cable management) impecável.",
+                  desc: "Do planejamento à montagem e organização (cable management) impecável.",
                   icon: Cpu,
                   color: "orange"
                 },
                 {
                   title: "Gestão de Impressão",
-                  desc: "Consultoria técnica e configuração de drivers, limpeza de cabeçotes e integração de periféricos.",
+                  desc: "Consultoria técnica em soluções de impressão, manutenção preventiva de cabeçotes e integração de periféricos.",
                   icon: Printer,
                   color: "pink"
                 }
@@ -423,7 +423,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               {[
                 {
                   name: "Rodrigo M.",
-                  msg: "Meu notebook gamer estava superaquecendo. Fizeram a limpeza e troca de pasta térmica. Ficou novo!",
+                  msg: "Meu notebook gamer estava com baixa performance térmica. Realizaram todo o processo de engenharia térmica. Desempenho restaurado!",
                   role: "Designer Gráfico"
                 },
                 {
@@ -433,7 +433,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 },
                 {
                   name: "Dr. Carlos F.",
-                  msg: "Precisava de uma migração de dados e otimização de infraestrutura. Realizaram tudo com sigilo total. Recomendo.",
+                  msg: "Precisava de uma migração de dados e reestruturação da minha infraestrutura. Realizaram tudo com sigilo total. Recomendo.",
                   role: "Médico"
                 }
               ].map((depo, i) => (
@@ -465,7 +465,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 {
                   icon: Building2,
                   title: 'Presencial ou Logística',
-                  desc: 'Vamos até sua empresa ou home-office. Coleta técnica no local ou logística segura para nossa Base de Performance.'
+                  desc: 'Atendimento on-site na sua empresa. Logística segura de ativos para nossa Base de Performance.'
                 },
                 {
                   icon: UserCheck,
@@ -499,7 +499,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <div className="container relative mx-auto px-4">
             <div className="text-center max-w-2xl mx-auto mb-16">
               <h2 className="text-3xl font-bold mb-4">Fluxo de Atendimento</h2>
-              <p className="text-slate-400">Processo otimizado para não parar sua operação.</p>
+              <p className="text-slate-400">Processo estruturado para não impactar sua operação.</p>
             </div>
 
             <div className="grid md:grid-cols-4 gap-8 relative">
@@ -538,14 +538,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div className="space-y-4">
               <details className="group bg-white/[0.02] border border-white/5 rounded-2xl overflow-hidden [&_summary::-webkit-details-marker]:hidden open:bg-white/[0.04] transition-colors duration-300">
                 <summary className="flex cursor-pointer items-center justify-between gap-1.5 p-6 text-slate-200 font-bold hover:text-white transition-colors">
-                  <h3 className="text-lg">Vocês atendem em domicílio?</h3>
+                  <h3 className="text-lg">Vocês realizam suporte on-site (presencial)?</h3>
                   <div className="white-space-nowrap text-primary group-open:-rotate-180 transition-transform duration-300">
                     <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
                   </div>
                 </summary>
                 <div className="px-6 pb-6 pt-2 text-slate-400 leading-relaxed border-t border-white/5 animate-in slide-in-from-top-2 fade-in duration-300">
                   <p>
-                    Sim! Atendemos no local em toda a região metropolitana. Para outras localidades ou projetos avançados, oferecemos a <b>Consultoria Remota</b> segura.
+                    Sim! Realizamos atendimento presencial em toda a região metropolitana. Para outras localidades ou projetos avançados, oferecemos a <b>Consultoria Remota</b> segura.
                   </p>
                 </div>
               </details>
@@ -580,14 +580,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
               <details className="group bg-white/[0.02] border border-white/5 rounded-2xl overflow-hidden [&_summary::-webkit-details-marker]:hidden open:bg-white/[0.04] transition-colors duration-300">
                 <summary className="flex cursor-pointer items-center justify-between gap-1.5 p-6 text-slate-200 font-bold hover:text-white transition-colors">
-                  <h3 className="text-lg">O orçamento é gratuito?</h3>
+                  <h3 className="text-lg">Como solicitar uma Análise Técnica?</h3>
                   <div className="white-space-nowrap text-primary group-open:-rotate-180 transition-transform duration-300">
                     <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
                   </div>
                 </summary>
                 <div className="px-6 pb-6 pt-2 text-slate-400 leading-relaxed border-t border-white/5 animate-in slide-in-from-top-2 fade-in duration-300">
                   <p>
-                    A avaliação inicial e pré-orçamento via WhatsApp são gratuitos. Para análises avançadas em bancada (que exigem testes exaustivos de hardware), pode haver uma taxa técnica, que é abatida integralmente se você aprovar o serviço.
+                    A consulta inicial via WhatsApp é sem custo. Para análises avançadas em bancada (que exigem testes exaustivos de hardware), pode haver uma taxa de diagnóstico, que é abatida integralmente se você aprovar o projeto.
                   </p>
                 </div>
               </details>
@@ -645,7 +645,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
                 <Button size="lg" className="rounded-full shadow-lg shadow-primary/20" asChild>
                   <Link href={whatsappLink} target="_blank">
-                    Falar com um Técnico
+                    Falar com Especialista
                   </Link>
                 </Button>
               </div>
@@ -699,7 +699,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <ul className="space-y-2">
                 <li><a href="#solucoes" className="hover:text-primary">Computadores e PCs</a></li>
                 <li><a href="#solucoes" className="hover:text-primary">Notebooks e Laptops</a></li>
-                <li><a href="#solucoes" className="hover:text-primary">Configuração de Redes</a></li>
+                <li><a href="#solucoes" className="hover:text-primary">Infraestrutura de Redes</a></li>
               </ul>
             </div>
 
@@ -726,6 +726,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div className="space-y-1">
               <p>© {new Date().getFullYear()} {brandName}. Todos os direitos reservados.</p>
               <p className="text-xs text-slate-600">CNPJ: 64.928.869/0001-83</p>
+              <p className="text-xs text-slate-600">Goiânia - GO | Atendimento com hora marcada</p>
             </div>
           </div>
         </div>
