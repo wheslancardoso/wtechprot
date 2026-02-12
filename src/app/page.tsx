@@ -55,7 +55,7 @@ const getTenantData = unstable_cache(
 export async function generateMetadata() {
   const { brandName } = await getTenantData()
   return {
-    title: `${brandName} | Plataforma de Gestão e Performance de Hardware`,
+    title: 'Plataforma de Gestão e Performance de Hardware',
     description: 'Plataforma de gestão de ativos de TI e consultoria especializada para profissionais e empresas. Engenharia de performance computacional e projetos corporativos.',
   }
 }

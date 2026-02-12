@@ -2,7 +2,7 @@ import { ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
 
 export const metadata = {
-    title: 'Termos de Uso | WFIX Tech',
+    title: 'Termos de Uso',
     description: 'Termos de Uso da WFIX Tech - Soluções em Gestão de TI e Consultoria Corporativa.',
 }
 

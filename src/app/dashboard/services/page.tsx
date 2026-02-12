@@ -4,7 +4,7 @@ import ServiceList from './service-list'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export const metadata = {
-    title: 'Catálogo de Serviços | WFIX Tech',
+    title: 'Catálogo de Serviços',
     description: 'Gerenciamento de serviços e preços base para IA',
 }
 
