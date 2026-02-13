@@ -644,7 +644,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </div>
 
                 <Button size="lg" className="rounded-full shadow-lg shadow-primary/20" asChild>
-                  <Link href={whatsappLink} target="_blank">
+                  <Link href={whatsappLink} target="_blank" id="cta-whatsapp-contato">
                     Falar com Especialista
                   </Link>
                 </Button>
@@ -669,6 +669,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 
         <a
+          id="cta-whatsapp-float"
           href={whatsappLink}
           target="_blank"
           className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 bg-green-500 rounded-full shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:scale-110 hover:shadow-[0_0_30px_rgba(34,197,94,0.5)] transition-all duration-300 animate-in slide-in-from-bottom-10 fade-in delay-1000 group"
