@@ -293,7 +293,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     <Laptop className="w-7 h-7" />
                   </div>
                   <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Performance para Notebooks</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Análise e implementação de melhorias em notebooks e laptops, incluindo substituição de display, bateria e otimização de sistema.</p>
+                  <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Análise e implementação de melhorias em notebooks, incluindo substituição de display, bateria e otimização de sistema.</p>
                   <div className="flex items-center justify-center text-sm font-bold text-purple-400 group-hover:text-purple-300 transition-colors uppercase tracking-wider">
                     Solicitar Análise <ArrowRight className="ml-2 w-4 h-4" />
                   </div>
@@ -757,7 +757,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <h4 className="font-bold text-white mb-4">Soluções</h4>
               <ul className="space-y-2">
                 <li><a href="#solucoes" className="hover:text-primary">Computadores de Alta Performance</a></li>
-                <li><a href="#solucoes" className="hover:text-primary">Notebooks e Laptops</a></li>
+                <li><a href="#solucoes" className="hover:text-primary">Notebooks</a></li>
                 <li><a href="#solucoes" className="hover:text-primary">Infraestrutura de Redes</a></li>
               </ul>
             </div>

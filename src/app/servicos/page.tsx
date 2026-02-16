@@ -118,7 +118,7 @@ export default async function ServicesPage() {
                                 <Laptop className="w-12 h-12 text-primary" />
                             </div>
                             <div>
-                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Notebooks e Laptops</h2>
+                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Notebooks</h2>
                                 <p className="text-slate-300 leading-relaxed mb-6">
                                     Soluções de Continuidade Operacional para notebooks. Resolvemos <b>falhas de inicialização, lentidão, aquecimento ou danos físicos.</b>
                                 </p>
