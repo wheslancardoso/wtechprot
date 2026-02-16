@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowLeft, Monitor, Laptop, Wifi, Headset, CheckCircle2, ArrowRight, Printer } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { createAdminClient } from '@/lib/supabase/server'
@@ -147,18 +148,28 @@ export default async function ServicesPage() {
                                 </Button>
                             </Link>
                         </div>
-                        <div className="order-1 md:order-2 bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-8 border border-white/5 aspect-square flex items-center justify-center relative overflow-hidden group">
-                            <div className="absolute inset-0 bg-primary/5 group-hover:bg-primary/10 transition-colors" />
-                            <Laptop className="w-32 h-32 text-slate-700 group-hover:text-primary/50 transition-colors duration-500" />
+                        <div className="order-1 md:order-2 bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl border border-white/5 aspect-square flex items-center justify-center relative overflow-hidden group">
+                            <Image
+                                src="/services/notebook-repair.png"
+                                alt="Reparo profissional de notebook em laboratório"
+                                fill
+                                className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent pointer-events-none" />
                         </div>
                     </section>
 
                     {/* COMPUTADORES */}
                     <section id="computadores" className="scroll-mt-28 grid md:grid-cols-2 gap-12 items-center">
                         <div className="order-1">
-                            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-8 border border-white/5 aspect-square flex items-center justify-center relative overflow-hidden group">
-                                <div className="absolute inset-0 bg-blue-500/5 group-hover:bg-blue-500/10 transition-colors" />
-                                <Monitor className="w-32 h-32 text-slate-700 group-hover:text-blue-500/50 transition-colors duration-500" />
+                            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl border border-white/5 aspect-square flex items-center justify-center relative overflow-hidden group">
+                                <Image
+                                    src="/services/pc-build.png"
+                                    alt="Computador Gamer de Alta Performance com refrigeração líquida"
+                                    fill
+                                    className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent pointer-events-none" />
                             </div>
                         </div>
                         <div className="order-2">
@@ -227,9 +238,14 @@ export default async function ServicesPage() {
                                 </Button>
                             </Link>
                         </div>
-                        <div className="order-1 md:order-2 bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-8 border border-white/5 aspect-square flex items-center justify-center relative overflow-hidden group">
-                            <div className="absolute inset-0 bg-pink-500/5 group-hover:bg-pink-500/10 transition-colors" />
-                            <Printer className="w-32 h-32 text-slate-700 group-hover:text-pink-500/50 transition-colors duration-500" />
+                        <div className="order-1 md:order-2 bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl border border-white/5 aspect-square flex items-center justify-center relative overflow-hidden group">
+                            <Image
+                                src="/services/printer-maintenance.png"
+                                alt="Manutenção profissional de impressoras corporativas"
+                                fill
+                                className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent pointer-events-none" />
                         </div>
                     </section>
                 </div>
