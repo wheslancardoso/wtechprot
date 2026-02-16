@@ -252,8 +252,8 @@ export default async function ServicesPage() {
 
                 {/* FAQ */}
                 <section className="mt-32 pt-20 border-t border-white/5">
-                    <h2 className="text-2xl md:text-3xl font-bold text-white text-center mb-12">Dúvidas Frequentes</h2>
-                    <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                    <h2 className="text-2xl md:text-3xl font-bold text-white text-center mb-12">Dúvidas sobre o Processo Técnico</h2>
+                    <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
                         <div className="bg-white/[0.02] border border-white/5 p-6 rounded-2xl">
                             <h3 className="font-bold text-white mb-2">Quanto tempo demora?</h3>
                             <p className="text-slate-400 text-sm">A maioria dos serviços (formatação, limpeza) fica pronto em até 24h. Diagnósticos de hardware podem levar um pouco mais para testes precisos.</p>
@@ -261,10 +261,6 @@ export default async function ServicesPage() {
                         <div className="bg-white/[0.02] border border-white/5 p-6 rounded-2xl">
                             <h3 className="font-bold text-white mb-2">Vocês buscam o equipamento?</h3>
                             <p className="text-slate-400 text-sm">Sim, temos serviço de logística. Podemos retirar no seu local e devolver pronto. Consulte a taxa para sua região.</p>
-                        </div>
-                        <div className="bg-white/[0.02] border border-white/5 p-6 rounded-2xl">
-                            <h3 className="font-bold text-white mb-2">Tem garantia?</h3>
-                            <p className="text-slate-400 text-sm">Com certeza. Todos os serviços de peças e mão de obra possuem garantia (geralmente 90 dias) para sua segurança.</p>
                         </div>
                         <div className="bg-white/[0.02] border border-white/5 p-6 rounded-2xl">
                             <h3 className="font-bold text-white mb-2">Valem a pena consertar meu PC antigo?</h3>
