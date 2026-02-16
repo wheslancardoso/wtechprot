@@ -187,11 +187,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <div className="flex-1 space-y-6 text-center lg:text-left">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs font-medium text-blue-400 mb-2">
                   <Clock className="w-3 h-3" />
-                  Gestão Inteligente de Infraestrutura de TI
+                  Gestão Digital de Ativos
                 </div>
                 <h2 className="text-3xl md:text-5xl font-bold leading-tight">
-                  Gestão Inteligente de <br />
-                  Infraestrutura de TI
+                  Status de Projetos <br />
+                  em Tempo Real.
                 </h2>
                 <p className="text-lg text-slate-400 leading-relaxed max-w-xl mx-auto lg:mx-0">
                   Nosso portal de <b>Gestão de Projetos</b> permite que sua equipe ou gestor acompanhe cada etapa do projeto. Transparência total para sua operação.
