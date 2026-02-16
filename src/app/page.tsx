@@ -130,7 +130,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </h1>
 
             <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200">
-              Laboratório especializado em <b>reparo de placas, troca de peças e otimização de performance.</b> Técnicos certificados e garantia em todos os serviços.
+              Laboratório especializado em <b>manutenção avançada, troca de peças e otimização de performance.</b> Técnicos certificados e garantia em todos os serviços.
             </p>
 
             <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
@@ -278,8 +278,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   <div className="mx-auto w-14 h-14 bg-blue-500/10 rounded-full flex items-center justify-center text-blue-400 mb-4 shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
                     <Monitor className="w-7 h-7" />
                   </div>
-                  <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Gestão e Manutenção de Hardware</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Gestão Inteligente de Infraestrutura de TI para estações de trabalho com upgrades estratégicos, componentes homologados e diagnóstico avançado.</p>
+                  <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Conserto de Computadores</h3>
+                  <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Diagnóstico avançado e reparo de desktops e workstations. Troca de peças, formatação e upgrades de performance.</p>
                   <div className="flex items-center justify-center text-sm font-bold text-blue-400 group-hover:text-blue-300 transition-colors uppercase tracking-wider">
                     Saiba mais <ArrowRight className="ml-2 w-4 h-4" />
                   </div>
@@ -292,8 +292,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   <div className="mx-auto w-14 h-14 bg-purple-500/10 rounded-full flex items-center justify-center text-purple-400 mb-4 shadow-lg shadow-purple-500/20 group-hover:scale-110 transition-transform">
                     <Laptop className="w-7 h-7" />
                   </div>
-                  <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Soluções para Notebooks</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Análise e implementação de melhorias em notebooks, incluindo expansão de memória, armazenamento SSD e substituição de módulos de interface.</p>
+                  <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Manutenção de Notebooks</h3>
+                  <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Troca de tela, bateria, teclado e reparo de carcaça. Limpeza interna, troca de pasta térmica e upgrades de velocidade (SSD/RAM).</p>
                   <div className="flex items-center justify-center text-sm font-bold text-purple-400 group-hover:text-purple-300 transition-colors uppercase tracking-wider">
                     Saiba mais <ArrowRight className="ml-2 w-4 h-4" />
                   </div>
@@ -367,10 +367,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <div className="container relative mx-auto px-4">
             <div className="text-center max-w-3xl mx-auto mb-16">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-xs font-medium text-primary mb-4">
-                <FileText className="w-3 h-3" /> Monitoramento e Manutenção
+                <FileText className="w-3 h-3" /> Transparência Total
               </div>
-              <h2 className="text-3xl font-bold mb-4">Monitoramento e Manutenção de Equipamentos</h2>
-              <p className="text-slate-400">Receba fotos, relatórios de evolução e o status da sua implementação direto no seu WhatsApp.</p>
+              <h2 className="text-3xl font-bold mb-4">Acompanhe o Status do seu Reparo</h2>
+              <p className="text-slate-400">Receba fotos, relatórios e o status do serviço direto no seu WhatsApp.</p>
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
@@ -381,7 +381,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">Check-in com Fotos</h3>
                 <p className="text-sm text-slate-400 leading-relaxed">
-                  Registro fotográfico detalhado do estado do equipamento na entrada e saída. Segurança total sobre o estado do seu ativo.
+                  Receba fotos do seu equipamento assim que ele chega na bancada. Transparência total sobre o estado físico do aparelho.
                 </p>
               </div>
 
@@ -390,9 +390,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <div className="w-12 h-12 rounded-xl bg-green-500/20 text-green-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                   <CheckCircle2 className="w-6 h-6" />
                 </div>
-                <h3 className="text-lg font-bold text-white mb-2">Aprovação Digital</h3>
+                <h3 className="text-lg font-bold text-white mb-2">Orçamento via WhatsApp</h3>
                 <p className="text-sm text-slate-400 leading-relaxed">
-                  Receba a análise técnica no seu celular. Aprove ou recuse itens com um clique, sem burocracia.
+                  Receba o diagnóstico detalhado e valores no seu celular. Aprove ou reprove serviços com um clique, sem enrolação.
                 </p>
               </div>
 
@@ -412,9 +412,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <div className="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                   <FileText className="w-6 h-6" />
                 </div>
-                <h3 className="text-lg font-bold text-white mb-2">Relatório em PDF</h3>
+                <h3 className="text-lg font-bold text-white mb-2">Laudo Técnico e Garantia</h3>
                 <p className="text-sm text-slate-400 leading-relaxed">
-                  Download instantâneo do registro completo com fotos, especificações e termo de garantia. Perfeito para gestão de ativos.
+                  Receba um laudo em PDF com fotos do antes e depois, descrição detalhada do serviço realizado e sua garantia de 90 dias.
                 </p>
               </div>
             </div>
@@ -523,7 +523,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 {
                   icon: Building2,
                   title: 'Presencial ou Logística',
-                  desc: 'Atendimento on-site na sua empresa. Logística segura de ativos para nossa Base de Performance.'
+                  desc: 'Atendimento on-site na sua empresa. Logística segura de equipamentos para nosso Laboratório.'
                 },
                 {
                   icon: UserCheck,
