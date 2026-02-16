@@ -196,15 +196,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   em Tempo Real.
                 </h2>
                 <p className="text-lg text-slate-400 leading-relaxed max-w-xl mx-auto lg:mx-0">
-                  Nosso portal de <b>Gestão de Projetos</b> permite que sua equipe ou gestor acompanhe cada etapa do projeto. Transparência total para sua operação.
+                  Transparência total. Acompanhe cada etapa do serviço em tempo real.
                 </p>
 
                 <ul className="space-y-3 text-slate-300 max-w-sm mx-auto lg:mx-0 text-left">
                   {[
-                    "Portal Corporativo Exclusivo",
+                    "Acompanhamento via WhatsApp",
                     "Evidências Fotográficas das Trocas",
-                    "Aprovação de Budget Online",
-                    "Histórico de Evolução por Ativo"
+                    "Aprovação de Orçamento Online",
+                    "Histórico de Manutenção"
                   ].map((item, i) => (
                     <li key={i} className="flex items-center gap-3">
                       <CheckCircle2 className="w-5 h-5 text-primary shrink-0" />
@@ -473,7 +473,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[100px] pointer-events-none" />
           <div className="container mx-auto px-4 relative">
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="text-3xl font-bold mb-4">O Que Dizem Nossos Clientes</h2>
+              <h2 className="text-3xl font-bold mb-4">O Que Dizem Meus Clientes</h2>
               <p className="text-slate-400">Confiança se conquista com transparência e resultado.</p>
             </div>
 
@@ -523,11 +523,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 {
                   icon: Building2,
                   title: 'Presencial ou Logística',
-                  desc: 'Atendimento on-site na sua empresa. Logística segura de equipamentos para nosso Laboratório.'
+                  desc: 'Atendimento on-site na sua empresa. Logística segura de equipamentos para o Laboratório.'
                 },
                 {
                   icon: UserCheck,
-                  title: 'Fale com Especialistas',
+                  title: 'Fale com o Especialista',
                   desc: 'Sem scripts de atendimento. Você conversa diretamente com quem entende do assunto para resolver seu problema.'
                 },
                 {
@@ -565,10 +565,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <div className="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-primary/30 to-transparent -translate-y-1/2" />
 
               {[
-                { icon: MessageCircle, title: '1. Solicitação', desc: 'Sua equipe inicia o projeto via WhatsApp ou Portal. Triagem imediata da necessidade.' },
-                { icon: Wrench, title: '2. Mapeamento', desc: 'Avaliação técnica da infraestrutura e envio de proposta comercial para o gestor.' },
-                { icon: CheckCircle2, title: '3. Implementação', desc: 'Intervenção técnica autorizada. Componentes homologados. Acompanhamento online.' },
-                { icon: Server, title: '4. Entrega', desc: 'Ativo otimizado e reintegrado à sua operação.' },
+                { icon: MessageCircle, title: '1. Solicitação', desc: 'Você inicia o chamado via WhatsApp. Triagem imediata da necessidade.' },
+                { icon: Wrench, title: '2. Mapeamento', desc: 'Avaliação técnica e envio de orçamento detalhado para sua aprovação.' },
+                { icon: CheckCircle2, title: '3. Implementação', desc: 'Manutenção iniciada. Componentes de qualidade. Acompanhamento online.' },
+                { icon: Server, title: '4. Entrega', desc: 'Equipamento otimizado e pronto para uso.' },
               ].map((step, i) => (
                 <div key={i} className="relative z-10 text-center group">
                   <div className="w-16 h-16 mx-auto rounded-full bg-slate-900 border-4 border-slate-950 flex items-center justify-center mb-6 shadow-xl group-hover:border-primary/50 group-hover:scale-110 group-hover:shadow-primary/20 transition-all duration-300">

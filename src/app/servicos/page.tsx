@@ -69,8 +69,8 @@ export default async function ServicesPage() {
                         Soluções Técnicas de <span className="text-primary">Alta Performance</span>
                     </h1>
                     <p className="text-lg text-slate-400 max-w-2xl mx-auto">
-                        Atuamos com manutenção especializada, infraestrutura de redes e suporte remoto.
-                        Nossa abordagem foca na durabilidade e performance do seu equipamento.
+                        Atuação com manutenção especializada, infraestrutura de redes e suporte remoto.
+                        O foco é na durabilidade e performance do seu equipamento.
                     </p>
                 </div>
 
@@ -85,7 +85,7 @@ export default async function ServicesPage() {
                                 <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Computadores</h2>
                                 <p className="text-slate-300 leading-relaxed mb-6">
                                     Montagem e manutenção de computadores (Desktops, PCs Gamers, All-in-One e Servidores).
-                                    Prezamos por uma organização impecável (cable management), fluxo de ar otimizado e estética de alto nível.
+                                    Foco em organização impecável (cable management), fluxo de ar otimizado e estética de alto nível.
                                 </p>
                                 <ul className="grid md:grid-cols-2 gap-3 mb-8">
                                     {[
@@ -121,8 +121,8 @@ export default async function ServicesPage() {
                             <div>
                                 <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Notebooks</h2>
                                 <p className="text-slate-300 leading-relaxed mb-6">
-                                    Serviço de reparo avançado para notebooks. Atendemos no local ou com retirada (logística reversa).
-                                    Especialistas em recuperação estrutural e substituição de peças originais.
+                                    Serviço de reparo avançado para notebooks. Atendimento no local ou com retirada (logística reversa).
+                                    Especialista em recuperação estrutural e substituição de peças originais.
                                 </p>
                                 <ul className="grid md:grid-cols-2 gap-3 mb-8">
                                     {[
@@ -158,8 +158,8 @@ export default async function ServicesPage() {
                             <div>
                                 <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Impressoras</h2>
                                 <p className="text-slate-300 leading-relaxed mb-6">
-                                    Especialistas em impressoras EcoTank (Epson), Mega Tank (Canon) e HP Ink Tank (ex: 416).
-                                    Resolvemos falhas de impressão e problemas de tracionamento de papel com peças de reposição de qualidade.
+                                    Especialista em impressoras EcoTank (Epson), Mega Tank (Canon) e HP Ink Tank (ex: 416).
+                                    Resolução de falhas de impressão e problemas de tracionamento de papel com peças de reposição de qualidade.
                                 </p>
                                 <ul className="grid md:grid-cols-2 gap-3 mb-8">
                                     {[
@@ -195,7 +195,7 @@ export default async function ServicesPage() {
                             <div>
                                 <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Suporte Remoto Ágil</h2>
                                 <p className="text-slate-300 leading-relaxed mb-6">
-                                    Acessamos seu computador à distância (com segurança total) para resolver problemas de software imediatamente.
+                                    Acesso ao computador à distância (com segurança total) para resolver problemas de software imediatamente.
                                     Economize tempo e evite deslocamentos desnecessários.
                                 </p>
                                 <ul className="grid md:grid-cols-2 gap-3 mb-8">
@@ -232,7 +232,7 @@ export default async function ServicesPage() {
                             <div>
                                 <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Redes & Conectividade</h2>
                                 <p className="text-slate-300 leading-relaxed mb-6">
-                                    Soluções para Wi-Fi lento e cobertura insuficiente. Atendemos demandas pontuais de conectividade.
+                                    Soluções para Wi-Fi lento e cobertura insuficiente. Atendimento para demandas pontuais de conectividade.
                                 </p>
                                 <ul className="grid md:grid-cols-2 gap-3 mb-8">
                                     {[
@@ -260,7 +260,7 @@ export default async function ServicesPage() {
                 <section className="text-center py-12 border-t border-white/5">
                     <h3 className="text-2xl font-bold text-white mb-4">Precisa de algo mais específico?</h3>
                     <p className="text-slate-400 mb-8 max-w-xl mx-auto">
-                        Nossa equipe de engenharia está pronta para analisar casos complexos e projetos personalizados.
+                        Consultoria técnica pronta para analisar casos complexos e projetos personalizados.
                     </p>
                     <Link href={whatsappLink} target="_blank">
                         <Button size="lg" className="bg-primary hover:bg-primary/90 text-slate-950 px-8 font-bold rounded-full">
