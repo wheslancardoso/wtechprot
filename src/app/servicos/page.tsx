@@ -1,5 +1,6 @@
 import Link from 'next/link'
-import { ArrowLeft, Monitor, Laptop, Wifi, Headset, CheckCircle2, ArrowRight } from 'lucide-react'
+import Link from 'next/link'
+import { ArrowLeft, Monitor, Laptop, Wifi, Headset, CheckCircle2, ArrowRight, Printer } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { createAdminClient } from '@/lib/supabase/server'
 import { unstable_cache } from 'next/cache'
@@ -148,26 +149,27 @@ export default async function ServicesPage() {
                     </div>
                 </section>
 
-                {/* REDES SECTION */}
-                <section id="redes" className="mb-24 scroll-mt-28">
+                {/* PRINTERS SECTION (NEW FOCUS) */}
+                <section id="impressoras" className="mb-24 scroll-mt-28">
                     <div className="bg-white/5 border border-white/10 rounded-3xl p-8 md:p-12">
                         <div className="flex flex-col md:flex-row gap-8 items-start">
                             <div className="p-4 bg-primary/10 rounded-2xl shrink-0">
-                                <Wifi className="w-12 h-12 text-primary" />
+                                <Printer className="w-12 h-12 text-primary" />
                             </div>
                             <div>
-                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Redes & Conectividade</h2>
+                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Manutenção de Impressoras (Tanque/Bulk Ink)</h2>
                                 <p className="text-slate-300 leading-relaxed mb-6">
-                                    Soluções definitivas para Wi-Fi lento, quedas de conexão e cobertura insuficiente em escritórios ou grandes residências.
+                                    Especialistas em impressoras EcoTank (Epson), Mega Tank (Canon) e HP Ink Tank (ex: 416).
+                                    Resolvemos falhas de impressão e problemas de tracionamento de papel com peças de reposição de qualidade.
                                 </p>
                                 <ul className="grid md:grid-cols-2 gap-3 mb-8">
                                     {[
-                                        'Projeto e instalação de redes Wi-Fi Mesh',
-                                        'Cabeamento estruturado (Cat6/Cat7)',
-                                        'Configuração de Roteadores e Switchs',
-                                        'Segurança de rede e firewall',
-                                        'Diagnóstico de interferências',
-                                        'Otimização para streaming e jogos'
+                                        'Desobstrução de cabeça de impressão',
+                                        'Reparo de falhas de cor e linhas',
+                                        'Troca de tracionador (não puxa papel)',
+                                        'Limpeza de almofadas (Reservatório)',
+                                        'Sangria e pressurização do sistema',
+                                        'Ajuste de bulk ink e tintas',
                                     ].map((item, i) => (
                                         <li key={i} className="flex items-center gap-2 text-slate-400 text-sm">
                                             <CheckCircle2 className="w-4 h-4 text-primary shrink-0" /> {item}
@@ -176,7 +178,7 @@ export default async function ServicesPage() {
                                 </ul>
                                 <Link href={whatsappLink} target="_blank">
                                     <Button className="w-full md:w-auto bg-white/10 hover:bg-white/20 text-white border border-white/10">
-                                        Melhorar Minha Conexão <ArrowRight className="w-4 h-4 ml-2" />
+                                        Orçar Manutenção de Impressora <ArrowRight className="w-4 h-4 ml-2" />
                                     </Button>
                                 </Link>
                             </div>
@@ -214,6 +216,40 @@ export default async function ServicesPage() {
                                 <Link href={whatsappLink} target="_blank">
                                     <Button className="w-full md:w-auto bg-white/10 hover:bg-white/20 text-white border border-white/10">
                                         Iniciar Suporte Remoto <ArrowRight className="w-4 h-4 ml-2" />
+                                    </Button>
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* REDES SECTION (MOVED TO BOTTOM) */}
+                <section id="redes" className="mb-24 scroll-mt-28">
+                    <div className="bg-white/5 border border-white/10 rounded-3xl p-8 md:p-12">
+                        <div className="flex flex-col md:flex-row gap-8 items-start">
+                            <div className="p-4 bg-primary/10 rounded-2xl shrink-0">
+                                <Wifi className="w-12 h-12 text-primary" />
+                            </div>
+                            <div>
+                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Redes & Conectividade</h2>
+                                <p className="text-slate-300 leading-relaxed mb-6">
+                                    Soluções para Wi-Fi lento e cobertura insuficiente. Atendemos demandas pontuais de conectividade.
+                                </p>
+                                <ul className="grid md:grid-cols-2 gap-3 mb-8">
+                                    {[
+                                        'Configuração de Repetidores/Mesh',
+                                        'Cabeamento de rede simples',
+                                        'Configuração de Roteadores',
+                                        'Diagnóstico de conexão',
+                                    ].map((item, i) => (
+                                        <li key={i} className="flex items-center gap-2 text-slate-400 text-sm">
+                                            <CheckCircle2 className="w-4 h-4 text-primary shrink-0" /> {item}
+                                        </li>
+                                    ))}
+                                </ul>
+                                <Link href={whatsappLink} target="_blank">
+                                    <Button className="w-full md:w-auto bg-white/10 hover:bg-white/20 text-white border border-white/10">
+                                        Ajuda com Internet <ArrowRight className="w-4 h-4 ml-2" />
                                     </Button>
                                 </Link>
                             </div>
