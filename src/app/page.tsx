@@ -252,52 +252,61 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <section id="solucoes" className="py-12 border-y border-white/5 bg-white/[0.02]">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-center">
-              {[
-                {
-                  title: "Projetos de Infraestrutura de Hardware",
-                  desc: "Engenharia de performance para estações de trabalho com upgrades estratégicos, componentes homologados e diagnóstico avançado.",
-                  icon: Monitor,
-                  color: "blue"
-                },
-                {
-                  title: "Soluções de Desempenho Computacional",
-                  desc: "Análise e implementação de melhorias em notebooks corporativos, incluindo expansão de memória, armazenamento SSD e substituição de módulos de interface.",
-                  icon: Laptop,
-                  color: "purple"
-                },
-                {
-                  title: "Infraestrutura de Redes",
-                  desc: "Projetos de conectividade corporativa, gestão de conectividade e segurança de endpoint.",
-                  icon: Wifi,
-                  color: "emerald"
-                },
-                {
-                  title: "Consultoria Remota",
-                  desc: "Consultoria técnica e suporte remoto seguro para ambientes de trabalho, com agilidade e total segurança.",
-                  icon: Globe,
-                  color: "cyan"
-                },
-                {
-                  title: "Montagem de PC Gamer",
-                  desc: "Do planejamento à montagem e organização (cable management) impecável.",
-                  icon: Cpu,
-                  color: "orange"
-                },
-                {
-                  title: "Gestão de Impressão",
-                  desc: "Consultoria técnica em soluções de impressão, manutenção preventiva de cabeçotes e integração de periféricos.",
-                  icon: Printer,
-                  color: "pink"
-                }
-              ].map((service, i) => (
-                <div key={i} className="group p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/50 hover:bg-white/[0.05] transition-all duration-300 hover:-translate-y-1">
-                  <div className={`mx-auto w-14 h-14 bg-${service.color}-500/10 rounded-full flex items-center justify-center text-${service.color}-400 mb-4 shadow-lg shadow-${service.color}-500/20 group-hover:scale-110 transition-transform`}>
-                    <service.icon className="w-7 h-7" />
-                  </div>
-                  <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">{service.title}</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed">{service.desc}</p>
+
+              {/* 1. Hardware */}
+              <div className="group p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/50 hover:bg-white/[0.05] transition-all duration-300 hover:-translate-y-1">
+                <div className="mx-auto w-14 h-14 bg-blue-500/10 rounded-full flex items-center justify-center text-blue-400 mb-4 shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
+                  <Monitor className="w-7 h-7" />
                 </div>
-              ))}
+                <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Projetos de Infraestrutura de Hardware</h3>
+                <p className="text-sm text-slate-400 leading-relaxed">Engenharia de performance para estações de trabalho com upgrades estratégicos, componentes homologados e diagnóstico avançado.</p>
+              </div>
+
+              {/* 2. Desempenho (Notebooks) */}
+              <div className="group p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/50 hover:bg-white/[0.05] transition-all duration-300 hover:-translate-y-1">
+                <div className="mx-auto w-14 h-14 bg-purple-500/10 rounded-full flex items-center justify-center text-purple-400 mb-4 shadow-lg shadow-purple-500/20 group-hover:scale-110 transition-transform">
+                  <Laptop className="w-7 h-7" />
+                </div>
+                <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Soluções de Desempenho Computacional</h3>
+                <p className="text-sm text-slate-400 leading-relaxed">Análise e implementação de melhorias em notebooks corporativos, incluindo expansão de memória, armazenamento SSD e substituição de módulos de interface.</p>
+              </div>
+
+              {/* 3. Redes */}
+              <div className="group p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/50 hover:bg-white/[0.05] transition-all duration-300 hover:-translate-y-1">
+                <div className="mx-auto w-14 h-14 bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-400 mb-4 shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
+                  <Wifi className="w-7 h-7" />
+                </div>
+                <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Infraestrutura de Redes</h3>
+                <p className="text-sm text-slate-400 leading-relaxed">Projetos de conectividade corporativa, gestão de conectividade e segurança de endpoint.</p>
+              </div>
+
+              {/* 4. Remoto */}
+              <div className="group p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/50 hover:bg-white/[0.05] transition-all duration-300 hover:-translate-y-1">
+                <div className="mx-auto w-14 h-14 bg-cyan-500/10 rounded-full flex items-center justify-center text-cyan-400 mb-4 shadow-lg shadow-cyan-500/20 group-hover:scale-110 transition-transform">
+                  <Globe className="w-7 h-7" />
+                </div>
+                <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Consultoria Remota</h3>
+                <p className="text-sm text-slate-400 leading-relaxed">Consultoria técnica e suporte remoto seguro para ambientes de trabalho, com agilidade e total segurança.</p>
+              </div>
+
+              {/* 5. PC Gamer */}
+              <div className="group p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/50 hover:bg-white/[0.05] transition-all duration-300 hover:-translate-y-1">
+                <div className="mx-auto w-14 h-14 bg-orange-500/10 rounded-full flex items-center justify-center text-orange-400 mb-4 shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform">
+                  <Cpu className="w-7 h-7" />
+                </div>
+                <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Montagem de PC Gamer</h3>
+                <p className="text-sm text-slate-400 leading-relaxed">Do planejamento à montagem e organização (cable management) impecável.</p>
+              </div>
+
+              {/* 6. Impressão */}
+              <div className="group p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/50 hover:bg-white/[0.05] transition-all duration-300 hover:-translate-y-1">
+                <div className="mx-auto w-14 h-14 bg-pink-500/10 rounded-full flex items-center justify-center text-pink-400 mb-4 shadow-lg shadow-pink-500/20 group-hover:scale-110 transition-transform">
+                  <Printer className="w-7 h-7" />
+                </div>
+                <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Gestão de Impressão</h3>
+                <p className="text-sm text-slate-400 leading-relaxed">Consultoria técnica em soluções de impressão, manutenção preventiva de cabeçotes e integração de periféricos.</p>
+              </div>
+
             </div>
           </div>
         </section>
@@ -374,7 +383,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </section>
 
         {/* GALERIA PC GAMER (Husky Inspired) */}
-        <section className="py-24 bg-slate-900 overflow-hidden relative border-t border-white/5">
+        <section className="py-24 bg-slate-900 overflow-hidden relative border-t border-white/5" >
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-primary/10 via-slate-900 to-slate-900" />
           <div className="container relative mx-auto px-4">
             <div className="text-center max-w-3xl mx-auto mb-16">
@@ -411,7 +420,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </section>
 
         {/* DEPOIMENTOS (Husky Inspired) */}
-        <section className="py-24 bg-slate-950 border-t border-white/5 relative">
+        <section className="py-24 bg-slate-950 border-t border-white/5 relative" >
           <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[100px] pointer-events-none" />
           <div className="container mx-auto px-4 relative">
             <div className="text-center max-w-3xl mx-auto mb-16">
@@ -453,7 +462,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </section>
 
         {/* DIFERENCIAIS */}
-        <section id="diferenciais" className="py-24 bg-slate-950">
+        <section id="diferenciais" className="py-24 bg-slate-950" >
           <div className="container mx-auto px-4">
             <div className="text-center max-w-2xl mx-auto mb-16">
               <h2 className="text-3xl font-bold mb-4">Consultoria Especializada de Confiança</h2>
@@ -493,7 +502,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </section>
 
         {/* COMO FUNCIONA (STEPS) */}
-        <section id="como-funciona" className="py-24 relative overflow-hidden">
+        <section id="como-funciona" className="py-24 relative overflow-hidden" >
           <div className="absolute inset-0 bg-primary/5 -skew-y-3 transform origin-top-left scale-110" />
 
           <div className="container relative mx-auto px-4">
@@ -528,7 +537,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </section>
 
         {/* FAQ - PERGUNTAS FREQUENTES */}
-        <section className="py-24 bg-slate-900 border-t border-white/5">
+        <section className="py-24 bg-slate-900 border-t border-white/5" >
           <div className="container mx-auto px-4 max-w-3xl">
             <div className="text-center mb-16">
               <h2 className="text-3xl font-bold mb-4">Dúvidas Frequentes</h2>
@@ -682,7 +691,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       </main>
 
       {/* FOOTER */}
-      <footer className="bg-slate-950 border-t border-white/5 py-12 text-sm text-slate-500">
+      <footer className="bg-slate-950 border-t border-white/5 py-12 text-sm text-slate-500" >
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div className="space-y-4">
