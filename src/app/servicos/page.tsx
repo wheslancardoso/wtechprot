@@ -121,14 +121,14 @@ export default async function ServicesPage() {
                             <div>
                                 <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Notebooks</h2>
                                 <p className="text-slate-300 leading-relaxed mb-6">
-                                    Serviço de reparo avançado para notebooks. Atendemos no local ou com retirada (logística reversa).
+                                    Serviço de manutenção avançada para notebooks. Atendemos no local ou com retirada (logística reversa).
                                     Especialistas em recuperação estrutural e substituição de peças originais.
                                 </p>
                                 <ul className="grid md:grid-cols-2 gap-3 mb-8">
                                     {[
                                         'Troca de telas originais (LCD/LED/OLED)',
                                         'Substituição de teclados e baterias',
-                                        'Reparo de carcaça e dobradiças',
+                                        'Restauração de carcaça e dobradiças',
                                         'Troca de pasta térmica (Cooling)',
                                         'Expansão de memória RAM e SSD',
                                         'Recuperação de sistema operacional'
@@ -140,7 +140,7 @@ export default async function ServicesPage() {
                                 </ul>
                                 <Link href={whatsappLink} target="_blank">
                                     <Button className="w-full md:w-auto bg-white/10 hover:bg-white/20 text-white border border-white/10">
-                                        Orçar Reparo de Notebook <ArrowRight className="w-4 h-4 ml-2" />
+                                        Orçar Manutenção de Notebook <ArrowRight className="w-4 h-4 ml-2" />
                                     </Button>
                                 </Link>
                             </div>
@@ -164,7 +164,7 @@ export default async function ServicesPage() {
                                 <ul className="grid md:grid-cols-2 gap-3 mb-8">
                                     {[
                                         'Desobstrução de cabeça de impressão',
-                                        'Reparo de falhas de cor e linhas',
+                                        'Correção de falhas de cor e linhas',
                                         'Troca de tracionador (não puxa papel)',
                                         'Reset e troca das almofadas',
                                         'Pressurização e troca das tintas',
