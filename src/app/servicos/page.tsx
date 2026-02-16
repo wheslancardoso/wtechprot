@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Link from 'next/link'
 import { ArrowLeft, Monitor, Laptop, Wifi, Headset, CheckCircle2, ArrowRight, Printer } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { createAdminClient } from '@/lib/supabase/server'
