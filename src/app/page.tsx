@@ -130,7 +130,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </h1>
 
             <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200">
-              Laboratório especializado em <b>manutenção avançada, troca de peças e otimização de performance.</b> Técnicos certificados e garantia em todos os serviços.
+              Laboratório especializado em <b>manutenção avançada, troca de peças e otimização de performance.</b> Serviço realizado por especialista certificado com garantia total.
             </p>
 
             <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
@@ -192,7 +192,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   Gestão Digital de Ativos
                 </div>
                 <h2 className="text-3xl md:text-5xl font-bold leading-tight">
-                  Status de Projetos <br />
+                  Acompanhe seu Reparo <br />
                   em Tempo Real.
                 </h2>
                 <p className="text-lg text-slate-400 leading-relaxed max-w-xl mx-auto lg:mx-0">
@@ -238,10 +238,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   {/* Timeline Mock - Animated */}
                   <div className="space-y-6 relative pl-4 border-l border-white/10 ml-2">
                     {[
-                      { title: "Projeto Iniciado", time: "10:30", delay: "0s" },
-                      { title: "Mapeamento Técnico", time: "10:45", delay: "0.5s" },
-                      { title: "Upgrades Implementados", time: "14:20", delay: "1s" },
-                      { title: "Pronto para Entrega", time: "16:00", delay: "1.5s" }
+                      { title: "Equipamento Recebido", time: "10:30", delay: "0s" },
+                      { title: "Análise do Especialista", time: "10:45", delay: "0.5s" },
+                      { title: "Manutenção Realizada", time: "14:20", delay: "1s" },
+                      { title: "Pronto para Retirada", time: "16:00", delay: "1.5s" }
                     ].map((step, i, arr) => (
                       <div
                         key={i}
