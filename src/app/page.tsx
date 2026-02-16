@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowRight, CheckCircle2, ShieldCheck, FileSearch, Smartphone, MessageCircle, Wrench, CreditCard, Laptop, Home as HomeIcon, UserCheck, Printer, Monitor, Clock, FileText, Server, Building2, Briefcase, Wifi, Globe, Cpu, Settings, MapPin } from 'lucide-react'
+import { ArrowRight, CheckCircle2, ShieldCheck, FileSearch, Smartphone, MessageCircle, Wrench, CreditCard, Laptop, Home as HomeIcon, UserCheck, Printer, Monitor, Clock, FileText, Server, Building2, Briefcase, Wifi, Globe, Cpu, Settings, MapPin, Headset } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 import Script from 'next/script'
@@ -175,36 +175,63 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </div>
           </div>
 
-          {/* QUICK SOLUTIONS SECTION (Hybrid Strategy) */}
+          {/* QUICK SOLUTIONS SECTION (Hybrid Strategy - Refined) */}
           <section className="py-12 bg-slate-950 border-b border-white/5">
             <div className="container mx-auto px-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
                 {/* Card 1: Desktop/Workstation */}
-                <div className="bg-white/5 rounded-2xl p-6 border border-white/10 hover:border-primary/50 transition-all group">
-                  <h3 className="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors">Workstations & Desktops</h3>
-                  <p className="text-slate-400 text-sm mb-4">Diagnóstico avançado, substituição de componentes e upgrades de alta performance.</p>
-                  <Link href={whatsappLink} target="_blank" className="text-primary text-sm font-bold flex items-center gap-2">
-                    Falar com Especialista <ArrowRight className="w-4 h-4" />
-                  </Link>
-                </div>
+                <Link href={whatsappLink} target="_blank" className="block">
+                  <div className="bg-white/5 rounded-2xl p-6 border border-white/10 hover:border-primary/50 hover:bg-white/10 transition-all cursor-pointer group h-full">
+                    <div className="mb-4 text-primary bg-primary/10 w-fit p-3 rounded-xl">
+                      <Monitor className="w-6 h-6" />
+                    </div>
+                    <h3 className="text-lg font-bold text-white mb-3 group-hover:text-primary transition-colors">Workstations & Desktops</h3>
+                    <p className="text-slate-400 text-sm leading-relaxed">
+                      Diagnóstico avançado, substituição segura de componentes, upgrades de hardware e montagem personalizada com gestão de cabos e fluxo de ar.
+                    </p>
+                  </div>
+                </Link>
 
                 {/* Card 2: Notebooks */}
-                <div className="bg-white/5 rounded-2xl p-6 border border-white/10 hover:border-primary/50 transition-all group">
-                  <h3 className="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors">Notebooks Corporativos</h3>
-                  <p className="text-slate-400 text-sm mb-4">Reparo de hardware, troca de telas originais e otimização de sistema térmico.</p>
-                  <Link href={whatsappLink} target="_blank" className="text-primary text-sm font-bold flex items-center gap-2">
-                    Orçamento via WhatsApp <ArrowRight className="w-4 h-4" />
-                  </Link>
-                </div>
+                <Link href={whatsappLink} target="_blank" className="block">
+                  <div className="bg-white/5 rounded-2xl p-6 border border-white/10 hover:border-primary/50 hover:bg-white/10 transition-all cursor-pointer group h-full">
+                    <div className="mb-4 text-primary bg-primary/10 w-fit p-3 rounded-xl">
+                      <Laptop className="w-6 h-6" />
+                    </div>
+                    <h3 className="text-lg font-bold text-white mb-3 group-hover:text-primary transition-colors">Notebooks Corporativos</h3>
+                    <p className="text-slate-400 text-sm leading-relaxed">
+                      Manutenção especializada para laptops corporativos: troca de telas originais, teclados, reparo estrutural (dobradiças/carcaça) e sistemas térmicos.
+                    </p>
+                  </div>
+                </Link>
 
                 {/* Card 3: Redes & Wi-Fi */}
-                <div className="bg-white/5 rounded-2xl p-6 border border-white/10 hover:border-primary/50 transition-all group">
-                  <h3 className="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors">Redes & Conectividade</h3>
-                  <p className="text-slate-400 text-sm mb-4">Projetos de cabeamento, configuração de Wi-Fi Mesh e segurança de dados.</p>
-                  <Link href={whatsappLink} target="_blank" className="text-primary text-sm font-bold flex items-center gap-2">
-                    Agendar Visita Técnica <ArrowRight className="w-4 h-4" />
-                  </Link>
-                </div>
+                <Link href={whatsappLink} target="_blank" className="block">
+                  <div className="bg-white/5 rounded-2xl p-6 border border-white/10 hover:border-primary/50 hover:bg-white/10 transition-all cursor-pointer group h-full">
+                    <div className="mb-4 text-primary bg-primary/10 w-fit p-3 rounded-xl">
+                      <Wifi className="w-6 h-6" />
+                    </div>
+                    <h3 className="text-lg font-bold text-white mb-3 group-hover:text-primary transition-colors">Redes & Conectividade</h3>
+                    <p className="text-slate-400 text-sm leading-relaxed">
+                      Soluções para Wi-Fi lento e instável. Configuração profissional de roteadores, redes Mesh e otimização de sinal para escritórios e residências.
+                    </p>
+                  </div>
+                </Link>
+
+                {/* Card 4: Suporte Remoto */}
+                <Link href={whatsappLink} target="_blank" className="block">
+                  <div className="bg-white/5 rounded-2xl p-6 border border-white/10 hover:border-primary/50 hover:bg-white/10 transition-all cursor-pointer group h-full">
+                    <div className="mb-4 text-primary bg-primary/10 w-fit p-3 rounded-xl">
+                      <Headset className="w-6 h-6" />
+                    </div>
+                    <h3 className="text-lg font-bold text-white mb-3 group-hover:text-primary transition-colors">Suporte Remoto Ágil</h3>
+                    <p className="text-slate-400 text-sm leading-relaxed">
+                      Atendimento imediato via acesso remoto seguro para resolução de problemas de software, drivers e configurações sem necessidade de visita.
+                    </p>
+                  </div>
+                </Link>
+
               </div>
             </div>
           </section>
