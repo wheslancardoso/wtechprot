@@ -181,7 +181,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
                 {/* Card 1: Desktop/Workstation */}
-                <Link href={whatsappLink} target="_blank" className="block">
+                <Link href="/servicos#workstations" className="block">
                   <div className="bg-white/5 rounded-2xl p-6 border border-white/10 hover:border-primary/50 hover:bg-white/10 transition-all cursor-pointer group h-full">
                     <div className="mb-4 text-primary bg-primary/10 w-fit p-3 rounded-xl">
                       <Monitor className="w-6 h-6" />
@@ -190,11 +190,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     <p className="text-slate-400 text-sm leading-relaxed">
                       Diagnóstico avançado, substituição segura de componentes, upgrades de hardware e montagem personalizada com gestão de cabos e fluxo de ar.
                     </p>
+                    <span className="text-xs text-primary font-bold mt-4 block uppercase tracking-wider group-hover:underline">Saiba Mais &rarr;</span>
                   </div>
                 </Link>
 
                 {/* Card 2: Notebooks */}
-                <Link href={whatsappLink} target="_blank" className="block">
+                <Link href="/servicos#notebooks" className="block">
                   <div className="bg-white/5 rounded-2xl p-6 border border-white/10 hover:border-primary/50 hover:bg-white/10 transition-all cursor-pointer group h-full">
                     <div className="mb-4 text-primary bg-primary/10 w-fit p-3 rounded-xl">
                       <Laptop className="w-6 h-6" />
@@ -203,11 +204,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     <p className="text-slate-400 text-sm leading-relaxed">
                       Manutenção especializada para laptops corporativos: troca de telas originais, teclados, reparo estrutural (dobradiças/carcaça) e sistemas térmicos.
                     </p>
+                    <span className="text-xs text-primary font-bold mt-4 block uppercase tracking-wider group-hover:underline">Saiba Mais &rarr;</span>
                   </div>
                 </Link>
 
                 {/* Card 3: Redes & Wi-Fi */}
-                <Link href={whatsappLink} target="_blank" className="block">
+                <Link href="/servicos#redes" className="block">
                   <div className="bg-white/5 rounded-2xl p-6 border border-white/10 hover:border-primary/50 hover:bg-white/10 transition-all cursor-pointer group h-full">
                     <div className="mb-4 text-primary bg-primary/10 w-fit p-3 rounded-xl">
                       <Wifi className="w-6 h-6" />
@@ -216,11 +218,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     <p className="text-slate-400 text-sm leading-relaxed">
                       Soluções para Wi-Fi lento e instável. Configuração profissional de roteadores, redes Mesh e otimização de sinal para escritórios e residências.
                     </p>
+                    <span className="text-xs text-primary font-bold mt-4 block uppercase tracking-wider group-hover:underline">Saiba Mais &rarr;</span>
                   </div>
                 </Link>
 
                 {/* Card 4: Suporte Remoto */}
-                <Link href={whatsappLink} target="_blank" className="block">
+                <Link href="/servicos#remoto" className="block">
                   <div className="bg-white/5 rounded-2xl p-6 border border-white/10 hover:border-primary/50 hover:bg-white/10 transition-all cursor-pointer group h-full">
                     <div className="mb-4 text-primary bg-primary/10 w-fit p-3 rounded-xl">
                       <Headset className="w-6 h-6" />
@@ -229,6 +232,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     <p className="text-slate-400 text-sm leading-relaxed">
                       Atendimento imediato via acesso remoto seguro para resolução de problemas de software, drivers e configurações sem necessidade de visita.
                     </p>
+                    <span className="text-xs text-primary font-bold mt-4 block uppercase tracking-wider group-hover:underline">Saiba Mais &rarr;</span>
                   </div>
                 </Link>
 
