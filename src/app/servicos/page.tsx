@@ -82,9 +82,9 @@ export default async function ServicesPage() {
                                 <Monitor className="w-12 h-12 text-primary" />
                             </div>
                             <div>
-                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Workstations & Desktops</h2>
+                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Computadores de Alta Performance</h2>
                                 <p className="text-slate-300 leading-relaxed mb-6">
-                                    Montagem e manutenção de computadores de alta performance (PCs Gamers, Workstations de Edição/Render e Servidores).
+                                    Montagem e manutenção de computadores (PCs Gamers, Workstations e Servidores).
                                     Prezamos por uma organização impecável (cable management), fluxo de ar otimizado e estética de alto nível.
                                 </p>
                                 <ul className="grid md:grid-cols-2 gap-3 mb-8">

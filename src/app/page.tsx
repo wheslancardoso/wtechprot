@@ -292,7 +292,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   <div className="mx-auto w-14 h-14 bg-purple-500/10 rounded-full flex items-center justify-center text-purple-400 mb-4 shadow-lg shadow-purple-500/20 group-hover:scale-110 transition-transform">
                     <Laptop className="w-7 h-7" />
                   </div>
-                  <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Otimização e Upgrade de Workstations</h3>
+                  <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Otimização de Notebooks</h3>
                   <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Análise e implementação de melhorias em notebooks corporativos, incluindo expansão de memória, armazenamento SSD e substituição de módulos de interface.</p>
                   <div className="flex items-center justify-center text-sm font-bold text-purple-400 group-hover:text-purple-300 transition-colors uppercase tracking-wider">
                     Saiba mais <ArrowRight className="ml-2 w-4 h-4" />
@@ -334,7 +334,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   <div className="mx-auto w-14 h-14 bg-orange-500/10 rounded-full flex items-center justify-center text-orange-400 mb-4 shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform">
                     <Cpu className="w-7 h-7" />
                   </div>
-                  <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Montagem de Workstations de Performance</h3>
+                  <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Montagem de Computadores e PC Gamer</h3>
                   <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Do planejamento à montagem e organização (cable management) impecável.</p>
                   <div className="flex items-center justify-center text-sm font-bold text-orange-400 group-hover:text-orange-300 transition-colors uppercase tracking-wider">
                     Saiba mais <ArrowRight className="ml-2 w-4 h-4" />
