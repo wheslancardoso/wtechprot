@@ -119,7 +119,7 @@ export default async function ServicesPage() {
                                 <Laptop className="w-12 h-12 text-primary" />
                             </div>
                             <div>
-                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Notebooks Corporativos</h2>
+                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Notebooks</h2>
                                 <p className="text-slate-300 leading-relaxed mb-6">
                                     Serviço de reparo avançado para notebooks. Atendemos no local ou com retirada (logística reversa).
                                     Especialistas em recuperação estrutural e substituição de peças originais.

@@ -293,7 +293,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     <Laptop className="w-7 h-7" />
                   </div>
                   <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Otimização de Notebooks</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Análise e implementação de melhorias em notebooks corporativos, incluindo expansão de memória, armazenamento SSD e substituição de módulos de interface.</p>
+                  <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Análise e implementação de melhorias em notebooks, incluindo expansão de memória, armazenamento SSD e substituição de módulos de interface.</p>
                   <div className="flex items-center justify-center text-sm font-bold text-purple-400 group-hover:text-purple-300 transition-colors uppercase tracking-wider">
                     Saiba mais <ArrowRight className="ml-2 w-4 h-4" />
                   </div>
