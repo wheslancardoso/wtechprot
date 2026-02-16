@@ -174,6 +174,40 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               ))}
             </div>
           </div>
+
+          {/* QUICK SOLUTIONS SECTION (Hybrid Strategy) */}
+          <section className="py-12 bg-slate-950 border-b border-white/5">
+            <div className="container mx-auto px-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Card 1: Desktop/Workstation */}
+                <div className="bg-white/5 rounded-2xl p-6 border border-white/10 hover:border-primary/50 transition-all group">
+                  <h3 className="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors">Workstations & Desktops</h3>
+                  <p className="text-slate-400 text-sm mb-4">Diagnóstico avançado, substituição de componentes e upgrades de alta performance.</p>
+                  <Link href={whatsappLink} target="_blank" className="text-primary text-sm font-bold flex items-center gap-2">
+                    Falar com Especialista <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </div>
+
+                {/* Card 2: Notebooks */}
+                <div className="bg-white/5 rounded-2xl p-6 border border-white/10 hover:border-primary/50 transition-all group">
+                  <h3 className="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors">Notebooks Corporativos</h3>
+                  <p className="text-slate-400 text-sm mb-4">Reparo de hardware, troca de telas originais e otimização de sistema térmico.</p>
+                  <Link href={whatsappLink} target="_blank" className="text-primary text-sm font-bold flex items-center gap-2">
+                    Orçamento via WhatsApp <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </div>
+
+                {/* Card 3: Redes & Wi-Fi */}
+                <div className="bg-white/5 rounded-2xl p-6 border border-white/10 hover:border-primary/50 transition-all group">
+                  <h3 className="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors">Redes & Conectividade</h3>
+                  <p className="text-slate-400 text-sm mb-4">Projetos de cabeamento, configuração de Wi-Fi Mesh e segurança de dados.</p>
+                  <Link href={whatsappLink} target="_blank" className="text-primary text-sm font-bold flex items-center gap-2">
+                    Agendar Visita Técnica <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
 
         {/* TRACKING SPOTLIGHT SECTION */}
