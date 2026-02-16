@@ -55,8 +55,8 @@ const getTenantData = unstable_cache(
 export async function generateMetadata() {
   const { brandName } = await getTenantData()
   return {
-    title: 'Plataforma de Gestão e Performance de Hardware',
-    description: 'Plataforma de gestão de ativos de TI e consultoria especializada para profissionais e empresas. Engenharia de performance computacional e projetos corporativos.',
+    title: `${brandName} | Assistência Técnica Especializada`,
+    description: 'Assistência Técnica Especializada em Notebooks, Computadores e Impressoras. Conserto, manutenção e peças originais. Atendimento em laboratório ou no local.',
   }
 }
 
@@ -116,21 +116,21 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-slate-950 to-slate-950" />
 
           <div className="container relative mx-auto px-4 text-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-primary mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-slate-300 mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
               <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
               </span>
-              Plataforma de Gestão e Performance de Hardware
+              Assistência Técnica Especializada
             </div>
 
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 bg-gradient-to-br from-white via-white to-slate-500 bg-clip-text text-transparent animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
-              Soluções de Performance e <br />
-              Gestão Inteligente de Infraestrutura de TI
+              Conserto de <br />
+              Notebooks e Computadores
             </h1>
 
             <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200">
-              Fale agora mesmo com um especialista. <b>Atendimento profissional, logística ou consultoria especializada.</b>
+              Laboratório especializado em <b>reparo de placas, troca de peças e otimização de performance.</b> Técnicos certificados e garantia em todos os serviços.
             </p>
 
             <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
