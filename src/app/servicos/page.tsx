@@ -51,7 +51,7 @@ export default async function ServicesPage() {
                         <ArrowLeft className="w-4 h-4" /> Voltar para Home
                     </Link>
                     <span className="font-bold text-lg text-white tracking-tight">
-                        {brandName} <span className="text-primary">Especialidades</span>
+                        {brandName} <span className="text-primary">Performance</span>
                     </span>
                     <Link href={whatsappLink} target="_blank">
                         <Button size="sm" className="bg-primary hover:bg-primary/90 text-slate-950 font-bold">
@@ -69,8 +69,8 @@ export default async function ServicesPage() {
                         Soluções Técnicas de <span className="text-primary">Alta Performance</span>
                     </h1>
                     <p className="text-lg text-slate-400 max-w-2xl mx-auto">
-                        Atuamos com manutenção especializada, infraestrutura de redes e suporte remoto.
-                        Nossa abordagem foca na durabilidade e performance do seu equipamento.
+                        Engenharia de hardware e otimização de infraestrutura.
+                        Foco total na continuidade do seu trabalho e durabilidade dos ativos.
                     </p>
                 </div>
 
@@ -82,17 +82,16 @@ export default async function ServicesPage() {
                                 <Monitor className="w-12 h-12 text-primary" />
                             </div>
                             <div>
-                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Computadores</h2>
+                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Workstations e Desktops</h2>
                                 <p className="text-slate-300 leading-relaxed mb-6">
-                                    Montagem e manutenção de computadores (Desktops, PCs Gamers, All-in-One e Servidores).
-                                    Prezamos por uma organização impecável (cable management), fluxo de ar otimizado e estética de alto nível.
+                                    Engenharia de montagem e reestruturação de hardware. Ideal para equipamentos que apresentam <b>lentidão em softwares pesados</b> ou travamentos aleatórios.
                                 </p>
                                 <ul className="grid md:grid-cols-2 gap-3 mb-8">
                                     {[
                                         'Diagnóstico avançado de hardware',
-                                        'Substituição de componentes (GPU, CPU, RAM)',
-                                        'Upgrades de performance e SSD',
-                                        'Organização de cabos e limpeza técnica',
+                                        'Substituição de Hardware (Upgrade)',
+                                        'Otimização de Sistema Operacional',
+                                        'Manutenção Preventiva e Organização',
                                         'Otimização de BIOS e Drivers',
                                         'Testes de stress e estabilidade'
                                     ].map((item, i) => (
@@ -103,7 +102,7 @@ export default async function ServicesPage() {
                                 </ul>
                                 <Link href={whatsappLink} target="_blank">
                                     <Button className="w-full md:w-auto bg-white/10 hover:bg-white/20 text-white border border-white/10">
-                                        Cotar Montagem ou Manutenção <ArrowRight className="w-4 h-4 ml-2" />
+                                        Solicitar Análise de Performance <ArrowRight className="w-4 h-4 ml-2" />
                                     </Button>
                                 </Link>
                             </div>
@@ -119,19 +118,18 @@ export default async function ServicesPage() {
                                 <Laptop className="w-12 h-12 text-primary" />
                             </div>
                             <div>
-                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Notebooks</h2>
+                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Estações Móveis (Notebooks)</h2>
                                 <p className="text-slate-300 leading-relaxed mb-6">
-                                    Serviço de manutenção avançada para notebooks. Atendemos no local ou com retirada (logística reversa).
-                                    Especialistas em recuperação estrutural e substituição de peças originais.
+                                    Restabelecimento de performance para equipamentos portáteis. Solução técnica para <b>falhas de inicialização, aquecimento ou danos físicos.</b>
                                 </p>
                                 <ul className="grid md:grid-cols-2 gap-3 mb-8">
                                     {[
-                                        'Troca de telas originais (LCD/LED/OLED)',
-                                        'Substituição de teclados e baterias',
+                                        'Substituição de Painel de Imagem (Display)',
+                                        'Restauro de Interface (Teclado/Touch)',
                                         'Restauração de carcaça e dobradiças',
-                                        'Troca de pasta térmica (Cooling)',
+                                        'Desobstrução Térmica e Refrigeração',
                                         'Expansão de memória RAM e SSD',
-                                        'Recuperação de sistema operacional'
+                                        'Recuperação de performance do Sistema'
                                     ].map((item, i) => (
                                         <li key={i} className="flex items-center gap-2 text-slate-400 text-sm">
                                             <CheckCircle2 className="w-4 h-4 text-primary shrink-0" /> {item}
@@ -140,7 +138,7 @@ export default async function ServicesPage() {
                                 </ul>
                                 <Link href={whatsappLink} target="_blank">
                                     <Button className="w-full md:w-auto bg-white/10 hover:bg-white/20 text-white border border-white/10">
-                                        Orçar Manutenção de Notebook <ArrowRight className="w-4 h-4 ml-2" />
+                                        Recuperar Estação Móvel <ArrowRight className="w-4 h-4 ml-2" />
                                     </Button>
                                 </Link>
                             </div>
@@ -156,18 +154,17 @@ export default async function ServicesPage() {
                                 <Printer className="w-12 h-12 text-primary" />
                             </div>
                             <div>
-                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Impressoras</h2>
+                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Gestão de Impressão</h2>
                                 <p className="text-slate-300 leading-relaxed mb-6">
-                                    Especialistas em impressoras EcoTank (Epson), Mega Tank (Canon) e HP Ink Tank (ex: 416).
-                                    Resolvemos falhas de impressão e problemas de tracionamento de papel com peças de reposição de qualidade.
+                                    Especialistas nos <b>principais fabricantes do mercado</b> (Ink Tank / Laser). Ideal para retomar a impressão sem manchas ou atolamentos.
                                 </p>
                                 <ul className="grid md:grid-cols-2 gap-3 mb-8">
                                     {[
                                         'Desobstrução de cabeça de impressão',
-                                        'Correção de falhas de cor e linhas',
-                                        'Troca de tracionador (não puxa papel)',
-                                        'Reset e troca das almofadas',
-                                        'Pressurização e troca das tintas',
+                                        'Restabelecimento de nitidez e cores',
+                                        'Substituição de Mecanismo de Tração',
+                                        'Manutenção de Reservatório de Resíduos',
+                                        'Pressurização de sistema de tinta',
                                         'Instalação de impressora na rede',
                                     ].map((item, i) => (
                                         <li key={i} className="flex items-center gap-2 text-slate-400 text-sm">
@@ -177,7 +174,7 @@ export default async function ServicesPage() {
                                 </ul>
                                 <Link href={whatsappLink} target="_blank">
                                     <Button className="w-full md:w-auto bg-white/10 hover:bg-white/20 text-white border border-white/10">
-                                        Orçar Manutenção de Impressora <ArrowRight className="w-4 h-4 ml-2" />
+                                        Resolver Problema de Impressão <ArrowRight className="w-4 h-4 ml-2" />
                                     </Button>
                                 </Link>
                             </div>
@@ -193,17 +190,16 @@ export default async function ServicesPage() {
                                 <Headset className="w-12 h-12 text-primary" />
                             </div>
                             <div>
-                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Suporte Remoto Ágil</h2>
+                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Consultoria Remota</h2>
                                 <p className="text-slate-300 leading-relaxed mb-6">
-                                    Acessamos seu computador à distância (com segurança total) para resolver problemas de software imediatamente.
-                                    Economize tempo e evite deslocamentos desnecessários.
+                                    Recuperação de performance via acesso seguro. Ideal para resolver <b>erros de software imediatamente</b> sem visita presencial.
                                 </p>
                                 <ul className="grid md:grid-cols-2 gap-3 mb-8">
                                     {[
-                                        'Remoção de vírus e malwares',
-                                        'Instalação e configuração de programas',
-                                        'Resolução de problemas de drivers',
-                                        'Configuração de impressoras e periféricos',
+                                        'Sanitização de Sistema e Segurança',
+                                        'Mapeamento e Configuração de Software',
+                                        'Resolução de conflitos de drivers',
+                                        'Configuração de periféricos',
                                         'Otimização de sistema lento',
                                         'Atendimento imediato (sem agendamento)'
                                     ].map((item, i) => (
@@ -214,7 +210,7 @@ export default async function ServicesPage() {
                                 </ul>
                                 <Link href={whatsappLink} target="_blank">
                                     <Button className="w-full md:w-auto bg-white/10 hover:bg-white/20 text-white border border-white/10">
-                                        Iniciar Suporte Remoto <ArrowRight className="w-4 h-4 ml-2" />
+                                        Solicitar Acesso Seguro <ArrowRight className="w-4 h-4 ml-2" />
                                     </Button>
                                 </Link>
                             </div>
@@ -232,12 +228,12 @@ export default async function ServicesPage() {
                             <div>
                                 <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Redes & Conectividade</h2>
                                 <p className="text-slate-300 leading-relaxed mb-6">
-                                    Soluções para Wi-Fi lento e cobertura insuficiente. Atendemos demandas pontuais de conectividade.
+                                    Diagnóstico de conectividade para eliminar <b>gargalos de rede e instabilidade</b> em chamadas de vídeo e sistemas.
                                 </p>
                                 <ul className="grid md:grid-cols-2 gap-3 mb-8">
                                     {[
                                         'Configuração de Repetidores/Mesh',
-                                        'Cabeamento de rede simples',
+                                        'Cabeamento de rede estruturado',
                                         'Configuração de Roteadores',
                                         'Diagnóstico de conexão',
                                     ].map((item, i) => (
@@ -248,7 +244,7 @@ export default async function ServicesPage() {
                                 </ul>
                                 <Link href={whatsappLink} target="_blank">
                                     <Button className="w-full md:w-auto bg-white/10 hover:bg-white/20 text-white border border-white/10">
-                                        Ajuda com Internet <ArrowRight className="w-4 h-4 ml-2" />
+                                        Melhorar Conexão <ArrowRight className="w-4 h-4 ml-2" />
                                     </Button>
                                 </Link>
                             </div>

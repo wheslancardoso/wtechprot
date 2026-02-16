@@ -281,7 +281,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Gestão e Manutenção de Hardware</h3>
                   <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Gestão Inteligente de Infraestrutura de TI para estações de trabalho com upgrades estratégicos, componentes homologados e diagnóstico avançado.</p>
                   <div className="flex items-center justify-center text-sm font-bold text-blue-400 group-hover:text-blue-300 transition-colors uppercase tracking-wider">
-                    Saiba mais <ArrowRight className="ml-2 w-4 h-4" />
+                    Conheça o Método <ArrowRight className="ml-2 w-4 h-4" />
                   </div>
                 </div>
               </Link>
@@ -292,10 +292,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   <div className="mx-auto w-14 h-14 bg-purple-500/10 rounded-full flex items-center justify-center text-purple-400 mb-4 shadow-lg shadow-purple-500/20 group-hover:scale-110 transition-transform">
                     <Laptop className="w-7 h-7" />
                   </div>
-                  <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Soluções para Notebooks</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Análise e implementação de melhorias em notebooks, incluindo expansão de memória, armazenamento SSD e substituição de módulos de interface.</p>
+                  <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Soluções para Estações Móveis</h3>
+                  <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Análise e implementação de melhorias em equipamentos portáteis, incluindo expansão de memória, armazenamento SSD e substituição de módulos.</p>
                   <div className="flex items-center justify-center text-sm font-bold text-purple-400 group-hover:text-purple-300 transition-colors uppercase tracking-wider">
-                    Saiba mais <ArrowRight className="ml-2 w-4 h-4" />
+                    Conheça o Método <ArrowRight className="ml-2 w-4 h-4" />
                   </div>
                 </div>
               </Link>
@@ -307,9 +307,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     <Printer className="w-7 h-7" />
                   </div>
                   <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Gestão de Impressão</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Especialistas em Epson/Canon/HP. Desobstrução de cabeçotes, troca de tracionador e manutenção de sistemas Bulk Ink com peças de qualidade.</p>
+                  <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Especialistas nos principais fabricantes do mercado (Ink Tank / Laser). Desobstrução de cabeçotes, troca de tracionador e manutenção de sistemas Bulk Ink.</p>
                   <div className="flex items-center justify-center text-sm font-bold text-pink-400 group-hover:text-pink-300 transition-colors uppercase tracking-wider">
-                    Saiba mais <ArrowRight className="ml-2 w-4 h-4" />
+                    Conheça o Método <ArrowRight className="ml-2 w-4 h-4" />
                   </div>
                 </div>
               </Link>
@@ -323,7 +323,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Consultoria Remota</h3>
                   <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Consultoria técnica e suporte remoto seguro para ambientes de trabalho, com agilidade e total segurança.</p>
                   <div className="flex items-center justify-center text-sm font-bold text-cyan-400 group-hover:text-cyan-300 transition-colors uppercase tracking-wider">
-                    Saiba mais <ArrowRight className="ml-2 w-4 h-4" />
+                    Conheça o Método <ArrowRight className="ml-2 w-4 h-4" />
                   </div>
                 </div>
               </Link>
@@ -337,7 +337,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Montagem de Computadores</h3>
                   <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Do planejamento à montagem e organização (cable management) impecável.</p>
                   <div className="flex items-center justify-center text-sm font-bold text-orange-400 group-hover:text-orange-300 transition-colors uppercase tracking-wider">
-                    Saiba mais <ArrowRight className="ml-2 w-4 h-4" />
+                    Conheça o Método <ArrowRight className="ml-2 w-4 h-4" />
                   </div>
                 </div>
               </Link>
@@ -351,7 +351,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Redes & Conectividade</h3>
                   <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Soluções pontuais para Wi-Fi e cabeamento em residências e pequenos escritórios.</p>
                   <div className="flex items-center justify-center text-sm font-bold text-emerald-400 group-hover:text-emerald-300 transition-colors uppercase tracking-wider">
-                    Saiba mais <ArrowRight className="ml-2 w-4 h-4" />
+                    Conheça o Método <ArrowRight className="ml-2 w-4 h-4" />
                   </div>
                 </div>
               </Link>
@@ -481,7 +481,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               {[
                 {
                   name: "Rodrigo M.",
-                  msg: "Meu notebook gamer estava com baixa performance térmica. Realizaram todo o processo de engenharia térmica. Desempenho restaurado!",
+                  msg: "Meu equipamento portátil estava com baixa performance térmica. Realizaram todo o processo de engenharia térmica. Desempenho restaurado!",
                   role: "Designer Gráfico"
                 },
                 {
@@ -756,8 +756,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div>
               <h4 className="font-bold text-white mb-4">Soluções</h4>
               <ul className="space-y-2">
-                <li><a href="#solucoes" className="hover:text-primary">Computadores e PCs</a></li>
-                <li><a href="#solucoes" className="hover:text-primary">Notebooks e Laptops</a></li>
+                <li><a href="#solucoes" className="hover:text-primary">Workstations e PCs</a></li>
+                <li><a href="#solucoes" className="hover:text-primary">Estações Móveis e Portáteis</a></li>
                 <li><a href="#solucoes" className="hover:text-primary">Infraestrutura de Redes</a></li>
               </ul>
             </div>
