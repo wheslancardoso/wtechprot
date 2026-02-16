@@ -82,9 +82,9 @@ export default async function ServicesPage() {
                                 <Monitor className="w-12 h-12 text-primary" />
                             </div>
                             <div>
-                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Computadores de Alta Performance</h2>
+                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Computadores</h2>
                                 <p className="text-slate-300 leading-relaxed mb-6">
-                                    Montagem e manutenção de computadores (PCs Gamers, Workstations e Servidores).
+                                    Montagem e manutenção de computadores (Desktops, PCs Gamers, All-in-One e Servidores).
                                     Prezamos por uma organização impecável (cable management), fluxo de ar otimizado e estética de alto nível.
                                 </p>
                                 <ul className="grid md:grid-cols-2 gap-3 mb-8">
@@ -156,7 +156,7 @@ export default async function ServicesPage() {
                                 <Printer className="w-12 h-12 text-primary" />
                             </div>
                             <div>
-                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Manutenção de Impressoras (Tanque/Bulk Ink)</h2>
+                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Impressoras</h2>
                                 <p className="text-slate-300 leading-relaxed mb-6">
                                     Especialistas em impressoras EcoTank (Epson), Mega Tank (Canon) e HP Ink Tank (ex: 416).
                                     Resolvemos falhas de impressão e problemas de tracionamento de papel com peças de reposição de qualidade.
