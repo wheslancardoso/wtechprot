@@ -82,18 +82,18 @@ export default async function ServicesPage() {
                                 <Monitor className="w-12 h-12 text-primary" />
                             </div>
                             <div>
-                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Workstations e Desktops</h2>
+                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Computadores e PC Gamer</h2>
                                 <p className="text-slate-300 leading-relaxed mb-6">
-                                    Engenharia de montagem e reestruturação de hardware. Ideal para equipamentos que apresentam <b>lentidão em softwares pesados</b> ou travamentos aleatórios.
+                                    Engenharia de montagem e otimização de computadores. Resolvemos lentidão, travamentos e tela azul.
                                 </p>
                                 <ul className="grid md:grid-cols-2 gap-3 mb-8">
                                     {[
-                                        'Diagnóstico avançado de hardware',
-                                        'Substituição de Hardware (Upgrade)',
-                                        'Otimização de Sistema Operacional',
-                                        'Manutenção Preventiva e Organização',
-                                        'Otimização de BIOS e Drivers',
-                                        'Testes de stress e estabilidade'
+                                        'Formatação e Backup de Dados',
+                                        'Upgrade de SSD e Memória RAM',
+                                        'Limpeza Completa e Pasta Térmica',
+                                        'Montagem de PC Gamer (Cable Management)',
+                                        'Atualização de BIOS e Drivers',
+                                        'Remoção de Vírus e Otimização'
                                     ].map((item, i) => (
                                         <li key={i} className="flex items-center gap-2 text-slate-400 text-sm">
                                             <CheckCircle2 className="w-4 h-4 text-primary shrink-0" /> {item}
@@ -102,7 +102,7 @@ export default async function ServicesPage() {
                                 </ul>
                                 <Link href={whatsappLink} target="_blank">
                                     <Button className="w-full md:w-auto bg-white/10 hover:bg-white/20 text-white border border-white/10">
-                                        Solicitar Análise de Performance <ArrowRight className="w-4 h-4 ml-2" />
+                                        Falar com Técnico <ArrowRight className="w-4 h-4 ml-2" />
                                     </Button>
                                 </Link>
                             </div>
@@ -118,18 +118,18 @@ export default async function ServicesPage() {
                                 <Laptop className="w-12 h-12 text-primary" />
                             </div>
                             <div>
-                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Estações Móveis (Notebooks)</h2>
+                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Notebooks e Laptops</h2>
                                 <p className="text-slate-300 leading-relaxed mb-6">
-                                    Restabelecimento de performance para equipamentos portáteis. Solução técnica para <b>falhas de inicialização, aquecimento ou danos físicos.</b>
+                                    Manutenção técnica especializada para notebooks. Solução para <b>falhas de inicialização, lentidão, aquecimento ou danos físicos.</b>
                                 </p>
                                 <ul className="grid md:grid-cols-2 gap-3 mb-8">
                                     {[
-                                        'Substituição de Painel de Imagem (Display)',
-                                        'Restauro de Interface (Teclado/Touch)',
-                                        'Restauração de carcaça e dobradiças',
-                                        'Desobstrução Térmica e Refrigeração',
+                                        'Troca de Tela (Display)',
+                                        'Reparo de Carcaça e Dobradiças',
+                                        'Troca de Teclado e Bateria',
+                                        'Desobstrução Térmica e Pasta Térmica',
                                         'Expansão de memória RAM e SSD',
-                                        'Recuperação de performance do Sistema'
+                                        'Formatação e Otimização de Sistema'
                                     ].map((item, i) => (
                                         <li key={i} className="flex items-center gap-2 text-slate-400 text-sm">
                                             <CheckCircle2 className="w-4 h-4 text-primary shrink-0" /> {item}
@@ -138,7 +138,7 @@ export default async function ServicesPage() {
                                 </ul>
                                 <Link href={whatsappLink} target="_blank">
                                     <Button className="w-full md:w-auto bg-white/10 hover:bg-white/20 text-white border border-white/10">
-                                        Recuperar Estação Móvel <ArrowRight className="w-4 h-4 ml-2" />
+                                        Falar com Técnico <ArrowRight className="w-4 h-4 ml-2" />
                                     </Button>
                                 </Link>
                             </div>
@@ -154,18 +154,18 @@ export default async function ServicesPage() {
                                 <Printer className="w-12 h-12 text-primary" />
                             </div>
                             <div>
-                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Gestão de Impressão</h2>
+                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Impressoras e Multifuncionais</h2>
                                 <p className="text-slate-300 leading-relaxed mb-6">
-                                    Especialistas nos <b>principais fabricantes do mercado</b> (Ink Tank / Laser). Ideal para retomar a impressão sem manchas ou atolamentos.
+                                    Manutenção técnica para impressoras. Trocamos almofadas, desentupimos cabeças de impressão e resolvemos falhas de papel.
                                 </p>
                                 <ul className="grid md:grid-cols-2 gap-3 mb-8">
                                     {[
-                                        'Desobstrução de cabeça de impressão',
-                                        'Restabelecimento de nitidez e cores',
-                                        'Substituição de Mecanismo de Tração',
-                                        'Manutenção de Reservatório de Resíduos',
-                                        'Pressurização de sistema de tinta',
+                                        'Desentupimento de cabeça de impressão',
+                                        'Troca de Almofadas de Tinta',
+                                        'Troca de Tracionador de Papel',
+                                        'Limpeza do sistema de tinta',
                                         'Instalação de impressora na rede',
+                                        'Resolução de erros de scanner',
                                     ].map((item, i) => (
                                         <li key={i} className="flex items-center gap-2 text-slate-400 text-sm">
                                             <CheckCircle2 className="w-4 h-4 text-primary shrink-0" /> {item}
@@ -174,7 +174,7 @@ export default async function ServicesPage() {
                                 </ul>
                                 <Link href={whatsappLink} target="_blank">
                                     <Button className="w-full md:w-auto bg-white/10 hover:bg-white/20 text-white border border-white/10">
-                                        Resolver Problema de Impressão <ArrowRight className="w-4 h-4 ml-2" />
+                                        Orçar Conserto de Impressora <ArrowRight className="w-4 h-4 ml-2" />
                                     </Button>
                                 </Link>
                             </div>

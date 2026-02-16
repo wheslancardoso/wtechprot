@@ -130,7 +130,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </h1>
 
             <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200">
-              Fale agora mesmo com um especialista. <b>Atendimento profissional, logística ou consultoria especializada.</b>
+              Fale agora mesmo com um <b>Técnico de Informática Especializado</b>. Atendimento profissional, logística ou consultoria.
             </p>
 
             <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
@@ -292,8 +292,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   <div className="mx-auto w-14 h-14 bg-purple-500/10 rounded-full flex items-center justify-center text-purple-400 mb-4 shadow-lg shadow-purple-500/20 group-hover:scale-110 transition-transform">
                     <Laptop className="w-7 h-7" />
                   </div>
-                  <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Soluções para Estações Móveis</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Análise e implementação de melhorias em equipamentos portáteis, incluindo expansão de memória, armazenamento SSD e substituição de módulos.</p>
+                  <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Manutenção de Notebooks</h3>
+                  <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Análise técnica e otimização para notebooks, incluindo troca de tela, teclado, bateria e upgrades de SSD.</p>
                   <div className="flex items-center justify-center text-sm font-bold text-purple-400 group-hover:text-purple-300 transition-colors uppercase tracking-wider">
                     Conheça o Método <ArrowRight className="ml-2 w-4 h-4" />
                   </div>
@@ -756,8 +756,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div>
               <h4 className="font-bold text-white mb-4">Soluções</h4>
               <ul className="space-y-2">
-                <li><a href="#solucoes" className="hover:text-primary">Workstations e PCs</a></li>
-                <li><a href="#solucoes" className="hover:text-primary">Estações Móveis e Portáteis</a></li>
+                <li><a href="#solucoes" className="hover:text-primary">Computadores e PCs</a></li>
+                <li><a href="#solucoes" className="hover:text-primary">Notebooks e Laptops</a></li>
                 <li><a href="#solucoes" className="hover:text-primary">Infraestrutura de Redes</a></li>
               </ul>
             </div>
