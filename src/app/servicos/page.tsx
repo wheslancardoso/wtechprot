@@ -241,7 +241,7 @@ export default async function ServicesPage() {
                         <div className="order-1 md:order-2 bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl border border-white/5 aspect-square flex items-center justify-center relative overflow-hidden group">
                             <Image
                                 src="/services/printer-maintenance.png"
-                                alt="Manutenção profissional de impressoras corporativas"
+                                alt="Manutenção de impressoras EcoTank e Laser"
                                 fill
                                 className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100"
                             />
