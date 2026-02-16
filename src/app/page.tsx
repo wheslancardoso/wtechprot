@@ -125,12 +125,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </div>
 
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 bg-gradient-to-br from-white via-white to-slate-500 bg-clip-text text-transparent animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
-              Soluções de Performance e <br />
-              Gestão Inteligente de Infraestrutura de TI
+              Soluções de Tecnologia: <br />
+              Performance e Gestão Inteligente de Infraestrutura
             </h1>
 
             <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200">
-              Fale agora mesmo com um <b>Técnico de Informática Especializado</b>. Atendimento profissional, logística ou consultoria.
+              Fale agora mesmo com um <b>Especialista em Tecnologia</b>. Atendimento profissional, logística ou consultoria para garantir a continuidade do seu trabalho.
             </p>
 
             <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
@@ -138,7 +138,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <Button size="lg" className="h-14 px-8 text-lg rounded-full w-full sm:w-auto shadow-xl shadow-primary/20 bg-primary hover:bg-primary/90 text-primary-foreground transition-all transform hover:scale-105" asChild>
                   <Link href={whatsappLink} target="_blank" id="cta-whatsapp-hero">
                     <Building2 className="mr-2 h-5 w-5" />
-                    Falar com Especialista
+                    Consultar Especialista
                   </Link>
                 </Button>
               </div>
@@ -281,7 +281,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Gestão e Manutenção de Hardware</h3>
                   <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Gestão Inteligente de Infraestrutura de TI para estações de trabalho com upgrades estratégicos, componentes homologados e diagnóstico avançado.</p>
                   <div className="flex items-center justify-center text-sm font-bold text-blue-400 group-hover:text-blue-300 transition-colors uppercase tracking-wider">
-                    Conheça o Método <ArrowRight className="ml-2 w-4 h-4" />
+                    Solicitar Análise de Performance <ArrowRight className="ml-2 w-4 h-4" />
                   </div>
                 </div>
               </Link>
@@ -292,10 +292,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   <div className="mx-auto w-14 h-14 bg-purple-500/10 rounded-full flex items-center justify-center text-purple-400 mb-4 shadow-lg shadow-purple-500/20 group-hover:scale-110 transition-transform">
                     <Laptop className="w-7 h-7" />
                   </div>
-                  <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Manutenção de Notebooks</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Análise técnica e otimização para notebooks, incluindo troca de tela, teclado, bateria e upgrades de SSD.</p>
+                  <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Soluções para Estações Móveis</h3>
+                  <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Análise e implementação de melhorias em equipamentos portáteis, incluindo substituição de display, bateria e otimização de sistema.</p>
                   <div className="flex items-center justify-center text-sm font-bold text-purple-400 group-hover:text-purple-300 transition-colors uppercase tracking-wider">
-                    Conheça o Método <ArrowRight className="ml-2 w-4 h-4" />
+                    Solicitar Análise <ArrowRight className="ml-2 w-4 h-4" />
                   </div>
                 </div>
               </Link>
@@ -309,7 +309,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Gestão de Impressão</h3>
                   <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Especialistas nos principais fabricantes do mercado (Ink Tank / Laser). Desobstrução de cabeçotes, troca de tracionador e manutenção de sistemas Bulk Ink.</p>
                   <div className="flex items-center justify-center text-sm font-bold text-pink-400 group-hover:text-pink-300 transition-colors uppercase tracking-wider">
-                    Conheça o Método <ArrowRight className="ml-2 w-4 h-4" />
+                    Solicitar Análise <ArrowRight className="ml-2 w-4 h-4" />
                   </div>
                 </div>
               </Link>
@@ -323,7 +323,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Consultoria Remota</h3>
                   <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Consultoria técnica e suporte remoto seguro para ambientes de trabalho, com agilidade e total segurança.</p>
                   <div className="flex items-center justify-center text-sm font-bold text-cyan-400 group-hover:text-cyan-300 transition-colors uppercase tracking-wider">
-                    Conheça o Método <ArrowRight className="ml-2 w-4 h-4" />
+                    Consultar Especialista <ArrowRight className="ml-2 w-4 h-4" />
                   </div>
                 </div>
               </Link>
@@ -337,7 +337,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Montagem de Computadores</h3>
                   <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Do planejamento à montagem e organização (cable management) impecável.</p>
                   <div className="flex items-center justify-center text-sm font-bold text-orange-400 group-hover:text-orange-300 transition-colors uppercase tracking-wider">
-                    Conheça o Método <ArrowRight className="ml-2 w-4 h-4" />
+                    Solicitar Análise <ArrowRight className="ml-2 w-4 h-4" />
                   </div>
                 </div>
               </Link>
@@ -351,7 +351,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Redes & Conectividade</h3>
                   <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Soluções pontuais para Wi-Fi e cabeamento em residências e pequenos escritórios.</p>
                   <div className="flex items-center justify-center text-sm font-bold text-emerald-400 group-hover:text-emerald-300 transition-colors uppercase tracking-wider">
-                    Conheça o Método <ArrowRight className="ml-2 w-4 h-4" />
+                    Consultar Especialista <ArrowRight className="ml-2 w-4 h-4" />
                   </div>
                 </div>
               </Link>
@@ -703,7 +703,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
                 <Button size="lg" className="rounded-full shadow-lg shadow-primary/20" asChild>
                   <Link href={whatsappLink} target="_blank" id="cta-whatsapp-contato">
-                    Falar com Especialista
+                    Consultar Especialista
                   </Link>
                 </Button>
               </div>
@@ -756,8 +756,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div>
               <h4 className="font-bold text-white mb-4">Soluções</h4>
               <ul className="space-y-2">
-                <li><a href="#solucoes" className="hover:text-primary">Computadores e PCs</a></li>
-                <li><a href="#solucoes" className="hover:text-primary">Notebooks e Laptops</a></li>
+                <li><a href="#solucoes" className="hover:text-primary">computadores de Alta Perfomance</a></li>
+                <li><a href="#solucoes" className="hover:text-primary">Estações Móveis e Portáteis</a></li>
                 <li><a href="#solucoes" className="hover:text-primary">Infraestrutura de Redes</a></li>
               </ul>
             </div>
