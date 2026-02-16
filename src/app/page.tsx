@@ -274,67 +274,85 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
               {/* 1. Hardware */}
               <Link href="/servicos#workstations" className="block group">
-                <div className="h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/50 hover:bg-white/[0.05] transition-all duration-300 hover:-translate-y-1">
+                <div className="h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/50 hover:bg-white/[0.05] transition-all duration-300 hover:-translate-y-1 flex flex-col">
                   <div className="mx-auto w-14 h-14 bg-blue-500/10 rounded-full flex items-center justify-center text-blue-400 mb-4 shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
                     <Monitor className="w-7 h-7" />
                   </div>
                   <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Projetos de Infraestrutura de Hardware</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed">Gestão Inteligente de Infraestrutura de TI para estações de trabalho com upgrades estratégicos, componentes homologados e diagnóstico avançado.</p>
+                  <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Gestão Inteligente de Infraestrutura de TI para estações de trabalho com upgrades estratégicos, componentes homologados e diagnóstico avançado.</p>
+                  <div className="flex items-center justify-center text-sm font-bold text-blue-400 group-hover:text-blue-300 transition-colors uppercase tracking-wider">
+                    Saiba mais <ArrowRight className="ml-2 w-4 h-4" />
+                  </div>
                 </div>
               </Link>
 
               {/* 2. Desempenho (Notebooks) */}
               <Link href="/servicos#notebooks" className="block group">
-                <div className="h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/50 hover:bg-white/[0.05] transition-all duration-300 hover:-translate-y-1">
+                <div className="h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/50 hover:bg-white/[0.05] transition-all duration-300 hover:-translate-y-1 flex flex-col">
                   <div className="mx-auto w-14 h-14 bg-purple-500/10 rounded-full flex items-center justify-center text-purple-400 mb-4 shadow-lg shadow-purple-500/20 group-hover:scale-110 transition-transform">
                     <Laptop className="w-7 h-7" />
                   </div>
                   <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Otimização e Upgrade de Workstations</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed">Análise e implementação de melhorias em notebooks corporativos, incluindo expansão de memória, armazenamento SSD e substituição de módulos de interface.</p>
+                  <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Análise e implementação de melhorias em notebooks corporativos, incluindo expansão de memória, armazenamento SSD e substituição de módulos de interface.</p>
+                  <div className="flex items-center justify-center text-sm font-bold text-purple-400 group-hover:text-purple-300 transition-colors uppercase tracking-wider">
+                    Saiba mais <ArrowRight className="ml-2 w-4 h-4" />
+                  </div>
                 </div>
               </Link>
 
               {/* 3. Redes */}
               <Link href="/servicos#redes" className="block group">
-                <div className="h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/50 hover:bg-white/[0.05] transition-all duration-300 hover:-translate-y-1">
+                <div className="h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/50 hover:bg-white/[0.05] transition-all duration-300 hover:-translate-y-1 flex flex-col">
                   <div className="mx-auto w-14 h-14 bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-400 mb-4 shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
                     <Wifi className="w-7 h-7" />
                   </div>
                   <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Infraestrutura de Redes</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed">Projetos de conectividade corporativa, gestão de conectividade e segurança de endpoint.</p>
+                  <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Projetos de conectividade corporativa, gestão de conectividade e segurança de endpoint.</p>
+                  <div className="flex items-center justify-center text-sm font-bold text-emerald-400 group-hover:text-emerald-300 transition-colors uppercase tracking-wider">
+                    Saiba mais <ArrowRight className="ml-2 w-4 h-4" />
+                  </div>
                 </div>
               </Link>
 
               {/* 4. Remoto */}
               <Link href="/servicos#remoto" className="block group">
-                <div className="h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/50 hover:bg-white/[0.05] transition-all duration-300 hover:-translate-y-1">
+                <div className="h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/50 hover:bg-white/[0.05] transition-all duration-300 hover:-translate-y-1 flex flex-col">
                   <div className="mx-auto w-14 h-14 bg-cyan-500/10 rounded-full flex items-center justify-center text-cyan-400 mb-4 shadow-lg shadow-cyan-500/20 group-hover:scale-110 transition-transform">
                     <Globe className="w-7 h-7" />
                   </div>
                   <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Consultoria Remota</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed">Consultoria técnica e suporte remoto seguro para ambientes de trabalho, com agilidade e total segurança.</p>
+                  <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Consultoria técnica e suporte remoto seguro para ambientes de trabalho, com agilidade e total segurança.</p>
+                  <div className="flex items-center justify-center text-sm font-bold text-cyan-400 group-hover:text-cyan-300 transition-colors uppercase tracking-wider">
+                    Saiba mais <ArrowRight className="ml-2 w-4 h-4" />
+                  </div>
                 </div>
               </Link>
 
               {/* 5. PC Gamer / Workstations */}
               <Link href="/servicos#workstations" className="block group">
-                <div className="h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/50 hover:bg-white/[0.05] transition-all duration-300 hover:-translate-y-1">
+                <div className="h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/50 hover:bg-white/[0.05] transition-all duration-300 hover:-translate-y-1 flex flex-col">
                   <div className="mx-auto w-14 h-14 bg-orange-500/10 rounded-full flex items-center justify-center text-orange-400 mb-4 shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform">
                     <Cpu className="w-7 h-7" />
                   </div>
                   <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Montagem de Workstations de Performance</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed">Do planejamento à montagem e organização (cable management) impecável.</p>
+                  <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Do planejamento à montagem e organização (cable management) impecável.</p>
+                  <div className="flex items-center justify-center text-sm font-bold text-orange-400 group-hover:text-orange-300 transition-colors uppercase tracking-wider">
+                    Saiba mais <ArrowRight className="ml-2 w-4 h-4" />
+                  </div>
                 </div>
               </Link>
 
               {/* 6. Impressão */}
               <Link href={whatsappLink} target="_blank" className="block group">
-                <div className="h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/50 hover:bg-white/[0.05] transition-all duration-300 hover:-translate-y-1">
+                <div className="h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/50 hover:bg-white/[0.05] transition-all duration-300 hover:-translate-y-1 flex flex-col">
                   <div className="mx-auto w-14 h-14 bg-pink-500/10 rounded-full flex items-center justify-center text-pink-400 mb-4 shadow-lg shadow-pink-500/20 group-hover:scale-110 transition-transform">
                     <Printer className="w-7 h-7" />
                   </div>
                   <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Gestão de Impressão</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed">Consultoria técnica em soluções de impressão, manutenção preventiva de cabeçotes e integração de periféricos.</p>
+                  <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Consultoria técnica em soluções de impressão, manutenção preventiva de cabeçotes e integração de periféricos.</p>
+                  <div className="flex items-center justify-center text-sm font-bold text-pink-400 group-hover:text-pink-300 transition-colors uppercase tracking-wider">
+                    Saiba mais <ArrowRight className="ml-2 w-4 h-4" />
+                  </div>
                 </div>
               </Link>
 
