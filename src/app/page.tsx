@@ -189,9 +189,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <div className="flex-1 space-y-6 text-center lg:text-left">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs font-medium text-blue-400 mb-2">
                   <Clock className="w-3 h-3" />
-                  Gestão Digital de Ativos <br />
-                  Acompanhamento de <br />
-                  <span className="text-primary">Serviços em Tempo Real.</span>
+                  Gestão Digital de Ativos
                 </div>
                 <h2 className="text-3xl md:text-5xl font-bold leading-tight">
                   Status de Serviços <br />
@@ -514,18 +512,18 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               {[
                 {
                   icon: Building2,
-                  title: 'Presencial ou Logística',
-                  desc: 'Atendimento on-site na sua empresa. Logística segura de ativos para nossa Base de Performance.'
+                  title: 'Vamos até você',
+                  desc: 'Não pode trazer o equipamento? Nós buscamos ou resolvemos aí mesmo na sua empresa/casa.'
                 },
                 {
                   icon: UserCheck,
-                  title: 'Fale com Especialistas',
-                  desc: 'Sem scripts de atendimento. Você conversa diretamente com quem entende do assunto para resolver seu problema.'
+                  title: 'Sem enrolação',
+                  desc: 'Você fala direto com quem vai consertar seu computador. Sem atendentes robôs ou demoras.'
                 },
                 {
                   icon: ShieldCheck,
-                  title: 'Segurança e Privacidade',
-                  desc: 'Seus dados são preservados. Processos rigorosos de confidencialidade e proteção de arquivos durante todo o projeto.'
+                  title: 'Dados Protegidos',
+                  desc: 'Total sigilo com seus arquivos e senhas. Seu equipamento cuidado com responsabilidade.'
                 }
               ].map((item, i) => (
                 <div key={i} className="group p-8 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-primary/50 hover:bg-white/[0.08] transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10">
@@ -557,10 +555,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <div className="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-primary/30 to-transparent -translate-y-1/2" />
 
               {[
-                { icon: MessageCircle, title: '1. Solicitação', desc: 'Sua equipe inicia o projeto via WhatsApp ou Portal. Triagem imediata da necessidade.' },
-                { icon: Wrench, title: '2. Mapeamento', desc: 'Avaliação técnica da infraestrutura e envio de proposta comercial para o gestor.' },
-                { icon: CheckCircle2, title: '3. Implementação', desc: 'Intervenção técnica autorizada. Componentes homologados. Acompanhamento online.' },
-                { icon: Server, title: '4. Entrega', desc: 'Ativo otimizado e reintegrado à sua operação.' },
+                { icon: MessageCircle, title: '1. Contato', desc: 'Chame no WhatsApp. A gente entende o problema rapidinho.' },
+                { icon: Wrench, title: '2. Orçamento', desc: 'Analisamos o equipamento e passamos o valor certinho antes de mexer.' },
+                { icon: CheckCircle2, title: '3. Mão na Massa', desc: 'Aprovou? A gente resolve. Peças de qualidade e serviço cuidadoso.' },
+                { icon: Server, title: '4. Tá Novo!', desc: 'Equipamento testado, limpo e pronto para voltar a trabalhar.' },
               ].map((step, i) => (
                 <div key={i} className="relative z-10 text-center group">
                   <div className="w-16 h-16 mx-auto rounded-full bg-slate-900 border-4 border-slate-950 flex items-center justify-center mb-6 shadow-xl group-hover:border-primary/50 group-hover:scale-110 group-hover:shadow-primary/20 transition-all duration-300">
@@ -595,7 +593,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </summary>
                 <div className="px-6 pb-6 pt-2 text-slate-400 leading-relaxed border-t border-white/5 animate-in slide-in-from-top-2 fade-in duration-300">
                   <p>
-                    Sim! Realizamos atendimento presencial em toda a região metropolitana. Para outras localidades ou projetos avançados, oferecemos a <b>Consultoria Remota</b> segura.
+                    Sim! Atendemos em toda Goiânia e região. Se for algo simples, resolvemos aí. Se for complexo, levamos para o laboratório e devolvemos pronto.
                   </p>
                 </div>
               </details>
@@ -609,7 +607,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </summary>
                 <div className="px-6 pb-6 pt-2 text-slate-400 leading-relaxed border-t border-white/5 animate-in slide-in-from-top-2 fade-in duration-300">
                   <p>
-                    Com certeza! Oferecemos o serviço de montagem técnica ("Bring Your Own Parts"). Organizamos os cabos (cable management), atualizamos a BIOS e configuramos o sistema para extrair o máximo das suas peças novas.
+                    Com certeza! Você compra as peças (Placa de vídeo, processador, etc) e nós montamos tudo profissionalmente. Organizamos os cabos e deixamos o PC "voando".
                   </p>
                 </div>
               </details>
@@ -623,7 +621,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </summary>
                 <div className="px-6 pb-6 pt-2 text-slate-400 leading-relaxed border-t border-white/5 animate-in slide-in-from-top-2 fade-in duration-300">
                   <p>
-                    Oferecemos garantia legal de <b>90 dias</b> em todos os serviços técnicos realizados. Você recebe um relatório detalhando o projeto.
+                    Garantia de <b>90 dias</b> em qualquer serviço. Se der problema (o que é raro), a gente resolve na hora.
                   </p>
                 </div>
               </details>
@@ -637,7 +635,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </summary>
                 <div className="px-6 pb-6 pt-2 text-slate-400 leading-relaxed border-t border-white/5 animate-in slide-in-from-top-2 fade-in duration-300">
                   <p>
-                    A consulta inicial via WhatsApp é sem custo. Para análises avançadas em bancada (que exigem testes exaustivos de hardware), pode haver uma taxa de diagnóstico, que é abatida integralmente se você aprovar o projeto.
+                    No WhatsApp é de graça! A gente conversa e já te dá uma ideia do que pode ser. Se precisar abrir o equipamento para testes profundos, combinamos tudo antes.
                   </p>
                 </div>
               </details>
