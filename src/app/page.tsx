@@ -417,6 +417,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                       src={setup.image}
                       alt="Setup Personalizado WFIX"
                       fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
                       className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-90 group-hover:opacity-100"
                     />
                     {/* Gradient Overlay para integrar com o fundo dark */}

@@ -166,6 +166,7 @@ export default async function ServicesPage() {
                                     src="/services/notebook-mt.png"
                                     alt="Reparo profissional de notebook em laboratório"
                                     fill
+                                    sizes="(max-width: 768px) 100vw, 50vw"
                                     className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent pointer-events-none" />
@@ -182,6 +183,7 @@ export default async function ServicesPage() {
                                         src="/services/pc-mt.png"
                                         alt="Computador Gamer de Alta Performance com refrigeração líquida"
                                         fill
+                                        sizes="(max-width: 768px) 100vw, 50vw"
                                         className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent pointer-events-none" />
@@ -264,6 +266,7 @@ export default async function ServicesPage() {
                                     src="/services/printer-mt.png"
                                     alt="Manutenção de impressoras EcoTank e Laser"
                                     fill
+                                    sizes="(max-width: 768px) 100vw, 50vw"
                                     className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent pointer-events-none" />
