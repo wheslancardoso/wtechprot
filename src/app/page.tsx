@@ -146,8 +146,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <div className="mt-12 grid grid-cols-3 gap-4 text-center max-w-lg mx-auto">
                 {[
                   { label: "Relatórios Técnicos", icon: FileText },
-                  { label: "Gestão de Ativos", icon: Server },
-                  { label: "SLA Garantido", icon: ShieldCheck },
+                  { label: "Laboratório Próprio", icon: Server },
+                  { label: "Garantia de 90 Dias", icon: ShieldCheck },
                 ].map((feat, i) => (
                   <div key={i} className="flex flex-col items-center gap-2 p-3 rounded-lg bg-white/5 border border-white/5 backdrop-blur-sm">
                     <feat.icon className="h-5 w-5 text-primary/80" />
@@ -410,14 +410,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </div>
 
             {/* Bottom CTA */}
-            <div className="mt-16 text-center">
-              <p className="text-slate-500 text-sm mb-4">Quer ver como funciona na prática?</p>
-              <Button variant="outline" size="lg" className="rounded-full border-white/10 hover:bg-white/5" asChild>
-                <Link href="#como-funciona">
-                  Ver Fluxo de Atendimento <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </div>
+
           </div>
         </section>
 
@@ -450,11 +443,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </div>
               ))}
             </div>
-            <div className="mt-12 text-center">
-              <Button variant="outline" className="border-primary/50 text-primary hover:bg-primary/10 hover:text-white transition-all">
-                <Link href={whatsappLink} target="_blank">Cotar Workstation de Performance</Link>
-              </Button>
-            </div>
+
           </div>
         </section>
 
