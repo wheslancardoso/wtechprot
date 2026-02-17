@@ -41,8 +41,8 @@ const getTenantData = unstable_cache(
 
 export async function generateMetadata() {
     return {
-        title: 'Soluções Técnicas de Alta Performance | WFIX Tech',
-        description: 'Serviços especializados em hardware, manutenção de notebooks, PCs e impressoras.',
+        title: 'Manutenção e Performance de Hardware | WFIX Tech',
+        description: 'Especialista em hardware. Manutenção de notebooks, PCs e impressoras com garantia.',
         robots: {
             index: false,
             follow: false,
@@ -87,7 +87,7 @@ export default async function ServicesPage() {
 
                     <AnimateIn>
                         <h1 className="text-3xl md:text-5xl font-bold text-white mb-6 relative z-10">
-                            Soluções Técnicas de <span className="text-primary">Alta Performance</span>
+                            Manutenção e Performance de <span className="text-primary">Hardware</span>
                         </h1>
                         <p className="text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed relative z-10">
                             Não é apenas sobre "consertar". É sobre devolver a performance do seu computador e garantir que você não tenha dores de cabeça tão cedo.
