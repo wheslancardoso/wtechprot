@@ -6,6 +6,8 @@ import Image from 'next/image'
 import Script from 'next/script'
 import { createAdminClient } from '@/lib/supabase/server'
 import { unstable_cache } from 'next/cache'
+import type { Metadata } from 'next'
+
 
 // Forçar execução em runtime (não build time) para ter acesso às env vars do Railway
 export const dynamic = 'force-dynamic'
@@ -56,7 +58,7 @@ const getTenantData = unstable_cache(
 export async function generateMetadata() {
   const { brandName } = await getTenantData()
   return {
-    title: 'Especialista em Hardware e Performance | WFIX Tech',
+    title: 'WFIX Tech | Especialista em Hardware e Performance ',
     description: 'Diagnóstico avançado, setups de alta performance e consultoria em tecnologia para profissionais e empresas.',
   }
 }
