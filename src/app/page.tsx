@@ -56,8 +56,8 @@ const getTenantData = unstable_cache(
 export async function generateMetadata() {
   const { brandName } = await getTenantData()
   return {
-    title: 'Plataforma de Gestão e Performance de Hardware',
-    description: 'Plataforma de gestão de ativos de TI e consultoria especializada para profissionais e empresas. Engenharia de performance computacional e projetos corporativos.',
+    title: 'Manutenção de Alta Performance para Notebooks e PCs',
+    description: 'Especialista em tecnologia e hardware. Diagnóstico, reparo avançado e upgrades de performance para profissionais de alta demanda.',
   }
 }
 
@@ -127,7 +127,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
                 </span>
-                Especialistas em Tecnologia e Hardware
+                Especialista em Tecnologia e Hardware
               </div>
             </AnimateIn>
 
@@ -170,24 +170,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           </div>
         </section>
 
-        {/* TECH AUTHORITY STRIP */}
-        <div className="border-y border-white/5 bg-white/[0.02] py-8">
-          <div className="container mx-auto px-4">
-            <p className="text-center text-sm font-medium text-slate-500 mb-6 uppercase tracking-wider">
-              Especialistas em Tecnologias de Alta Performance
-            </p>
-            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
-              {/* Text-based Logos for Authority */}
-              {['INTEL', 'AMD', 'NVIDIA', 'MICROSOFT', 'LINUX'].map((tech) => (
-                <span key={tech} className="text-xl md:text-2xl font-bold text-slate-300 font-mono tracking-tighter">
-                  {tech}
-                </span>
-              ))}
-            </div>
-          </div>
 
-
-        </div>
 
         {/* TRACKING SPOTLIGHT SECTION */}
         <section className="py-24 bg-gradient-to-b from-slate-950 to-primary/5 border-b border-white/5 relative overflow-hidden">
@@ -307,7 +290,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   <Printer className="w-7 h-7" />
                 </div>
                 <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Gestão de Impressão</h3>
-                <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Especialistas nos principais fabricantes do mercado (Ink Tank / Laser). Desobstrução de cabeçotes, troca de tracionador e manutenção de sistemas Bulk Ink.</p>
+                <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Especialista nos principais fabricantes do mercado (Ink Tank / Laser). Desobstrução de cabeçotes, troca de tracionador e manutenção de sistemas Bulk Ink.</p>
               </div>
 
               {/* 4. Remoto */}
