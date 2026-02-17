@@ -189,22 +189,24 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <div className="flex-1 space-y-6 text-center lg:text-left">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs font-medium text-blue-400 mb-2">
                   <Clock className="w-3 h-3" />
-                  Gestão Digital de Ativos
+                  Gestão Digital de Ativos <br />
+                  Acompanhamento de <br />
+                  <span className="text-primary">Serviços em Tempo Real.</span>
                 </div>
                 <h2 className="text-3xl md:text-5xl font-bold leading-tight">
-                  Status de Projetos <br />
+                  Status de Serviços <br />
                   em Tempo Real.
                 </h2>
                 <p className="text-lg text-slate-400 leading-relaxed max-w-xl mx-auto lg:mx-0">
-                  Nosso portal de <b>Gestão de Projetos</b> permite que sua equipe ou gestor acompanhe cada etapa do projeto. Transparência total para sua operação.
+                  Nosso sistema de Acompanhamento Técnico permite que você visualize cada etapa do reparo. Transparência total para sua segurança.
                 </p>
 
                 <ul className="space-y-3 text-slate-300 max-w-sm mx-auto lg:mx-0 text-left">
                   {[
-                    "Portal Corporativo Exclusivo",
-                    "Evidências Fotográficas das Trocas",
-                    "Aprovação de Budget Online",
-                    "Histórico de Evolução por Ativo"
+                    "Portal do Cliente",
+                    "Fotos das Peças Trocadas",
+                    "Aprovação de Orçamento Online",
+                    "Histórico Completo do Aparelho"
                   ].map((item, i) => (
                     <li key={i} className="flex items-center gap-3">
                       <CheckCircle2 className="w-5 h-5 text-primary shrink-0" />
@@ -238,8 +240,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   {/* Timeline Mock - Animated */}
                   <div className="space-y-6 relative pl-4 border-l border-white/10 ml-2">
                     {[
-                      { title: "Projeto Iniciado", time: "10:30", delay: "0s" },
-                      { title: "Mapeamento Técnico", time: "10:45", delay: "0.5s" },
+                      { title: "Serviço Iniciado", time: "10:30", delay: "0s" },
+                      { title: "Análise Técnica", time: "10:45", delay: "0.5s" },
                       { title: "Upgrades Implementados", time: "14:20", delay: "1s" },
                       { title: "Pronto para Entrega", time: "16:00", delay: "1.5s" }
                     ].map((step, i, arr) => (
