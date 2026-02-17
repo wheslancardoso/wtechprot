@@ -127,14 +127,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
                 </span>
-                Plataforma de Gestão e Performance de Hardware
+                Especialistas em Tecnologia e Hardware
               </div>
             </AnimateIn>
 
             <AnimateIn delay={0.2}>
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 bg-gradient-to-br from-white via-white to-slate-500 bg-clip-text text-transparent">
-                Soluções e Performance <br />
-                em Hardware
+                Manutenção de Alta Performance <br />
+                para Notebooks e PCs
               </h1>
             </AnimateIn>
 
