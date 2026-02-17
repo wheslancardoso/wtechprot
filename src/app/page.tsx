@@ -512,18 +512,18 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               {[
                 {
                   icon: Building2,
-                  title: 'Vamos até você',
-                  desc: 'Não pode trazer o equipamento? Nós buscamos ou resolvemos aí mesmo na sua empresa/casa.'
+                  title: 'Atendimento e Logística',
+                  desc: 'Suporte técnico on-site para empresas ou logística segura de retirada e entrega de equipamentos.'
                 },
                 {
                   icon: UserCheck,
-                  title: 'Sem enrolação',
-                  desc: 'Você fala direto com quem vai consertar seu computador. Sem atendentes robôs ou demoras.'
+                  title: 'Consultoria Técnica',
+                  desc: 'Diagnóstico preciso feito por especialistas. Explicamos o problema e a solução de forma transparente.'
                 },
                 {
                   icon: ShieldCheck,
-                  title: 'Dados Protegidos',
-                  desc: 'Total sigilo com seus arquivos e senhas. Seu equipamento cuidado com responsabilidade.'
+                  title: 'Segurança e Dados',
+                  desc: 'Protocolos rigorosos de privacidade. Seus arquivos e informações sensíveis são preservados durante todo o serviço.'
                 }
               ].map((item, i) => (
                 <div key={i} className="group p-8 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-primary/50 hover:bg-white/[0.08] transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10">
@@ -555,10 +555,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <div className="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-primary/30 to-transparent -translate-y-1/2" />
 
               {[
-                { icon: MessageCircle, title: '1. Contato', desc: 'Chame no WhatsApp. A gente entende o problema rapidinho.' },
-                { icon: Wrench, title: '2. Orçamento', desc: 'Analisamos o equipamento e passamos o valor certinho antes de mexer.' },
-                { icon: CheckCircle2, title: '3. Mão na Massa', desc: 'Aprovou? A gente resolve. Peças de qualidade e serviço cuidadoso.' },
-                { icon: Server, title: '4. Tá Novo!', desc: 'Equipamento testado, limpo e pronto para voltar a trabalhar.' },
+                { icon: MessageCircle, title: '1. Agendamento', desc: 'Solicite atendimento via WhatsApp ou Portal. Triagem inicial rápida da sua necessidade.' },
+                { icon: Wrench, title: '2. Diagnóstico', desc: 'Análise técnica do equipamento e envio de orçamento detalhado para aprovação.' },
+                { icon: CheckCircle2, title: '3. Manutenção', desc: 'Execução do serviço com peças de qualidade e laboratório especializado.' },
+                { icon: Server, title: '4. Entrega', desc: 'Equipamento testado, higienizado e pronto para uso com garantia.' },
               ].map((step, i) => (
                 <div key={i} className="relative z-10 text-center group">
                   <div className="w-16 h-16 mx-auto rounded-full bg-slate-900 border-4 border-slate-950 flex items-center justify-center mb-6 shadow-xl group-hover:border-primary/50 group-hover:scale-110 group-hover:shadow-primary/20 transition-all duration-300">
@@ -593,7 +593,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </summary>
                 <div className="px-6 pb-6 pt-2 text-slate-400 leading-relaxed border-t border-white/5 animate-in slide-in-from-top-2 fade-in duration-300">
                   <p>
-                    Sim! Atendemos em toda Goiânia e região. Se for algo simples, resolvemos aí. Se for complexo, levamos para o laboratório e devolvemos pronto.
+                    Sim. Atendemos presencialmente em toda a região metropolitana. Para serviços complexos de laboratório, oferecemos logística de retirada e devolução.
                   </p>
                 </div>
               </details>
@@ -607,7 +607,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </summary>
                 <div className="px-6 pb-6 pt-2 text-slate-400 leading-relaxed border-t border-white/5 animate-in slide-in-from-top-2 fade-in duration-300">
                   <p>
-                    Com certeza! Você compra as peças (Placa de vídeo, processador, etc) e nós montamos tudo profissionalmente. Organizamos os cabos e deixamos o PC "voando".
+                    Sim. Realizamos a montagem técnica profissional com seus componentes ("Bring Your Own Parts"), incluindo organização de cabos e configuração de BIOS para máxima performance.
                   </p>
                 </div>
               </details>
@@ -621,7 +621,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </summary>
                 <div className="px-6 pb-6 pt-2 text-slate-400 leading-relaxed border-t border-white/5 animate-in slide-in-from-top-2 fade-in duration-300">
                   <p>
-                    Garantia de <b>90 dias</b> em qualquer serviço. Se der problema (o que é raro), a gente resolve na hora.
+                    Todos os serviços contam com garantia legal de <b>90 dias</b>. Emitimos laudo técnico e nota fiscal dos serviços prestados.
                   </p>
                 </div>
               </details>
@@ -635,7 +635,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </summary>
                 <div className="px-6 pb-6 pt-2 text-slate-400 leading-relaxed border-t border-white/5 animate-in slide-in-from-top-2 fade-in duration-300">
                   <p>
-                    No WhatsApp é de graça! A gente conversa e já te dá uma ideia do que pode ser. Se precisar abrir o equipamento para testes profundos, combinamos tudo antes.
+                    A triagem inicial via WhatsApp é gratuita. Para diagnósticos avançados em laboratório que exijam desmontagem e testes de componentes, pode haver taxa de análise (abonada em caso de aprovação do serviço).
                   </p>
                 </div>
               </details>
