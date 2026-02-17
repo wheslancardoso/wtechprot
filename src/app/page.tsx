@@ -56,8 +56,8 @@ const getTenantData = unstable_cache(
 export async function generateMetadata() {
   const { brandName } = await getTenantData()
   return {
-    title: 'Manutenção de Alta Performance para Notebooks e PCs',
-    description: 'Especialista em tecnologia e hardware. Diagnóstico, reparo avançado e upgrades de performance para profissionais de alta demanda.',
+    title: 'Especialista em Hardware e Performance | WFIX Tech',
+    description: 'Diagnóstico avançado, setups de alta performance e consultoria em tecnologia para profissionais e empresas.',
   }
 }
 
