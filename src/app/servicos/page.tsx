@@ -39,6 +39,21 @@ const getTenantData = unstable_cache(
     { revalidate: 3600 }
 )
 
+export async function generateMetadata() {
+    return {
+        title: 'Soluções Técnicas de Alta Performance | WFIX Tech',
+        description: 'Serviços especializados em hardware, manutenção de notebooks, PCs e impressoras.',
+        robots: {
+            index: false,
+            follow: false,
+            googleBot: {
+                index: false,
+                follow: false,
+            },
+        },
+    }
+}
+
 export default async function ServicesPage() {
     const { whatsappNumber, brandName } = await getTenantData()
     const whatsappLink = `https://wa.me/${whatsappNumber}?text=Olá! Vim pelo site da ${brandName} e gostaria de saber mais sobre os serviços.`
@@ -72,7 +87,7 @@ export default async function ServicesPage() {
 
                     <AnimateIn>
                         <h1 className="text-3xl md:text-5xl font-bold text-white mb-6 relative z-10">
-                            Entenda como <span className="text-primary">cuidamos do seu equipamento</span>
+                            Soluções Técnicas de <span className="text-primary">Alta Performance</span>
                         </h1>
                         <p className="text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed relative z-10">
                             Não é apenas sobre "consertar". É sobre devolver a performance do seu computador e garantir que você não tenha dores de cabeça tão cedo.
@@ -281,7 +296,7 @@ export default async function ServicesPage() {
                     <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
                         <div className="bg-white/[0.02] border border-white/5 p-6 rounded-2xl">
                             <h3 className="font-bold text-white mb-2">Quanto tempo demora?</h3>
-                            <p className="text-slate-400 text-sm">A maioria dos serviços (formatação, limpeza) fica pronto em até 24h. Diagnósticos de hardware podem levar um pouco mais para testes precisos.</p>
+                            <p className="text-slate-400 text-sm">A maioria dos serviços (formatação, limpeza) fica pronto em até 24h. E não se preocupe: oferecemos <strong>90 dias de garantia</strong> em todos os reparos.</p>
                         </div>
                         <div className="bg-white/[0.02] border border-white/5 p-6 rounded-2xl">
                             <h3 className="font-bold text-white mb-2">Vocês buscam o equipamento?</h3>
