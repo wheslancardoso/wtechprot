@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ArrowRight, CheckCircle2, ShieldCheck, FileSearch, Smartphone, MessageCircle, Wrench, CreditCard, Laptop, Home as HomeIcon, UserCheck, Printer, Monitor, Clock, FileText, Server, Building2, Briefcase, Wifi, Globe, Cpu, Settings, MapPin, Headset } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { AnimateIn } from '@/components/ui/animate-in'
 import Image from 'next/image'
 import Script from 'next/script'
 import { createAdminClient } from '@/lib/supabase/server'
@@ -111,30 +112,40 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <main className="flex-1 pt-16">
 
         {/* HERO SECTION */}
-        <section className="relative py-24 lg:py-32 overflow-hidden">
+        <section className="relative py-16 md:py-32 overflow-hidden">
           {/* Background Elements */}
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-slate-950 to-slate-950" />
 
+          {/* Floating Blobs (Mobile Enchantment) */}
+          <div className="absolute top-20 left-10 w-32 h-32 bg-blue-500/10 rounded-full blur-[50px] animate-pulse" />
+          <div className="absolute bottom-20 right-10 w-40 h-40 bg-purple-500/10 rounded-full blur-[60px] animate-pulse delay-700" />
+
           <div className="container relative mx-auto px-4 text-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-primary mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-              </span>
-              Plataforma de Gestão e Performance de Hardware
-            </div>
+            <AnimateIn delay={0.1}>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-primary mb-6 md:mb-8 backdrop-blur-sm">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                </span>
+                Plataforma de Gestão e Performance de Hardware
+              </div>
+            </AnimateIn>
 
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 bg-gradient-to-br from-white via-white to-slate-500 bg-clip-text text-transparent animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
-              Soluções e Performance <br />
-              em Hardware
-            </h1>
+            <AnimateIn delay={0.2}>
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 bg-gradient-to-br from-white via-white to-slate-500 bg-clip-text text-transparent">
+                Soluções e Performance <br />
+                em Hardware
+              </h1>
+            </AnimateIn>
 
-            <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200">
-              Fale agora mesmo com um <b>Especialista em Tecnologia</b>. Atendimento profissional, logística ou consultoria para garantir a continuidade do seu trabalho.
-            </p>
+            <AnimateIn delay={0.3}>
+              <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed px-4">
+                Fale agora mesmo com um <b>Especialista em Tecnologia</b>. Atendimento profissional, logística segura ou consultoria para garantir a continuidade do seu trabalho.
+              </p>
+            </AnimateIn>
 
-            <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <AnimateIn delay={0.4}>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 px-4">
                 <Button size="lg" className="h-14 px-8 text-lg rounded-full w-full sm:w-auto shadow-xl shadow-primary/20 bg-primary hover:bg-primary/90 text-primary-foreground transition-all transform hover:scale-105" asChild>
                   <Link href={whatsappLink} target="_blank" id="cta-whatsapp-hero">
                     <Building2 className="mr-2 h-5 w-5" />
@@ -143,19 +154,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </Button>
               </div>
 
-              <div className="mt-12 grid grid-cols-3 gap-4 text-center max-w-lg mx-auto">
+              <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4 text-center max-w-lg mx-auto px-6">
                 {[
                   { label: "Relatórios Técnicos", icon: FileText },
                   { label: "Laboratório Próprio", icon: Server },
                   { label: "Garantia de 90 Dias", icon: ShieldCheck },
                 ].map((feat, i) => (
-                  <div key={i} className="flex flex-col items-center gap-2 p-3 rounded-lg bg-white/5 border border-white/5 backdrop-blur-sm">
-                    <feat.icon className="h-5 w-5 text-primary/80" />
-                    <span className="text-xs font-medium text-slate-300">{feat.label}</span>
+                  <div key={i} className="flex md:flex-col flex-row items-center justify-center md:justify-center gap-3 md:gap-2 p-3 rounded-xl bg-white/5 border border-white/5 backdrop-blur-md shadow-lg">
+                    <feat.icon className="h-5 w-5 text-primary" />
+                    <span className="text-sm font-medium text-slate-300">{feat.label}</span>
                   </div>
                 ))}
               </div>
-            </div>
+            </AnimateIn>
           </div>
         </section>
 
@@ -273,70 +284,58 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-center">
 
               {/* 1. Hardware */}
-              <Link href="/servicos#workstations" className="block group">
-                <div className="h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/50 hover:bg-white/[0.05] transition-all duration-300 hover:-translate-y-1 flex flex-col">
-                  <div className="mx-auto w-14 h-14 bg-blue-500/10 rounded-full flex items-center justify-center text-blue-400 mb-4 shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
-                    <Monitor className="w-7 h-7" />
-                  </div>
-                  <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Gestão e Manutenção de Hardware</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Gestão Inteligente de Infraestrutura de TI para estações de trabalho com upgrades estratégicos, componentes homologados e diagnóstico avançado.</p>
+              <div className="group h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors duration-300 flex flex-col">
+                <div className="mx-auto w-14 h-14 bg-blue-500/10 rounded-full flex items-center justify-center text-blue-400 mb-4 shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
+                  <Monitor className="w-7 h-7" />
                 </div>
-              </Link>
+                <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Gestão e Manutenção de Hardware</h3>
+                <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Gestão Inteligente de Infraestrutura de TI para estações de trabalho com upgrades estratégicos, componentes homologados e diagnóstico avançado.</p>
+              </div>
 
               {/* 2. Desempenho (Notebooks) */}
-              <Link href="/servicos#notebooks" className="block group">
-                <div className="h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/50 hover:bg-white/[0.05] transition-all duration-300 hover:-translate-y-1 flex flex-col">
-                  <div className="mx-auto w-14 h-14 bg-purple-500/10 rounded-full flex items-center justify-center text-purple-400 mb-4 shadow-lg shadow-purple-500/20 group-hover:scale-110 transition-transform">
-                    <Laptop className="w-7 h-7" />
-                  </div>
-                  <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Performance para Notebooks</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Análise e implementação de melhorias em notebooks, incluindo substituição de display, bateria e otimização de sistema.</p>
+              <div className="group h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors duration-300 flex flex-col">
+                <div className="mx-auto w-14 h-14 bg-purple-500/10 rounded-full flex items-center justify-center text-purple-400 mb-4 shadow-lg shadow-purple-500/20 group-hover:scale-110 transition-transform">
+                  <Laptop className="w-7 h-7" />
                 </div>
-              </Link>
+                <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Performance para Notebooks</h3>
+                <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Análise e implementação de melhorias em notebooks, incluindo substituição de display, bateria e otimização de sistema.</p>
+              </div>
 
               {/* 3. Impressão (PRIORITIZED) */}
-              <Link href="/servicos#impressoras" className="block group">
-                <div className="h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/50 hover:bg-white/[0.05] transition-all duration-300 hover:-translate-y-1 flex flex-col">
-                  <div className="mx-auto w-14 h-14 bg-pink-500/10 rounded-full flex items-center justify-center text-pink-400 mb-4 shadow-lg shadow-pink-500/20 group-hover:scale-110 transition-transform">
-                    <Printer className="w-7 h-7" />
-                  </div>
-                  <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Gestão de Impressão</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Especialistas nos principais fabricantes do mercado (Ink Tank / Laser). Desobstrução de cabeçotes, troca de tracionador e manutenção de sistemas Bulk Ink.</p>
+              <div className="group h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors duration-300 flex flex-col">
+                <div className="mx-auto w-14 h-14 bg-pink-500/10 rounded-full flex items-center justify-center text-pink-400 mb-4 shadow-lg shadow-pink-500/20 group-hover:scale-110 transition-transform">
+                  <Printer className="w-7 h-7" />
                 </div>
-              </Link>
+                <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Gestão de Impressão</h3>
+                <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Especialistas nos principais fabricantes do mercado (Ink Tank / Laser). Desobstrução de cabeçotes, troca de tracionador e manutenção de sistemas Bulk Ink.</p>
+              </div>
 
               {/* 4. Remoto */}
-              <Link href="/servicos#remoto" className="block group">
-                <div className="h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/50 hover:bg-white/[0.05] transition-all duration-300 hover:-translate-y-1 flex flex-col">
-                  <div className="mx-auto w-14 h-14 bg-cyan-500/10 rounded-full flex items-center justify-center text-cyan-400 mb-4 shadow-lg shadow-cyan-500/20 group-hover:scale-110 transition-transform">
-                    <Globe className="w-7 h-7" />
-                  </div>
-                  <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Consultoria Remota</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Consultoria técnica e suporte remoto seguro para ambientes de trabalho, com agilidade e total segurança.</p>
+              <div className="group h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors duration-300 flex flex-col">
+                <div className="mx-auto w-14 h-14 bg-cyan-500/10 rounded-full flex items-center justify-center text-cyan-400 mb-4 shadow-lg shadow-cyan-500/20 group-hover:scale-110 transition-transform">
+                  <Globe className="w-7 h-7" />
                 </div>
-              </Link>
+                <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Consultoria Remota</h3>
+                <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Consultoria técnica e suporte remoto seguro para ambientes de trabalho, com agilidade e total segurança.</p>
+              </div>
 
               {/* 5. PC Gamer / Workstations */}
-              <Link href="/servicos#workstations" className="block group">
-                <div className="h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/50 hover:bg-white/[0.05] transition-all duration-300 hover:-translate-y-1 flex flex-col">
-                  <div className="mx-auto w-14 h-14 bg-orange-500/10 rounded-full flex items-center justify-center text-orange-400 mb-4 shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform">
-                    <Cpu className="w-7 h-7" />
-                  </div>
-                  <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Montagem de Computadores</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Do planejamento à montagem e organização (cable management) impecável.</p>
+              <div className="group h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors duration-300 flex flex-col">
+                <div className="mx-auto w-14 h-14 bg-orange-500/10 rounded-full flex items-center justify-center text-orange-400 mb-4 shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform">
+                  <Cpu className="w-7 h-7" />
                 </div>
-              </Link>
+                <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Montagem de Computadores</h3>
+                <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Do planejamento à montagem e organização (cable management) impecável.</p>
+              </div>
 
               {/* 6. Redes (DEMOTED) */}
-              <Link href="/servicos#redes" className="block group">
-                <div className="h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/50 hover:bg-white/[0.05] transition-all duration-300 hover:-translate-y-1 flex flex-col">
-                  <div className="mx-auto w-14 h-14 bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-400 mb-4 shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
-                    <Wifi className="w-7 h-7" />
-                  </div>
-                  <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Redes & Conectividade</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Soluções pontuais para Wi-Fi e cabeamento em residências e pequenos escritórios.</p>
+              <div className="group h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors duration-300 flex flex-col">
+                <div className="mx-auto w-14 h-14 bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-400 mb-4 shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
+                  <Wifi className="w-7 h-7" />
                 </div>
-              </Link>
+                <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Redes & Conectividade</h3>
+                <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Soluções pontuais para Wi-Fi e cabeamento em residências e pequenos escritórios.</p>
+              </div>
 
             </div>
 
@@ -447,44 +446,43 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           </div>
         </section>
 
-        {/* DEPOIMENTOS (Husky Inspired) */}
-        <section className="py-24 bg-slate-950 border-t border-white/5 relative" >
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[100px] pointer-events-none" />
-          <div className="container mx-auto px-4 relative">
-            <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="text-3xl font-bold mb-4">O Que Dizem Nossos Clientes</h2>
-              <p className="text-slate-400">Confiança se conquista com transparência e resultado.</p>
-            </div>
+        {/* DEPOIMENTOS "HIBRIDOS" (Corporativo + Pessoal) */}
+        <section className="py-24 bg-gradient-to-t from-slate-950 to-slate-900 border-t border-white/5 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
 
-            <div className="grid md:grid-cols-3 gap-8">
-              {[
-                {
-                  name: "Rodrigo M.",
-                  msg: "Meu equipamento portátil estava com baixa performance térmica. Realizaram todo o processo de engenharia térmica. Desempenho restaurado!",
-                  role: "Designer Gráfico"
-                },
-                {
-                  name: "Amanda S.",
-                  msg: "Montei meu PC completo com a WFIX. O cable management ficou perfeito, muito capricho na montagem.",
-                  role: "Arquiteta"
-                },
-                {
-                  name: "Dr. Carlos F.",
-                  msg: "Precisava de uma migração de dados e reestruturação da minha infraestrutura. Realizaram tudo com sigilo total. Recomendo.",
-                  role: "Médico"
-                }
-              ].map((depo, i) => (
-                <div key={i} className="p-8 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors hover:-translate-y-1 duration-300">
-                  <div className="flex gap-1 mb-4 text-yellow-500">
-                    {[1, 2, 3, 4, 5].map(star => <svg key={star} className="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>)}
-                  </div>
-                  <p className="text-slate-300 italic mb-6 leading-relaxed">"{depo.msg}"</p>
+          <div className="container mx-auto px-4 relative z-10">
+            <h2 className="text-3xl font-bold text-center mb-16">O que dizem quem já confiou</h2>
+
+            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+              {/* Card 1 - Pessoal/Autônomo (Humanizado) */}
+              <div className="bg-white/[0.02] border border-white/5 p-8 rounded-2xl relative flex flex-col justify-between h-full">
+                <div className="absolute -top-4 -left-4 w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center text-primary text-4xl font-serif">"</div>
+                <p className="text-slate-300 italic mb-6 leading-relaxed">
+                  "Meu notebook estava esquentando muito e desligando sozinho no meio das reuniões. Fizeram uma limpeza completa e trocaram a pasta térmica. Agora funciona perfeitamente, silencioso e não esquenta nada. Serviço impecável!"
+                </p>
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center font-bold text-slate-500">R</div>
                   <div>
-                    <p className="font-bold text-white">{depo.name}</p>
-                    <p className="text-xs text-slate-500 uppercase tracking-wider">{depo.role}</p>
+                    <div className="font-bold text-white">Ricardo M.</div>
+                    <div className="text-xs text-primary">Arquiteto e Designer</div>
                   </div>
                 </div>
-              ))}
+              </div>
+
+              {/* Card 2 - Empresarial (Profissional) */}
+              <div className="bg-white/[0.02] border border-white/5 p-8 rounded-2xl relative flex flex-col justify-between h-full">
+                <div className="absolute -top-4 -left-4 w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center text-blue-400 text-4xl font-serif">"</div>
+                <p className="text-slate-300 italic mb-6 leading-relaxed">
+                  "Precisava formatar meu PC mas tinha medo de perder meus arquivos de trabalho. Eles fizeram o backup de tudo com total segurança e deixaram o sistema voando. Profissionalismo raro de encontrar."
+                </p>
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center font-bold text-slate-500">A</div>
+                  <div>
+                    <div className="font-bold text-white">Ana Paula S.</div>
+                    <div className="text-xs text-blue-400">Consultora Financeira</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -493,26 +491,26 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <section id="diferenciais" className="py-24 bg-slate-950" >
           <div className="container mx-auto px-4">
             <div className="text-center max-w-2xl mx-auto mb-16">
-              <h2 className="text-3xl font-bold mb-4">Consultoria Especializada de Confiança</h2>
-              <p className="text-slate-400">Transparência, agilidade e garantia em todos os serviços realizados.</p>
+              <h2 className="text-3xl font-bold mb-4">Compromisso com a Excelência</h2>
+              <p className="text-slate-400">Aliamos rigor técnico a um atendimento focado na continuidade do seu negócio e na segurança dos seus ativos.</p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-8">
               {[
                 {
                   icon: Building2,
-                  title: 'Atendimento e Logística',
-                  desc: 'Suporte técnico on-site para empresas ou logística segura de retirada e entrega de equipamentos.'
+                  title: 'Agilidade e Continuidade',
+                  desc: 'Atendimento on-site especializado ou logística segura de coleta e entrega, garantindo o mínimo impacto em sua produtividade.'
                 },
                 {
                   icon: UserCheck,
-                  title: 'Consultoria Técnica',
-                  desc: 'Diagnóstico preciso feito por especialistas. Explicamos o problema e a solução de forma transparente.'
+                  title: 'Diagnóstico Transparente',
+                  desc: 'Comunicação clara e objetiva. Você recebe um detalhamento completo da solução, com total previsibilidade de custos e prazos.'
                 },
                 {
                   icon: ShieldCheck,
-                  title: 'Segurança e Dados',
-                  desc: 'Protocolos rigorosos de privacidade. Seus arquivos e informações sensíveis são preservados durante todo o serviço.'
+                  title: 'Sigilo e Privacidade',
+                  desc: 'Garantimos a integridade total dos seus dados através de protocolos rigorosos de segurança e discrição em todas as etapas do serviço.'
                 }
               ].map((item, i) => (
                 <div key={i} className="group p-8 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-primary/50 hover:bg-white/[0.08] transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10">
