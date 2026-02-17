@@ -289,7 +289,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   <Monitor className="w-7 h-7" />
                 </div>
                 <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Gestão e Manutenção de Hardware</h3>
-                <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Gestão Inteligente de Infraestrutura de TI para estações de trabalho com upgrades estratégicos, componentes homologados e diagnóstico avançado.</p>
+                <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Diagnóstico preciso, substituição de componentes defeituosos e upgrades de performance. Deixamos sua máquina nova de novo.</p>
               </div>
 
               {/* 2. Desempenho (Notebooks) */}
@@ -341,7 +341,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             <div className="mt-12 text-center">
               <Link href="/servicos">
-                <Button size="lg" className="bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-full px-8">
+                <Button size="lg" className="bg-primary hover:bg-white/90 text-slate-950 font-bold rounded-full px-10 shadow-lg shadow-white/10 hover:shadow-white/20 transition-all hover:scale-105">
                   Conhecer todas as Soluções <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </Link>
@@ -418,7 +418,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-primary/10 via-slate-900 to-slate-900" />
           <div className="container relative mx-auto px-4">
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Montagem de Setups de Alta Performance</h2>
+              <h2 className="text-3xl font-bold mb-4 text-white">Montagem de Setups de Alta Performance</h2>
               <p className="text-slate-400">Qualidade de montagem, cable management impecável e hardware configurado para máximo desempenho.</p>
             </div>
 
