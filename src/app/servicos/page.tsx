@@ -130,15 +130,19 @@ export default async function ServicesPage() {
                                 <ul className="space-y-3">
                                     <li className="flex gap-3 text-slate-300 text-sm">
                                         <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0" />
-                                        <span><strong>Lentidão extrema:</strong> Otimização do sistema e upgrade para SSD (deixa até 10x mais rápido).</span>
+                                        <span><strong>Reparo de Carcaça e Dobradiças:</strong> Restauração completa da estrutura física.</span>
                                     </li>
                                     <li className="flex gap-3 text-slate-300 text-sm">
                                         <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0" />
-                                        <span><strong>Aquecimento/Barulho:</strong> Limpeza interna completa e troca da pasta térmica.</span>
+                                        <span><strong>Limpeza Técnica:</strong> Higienização interna e troca de pasta térmica (Silver/Gold).</span>
                                     </li>
                                     <li className="flex gap-3 text-slate-300 text-sm">
                                         <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0" />
-                                        <span><strong>Tela ou Teclado quebrados:</strong> Substituição por peças novas e compatíveis.</span>
+                                        <span><strong>Substituição de Peças:</strong> Troca de Teclados, Baterias e Telas originais.</span>
+                                    </li>
+                                    <li className="flex gap-3 text-slate-300 text-sm">
+                                        <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0" />
+                                        <span><strong>Upgrades de Performance:</strong> Substituição de HD por SSD e adição de Memória RAM.</span>
                                     </li>
                                 </ul>
                             </div>
@@ -150,7 +154,7 @@ export default async function ServicesPage() {
                         </div>
                         <div className="order-1 md:order-2 bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl border border-white/5 aspect-square flex items-center justify-center relative overflow-hidden group">
                             <Image
-                                src="/services/notebook-repair.png"
+                                src="/services/notebook-mt.png"
                                 alt="Reparo profissional de notebook em laboratório"
                                 fill
                                 className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100"
@@ -164,7 +168,7 @@ export default async function ServicesPage() {
                         <div className="order-1">
                             <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl border border-white/5 aspect-square flex items-center justify-center relative overflow-hidden group">
                                 <Image
-                                    src="/services/pc-build.png"
+                                    src="/services/pc-mt.png"
                                     alt="Computador Gamer de Alta Performance com refrigeração líquida"
                                     fill
                                     className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100"
@@ -185,15 +189,19 @@ export default async function ServicesPage() {
                                 <ul className="space-y-3">
                                     <li className="flex gap-3 text-slate-300 text-sm">
                                         <CheckCircle2 className="w-5 h-5 text-blue-500 shrink-0" />
-                                        <span><strong>Upgrade Gamer/Workstation:</strong> Instalação de Placa de Vídeo, mais Memória e Fontes Potentes.</span>
+                                        <span><strong>Montagem PC Gamer/Workstation:</strong> Consultoria de peças e montagem profissional.</span>
                                     </li>
                                     <li className="flex gap-3 text-slate-300 text-sm">
                                         <CheckCircle2 className="w-5 h-5 text-blue-500 shrink-0" />
-                                        <span><strong>Formatação Profissional:</strong> Backup dos seus arquivos e instalação limpa do Windows.</span>
+                                        <span><strong>Diagnóstico Avançado:</strong> Identificação e substituição de hardware defeituoso.</span>
                                     </li>
                                     <li className="flex gap-3 text-slate-300 text-sm">
                                         <CheckCircle2 className="w-5 h-5 text-blue-500 shrink-0" />
-                                        <span><strong>Montagem do Zero:</strong> Você compra as peças, nós montamos com cable management impecável.</span>
+                                        <span><strong>Upgrades Gerais:</strong> Instalação de SSD NVMe, Memória RAM e Placas de Vídeo.</span>
+                                    </li>
+                                    <li className="flex gap-3 text-slate-300 text-sm">
+                                        <CheckCircle2 className="w-5 h-5 text-blue-500 shrink-0" />
+                                        <span><strong>Limpeza Completa:</strong> Remoção de poeira e organização de cabos (Cable Management).</span>
                                     </li>
                                 </ul>
                             </div>
@@ -220,15 +228,15 @@ export default async function ServicesPage() {
                                 <ul className="space-y-3">
                                     <li className="flex gap-3 text-slate-300 text-sm">
                                         <CheckCircle2 className="w-5 h-5 text-pink-500 shrink-0" />
-                                        <span><strong>Desentupimento:</strong> Limpeza técnica dos cabeçotes de impressão.</span>
+                                        <span><strong>Cabeça de Impressão:</strong> Desobstrução profissional e alinhamento.</span>
                                     </li>
                                     <li className="flex gap-3 text-slate-300 text-sm">
                                         <CheckCircle2 className="w-5 h-5 text-pink-500 shrink-0" />
-                                        <span><strong>Manutenção de Bulk Ink:</strong> Ajuste de pressão e retirada de ar das mangueiras.</span>
+                                        <span><strong>Tracionador de Papel:</strong> Reparo ou troca do sistema de puxar folhas.</span>
                                     </li>
                                     <li className="flex gap-3 text-slate-300 text-sm">
                                         <CheckCircle2 className="w-5 h-5 text-pink-500 shrink-0" />
-                                        <span><strong>Almofadas de Tinta:</strong> Troca e reset do contador quando a impressora trava.</span>
+                                        <span><strong>Configuração de Rede:</strong> Instalação de impressoras Wi-Fi e compartilhamento.</span>
                                     </li>
                                 </ul>
                             </div>
@@ -240,7 +248,7 @@ export default async function ServicesPage() {
                         </div>
                         <div className="order-1 md:order-2 bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl border border-white/5 aspect-square flex items-center justify-center relative overflow-hidden group">
                             <Image
-                                src="/services/printer-maintenance.png"
+                                src="/services/printer-mt.png"
                                 alt="Manutenção de impressoras EcoTank e Laser"
                                 fill
                                 className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100"
