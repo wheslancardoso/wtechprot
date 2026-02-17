@@ -33,7 +33,7 @@ export function AnimateIn({
             transition: {
                 duration: duration,
                 delay: delay,
-                ease: [0.22, 1, 0.36, 1] // Custom easing
+                ease: [0.22, 1, 0.36, 1] as [number, number, number, number] // Custom easing
             }
         }
     }
