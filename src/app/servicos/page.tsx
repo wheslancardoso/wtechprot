@@ -68,14 +68,9 @@ export default async function ServicesPage() {
                         <ArrowLeft className="w-4 h-4" /> <span className="hidden sm:inline">Voltar para Home</span><span className="sm:hidden">Voltar</span>
                     </Link>
                     <span className="font-bold text-lg text-white tracking-tight">
-                        {brandName} <span className="text-primary">Tech</span>
+                        {brandName}
                     </span>
-                    <Link href={whatsappLink} target="_blank">
-                        <Button size="sm" className="bg-primary hover:bg-primary/90 text-slate-950 font-bold">
-                            <span className="hidden sm:inline">Falar no WhatsApp</span>
-                            <span className="sm:hidden">WhatsApp</span>
-                        </Button>
-                    </Link>
+
                 </div>
             </header>
 
