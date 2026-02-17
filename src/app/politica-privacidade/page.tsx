@@ -2,7 +2,7 @@ import { ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
 
 export const metadata = {
-    title: 'Política de Privacidade | WFIX Tech',
+    title: 'Política de Privacidade',
     description: 'Política de Privacidade da WFIX Tech - Soluções em Gestão de TI e Consultoria Corporativa.',
 }
 

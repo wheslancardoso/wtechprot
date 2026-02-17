@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    template: '%s',
-    default: 'WFIX Tech',
+    template: 'WFIX Tech | %s',
+    default: 'WFIX Tech | Consultoria e Soluções em Tecnologia',
   },
   description: "Consultoria e Soluções em Tecnologia da Informação",
 };

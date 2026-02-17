@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Script from 'next/script'
 
 export const metadata: Metadata = {
-    title: 'WFIX Tech Solutions | Gestão de TI e Infraestrutura Corporativa',
+    title: 'Gestão de TI e Infraestrutura Corporativa',
     description: 'Soluções corporativas de gestão de infraestrutura de TI para pequenas e médias empresas. Reduza custos e aumente produtividade com suporte especializado.',
     robots: 'noindex, nofollow', // Página ponte - não indexar
 }

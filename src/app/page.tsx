@@ -1,6 +1,7 @@
 import Link from 'next/link'
-import { ArrowRight, CheckCircle2, ShieldCheck, FileSearch, Smartphone, MessageCircle, Wrench, CreditCard, Laptop, Home as HomeIcon, UserCheck, Printer, Monitor, Clock, FileText, Server, Building2, Briefcase } from 'lucide-react'
+import { ArrowRight, CheckCircle2, ShieldCheck, FileSearch, Smartphone, MessageCircle, Wrench, CreditCard, Laptop, Home as HomeIcon, UserCheck, Printer, Monitor, Clock, FileText, Server, Building2, Briefcase, Wifi, Globe, Cpu, Settings, MapPin, Headset } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { AnimateIn } from '@/components/ui/animate-in'
 import Image from 'next/image'
 import Script from 'next/script'
 import { createAdminClient } from '@/lib/supabase/server'
@@ -57,8 +58,8 @@ const getTenantData = unstable_cache(
 export async function generateMetadata() {
   const { brandName } = await getTenantData()
   return {
-    title: 'WFIX Tech | Soluções de TI para Empresas',
-    description: 'Consultoria e Soluções em Tecnologia da Informação para Empresas.',
+    title: 'WFIX Tech | Especialista em Hardware e Performance ',
+    description: 'Diagnóstico avançado, setups de alta performance e consultoria em tecnologia para profissionais e empresas.',
   }
 }
 
@@ -113,53 +114,65 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <main className="flex-1 pt-16">
 
         {/* HERO SECTION */}
-        <section className="relative py-24 lg:py-32 overflow-hidden">
+        <section className="relative py-16 md:py-32 overflow-hidden">
           {/* Background Elements */}
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-slate-950 to-slate-950" />
 
+          {/* Floating Blobs (Mobile Enchantment) */}
+          <div className="absolute top-20 left-10 w-32 h-32 bg-blue-500/10 rounded-full blur-[50px] animate-pulse" />
+          <div className="absolute bottom-20 right-10 w-40 h-40 bg-purple-500/10 rounded-full blur-[60px] animate-pulse delay-700" />
+
           <div className="container relative mx-auto px-4 text-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-primary mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-              </span>
-              Suporte Técnico Empresarial
-            </div>
+            <AnimateIn delay={0.1}>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-primary mb-6 md:mb-8 backdrop-blur-sm">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                </span>
+                Especialista em Tecnologia e Hardware
+              </div>
+            </AnimateIn>
 
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 bg-gradient-to-br from-white via-white to-slate-500 bg-clip-text text-transparent animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
-              Gestão e Manutenção <br />
-              de Ativos de TI
-            </h1>
+            <AnimateIn delay={0.2}>
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 bg-gradient-to-br from-white via-white to-slate-500 bg-clip-text text-transparent">
+                Manutenção de Alta Performance <br />
+                para Notebooks e PCs
+              </h1>
+            </AnimateIn>
 
-            <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200">
-              Soluções completas para infraestrutura corporativa. <b>Notebooks, Workstations e Redes</b>. Suporte On-Site e Remoto para sua empresa fluir sem interrupções.
-            </p>
+            <AnimateIn delay={0.3}>
+              <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed px-4">
+                Fale agora mesmo com um <b>Especialista em Tecnologia</b>. Atendimento profissional, logística segura ou consultoria para garantir a continuidade do seu trabalho.
+              </p>
+            </AnimateIn>
 
-            <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <AnimateIn delay={0.4}>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 px-4">
                 <Button size="lg" className="h-14 px-8 text-lg rounded-full w-full sm:w-auto shadow-xl shadow-primary/20 bg-primary hover:bg-primary/90 text-primary-foreground transition-all transform hover:scale-105" asChild>
                   <Link href={whatsappLink} target="_blank" id="cta-whatsapp-hero">
                     <Building2 className="mr-2 h-5 w-5" />
-                    Falar com Consultor
+                    Consultar Especialista
                   </Link>
                 </Button>
               </div>
 
-              <div className="mt-12 grid grid-cols-3 gap-4 text-center max-w-lg mx-auto">
+              <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4 text-center max-w-lg mx-auto px-6">
                 {[
                   { label: "Relatórios Técnicos", icon: FileText },
-                  { label: "Gestão de Ativos", icon: Server },
-                  { label: "SLA Garantido", icon: ShieldCheck },
+                  { label: "Laboratório Próprio", icon: Server },
+                  { label: "Garantia de 90 Dias", icon: ShieldCheck },
                 ].map((feat, i) => (
-                  <div key={i} className="flex flex-col items-center gap-2 p-3 rounded-lg bg-white/5 border border-white/5 backdrop-blur-sm">
-                    <feat.icon className="h-5 w-5 text-primary/80" />
-                    <span className="text-xs font-medium text-slate-300">{feat.label}</span>
+                  <div key={i} className="flex md:flex-col flex-row items-center justify-center md:justify-center gap-3 md:gap-2 p-3 rounded-xl bg-white/5 border border-white/5 backdrop-blur-md shadow-lg">
+                    <feat.icon className="h-5 w-5 text-primary" />
+                    <span className="text-sm font-medium text-slate-300">{feat.label}</span>
                   </div>
                 ))}
               </div>
-            </div>
+            </AnimateIn>
           </div>
         </section>
+
+
 
         {/* TRACKING SPOTLIGHT SECTION */}
         <section className="py-24 bg-gradient-to-b from-slate-950 to-primary/5 border-b border-white/5 relative overflow-hidden">
@@ -172,22 +185,22 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <div className="flex-1 space-y-6 text-center lg:text-left">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs font-medium text-blue-400 mb-2">
                   <Clock className="w-3 h-3" />
-                  Service Desk Digital
+                  Gestão Digital de Ativos
                 </div>
                 <h2 className="text-3xl md:text-5xl font-bold leading-tight">
-                  Status de Chamados <br />
+                  Status de Serviços <br />
                   em Tempo Real.
                 </h2>
                 <p className="text-lg text-slate-400 leading-relaxed max-w-xl mx-auto lg:mx-0">
-                  Nosso portal de <b>Gestão de Chamados</b> permite que sua equipe de TI ou administrativa acompanhe cada etapa da manutenção. Transparência total para sua operação.
+                  Nosso sistema de Acompanhamento Técnico permite que você visualize cada etapa do reparo. Transparência total para sua segurança.
                 </p>
 
                 <ul className="space-y-3 text-slate-300 max-w-sm mx-auto lg:mx-0 text-left">
                   {[
-                    "Portal Corporativo Exclusivo",
-                    "Evidências Fotográficas das Trocas",
-                    "Aprovação de Budget Online",
-                    "Histórico de Manutenção por Ativo"
+                    "Portal do Cliente",
+                    "Fotos das Peças Trocadas",
+                    "Aprovação de Orçamento Online",
+                    "Histórico Completo do Aparelho"
                   ].map((item, i) => (
                     <li key={i} className="flex items-center gap-3">
                       <CheckCircle2 className="w-5 h-5 text-primary shrink-0" />
@@ -221,10 +234,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   {/* Timeline Mock - Animated */}
                   <div className="space-y-6 relative pl-4 border-l border-white/10 ml-2">
                     {[
-                      { title: "Chamado Aberto", time: "10:30", delay: "0s" },
-                      { title: "Diagnóstico Técnico", time: "10:45", delay: "0.5s" },
-                      { title: "Componentes Substituídos", time: "14:20", delay: "1s" },
-                      { title: "Disponível para Entrega", time: "16:00", delay: "1.5s" }
+                      { title: "Serviço Iniciado", time: "10:30", delay: "0s" },
+                      { title: "Análise Técnica", time: "10:45", delay: "0.5s" },
+                      { title: "Upgrades Implementados", time: "14:20", delay: "1s" },
+                      { title: "Pronto para Entrega", time: "16:00", delay: "1.5s" }
                     ].map((step, i, arr) => (
                       <div
                         key={i}
@@ -253,28 +266,70 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         {/* SOLUCOES */}
         <section id="solucoes" className="py-12 border-y border-white/5 bg-white/[0.02]">
           <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-white/5">
-              <div className="p-4 animate-in fade-in zoom-in duration-700 delay-100 hover:scale-105 transition-transform cursor-default">
-                <div className="mx-auto w-12 h-12 bg-blue-500/10 rounded-full flex items-center justify-center text-blue-400 mb-4 shadow-lg shadow-blue-500/20">
-                  <Monitor className="w-6 h-6 animate-pulse" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-center">
+
+              {/* 1. Hardware */}
+              <div className="group h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors duration-300 flex flex-col">
+                <div className="mx-auto w-14 h-14 bg-blue-500/10 rounded-full flex items-center justify-center text-blue-400 mb-4 shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
+                  <Monitor className="w-7 h-7" />
                 </div>
-                <h3 className="font-bold text-lg text-slate-200 mb-2">Workstations Corporativas</h3>
-                <p className="text-sm text-slate-400">Manutenção preventiva e corretiva para estações de trabalho de alto desempenho (CAD, Design, Engenharia).</p>
+                <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Gestão e Manutenção de Hardware</h3>
+                <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Diagnóstico preciso, substituição de componentes defeituosos e upgrades de performance. Deixamos sua máquina nova de novo.</p>
               </div>
-              <div className="p-4 animate-in fade-in zoom-in duration-700 delay-200 hover:scale-105 transition-transform cursor-default">
-                <div className="mx-auto w-12 h-12 bg-purple-500/10 rounded-full flex items-center justify-center text-purple-400 mb-4 shadow-lg shadow-purple-500/20">
-                  <Laptop className="w-6 h-6 animate-pulse" />
+
+              {/* 2. Desempenho (Notebooks) */}
+              <div className="group h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors duration-300 flex flex-col">
+                <div className="mx-auto w-14 h-14 bg-purple-500/10 rounded-full flex items-center justify-center text-purple-400 mb-4 shadow-lg shadow-purple-500/20 group-hover:scale-110 transition-transform">
+                  <Laptop className="w-7 h-7" />
                 </div>
-                <h3 className="font-bold text-lg text-slate-200 mb-2">Parque de Notebooks</h3>
-                <p className="text-sm text-slate-400">Gestão de frota, Upgrades de Performance, gestão de hardware e ciclo de vida para manter sua equipe produtiva.</p>
+                <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Performance para Notebooks</h3>
+                <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Análise e implementação de melhorias em notebooks, incluindo substituição de display, bateria e otimização de sistema.</p>
               </div>
-              <div className="p-4 animate-in fade-in zoom-in duration-700 delay-300 hover:scale-105 transition-transform cursor-default">
-                <div className="mx-auto w-12 h-12 bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-400 mb-4 shadow-lg shadow-emerald-500/20">
-                  <Printer className="w-6 h-6 animate-pulse" />
+
+              {/* 3. Impressão (PRIORITIZED) */}
+              <div className="group h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors duration-300 flex flex-col">
+                <div className="mx-auto w-14 h-14 bg-pink-500/10 rounded-full flex items-center justify-center text-pink-400 mb-4 shadow-lg shadow-pink-500/20 group-hover:scale-110 transition-transform">
+                  <Printer className="w-7 h-7" />
                 </div>
-                <h3 className="font-bold text-lg text-slate-200 mb-2">Impressão Corporativa</h3>
-                <p className="text-sm text-slate-400">Suporte para impressoras de rede, plotters e multifuncionais. Manutenção de Hardware.</p>
+                <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Gestão de Impressão</h3>
+                <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Especialista nos principais fabricantes do mercado (Ink Tank / Laser). Desobstrução de cabeçotes, troca de tracionador e manutenção de sistemas Bulk Ink.</p>
               </div>
+
+              {/* 4. Remoto */}
+              <div className="group h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors duration-300 flex flex-col">
+                <div className="mx-auto w-14 h-14 bg-cyan-500/10 rounded-full flex items-center justify-center text-cyan-400 mb-4 shadow-lg shadow-cyan-500/20 group-hover:scale-110 transition-transform">
+                  <Globe className="w-7 h-7" />
+                </div>
+                <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Consultoria Remota</h3>
+                <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Consultoria técnica e suporte remoto seguro para ambientes de trabalho, com agilidade e total segurança.</p>
+              </div>
+
+              {/* 5. PC Gamer / Workstations */}
+              <div className="group h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors duration-300 flex flex-col">
+                <div className="mx-auto w-14 h-14 bg-orange-500/10 rounded-full flex items-center justify-center text-orange-400 mb-4 shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform">
+                  <Cpu className="w-7 h-7" />
+                </div>
+                <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Montagem de Computadores</h3>
+                <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Do planejamento à montagem e organização (cable management) impecável.</p>
+              </div>
+
+              {/* 6. Redes (DEMOTED) */}
+              <div className="group h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors duration-300 flex flex-col">
+                <div className="mx-auto w-14 h-14 bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-400 mb-4 shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
+                  <Wifi className="w-7 h-7" />
+                </div>
+                <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Redes & Conectividade</h3>
+                <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Soluções pontuais para Wi-Fi e cabeamento em residências e pequenos escritórios.</p>
+              </div>
+
+            </div>
+
+            <div className="mt-12 text-center">
+              <Link href="/servicos">
+                <Button size="lg" className="bg-primary hover:bg-white/90 text-slate-950 font-bold rounded-full px-10 shadow-lg shadow-white/10 hover:shadow-white/20 transition-all hover:scale-105">
+                  Conhecer todas as Soluções <ArrowRight className="ml-2 w-4 h-4" />
+                </Button>
+              </Link>
             </div>
           </div>
         </section>
@@ -286,10 +341,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <div className="container relative mx-auto px-4">
             <div className="text-center max-w-3xl mx-auto mb-16">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-xs font-medium text-primary mb-4">
-                <FileText className="w-3 h-3" /> Plataforma Digital
+                <FileText className="w-3 h-3" /> Monitoramento e Manutenção
               </div>
-              <h2 className="text-3xl font-bold mb-4">Transparência Total para Sua Empresa</h2>
-              <p className="text-slate-400">Seu gestor de TI acompanha todo o processo em tempo real. Sem surpresas, sem ligações desnecessárias.</p>
+              <h2 className="text-3xl font-bold mb-4">Monitoramento e Manutenção de Equipamentos</h2>
+              <p className="text-slate-400">Receba fotos, relatórios de evolução e o status da sua implementação direto no seu WhatsApp.</p>
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
@@ -300,7 +355,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">Check-in com Fotos</h3>
                 <p className="text-sm text-slate-400 leading-relaxed">
-                  Registro fotográfico obrigatório no recebimento e na entrega. Evidências para auditoria e prestação de contas.
+                  Registro fotográfico detalhado do estado do equipamento na entrada e saída. Segurança total sobre o estado do seu ativo.
                 </p>
               </div>
 
@@ -311,7 +366,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">Aprovação Digital</h3>
                 <p className="text-sm text-slate-400 leading-relaxed">
-                  Antes de qualquer intervenção, o gestor autoriza via link. Aceite de termos e confirmação digital registrados.
+                  Receba a análise técnica no seu celular. Aprove ou recuse itens com um clique, sem burocracia.
                 </p>
               </div>
 
@@ -322,7 +377,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">Assinatura Digital</h3>
                 <p className="text-sm text-slate-400 leading-relaxed">
-                  Na retirada, o cliente confirma o recebimento com assinatura digital no próprio celular. Tudo registrado e auditável.
+                  Confirmação de retirada segura via assinatura na tela do celular. Garantia de que o equipamento foi entregue a você.
                 </p>
               </div>
 
@@ -331,49 +386,117 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <div className="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                   <FileText className="w-6 h-6" />
                 </div>
-                <h3 className="text-lg font-bold text-white mb-2">Laudo em PDF</h3>
+                <h3 className="text-lg font-bold text-white mb-2">Relatório em PDF</h3>
                 <p className="text-sm text-slate-400 leading-relaxed">
-                  Download instantâneo do relatório com fotos, diagnóstico e termo de garantia. Perfeito para auditorias internas.
+                  Download instantâneo do registro completo com fotos, especificações e termo de garantia. Perfeito para gestão de ativos.
                 </p>
               </div>
             </div>
 
             {/* Bottom CTA */}
-            <div className="mt-16 text-center">
-              <p className="text-slate-500 text-sm mb-4">Quer ver como funciona na prática?</p>
-              <Button variant="outline" size="lg" className="rounded-full border-white/10 hover:bg-white/5" asChild>
-                <Link href="#como-funciona">
-                  Ver Fluxo de Atendimento <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
+
+          </div>
+        </section>
+
+        {/* GALERIA PC GAMER (Husky Inspired) */}
+        <section className="py-24 bg-slate-900 overflow-hidden relative border-t border-white/5" >
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-primary/10 via-slate-900 to-slate-900" />
+          <div className="container relative mx-auto px-4">
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <h2 className="text-3xl font-bold mb-4 text-white">Montagem de Setups de Alta Performance</h2>
+              <p className="text-slate-400">Qualidade de montagem, cable management impecável e hardware configurado para máximo desempenho.</p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-6">
+              {[
+                { id: 1, image: "/setup-rgb-01.jpg" },
+                { id: 2, image: "/pc-gamer-1.jpg" },
+                { id: 3, image: "/workspace-tech-03.jpg" },
+              ].map((setup) => (
+                <div key={setup.id} className="group relative aspect-video rounded-xl overflow-hidden border border-white/10 hover:border-primary/50 transition-all duration-500 shadow-lg hover:shadow-primary/20 bg-slate-950">
+                  <div className="absolute inset-0 bg-slate-900">
+                    <Image
+                      src={setup.image}
+                      alt="Setup Personalizado WFIX"
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
+                      className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-90 group-hover:opacity-100"
+                    />
+                    {/* Gradient Overlay para integrar com o fundo dark */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500" />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+          </div>
+        </section>
+
+        {/* DEPOIMENTOS "HIBRIDOS" (Corporativo + Pessoal) */}
+        <section className="py-24 bg-gradient-to-t from-slate-950 to-slate-900 border-t border-white/5 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+
+          <div className="container mx-auto px-4 relative z-10">
+            <h2 className="text-3xl font-bold text-center mb-16">O que dizem quem já confiou</h2>
+
+            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+              {/* Card 1 - Pessoal/Autônomo (Humanizado) */}
+              <div className="bg-white/[0.02] border border-white/5 p-8 rounded-2xl relative flex flex-col justify-between h-full">
+                <div className="absolute -top-4 -left-4 w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center text-primary text-4xl font-serif">"</div>
+                <p className="text-slate-300 italic mb-6 leading-relaxed">
+                  "Meu notebook estava esquentando muito e desligando sozinho no meio das reuniões. Fizeram uma limpeza completa e trocaram a pasta térmica. Agora funciona perfeitamente, silencioso e não esquenta nada. Serviço impecável!"
+                </p>
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center font-bold text-slate-500">R</div>
+                  <div>
+                    <div className="font-bold text-white">Ricardo M.</div>
+                    <div className="text-xs text-primary">Arquiteto e Designer</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 2 - Empresarial (Profissional) */}
+              <div className="bg-white/[0.02] border border-white/5 p-8 rounded-2xl relative flex flex-col justify-between h-full">
+                <div className="absolute -top-4 -left-4 w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center text-blue-400 text-4xl font-serif">"</div>
+                <p className="text-slate-300 italic mb-6 leading-relaxed">
+                  "Precisava formatar meu PC mas tinha medo de perder meus arquivos de trabalho. Eles fizeram o backup de tudo com total segurança e deixaram o sistema voando. Profissionalismo raro de encontrar."
+                </p>
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center font-bold text-slate-500">A</div>
+                  <div>
+                    <div className="font-bold text-white">Ana Paula S.</div>
+                    <div className="text-xs text-blue-400">Consultora Financeira</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
         {/* DIFERENCIAIS */}
-        <section id="diferenciais" className="py-24 bg-slate-950">
+        <section id="diferenciais" className="py-24 bg-slate-950" >
           <div className="container mx-auto px-4">
             <div className="text-center max-w-2xl mx-auto mb-16">
-              <h2 className="text-3xl font-bold mb-4">Parceiro Estratégico de TI</h2>
-              <p className="text-slate-400">Focados em reduzir o downtime da sua empresa com soluções rápidas e eficientes.</p>
+              <h2 className="text-3xl font-bold mb-4">Compromisso com a Excelência</h2>
+              <p className="text-slate-400">Aliamos rigor técnico a um atendimento focado na continuidade do seu negócio e na segurança dos seus ativos.</p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-8">
               {[
                 {
                   icon: Building2,
-                  title: 'Atendimento In-Company',
-                  desc: 'Deslocamento técnico até sua empresa. Intervenção rápida on-site ou retirada estratégica para Base Técnica.'
+                  title: 'Agilidade e Continuidade',
+                  desc: 'Atendimento on-site especializado ou logística segura de coleta e entrega, garantindo o mínimo impacto em sua produtividade.'
                 },
                 {
                   icon: UserCheck,
-                  title: 'Consultoria Dedicada',
-                  desc: 'Atendimento direto com especialistas. Sem scripts de call center. Focamos em resolver a demanda do negócio.'
+                  title: 'Diagnóstico Transparente',
+                  desc: 'Comunicação clara e objetiva. Você recebe um detalhamento completo da solução, com total previsibilidade de custos e prazos.'
                 },
                 {
                   icon: ShieldCheck,
-                  title: 'Segurança e Compliance',
-                  desc: 'Respeitamos as políticas de dados da sua empresa. Processos auditáveis e sigilo garantido nas manutenções.'
+                  title: 'Sigilo e Privacidade',
+                  desc: 'Garantimos a integridade total dos seus dados através de protocolos rigorosos de segurança e discrição em todas as etapas do serviço.'
                 }
               ].map((item, i) => (
                 <div key={i} className="group p-8 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-primary/50 hover:bg-white/[0.08] transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10">
@@ -391,13 +514,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </section>
 
         {/* COMO FUNCIONA (STEPS) */}
-        <section id="como-funciona" className="py-24 relative overflow-hidden">
+        <section id="como-funciona" className="py-24 relative overflow-hidden" >
           <div className="absolute inset-0 bg-primary/5 -skew-y-3 transform origin-top-left scale-110" />
 
           <div className="container relative mx-auto px-4">
             <div className="text-center max-w-2xl mx-auto mb-16">
               <h2 className="text-3xl font-bold mb-4">Fluxo de Atendimento</h2>
-              <p className="text-slate-400">Processo otimizado para não parar sua operação.</p>
+              <p className="text-slate-400">Processo estruturado para não impactar sua operação.</p>
             </div>
 
             <div className="grid md:grid-cols-4 gap-8 relative">
@@ -405,10 +528,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <div className="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-primary/30 to-transparent -translate-y-1/2" />
 
               {[
-                { icon: MessageCircle, title: '1. Abertura', desc: 'Sua equipe abre o chamado via WhatsApp ou Portal. Triagem imediata da urgência.' },
-                { icon: Wrench, title: '2. Diagnóstico', desc: 'Avaliação técnica do ativo e envio de proposta comercial para o gestor.' },
-                { icon: CheckCircle2, title: '3. Execução', desc: 'Intervenção técnica autorizada. Componentes homologados. Acompanhamento online.' },
-                { icon: Server, title: '4. Devolução', desc: 'Equipamento testado e reintegrado à rede da empresa.' },
+                { icon: MessageCircle, title: '1. Agendamento', desc: 'Solicite atendimento via WhatsApp ou Portal. Triagem inicial rápida da sua necessidade.' },
+                { icon: Wrench, title: '2. Diagnóstico', desc: 'Análise técnica do equipamento e envio de orçamento detalhado para aprovação.' },
+                { icon: CheckCircle2, title: '3. Manutenção', desc: 'Execução do serviço com peças de qualidade e laboratório especializado.' },
+                { icon: Server, title: '4. Entrega', desc: 'Equipamento testado, higienizado e pronto para uso com garantia.' },
               ].map((step, i) => (
                 <div key={i} className="relative z-10 text-center group">
                   <div className="w-16 h-16 mx-auto rounded-full bg-slate-900 border-4 border-slate-950 flex items-center justify-center mb-6 shadow-xl group-hover:border-primary/50 group-hover:scale-110 group-hover:shadow-primary/20 transition-all duration-300">
@@ -425,28 +548,162 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           </div>
         </section>
 
-        {/* CTA FINAL */}
-        <section className="py-24 text-center">
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">Fale com um Especialista Agora</h2>
-            <p className="text-xl text-slate-400 mb-8 max-w-2xl mx-auto">
-              Garanta a estabilidade da sua infraestrutura com quem entende de TI Corporativa.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button size="lg" className="h-14 px-8 text-lg rounded-full w-full sm:w-auto shadow-xl shadow-primary/20" asChild>
-                <Link href={whatsappLink} target="_blank" id="cta-whatsapp-footer">
-                  <MessageCircle className="mr-2 h-5 w-5" />
-                  Iniciar Atendimento
-                </Link>
-              </Button>
+        {/* FAQ - PERGUNTAS FREQUENTES */}
+        <section className="py-24 bg-slate-900 border-t border-white/5" >
+          <div className="container mx-auto px-4 max-w-3xl">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-bold mb-4">Dúvidas Frequentes</h2>
+              <p className="text-slate-400">O que você precisa saber antes de iniciar seu atendimento.</p>
+            </div>
+
+            <div className="space-y-4">
+              <details className="group bg-white/[0.02] border border-white/5 rounded-2xl overflow-hidden [&_summary::-webkit-details-marker]:hidden open:bg-white/[0.04] transition-colors duration-300">
+                <summary className="flex cursor-pointer items-center justify-between gap-1.5 p-6 text-slate-200 font-bold hover:text-white transition-colors">
+                  <h3 className="text-lg">Vocês realizam suporte on-site (presencial)?</h3>
+                  <div className="white-space-nowrap text-primary group-open:-rotate-180 transition-transform duration-300">
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                  </div>
+                </summary>
+                <div className="px-6 pb-6 pt-2 text-slate-400 leading-relaxed border-t border-white/5 animate-in slide-in-from-top-2 fade-in duration-300">
+                  <p>
+                    Sim. Atendemos presencialmente em toda a região metropolitana. Para serviços complexos de laboratório, oferecemos logística de retirada e devolução.
+                  </p>
+                </div>
+              </details>
+
+              <details className="group bg-white/[0.02] border border-white/5 rounded-2xl overflow-hidden [&_summary::-webkit-details-marker]:hidden open:bg-white/[0.04] transition-colors duration-300">
+                <summary className="flex cursor-pointer items-center justify-between gap-1.5 p-6 text-slate-200 font-bold hover:text-white transition-colors">
+                  <h3 className="text-lg">Montam PC com peças que eu comprei na internet?</h3>
+                  <div className="white-space-nowrap text-primary group-open:-rotate-180 transition-transform duration-300">
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                  </div>
+                </summary>
+                <div className="px-6 pb-6 pt-2 text-slate-400 leading-relaxed border-t border-white/5 animate-in slide-in-from-top-2 fade-in duration-300">
+                  <p>
+                    Sim. Realizamos a montagem técnica profissional com seus componentes ("Bring Your Own Parts"), incluindo organização de cabos e configuração de BIOS para máxima performance.
+                  </p>
+                </div>
+              </details>
+
+              <details className="group bg-white/[0.02] border border-white/5 rounded-2xl overflow-hidden [&_summary::-webkit-details-marker]:hidden open:bg-white/[0.04] transition-colors duration-300">
+                <summary className="flex cursor-pointer items-center justify-between gap-1.5 p-6 text-slate-200 font-bold hover:text-white transition-colors">
+                  <h3 className="text-lg">Qual a garantia do serviço?</h3>
+                  <div className="white-space-nowrap text-primary group-open:-rotate-180 transition-transform duration-300">
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                  </div>
+                </summary>
+                <div className="px-6 pb-6 pt-2 text-slate-400 leading-relaxed border-t border-white/5 animate-in slide-in-from-top-2 fade-in duration-300">
+                  <p>
+                    Todos os serviços contam com garantia legal de <b>90 dias</b>. Emitimos laudo técnico e nota fiscal dos serviços prestados.
+                  </p>
+                </div>
+              </details>
+
+              <details className="group bg-white/[0.02] border border-white/5 rounded-2xl overflow-hidden [&_summary::-webkit-details-marker]:hidden open:bg-white/[0.04] transition-colors duration-300">
+                <summary className="flex cursor-pointer items-center justify-between gap-1.5 p-6 text-slate-200 font-bold hover:text-white transition-colors">
+                  <h3 className="text-lg">Como solicitar uma Análise Técnica?</h3>
+                  <div className="white-space-nowrap text-primary group-open:-rotate-180 transition-transform duration-300">
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                  </div>
+                </summary>
+                <div className="px-6 pb-6 pt-2 text-slate-400 leading-relaxed border-t border-white/5 animate-in slide-in-from-top-2 fade-in duration-300">
+                  <p>
+                    A triagem inicial via WhatsApp é gratuita. Para diagnósticos avançados em laboratório que exijam desmontagem e testes de componentes, pode haver taxa de análise (abonada em caso de aprovação do serviço).
+                  </p>
+                </div>
+              </details>
             </div>
           </div>
         </section>
 
+        {/* MAPA - ÁREA DE ATENDIMENTO */}
+        {/* MAPA E CONTATO */}
+        <section className="py-24 bg-slate-950 border-t border-white/5">
+          <div className="container mx-auto px-4">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              {/* Coluna 1: Info */}
+              <div className="space-y-8">
+                <div>
+                  <h2 className="text-3xl font-bold mb-4">Atendimento em Goiânia e Região</h2>
+                  <p className="text-slate-400">
+                    Nossa base técnica está pronta para receber seu equipamento ou agregar valor ao seu projeto no seu endereço.
+                  </p>
+                </div>
+
+                <div className="space-y-6">
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                      <MapPin className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-white mb-1">Localização</h3>
+                      <p className="text-slate-400 text-sm italic">Goiânia - GO (Atendimento com hora marcada)</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                      <Clock className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-white mb-1">Horário</h3>
+                      <p className="text-slate-400 text-sm">Segunda a Sexta: 08:00 às 18:00</p>
+                      <p className="text-slate-400 text-sm">Sábado: 08:00 às 12:00</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                      <MessageCircle className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-white mb-1">Contato</h3>
+                      <p className="text-slate-400 text-sm">{formattedPhone}</p>
+                      <p className="text-slate-400 text-sm">wfixtech.contato@gmail.com</p>
+                    </div>
+                  </div>
+                </div>
+
+                <Button size="lg" className="rounded-full shadow-lg shadow-primary/20" asChild>
+                  <Link href={whatsappLink} target="_blank" id="cta-whatsapp-contato">
+                    Consultar Especialista
+                  </Link>
+                </Button>
+              </div>
+
+              {/* Coluna 2: Mapa */}
+              <div className="h-[400px] rounded-2xl overflow-hidden border border-white/10 shadow-2xl grayscale hover:grayscale-0 transition-all duration-700">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d122295.45493208575!2d-49.4058981!3d-16.6204683!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x935ef6b2f4f107f7%3A0xe54955b760a92f02!2sGoi%C3%A2nia%2C%20GO!5e0!3m2!1spt-BR!2sbr!4v1707238472911!5m2!1spt-BR!2sbr"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen={true}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                ></iframe>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+
+        <a
+          id="cta-whatsapp-float"
+          href={whatsappLink}
+          target="_blank"
+          className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 bg-green-500 rounded-full shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:scale-110 hover:shadow-[0_0_30px_rgba(34,197,94,0.5)] transition-all duration-300 animate-in slide-in-from-bottom-10 fade-in delay-1000 group"
+        >
+          <MessageCircle className="w-8 h-8 text-white fill-white" />
+          <span className="absolute right-full mr-4 bg-white text-slate-900 px-3 py-1 rounded-lg text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg pointer-events-none">
+            Fale Conosco
+          </span>
+        </a>
       </main>
 
       {/* FOOTER */}
-      <footer className="bg-slate-950 border-t border-white/5 py-12 text-sm text-slate-500">
+      <footer className="bg-slate-950 border-t border-white/5 py-12 text-sm text-slate-500" >
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div className="space-y-4">
@@ -462,9 +719,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div>
               <h4 className="font-bold text-white mb-4">Soluções</h4>
               <ul className="space-y-2">
-                <li><a href="#" className="hover:text-primary">Gestão de Workstations</a></li>
-                <li><a href="#" className="hover:text-primary">Gestão de Notebooks</a></li>
-                <li><a href="#" className="hover:text-primary">Infraestrutura de Redes</a></li>
+                <li><a href="#solucoes" className="hover:text-primary">Computadores de Alta Performance</a></li>
+                <li><a href="#solucoes" className="hover:text-primary">Notebooks</a></li>
+                <li><a href="#solucoes" className="hover:text-primary">Infraestrutura de Redes</a></li>
               </ul>
             </div>
 
@@ -491,6 +748,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div className="space-y-1">
               <p>© {new Date().getFullYear()} {brandName}. Todos os direitos reservados.</p>
               <p className="text-xs text-slate-600">CNPJ: 64.928.869/0001-83</p>
+              <p className="text-xs text-slate-600">Goiânia - GO | Atendimento com hora marcada</p>
             </div>
           </div>
         </div>
