@@ -59,20 +59,21 @@ export default async function ServicesPage() {
     const whatsappLink = `https://wa.me/${whatsappNumber}?text=Olá! Vim pelo site da ${brandName} e gostaria de saber mais sobre os serviços.`
 
     return (
-        <div className="min-h-screen bg-slate-950 text-slate-200 selection:bg-primary/30 font-sans">
+        <div className="min-h-screen bg-slate-950 text-slate-200 selection:bg-primary/30 font-sans overflow-x-hidden">
 
             {/* HEADER SIMPLIFICADO */}
             <header className="fixed top-0 w-full z-50 bg-slate-950/80 backdrop-blur-md border-b border-white/5">
                 <div className="container mx-auto px-4 h-16 flex items-center justify-between">
                     <Link href="/" className="flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-white transition-colors">
-                        <ArrowLeft className="w-4 h-4" /> Voltar para Home
+                        <ArrowLeft className="w-4 h-4" /> <span className="hidden sm:inline">Voltar para Home</span><span className="sm:hidden">Voltar</span>
                     </Link>
                     <span className="font-bold text-lg text-white tracking-tight">
                         {brandName} <span className="text-primary">Tech</span>
                     </span>
                     <Link href={whatsappLink} target="_blank">
                         <Button size="sm" className="bg-primary hover:bg-primary/90 text-slate-950 font-bold">
-                            Falar no WhatsApp
+                            <span className="hidden sm:inline">Falar no WhatsApp</span>
+                            <span className="sm:hidden">WhatsApp</span>
                         </Button>
                     </Link>
                 </div>
@@ -313,7 +314,7 @@ export default async function ServicesPage() {
                 <section className="text-center py-20 mt-12">
                     <h3 className="text-2xl font-bold text-white mb-6">Pronto para resolver?</h3>
                     <Link href={whatsappLink} target="_blank">
-                        <Button size="lg" className="bg-primary hover:bg-primary/90 text-slate-950 px-10 py-6 text-lg font-bold rounded-full shadow-xl shadow-primary/20">
+                        <Button size="lg" className="bg-primary hover:bg-primary/90 text-slate-950 px-6 md:px-10 py-6 text-base md:text-lg font-bold rounded-full shadow-xl shadow-primary/20 w-full md:w-auto">
                             Falar com Especialista no WhatsApp
                         </Button>
                     </Link>
