@@ -1,4 +1,4 @@
-'use client'
+'use client' // Required for useState and useRouter hooks
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
