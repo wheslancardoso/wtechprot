@@ -22,6 +22,8 @@ interface ShareActionsProps {
     customerName: string
     storeName?: string
     className?: string
+    variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
+    icon?: React.ReactNode
 }
 
 // ==================================================
@@ -33,6 +35,8 @@ export default function ShareActions({
     customerName,
     storeName = 'WTECH',
     className,
+    variant = "outline",
+    icon
 }: ShareActionsProps) {
     const [copied, setCopied] = useState(false)
     const { toast } = useToast()
@@ -79,9 +83,9 @@ ${storeName}`
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className={className}>
-                    <Share2 className="mr-2 h-4 w-4" />
-                    Compartilhar
+                <Button variant={variant} size="sm" className={className}>
+                    {icon ? icon : <Share2 className="mr-2 h-4 w-4" />}
+                    {!icon && "Compartilhar"}
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">

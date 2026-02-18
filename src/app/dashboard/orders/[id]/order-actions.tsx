@@ -1,5 +1,3 @@
-'use client'
-
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -20,6 +18,14 @@ import type { TechnicalReport } from '@/types/technical-report'
 // UI Components
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 // Icons
 import {
@@ -36,6 +42,11 @@ import {
     Trash2,
     RefreshCcw,
     MessageCircle,
+    MoreHorizontal,
+    MoreVertical,
+    Share2,
+    FileDown,
+    ArrowLeft
 } from 'lucide-react'
 
 interface OrderActionsProps {
@@ -91,7 +102,6 @@ export default function OrderActions({
     }
 
     async function handleConfirmPartArrival() {
-        // Confirmação extra para ação manual
         if (!window.confirm('Confirma que as peças chegaram? Isso moverá a OS para "Em Reparo".')) {
             return
         }
@@ -146,249 +156,214 @@ export default function OrderActions({
     }
 
     return (
-        <>
-            <div className="space-y-4">
-                {/* ====== SEÇÃO 1: AÇÃO PRINCIPAL (CTA) ====== */}
-                <div className="space-y-3">
-                    {/* Status: OPEN */}
+        <div className="space-y-4">
+
+            {/* ====== SEÇÃO 1: FEEDBACK & ALERTS ====== */}
+            {feedback && (
+                <Alert variant={feedback.type === 'success' ? 'success' : 'destructive'}>
+                    {feedback.type === 'success' ? (
+                        <CheckCircle className="h-4 w-4" />
+                    ) : (
+                        <AlertCircle className="h-4 w-4" />
+                    )}
+                    <AlertDescription>{feedback.message}</AlertDescription>
+                </Alert>
+            )}
+
+            {currentStatus === 'waiting_approval' && (
+                <Alert variant="warning" className="border-yellow-500/50 bg-yellow-500/10 text-yellow-500">
+                    <Clock className="h-5 w-5" />
+                    <AlertTitle>Aguardando Aprovação</AlertTitle>
+                    <AlertDescription>O orçamento foi enviado. Aguarde o cliente aprovar.</AlertDescription>
+                </Alert>
+            )}
+
+            {currentStatus === 'waiting_parts' && (
+                <Alert variant="info" className="border-blue-500/50 bg-blue-500/10 text-blue-500">
+                    <Package className="h-5 w-5" />
+                    <AlertTitle>Aguardando Peças</AlertTitle>
+                    <AlertDescription>O cliente precisa comprar e entregar as peças.</AlertDescription>
+                </Alert>
+            )}
+
+            {(currentStatus === 'finished' || currentStatus === 'canceled') && (
+                <Alert variant={currentStatus === 'finished' ? 'success' : 'destructive'} className={currentStatus === 'finished' ? "border-green-500/50 bg-green-500/10 text-green-500" : "border-red-500/50 bg-red-500/10 text-red-500"}>
+                    {currentStatus === 'finished' ? <CheckCircle className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}
+                    <AlertDescription>Esta OS está {currentStatus === 'finished' ? 'finalizada' : 'cancelada'}.</AlertDescription>
+                </Alert>
+            )}
+
+            {/* ====== SEÇÃO 2: ACTION BAR ====== */}
+            <div className="flex flex-col md:flex-row gap-3">
+
+                {/* Primary Action Button (Takes flex-1) */}
+                <div className="flex-1">
+                    {/* OPEN */}
                     {currentStatus === 'open' && (
-                        <div className="grid grid-cols-2 gap-2">
-                            <Link href={`/os/${displayId}/checkin`} passHref className="col-span-1">
-                                <Button variant="outline" className="w-full">
-                                    <Package className="mr-2 h-4 w-4" />
-                                    <span className="hidden sm:inline">Retirar</span>
-                                    <span className="sm:hidden">Retirar</span>
-                                </Button>
-                            </Link>
-                            <Button
-                                onClick={() => handleStatusChange('analyzing')}
-                                disabled={isPending}
-                                className="col-span-1 bg-primary"
-                            >
-                                {isPending ? (
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                ) : (
-                                    <Play className="mr-2 h-4 w-4" />
-                                )}
-                                <span className="hidden sm:inline">Iniciar Análise</span>
-                                <span className="sm:hidden">Iniciar</span>
-                            </Button>
-                        </div>
+                        <Button
+                            onClick={() => handleStatusChange('analyzing')}
+                            disabled={isPending}
+                            className="w-full h-12 text-base font-semibold shadow-lg shadow-primary/20"
+                        >
+                            {isPending ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <Play className="mr-2 h-5 w-5" />}
+                            Iniciar Análise
+                        </Button>
                     )}
 
-                    {/* Status: ANALYZING */}
+                    {/* ANALYZING */}
                     {currentStatus === 'analyzing' && (
-                        <div className="grid grid-cols-3 gap-2">
+                        <div className="grid grid-cols-2 gap-2">
                             <Button
                                 onClick={() => setIsBudgetOpen(true)}
                                 disabled={isPending}
-                                className="col-span-2 bg-green-600 hover:bg-green-700"
+                                className="col-span-2 h-12 bg-green-600 hover:bg-green-700 text-base font-semibold"
                             >
-                                <FileText className="mr-2 h-4 w-4" />
-                                <span className="hidden sm:inline">Finalizar Diagnóstico</span>
-                                <span className="sm:hidden">Diagnóstico</span>
-                            </Button>
-                            <Button
-                                onClick={() => handleStatusChange('canceled')}
-                                disabled={isPending}
-                                variant="destructive"
-                                className="col-span-1"
-                            >
-                                <XCircle className="h-4 w-4" />
-                                <span className="hidden sm:inline ml-2">Cancelar</span>
+                                <FileText className="mr-2 h-5 w-5" />
+                                Finalizar Diagnóstico
                             </Button>
                         </div>
                     )}
 
-                    {/* Status: WAITING_PARTS */}
+                    {/* WAITING_PARTS */}
                     {currentStatus === 'waiting_parts' && (
                         <Button
                             onClick={handleConfirmPartArrival}
                             disabled={isPending}
-                            className="w-full border-blue-200 bg-blue-600 text-white hover:bg-blue-700"
+                            className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-base font-semibold"
                         >
-                            {isPending ? (
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            ) : (
-                                <PackageCheck className="mr-2 h-4 w-4" />
-                            )}
+                            {isPending ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <PackageCheck className="mr-2 h-5 w-5" />}
                             Confirmar Chegada das Peças
                         </Button>
                     )}
 
-                    {/* Status: IN_PROGRESS */}
-                    {currentStatus === 'in_progress' && (
+                    {/* IN_PROGRESS / READY */}
+                    {(currentStatus === 'in_progress' || currentStatus === 'ready') && (
                         <Button
                             onClick={() => setIsFinishOpen(true)}
                             disabled={isPending}
-                            className="w-full bg-green-600 hover:bg-green-700"
+                            className="w-full h-12 bg-green-600 hover:bg-green-700 text-base font-semibold"
                         >
-                            <Receipt className="mr-2 h-4 w-4" />
-                            Finalizar Serviço
+                            <Receipt className="mr-2 h-5 w-5" />
+                            {currentStatus === 'in_progress' ? 'Finalizar Serviço' : 'Entregar ao Cliente'}
                         </Button>
                     )}
 
-                    {/* Status: READY */}
-                    {currentStatus === 'ready' && (
-                        <Button
-                            onClick={() => setIsFinishOpen(true)}
-                            disabled={isPending}
-                            className="w-full bg-green-600 hover:bg-green-700"
-                        >
-                            <Receipt className="mr-2 h-4 w-4" />
-                            Entregar ao Cliente
-                        </Button>
-                    )}
-
-                    {/* Status: FINISHED - Primary: Enviar Avaliação */}
+                    {/* FINISHED */}
                     {currentStatus === 'finished' && (
                         <Button
-                            className="w-full bg-green-600 hover:bg-green-700 text-white"
+                            className="w-full h-12 bg-green-600 hover:bg-green-700 text-white text-base font-semibold"
                             onClick={() => {
                                 const phone = orderData?.customerPhone?.replace(/\D/g, '') || ''
-                                if (!phone) {
-                                    alert('Cliente sem telefone cadastrado.')
-                                    return
-                                }
-                                const whatsappUrl = new URL('https://api.whatsapp.com/send')
-                                whatsappUrl.searchParams.append('phone', `55${phone}`)
-                                whatsappUrl.searchParams.append('text', `Olá ${customerName}! 👋\n\nSua ordem de serviço #${displayId} foi finalizada. Poderia avaliar nosso atendimento rapidinho? Leva menos de 1 minuto e nos ajuda muito!\n\n👉 ${window.location.origin}/feedback/${orderId}\n\nObrigado!`)
-                                window.open(whatsappUrl.toString(), '_blank')
+                                if (!phone) return alert('Cliente sem telefone.')
+                                const url = `https://wa.me/55${phone}?text=${encodeURIComponent(`Olá ${customerName}! 👋\n\nSua OS #${displayId} foi finalizada. Poderia avaliar? 👉 ${window.location.origin}/feedback/${orderId}`)}`
+                                window.open(url, '_blank')
                             }}
                         >
-                            <MessageCircle className="mr-2 h-4 w-4" />
-                            Pedir Avaliação via WhatsApp
+                            <MessageCircle className="mr-2 h-5 w-5" />
+                            Pedir Avaliação
                         </Button>
                     )}
                 </div>
 
-                {/* ====== SEÇÃO 2: AÇÕES SECUNDÁRIAS ====== */}
-                <div className="flex flex-col sm:flex-row gap-2 pt-3 border-t">
-                    {/* Compartilhar - Sempre visível */}
-                    <div className="w-full sm:w-auto">
-                        <ShareActions
-                            orderId={orderId}
-                            displayId={displayId}
-                            customerName={customerName}
-                            storeName={storeSettings?.trade_name}
-                            className="w-full"
-                        />
-                    </div>
+                {/* Secondary Actions Group (Share, PDF, More) */}
+                <div className="flex gap-2 justify-end">
+                    {/* Share Button (Always Visible) */}
+                    <ShareActions
+                        orderId={orderId}
+                        displayId={displayId}
+                        customerName={customerName}
+                        storeName={storeSettings?.trade_name}
+                        className="h-12 w-12 p-0 flex items-center justify-center rounded-lg border-2 border-slate-700 bg-slate-800 text-slate-200 hover:bg-slate-700 hover:border-slate-600 transition-colors"
+                        icon={<Share2 className="h-5 w-5" />}
+                        variant="ghost"
+                    />
 
-                    {/* PDF - Quando finalizado ou pronto */}
+                    {/* PDF Button (Visible if finished/ready) */}
                     {(currentStatus === 'finished' || currentStatus === 'ready') && (
-                        <div className="w-full sm:w-auto">
-                            <PdfButtonWrapper orderData={orderData!} storeSettings={storeSettings!} className="w-full" />
-                        </div>
+                        <PdfButtonWrapper
+                            orderData={orderData!}
+                            storeSettings={storeSettings!}
+                            className="h-12 w-12 p-0 flex items-center justify-center rounded-lg border-2 border-slate-700 bg-slate-800 text-slate-200 hover:bg-slate-700 hover:border-slate-600 transition-colors"
+                            variant="ghost"
+                            icon={<FileDown className="h-5 w-5" />}
+                        />
                     )}
 
-                    {/* Reabrir - Quando finalizado ou cancelado */}
-                    {(currentStatus === 'finished' || currentStatus === 'canceled') && (
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={handleReopen}
-                            disabled={isPending}
-                            className="w-full sm:w-auto border-dashed"
-                        >
-                            <RefreshCcw className="mr-2 h-4 w-4" />
-                            Reabrir
-                        </Button>
-                    )}
+                    {/* Dropdown Menu for Less Common Actions */}
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button
+                                variant="outline"
+                                className="h-12 w-12 p-0 border-2 border-slate-700 bg-slate-800 text-slate-200 hover:bg-slate-700 hover:border-slate-600 transition-colors rounded-lg"
+                            >
+                                <MoreHorizontal className="h-5 w-5" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-56 bg-slate-900 border-slate-800 text-slate-200">
+                            <DropdownMenuLabel>Ações da OS</DropdownMenuLabel>
+                            <DropdownMenuSeparator className="bg-slate-800" />
+
+                            {/* Checkin Action - Always useful */}
+                            <DropdownMenuItem asChild>
+                                <Link href={`/os/${displayId}/checkin`} className="cursor-pointer flex items-center">
+                                    <Package className="mr-2 h-4 w-4" />
+                                    Ver Check-in / Retirada
+                                </Link>
+                            </DropdownMenuItem>
+
+                            {/* Conditional Reopen */}
+                            {(currentStatus === 'finished' || currentStatus === 'canceled') && (
+                                <DropdownMenuItem onClick={handleReopen} className="cursor-pointer">
+                                    <RefreshCcw className="mr-2 h-4 w-4" />
+                                    Reabrir Ordem
+                                </DropdownMenuItem>
+                            )}
+
+                            {/* Cancel (if active) */}
+                            {['open', 'analyzing', 'waiting_approval', 'waiting_parts', 'in_progress'].includes(currentStatus) && (
+                                <DropdownMenuItem
+                                    onClick={() => handleStatusChange('canceled')}
+                                    className="text-red-400 focus:text-red-400 focus:bg-red-950/50 cursor-pointer"
+                                >
+                                    <XCircle className="mr-2 h-4 w-4" />
+                                    Cancelar OS
+                                </DropdownMenuItem>
+                            )}
+
+                            <DropdownMenuSeparator className="bg-slate-800" />
+
+                            {/* Delete (Destructive) */}
+                            <DropdownMenuItem
+                                onClick={handleDelete}
+                                className="text-red-500 focus:text-red-500 focus:bg-red-950/50 cursor-pointer"
+                            >
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                Excluir Permanentemente
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
-
-                {/* ====== SEÇÃO 3: FEEDBACK ALERT ====== */}
-                {feedback && (
-                    <Alert variant={feedback.type === 'success' ? 'success' : 'destructive'}>
-                        {feedback.type === 'success' ? (
-                            <CheckCircle className="h-4 w-4" />
-                        ) : (
-                            <AlertCircle className="h-4 w-4" />
-                        )}
-                        <AlertDescription>{feedback.message}</AlertDescription>
-                    </Alert>
-                )}
-
-                {/* ====== SEÇÃO 4: STATUS ALERTS ====== */}
-                {currentStatus === 'waiting_approval' && (
-                    <Alert variant="warning" className="border-yellow-500 bg-yellow-50 dark:bg-yellow-950">
-                        <Clock className="h-5 w-5 text-yellow-600" />
-                        <AlertTitle className="text-yellow-800 dark:text-yellow-200">
-                            Aguardando Aprovação
-                        </AlertTitle>
-                        <AlertDescription className="text-yellow-700 dark:text-yellow-300">
-                            O orçamento foi enviado. Aguarde o cliente aprovar ou reprovar.
-                        </AlertDescription>
-                    </Alert>
-                )}
-
-                {currentStatus === 'waiting_parts' && (
-                    <Alert variant="info" className="border-blue-500 bg-blue-50 dark:bg-blue-950">
-                        <Package className="h-5 w-5 text-blue-600" />
-                        <AlertTitle className="text-blue-800 dark:text-blue-200">
-                            Aguardando Peças
-                        </AlertTitle>
-                        <AlertDescription className="text-blue-700 dark:text-blue-300">
-                            O cliente precisa comprar e entregar as peças.
-                        </AlertDescription>
-                    </Alert>
-                )}
-
-                {(currentStatus === 'finished' || currentStatus === 'canceled') && (
-                    <Alert variant={currentStatus === 'finished' ? 'success' : 'destructive'}>
-                        {currentStatus === 'finished' ? (
-                            <CheckCircle className="h-4 w-4" />
-                        ) : (
-                            <XCircle className="h-4 w-4" />
-                        )}
-                        <AlertDescription>
-                            Esta OS está {currentStatus === 'finished' ? 'finalizada' : 'cancelada'}.
-                        </AlertDescription>
-                    </Alert>
-                )}
-
-                {/* ====== SEÇÃO 5: ZONA DE PERIGO (Colapsável) ====== */}
-                <details className="pt-4 border-t group">
-                    <summary className="cursor-pointer text-sm text-muted-foreground hover:text-red-600 flex items-center gap-2">
-                        <AlertCircle className="h-4 w-4" />
-                        <span>Zona de Perigo</span>
-                    </summary>
-                    <div className="mt-3 p-4 rounded-lg bg-red-50 dark:bg-red-950/20 border border-red-100 dark:border-red-900/50">
-                        <p className="text-xs text-red-600 dark:text-red-400 mb-3">
-                            Ação irreversível. Esta OS será permanentemente excluída.
-                        </p>
-                        <Button
-                            variant="destructive"
-                            size="sm"
-                            className="w-full"
-                            onClick={handleDelete}
-                            disabled={isPending}
-                        >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Excluir Permanentemente
-                        </Button>
-                    </div>
-                </details>
-
-                <BudgetModal
-                    orderId={orderId}
-                    displayId={displayId}
-                    open={isBudgetOpen}
-                    onOpenChange={setIsBudgetOpen}
-                    technicalReport={technicalReport}
-                    equipmentContext={orderData ? `${orderData.equipmentType} ${orderData.equipmentBrand} ${orderData.equipmentModel}`.trim() : ''}
-                    problemDescription={problemDescription}
-                />
-
-                <FinishOrderModal
-                    orderId={orderId}
-                    open={isFinishOpen}
-                    onOpenChange={setIsFinishOpen}
-                    orderData={orderData}
-                    storeSettings={storeSettings}
-                    discountAmount={discountAmount}
-                />
             </div>
-        </>
+
+            <BudgetModal
+                orderId={orderId}
+                displayId={displayId}
+                open={isBudgetOpen}
+                onOpenChange={setIsBudgetOpen}
+                technicalReport={technicalReport}
+                equipmentContext={orderData ? `${orderData.equipmentType} ${orderData.equipmentBrand} ${orderData.equipmentModel}`.trim() : ''}
+                problemDescription={problemDescription}
+            />
+
+            <FinishOrderModal
+                orderId={orderId}
+                open={isFinishOpen}
+                onOpenChange={setIsFinishOpen}
+                orderData={orderData}
+                storeSettings={storeSettings}
+                discountAmount={discountAmount}
+            />
+        </div>
     )
 }
+

@@ -20,8 +20,10 @@ interface PdfButtonWrapperProps {
     orderData: OrderData
     storeSettings: any
     className?: string
+    variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
+    icon?: React.ReactNode
 }
 
-export default function PdfButtonWrapper({ orderData, storeSettings, className }: PdfButtonWrapperProps) {
-    return <WarrantyPdfButton orderData={orderData} storeSettings={storeSettings} className={className} />
+export default function PdfButtonWrapper({ orderData, storeSettings, className, variant, icon }: PdfButtonWrapperProps) {
+    return <WarrantyPdfButton orderData={orderData} storeSettings={storeSettings} className={className} variant={variant} icon={icon} />
 }

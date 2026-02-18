@@ -419,9 +419,11 @@ interface WarrantyPdfButtonProps {
     orderData: OrderData
     storeSettings: StoreSettings
     className?: string
+    variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
+    icon?: React.ReactNode
 }
 
-export default function WarrantyPdfButton({ orderData, storeSettings, className }: WarrantyPdfButtonProps) {
+export default function WarrantyPdfButton({ orderData, storeSettings, className, variant = "outline", icon }: WarrantyPdfButtonProps) {
     const osNumber = String(orderData.displayId).padStart(4, '0')
     const storeName = storeSettings.trade_name.replace(/\s+/g, '_').toUpperCase()
     const fileName = `${storeName}_OS_${osNumber}_Garantia.pdf`
@@ -432,8 +434,8 @@ export default function WarrantyPdfButton({ orderData, storeSettings, className 
             fileName={fileName}
             className={className}
         >
-            {({ loading }: { loading: boolean }) => (
-                <Button variant="outline" disabled={loading} className="w-full">
+            {({ loading }) => (
+                <Button variant={variant} disabled={loading} className="w-full">
                     {loading ? (
                         <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -441,8 +443,8 @@ export default function WarrantyPdfButton({ orderData, storeSettings, className 
                         </>
                     ) : (
                         <>
-                            <FileDown className="mr-2 h-4 w-4" />
-                            Baixar Termo de Garantia
+                            {icon ? icon : <FileDown className="mr-2 h-4 w-4" />}
+                            {!icon && "Baixar Termo de Garantia"}
                         </>
                     )}
                 </Button>

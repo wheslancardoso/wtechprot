@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Progress } from '@/components/ui/progress'
+import { DashboardActivityFeed } from '@/components/dashboard-activity-feed'
 
 // Icons
 import {
@@ -112,221 +113,235 @@ export default async function DashboardHomePage() {
                 </Button>
             </div>
 
-            {/* Cards de Métricas */}
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                {/* Faturamento Anual */}
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">
-                            Faturamento {currentYear}
-                        </CardTitle>
-                        <DollarSign className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-green-600">
-                            {formatCurrency(yearlyRevenue)}
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-1">
-                            Apenas mão de obra (MEI Safe)
-                        </p>
-                    </CardContent>
-                </Card>
+            {/* Main Content Grid */}
+            <div className="grid gap-8 lg:grid-cols-3">
 
-                {/* Ticket Médio */}
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">
-                            Ticket Médio
-                        </CardTitle>
-                        <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">
-                            {formatCurrency(ticketMedio)}
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-1">
-                            Por serviço finalizado
-                        </p>
-                    </CardContent>
-                </Card>
+                {/* Left Column: Metrics & Actions */}
+                <div className="lg:col-span-2 space-y-8">
 
-                {/* OS em Aberto */}
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">
-                            OS em Andamento
-                        </CardTitle>
-                        <ClipboardList className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-blue-600">
-                            {totalOpen || 0}
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-1">
-                            {totalReady || 0} prontas para retirada
-                        </p>
-                    </CardContent>
-                </Card>
+                    {/* Cards de Métricas */}
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                        {/* Faturamento Anual */}
+                        <Card className="bg-slate-950/50 border-white/5 backdrop-blur-sm">
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">
+                                    Faturamento {currentYear}
+                                </CardTitle>
+                                <DollarSign className="h-4 w-4 text-green-500" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold text-green-500">
+                                    {formatCurrency(yearlyRevenue)}
+                                </div>
+                                <p className="text-xs text-muted-foreground mt-1">
+                                    Apenas mão de obra (MEI Safe)
+                                </p>
+                            </CardContent>
+                        </Card>
 
-                {/* Total Clientes */}
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">
-                            Clientes
-                        </CardTitle>
-                        <Users className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">
-                            {totalCustomers || 0}
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-1">
-                            Cadastrados no sistema
-                        </p>
-                    </CardContent>
-                </Card>
-            </div>
+                        {/* Ticket Médio */}
+                        <Card className="bg-slate-950/50 border-white/5 backdrop-blur-sm">
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">
+                                    Ticket Médio
+                                </CardTitle>
+                                <TrendingUp className="h-4 w-4 text-blue-500" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold text-blue-500">
+                                    {formatCurrency(ticketMedio)}
+                                </div>
+                                <p className="text-xs text-muted-foreground mt-1">
+                                    Por serviço finalizado
+                                </p>
+                            </CardContent>
+                        </Card>
 
-            {/* Progresso MEI */}
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                        <TrendingUp className="h-5 w-5" />
-                        Projeção Teto MEI
-                    </CardTitle>
-                    <CardDescription>
-                        Limite configurado: {formatCurrency(meiLimit)}
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                    <Progress
-                        value={Math.min(meiProgress, 100)}
-                        className={`h-4 ${meiProgress > 90 ? '[&>div]:bg-red-500' :
-                            meiProgress > 70 ? '[&>div]:bg-yellow-500' :
-                                '[&>div]:bg-green-500'
-                            }`}
-                    />
-                    <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">
-                            {meiProgress.toFixed(1)}% utilizado
-                        </span>
-                        <span className="font-medium">
-                            Restam {formatCurrency(Math.max(meiLimit - yearlyRevenue, 0))}
-                        </span>
+                        {/* OS em Aberto */}
+                        <Card className="bg-slate-950/50 border-white/5 backdrop-blur-sm">
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">
+                                    OS em Andamento
+                                </CardTitle>
+                                <ClipboardList className="h-4 w-4 text-orange-500" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold text-orange-500">
+                                    {totalOpen || 0}
+                                </div>
+                                <p className="text-xs text-muted-foreground mt-1">
+                                    {totalReady || 0} prontas para retirada
+                                </p>
+                            </CardContent>
+                        </Card>
+
+                        {/* Total Clientes */}
+                        <Card className="bg-slate-950/50 border-white/5 backdrop-blur-sm">
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">
+                                    Clientes
+                                </CardTitle>
+                                <Users className="h-4 w-4 text-purple-500" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold text-purple-500">
+                                    {totalCustomers || 0}
+                                </div>
+                                <p className="text-xs text-muted-foreground mt-1">
+                                    Cadastrados no sistema
+                                </p>
+                            </CardContent>
+                        </Card>
                     </div>
 
-                    {meiProgress > 80 && (
-                        <Alert variant="destructive">
-                            <AlertTriangle className="h-4 w-4" />
-                            <AlertTitle>Atenção!</AlertTitle>
-                            <AlertDescription>
-                                Você atingiu {meiProgress.toFixed(0)}% do seu limite MEI.
-                                Considere revisar seu enquadramento ou ajustar o limite em Configurações.
-                            </AlertDescription>
-                        </Alert>
-                    )}
-                </CardContent>
-            </Card>
+                    {/* Progresso MEI */}
+                    <Card className="bg-slate-950/50 border-white/5 backdrop-blur-sm">
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <TrendingUp className="h-5 w-5 text-green-500" />
+                                Projeção Teto MEI
+                            </CardTitle>
+                            <CardDescription>
+                                Limite configurado: {formatCurrency(meiLimit)}
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <Progress
+                                value={Math.min(meiProgress, 100)}
+                                className={`h-2 bg-slate-800 ${meiProgress > 90 ? '[&>div]:bg-red-500' :
+                                    meiProgress > 70 ? '[&>div]:bg-yellow-500' :
+                                        '[&>div]:bg-green-500'
+                                    }`}
+                            />
+                            <div className="flex justify-between text-sm">
+                                <span className="text-muted-foreground">
+                                    {meiProgress.toFixed(1)}% utilizado
+                                </span>
+                                <span className="font-medium">
+                                    Restam {formatCurrency(Math.max(meiLimit - yearlyRevenue, 0))}
+                                </span>
+                            </div>
 
-            {/* Atenção Necessária */}
-            <div className="grid gap-4 md:grid-cols-2">
-                {/* Aguardando Aprovação */}
-                <Card className={waitingApproval && waitingApproval.length > 0 ? 'border-yellow-500' : ''}>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2 text-lg">
-                            <Clock className="h-5 w-5 text-yellow-500" />
-                            Aguardando Aprovação
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        {waitingApproval && waitingApproval.length > 0 ? (
-                            <div className="space-y-3">
-                                {waitingApproval.slice(0, 3).map((order) => {
-                                    const customerData = order.customer as { name: string }[] | null
-                                    const customer = customerData?.[0] || null
-                                    return (
-                                        <div key={order.id} className="flex items-center justify-between">
-                                            <div>
-                                                <p className="font-medium">
-                                                    OS #{String(order.display_id).padStart(4, '0')}
-                                                </p>
-                                                <p className="text-sm text-muted-foreground">
-                                                    {customer?.name || 'Cliente'}
-                                                </p>
-                                            </div>
-                                            <Button variant="ghost" size="sm" asChild>
-                                                <Link href={`/dashboard/orders/${order.id}`}>
-                                                    <ArrowRight className="h-4 w-4" />
+                            {meiProgress > 80 && (
+                                <Alert variant="destructive">
+                                    <AlertTriangle className="h-4 w-4" />
+                                    <AlertTitle>Atenção!</AlertTitle>
+                                    <AlertDescription>
+                                        Você atingiu {meiProgress.toFixed(0)}% do seu limite MEI.
+                                        Considere revisar seu enquadramento ou ajustar o limite em Configurações.
+                                    </AlertDescription>
+                                </Alert>
+                            )}
+                        </CardContent>
+                    </Card>
+
+                    {/* Atenção Necessária */}
+                    <div className="grid gap-4 md:grid-cols-2">
+                        {/* Aguardando Aprovação */}
+                        <Card className={`bg-slate-950/50 border-white/5 backdrop-blur-sm ${waitingApproval && waitingApproval.length > 0 ? 'border-yellow-500/50' : ''}`}>
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2 text-lg">
+                                    <Clock className="h-5 w-5 text-yellow-500" />
+                                    Aguardando Aprovação
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                {waitingApproval && waitingApproval.length > 0 ? (
+                                    <div className="space-y-3">
+                                        {waitingApproval.slice(0, 3).map((order) => {
+                                            const customerData = order.customer as { name: string }[] | null
+                                            const customer = customerData?.[0] || null
+                                            return (
+                                                <div key={order.id} className="flex items-center justify-between p-2 rounded hover:bg-white/5 transition-colors">
+                                                    <div>
+                                                        <p className="font-medium text-sm">
+                                                            OS #{String(order.display_id).padStart(4, '0')}
+                                                        </p>
+                                                        <p className="text-xs text-muted-foreground">
+                                                            {customer?.name || 'Cliente'}
+                                                        </p>
+                                                    </div>
+                                                    <Button variant="ghost" size="sm" asChild className="h-8 w-8 p-0">
+                                                        <Link href={`/dashboard/orders/${order.id}`}>
+                                                            <ArrowRight className="h-4 w-4" />
+                                                        </Link>
+                                                    </Button>
+                                                </div>
+                                            )
+                                        })}
+                                        {waitingApproval.length > 3 && (
+                                            <Button variant="outline" className="w-full text-xs" asChild>
+                                                <Link href="/dashboard/orders?status=waiting_approval">
+                                                    Ver todas ({waitingApproval.length})
                                                 </Link>
                                             </Button>
-                                        </div>
-                                    )
-                                })}
-                                {waitingApproval.length > 3 && (
-                                    <Button variant="outline" className="w-full" asChild>
-                                        <Link href="/dashboard/orders?status=waiting_approval">
-                                            Ver todas ({waitingApproval.length})
-                                        </Link>
-                                    </Button>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center gap-2 text-muted-foreground text-sm py-2">
+                                        <CheckCircle className="h-4 w-4 text-green-500" />
+                                        <span>Tudo em dia!</span>
+                                    </div>
                                 )}
-                            </div>
-                        ) : (
-                            <div className="flex items-center gap-2 text-green-600">
-                                <CheckCircle className="h-5 w-5" />
-                                <span>Nenhuma OS pendente de aprovação</span>
-                            </div>
-                        )}
-                    </CardContent>
-                </Card>
+                            </CardContent>
+                        </Card>
 
-                {/* Aguardando Peças */}
-                <Card className={waitingParts && waitingParts.length > 0 ? 'border-purple-500' : ''}>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2 text-lg">
-                            <Package className="h-5 w-5 text-purple-500" />
-                            Aguardando Peças
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        {waitingParts && waitingParts.length > 0 ? (
-                            <div className="space-y-3">
-                                {waitingParts.slice(0, 3).map((order) => {
-                                    const customerData = order.customer as { name: string }[] | null
-                                    const customer = customerData?.[0] || null
-                                    return (
-                                        <div key={order.id} className="flex items-center justify-between">
-                                            <div>
-                                                <p className="font-medium">
-                                                    OS #{String(order.display_id).padStart(4, '0')}
-                                                </p>
-                                                <p className="text-sm text-muted-foreground">
-                                                    {customer?.name || 'Cliente'} • {formatRelativeDate(order.created_at)}
-                                                </p>
-                                            </div>
-                                            <Button variant="ghost" size="sm" asChild>
-                                                <Link href={`/dashboard/orders/${order.id}`}>
-                                                    <ArrowRight className="h-4 w-4" />
+                        {/* Aguardando Peças */}
+                        <Card className={`bg-slate-950/50 border-white/5 backdrop-blur-sm ${waitingParts && waitingParts.length > 0 ? 'border-purple-500/50' : ''}`}>
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2 text-lg">
+                                    <Package className="h-5 w-5 text-purple-500" />
+                                    Aguardando Peças
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                {waitingParts && waitingParts.length > 0 ? (
+                                    <div className="space-y-3">
+                                        {waitingParts.slice(0, 3).map((order) => {
+                                            const customerData = order.customer as { name: string }[] | null
+                                            const customer = customerData?.[0] || null
+                                            return (
+                                                <div key={order.id} className="flex items-center justify-between p-2 rounded hover:bg-white/5 transition-colors">
+                                                    <div>
+                                                        <p className="font-medium text-sm">
+                                                            OS #{String(order.display_id).padStart(4, '0')}
+                                                        </p>
+                                                        <p className="text-xs text-muted-foreground">
+                                                            {customer?.name || 'Cliente'}
+                                                        </p>
+                                                    </div>
+                                                    <Button variant="ghost" size="sm" asChild className="h-8 w-8 p-0">
+                                                        <Link href={`/dashboard/orders/${order.id}`}>
+                                                            <ArrowRight className="h-4 w-4" />
+                                                        </Link>
+                                                    </Button>
+                                                </div>
+                                            )
+                                        })}
+                                        {waitingParts.length > 3 && (
+                                            <Button variant="outline" className="w-full text-xs" asChild>
+                                                <Link href="/dashboard/orders?status=waiting_parts">
+                                                    Ver todas ({waitingParts.length})
                                                 </Link>
                                             </Button>
-                                        </div>
-                                    )
-                                })}
-                                {waitingParts.length > 3 && (
-                                    <Button variant="outline" className="w-full" asChild>
-                                        <Link href="/dashboard/orders?status=waiting_parts">
-                                            Ver todas ({waitingParts.length})
-                                        </Link>
-                                    </Button>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center gap-2 text-muted-foreground text-sm py-2">
+                                        <CheckCircle className="h-4 w-4 text-green-500" />
+                                        <span>Tudo em dia!</span>
+                                    </div>
                                 )}
-                            </div>
-                        ) : (
-                            <div className="flex items-center gap-2 text-green-600">
-                                <CheckCircle className="h-5 w-5" />
-                                <span>Nenhuma OS aguardando peças</span>
-                            </div>
-                        )}
-                    </CardContent>
-                </Card>
+                            </CardContent>
+                        </Card>
+                    </div>
+                </div>
+
+                {/* Right Column: Activity Feed */}
+                <div className="lg:col-span-1">
+                    <DashboardActivityFeed />
+                </div>
+
             </div>
 
             {/* Atalhos Rápidos */}

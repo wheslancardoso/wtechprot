@@ -21,6 +21,7 @@ import TelemetryTab from './telemetry-tab'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { OrderStatusStepper } from '@/components/order-status-stepper'
 
 // Icons
 import {
@@ -195,7 +196,12 @@ export default async function OrderDetailPage({ params }: PageProps) {
                     </p>
                 </div>
 
-                <div className="w-full">
+                <div className="w-full space-y-6">
+                    {/* Stepper Visual */}
+                    <div className="bg-slate-950/50 border border-white/5 rounded-xl p-6 backdrop-blur-sm">
+                        <OrderStatusStepper currentStatus={order.status} />
+                    </div>
+
                     <OrderActions
                         orderId={order.id}
                         currentStatus={order.status}
