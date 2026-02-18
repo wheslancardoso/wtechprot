@@ -262,8 +262,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
                   {/* Bottom Action - Animated */}
                   <div className="mt-8 pt-6 border-t border-white/5 opacity-0 animate-[fadeInUp_0.6s_ease-out_forwards]" style={{ animationDelay: '2s' }}>
-                    <div className="w-full h-10 bg-primary/20 rounded border border-primary/20 flex items-center justify-center text-primary text-sm font-bold hover:bg-primary/30 transition-colors cursor-pointer">
-                      Download Laudo Técnico (PDF)
+                    <div className="w-full py-3 bg-white/5 rounded-lg border border-dashed border-white/20 flex items-center justify-center gap-2 text-slate-400 text-xs uppercase tracking-wider">
+                      <FileText className="w-4 h-4" /> Laudo Técnico Incluso
                     </div>
                   </div>
                 </div>
