@@ -109,6 +109,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-400">
             <Link href="#solucoes" className="hover:text-white transition-colors">Soluções</Link>
             <Link href="#diferenciais" className="hover:text-white transition-colors">Diferenciais Corporativos</Link>
+            <a href="https://instagram.com/wfixtech" target="_blank" className="hover:text-primary transition-colors" aria-label="Siga-nos no Instagram">
+              <Instagram className="w-5 h-5" />
+            </a>
           </nav>
         </div>
       </header>
@@ -733,6 +736,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <ul className="space-y-2">
                 <li className="flex items-center gap-2">
                   <MessageCircle className="w-4 h-4" /> {formattedPhone}
+                </li>
+                <li className="flex items-center gap-2">
+                  <a href="https://instagram.com/wfixtech" target="_blank" className="flex items-center gap-2 hover:text-primary transition-colors">
+                    <Instagram className="w-4 h-4" /> @wfixtech
+                  </a>
                 </li>
               </ul>
             </div>
