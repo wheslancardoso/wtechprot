@@ -71,7 +71,7 @@ export default async function Home() {
   const whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}`
 
   return (
-    <div className="dark flex min-h-screen flex-col bg-slate-950 text-slate-50 selection:bg-primary selection:text-primary-foreground">
+    <div className="dark flex min-h-screen flex-col bg-slate-950 text-slate-50">
 
       {/* Google Tag Manager */}
       <Script
