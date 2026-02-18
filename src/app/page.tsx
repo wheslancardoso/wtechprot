@@ -7,7 +7,6 @@ import Script from 'next/script'
 import { createAdminClient } from '@/lib/supabase/server'
 import { unstable_cache } from 'next/cache'
 import type { Metadata } from 'next'
-import { InstagramSection } from '@/components/instagram-section'
 
 
 // Forçar execução em runtime (não build time) para ter acesso às env vars do Railway
@@ -474,8 +473,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           </div>
         </section>
 
-        {/* INSTAGRAM / BASTIDORES */}
-        <InstagramSection />
 
         {/* DIFERENCIAIS */}
         <section id="diferenciais" className="py-24 bg-slate-950" >
