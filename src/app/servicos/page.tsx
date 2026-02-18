@@ -287,9 +287,6 @@ export default async function ServicesPage() {
                     </AnimateIn>
                 </div>
 
-                {/* INSTAGRAM / BASTIDORES */}
-                <InstagramSection />
-
                 {/* FAQ */}
                 <section className="mt-32 pt-20 border-t border-white/5">
                     <h2 className="text-2xl md:text-3xl font-bold text-white text-center mb-12">Dúvidas sobre o Processo Técnico</h2>
