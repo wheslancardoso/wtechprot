@@ -67,7 +67,7 @@ export default async function ServicesPage() {
                     <Link href="/" className="flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-white transition-colors">
                         <ArrowLeft className="w-4 h-4" /> <span className="hidden sm:inline">Voltar para Home</span><span className="sm:hidden">Voltar</span>
                     </Link>
-                    <span className="font-bold text-lg text-white tracking-tight">
+                    <span className="font-bold text-lg text-primary tracking-tight">
                         {brandName}
                     </span>
 
