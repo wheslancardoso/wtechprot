@@ -68,9 +68,9 @@ export function BusinessLanding() {
                     <div className="flex items-center gap-2 font-bold text-xl tracking-tight text-white">
                         <div className="w-8 h-8 relative flex items-center justify-center">
                             {/* Fallback icon se não tiver logo */}
-                            <Building2 className="w-6 h-6 text-blue-400" />
+                            <Building2 className="w-6 h-6 text-primary" />
                         </div>
-                        <span>WFIX Tech <span className="text-slate-500 text-sm font-normal">Solutions</span></span>
+                        <span className="text-primary">WFIX Tech <span className="text-slate-500 text-sm font-normal">Solutions</span></span>
                     </div>
 
                     <div className="flex items-center gap-4">
