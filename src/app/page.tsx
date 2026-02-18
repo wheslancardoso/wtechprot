@@ -101,7 +101,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div className="w-12 h-12 relative flex items-center justify-center">
               <Image src="/logo.svg" alt="Logo" width={48} height={48} className="object-contain" />
             </div>
-            <span>{brandName}</span>
+            <span className="text-primary">{brandName}</span>
           </div>
 
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-400">
@@ -711,7 +711,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <div className="w-6 h-6 relative flex items-center justify-center">
                   <Image src="/logo.svg" alt="Logo" width={24} height={24} className="object-contain" />
                 </div>
-                {brandName}
+                <span className="text-primary">{brandName}</span>
               </div>
               <p>Soluções em Tecnologia e Gestão de TI para Empresas.</p>
             </div>
