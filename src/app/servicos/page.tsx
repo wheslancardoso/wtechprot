@@ -61,7 +61,7 @@ export default async function ServicesPage() {
     const whatsappLink = `https://wa.me/${whatsappNumber}?text=Olá! Vim pelo site da ${brandName} e gostaria de saber mais sobre os serviços.`
 
     return (
-        <div className="min-h-screen bg-slate-950 text-slate-200 selection:bg-primary/30 font-sans overflow-x-hidden">
+        <div className="min-h-screen bg-slate-950 text-slate-200 font-sans overflow-x-hidden">
 
             {/* HEADER SIMPLIFICADO */}
             <header className="fixed top-0 w-full z-50 bg-slate-950/80 backdrop-blur-md border-b border-white/5">
