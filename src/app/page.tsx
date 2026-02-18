@@ -106,6 +106,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <span className="text-primary">{brandName}</span>
           </div>
 
+          <a href="https://instagram.com/wfixtech" target="_blank" className="md:hidden text-slate-400 hover:text-primary transition-colors" aria-label="Siga-nos no Instagram">
+            <Instagram className="w-6 h-6" />
+          </a>
+
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-400">
             <Link href="#solucoes" className="hover:text-white transition-colors">Soluções</Link>
             <Link href="#diferenciais" className="hover:text-white transition-colors">Diferenciais Corporativos</Link>
