@@ -1,7 +1,9 @@
 import Link from 'next/link'
-import { ArrowRight, CheckCircle2, ShieldCheck, FileSearch, Smartphone, MessageCircle, Wrench, CreditCard, Laptop, Home as HomeIcon, UserCheck, Printer, Monitor, Clock, FileText, Server, Building2, Briefcase, Wifi, Globe, Cpu, Settings, MapPin, Headset } from 'lucide-react'
+import { ArrowLeft, Monitor, Laptop, Wifi, Headset, CheckCircle2, ArrowRight, Printer, Star, Quote, Building2, Cpu, Globe, FileText, Server, ShieldCheck, Instagram, Clock, Briefcase, Smartphone, UserCheck, MessageCircle, Wrench, MapPin } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { AnimateIn } from '@/components/ui/animate-in'
+import { SpotlightCard } from '@/components/ui/spotlight-card'
+import { InstagramSection } from '@/components/instagram-section'
 import Image from 'next/image'
 import Script from 'next/script'
 import { createAdminClient } from '@/lib/supabase/server'
@@ -38,7 +40,7 @@ const getTenantData = unstable_cache(
       if (tenant) {
         if (tenant.phone) {
           const cleanPhone = tenant.phone.replace(/\D/g, '')
-          whatsappNumber = `55${cleanPhone}`
+          whatsappNumber = `55${cleanPhone} `
           formattedPhone = tenant.phone
         }
         if (tenant.trade_name && tenant.trade_name !== 'Minha Assistência') {
@@ -69,7 +71,7 @@ export default async function Home() {
   const whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}`
 
   return (
-    <div className="dark flex min-h-screen flex-col bg-slate-950 text-slate-50 selection:bg-primary selection:text-primary-foreground">
+    <div className="dark flex min-h-screen flex-col bg-slate-950 text-slate-50">
 
       {/* Google Tag Manager */}
       <Script
@@ -104,14 +106,21 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <span className="text-primary">{brandName}</span>
           </div>
 
+          <a href="https://instagram.com/wfixtech" target="_blank" className="md:hidden text-slate-400 hover:text-primary transition-colors" aria-label="Siga-nos no Instagram">
+            <Instagram className="w-6 h-6" />
+          </a>
+
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-400">
             <Link href="#solucoes" className="hover:text-white transition-colors">Soluções</Link>
             <Link href="#diferenciais" className="hover:text-white transition-colors">Diferenciais Corporativos</Link>
+            <a href="https://instagram.com/wfixtech" target="_blank" className="hover:text-primary transition-colors" aria-label="Siga-nos no Instagram">
+              <Instagram className="w-5 h-5" />
+            </a>
           </nav>
         </div>
       </header>
 
-      <main className="flex-1 pt-16">
+      <main className="flex-1 pt-16 bg-noise">
 
         {/* HERO SECTION */}
         <section className="relative py-16 md:py-32 overflow-hidden">
@@ -269,64 +278,64 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-center">
 
               {/* 1. Hardware */}
-              <div className="group h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors duration-300 flex flex-col">
-                <div className="mx-auto w-14 h-14 bg-blue-500/10 rounded-full flex items-center justify-center text-blue-400 mb-4 shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
+              <SpotlightCard className="h-full p-6 flex flex-col group hover:-translate-y-1 transition-transform duration-300 bg-slate-900/50 border-white/5">
+                <div className="mx-auto w-14 h-14 bg-blue-500/10 rounded-full flex items-center justify-center text-blue-400 mb-4 shadow-[inset_0_0_20px_rgba(59,130,246,0.2)] group-hover:scale-110 transition-transform">
                   <Monitor className="w-7 h-7" />
                 </div>
                 <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Gestão e Manutenção de Hardware</h3>
                 <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Diagnóstico preciso, substituição de componentes defeituosos e upgrades de performance. Deixamos sua máquina nova de novo.</p>
-              </div>
+              </SpotlightCard>
 
               {/* 2. Desempenho (Notebooks) */}
-              <div className="group h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors duration-300 flex flex-col">
-                <div className="mx-auto w-14 h-14 bg-purple-500/10 rounded-full flex items-center justify-center text-purple-400 mb-4 shadow-lg shadow-purple-500/20 group-hover:scale-110 transition-transform">
+              <SpotlightCard className="h-full p-6 flex flex-col group hover:-translate-y-1 transition-transform duration-300 bg-slate-900/50 border-white/5" spotlightColor="rgba(168, 85, 247, 0.2)">
+                <div className="mx-auto w-14 h-14 bg-purple-500/10 rounded-full flex items-center justify-center text-purple-400 mb-4 shadow-[inset_0_0_20px_rgba(168,85,247,0.2)] group-hover:scale-110 transition-transform">
                   <Laptop className="w-7 h-7" />
                 </div>
                 <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Performance para Notebooks</h3>
                 <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Análise e implementação de melhorias em notebooks, incluindo substituição de display, bateria e otimização de sistema.</p>
-              </div>
+              </SpotlightCard>
 
               {/* 3. Impressão (PRIORITIZED) */}
-              <div className="group h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors duration-300 flex flex-col">
-                <div className="mx-auto w-14 h-14 bg-pink-500/10 rounded-full flex items-center justify-center text-pink-400 mb-4 shadow-lg shadow-pink-500/20 group-hover:scale-110 transition-transform">
+              <SpotlightCard className="h-full p-6 flex flex-col group hover:-translate-y-1 transition-transform duration-300 bg-slate-900/50 border-white/5" spotlightColor="rgba(236, 72, 153, 0.2)">
+                <div className="mx-auto w-14 h-14 bg-pink-500/10 rounded-full flex items-center justify-center text-pink-400 mb-4 shadow-[inset_0_0_20px_rgba(236,72,153,0.2)] group-hover:scale-110 transition-transform">
                   <Printer className="w-7 h-7" />
                 </div>
                 <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Gestão de Impressão</h3>
                 <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Especialista nos principais fabricantes do mercado (Ink Tank / Laser). Desobstrução de cabeçotes, troca de tracionador e manutenção de sistemas Bulk Ink.</p>
-              </div>
+              </SpotlightCard>
 
               {/* 4. Remoto */}
-              <div className="group h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors duration-300 flex flex-col">
-                <div className="mx-auto w-14 h-14 bg-cyan-500/10 rounded-full flex items-center justify-center text-cyan-400 mb-4 shadow-lg shadow-cyan-500/20 group-hover:scale-110 transition-transform">
+              <SpotlightCard className="h-full p-6 flex flex-col group hover:-translate-y-1 transition-transform duration-300 bg-slate-900/50 border-white/5" spotlightColor="rgba(34, 211, 238, 0.2)">
+                <div className="mx-auto w-14 h-14 bg-cyan-500/10 rounded-full flex items-center justify-center text-cyan-400 mb-4 shadow-[inset_0_0_20px_rgba(34,211,238,0.2)] group-hover:scale-110 transition-transform">
                   <Globe className="w-7 h-7" />
                 </div>
                 <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Consultoria Remota</h3>
                 <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Consultoria técnica e suporte remoto seguro para ambientes de trabalho, com agilidade e total segurança.</p>
-              </div>
+              </SpotlightCard>
 
               {/* 5. PC Gamer / Workstations */}
-              <div className="group h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors duration-300 flex flex-col">
-                <div className="mx-auto w-14 h-14 bg-orange-500/10 rounded-full flex items-center justify-center text-orange-400 mb-4 shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform">
+              <SpotlightCard className="h-full p-6 flex flex-col group hover:-translate-y-1 transition-transform duration-300 bg-slate-900/50 border-white/5" spotlightColor="rgba(249, 115, 22, 0.2)">
+                <div className="mx-auto w-14 h-14 bg-orange-500/10 rounded-full flex items-center justify-center text-orange-400 mb-4 shadow-[inset_0_0_20px_rgba(249,115,22,0.2)] group-hover:scale-110 transition-transform">
                   <Cpu className="w-7 h-7" />
                 </div>
                 <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Montagem de Computadores</h3>
                 <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Do planejamento à montagem e organização (cable management) impecável.</p>
-              </div>
+              </SpotlightCard>
 
               {/* 6. Redes (DEMOTED) */}
-              <div className="group h-full p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors duration-300 flex flex-col">
-                <div className="mx-auto w-14 h-14 bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-400 mb-4 shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
+              <SpotlightCard className="h-full p-6 flex flex-col group hover:-translate-y-1 transition-transform duration-300 bg-slate-900/50 border-white/5" spotlightColor="rgba(16, 185, 129, 0.2)">
+                <div className="mx-auto w-14 h-14 bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-400 mb-4 shadow-[inset_0_0_20px_rgba(16,185,129,0.2)] group-hover:scale-110 transition-transform">
                   <Wifi className="w-7 h-7" />
                 </div>
                 <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Redes & Conectividade</h3>
                 <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Soluções pontuais para Wi-Fi e cabeamento em residências e pequenos escritórios.</p>
-              </div>
+              </SpotlightCard>
 
             </div>
 
             <div className="mt-12 text-center">
               <Link href="/servicos">
-                <Button size="lg" className="bg-primary hover:bg-white/90 text-slate-950 font-bold rounded-full px-10 shadow-lg shadow-white/10 hover:shadow-white/20 transition-all hover:scale-105">
+                <Button size="lg" className="bg-slate-800 hover:bg-blue-700 text-white font-bold rounded-full px-10 h-11 border border-blue-700 hover:border-blue-600 transition-all hover:scale-105 shadow-lg shadow-black/20">
                   Conhecer todas as Soluções <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </Link>
@@ -472,6 +481,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </div>
           </div>
         </section>
+
 
         {/* DIFERENCIAIS */}
         <section id="diferenciais" className="py-24 bg-slate-950" >
@@ -730,6 +740,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <ul className="space-y-2">
                 <li className="flex items-center gap-2">
                   <MessageCircle className="w-4 h-4" /> {formattedPhone}
+                </li>
+                <li className="flex items-center gap-2">
+                  <a href="https://instagram.com/wfixtech" target="_blank" className="flex items-center gap-2 hover:text-primary transition-colors">
+                    <Instagram className="w-4 h-4" /> @wfixtech
+                  </a>
                 </li>
               </ul>
             </div>
