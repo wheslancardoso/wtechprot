@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { ArrowLeft, Monitor, Laptop, Wifi, Headset, CheckCircle2, ArrowRight, Printer } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { AnimateIn } from '@/components/ui/animate-in'
+import { InstagramSection } from '@/components/instagram-section'
 import { createAdminClient } from '@/lib/supabase/server'
 import { unstable_cache } from 'next/cache'
 
@@ -285,6 +286,9 @@ export default async function ServicesPage() {
                         </section>
                     </AnimateIn>
                 </div>
+
+                {/* INSTAGRAM / BASTIDORES */}
+                <InstagramSection />
 
                 {/* FAQ */}
                 <section className="mt-32 pt-20 border-t border-white/5">
