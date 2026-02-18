@@ -1,8 +1,9 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { ArrowLeft, Monitor, Laptop, Wifi, Headset, CheckCircle2, ArrowRight, Printer } from 'lucide-react'
+import { ArrowLeft, Monitor, Laptop, Wifi, Headset, CheckCircle2, ArrowRight, Printer, Cpu } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { AnimateIn } from '@/components/ui/animate-in'
+import { SpotlightCard } from '@/components/ui/spotlight-card'
 import { InstagramSection } from '@/components/instagram-section'
 import { createAdminClient } from '@/lib/supabase/server'
 import { unstable_cache } from 'next/cache'
@@ -138,7 +139,7 @@ export default async function ServicesPage() {
                     {/* NOTEBOOKS */}
                     <AnimateIn direction="left">
                         <section id="notebooks" className="scroll-mt-28 grid md:grid-cols-2 gap-8 md:gap-12 items-center">
-                            <div className="order-2 md:order-1">
+                            <div className="order-2 md:order-1 relative z-10">
                                 <div className="inline-flex gap-2 items-center text-primary font-bold mb-4 bg-primary/10 px-3 py-1 rounded-full text-xs uppercase tracking-widest">
                                     <Laptop className="w-4 h-4" /> Notebooks e Laptops
                                 </div>
@@ -167,11 +168,11 @@ export default async function ServicesPage() {
                                         </li>
                                     </ul>
                                 </div>
-                                <Link href={whatsappLink} target="_blank">
-                                    <Button className="w-full md:w-auto bg-primary hover:bg-primary/90 text-slate-950 font-bold px-8 rounded-full h-12">
+                                <Button asChild className="w-full md:w-auto bg-primary hover:bg-primary/90 text-slate-950 font-bold px-8 rounded-full h-12 cursor-pointer relative z-20 shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all duration-300">
+                                    <Link href={whatsappLink} target="_blank">
                                         Pedir Orçamento para Notebook
-                                    </Button>
-                                </Link>
+                                    </Link>
+                                </Button>
                             </div>
                             <div className="order-1 md:order-2 bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl border border-white/5 aspect-square flex items-center justify-center relative overflow-hidden group shadow-2xl">
                                 <Image
@@ -185,7 +186,6 @@ export default async function ServicesPage() {
                             </div>
                         </section>
                     </AnimateIn>
-
                     {/* COMPUTADORES */}
                     <AnimateIn direction="right">
                         <section id="computadores" className="scroll-mt-28 grid md:grid-cols-2 gap-8 md:gap-12 items-center">
@@ -201,7 +201,7 @@ export default async function ServicesPage() {
                                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent pointer-events-none" />
                                 </div>
                             </div>
-                            <div className="order-2">
+                            <div className="order-2 relative z-10">
                                 <div className="inline-flex gap-2 items-center text-blue-400 font-bold mb-4 bg-blue-400/10 px-3 py-1 rounded-full text-xs uppercase tracking-widest">
                                     <Monitor className="w-4 h-4" /> Computadores e PCs
                                 </div>
@@ -230,11 +230,11 @@ export default async function ServicesPage() {
                                         </li>
                                     </ul>
                                 </div>
-                                <Link href={whatsappLink} target="_blank">
-                                    <Button className="w-full md:w-auto bg-blue-500 hover:bg-blue-600 text-white font-bold px-8 rounded-full border-0 h-12">
+                                <Button asChild className="w-full md:w-auto bg-blue-500 hover:bg-blue-600 text-white font-bold px-8 rounded-full border-0 h-12 cursor-pointer relative z-20 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 transition-all duration-300">
+                                    <Link href={whatsappLink} target="_blank">
                                         Melhorar meu Computador
-                                    </Button>
-                                </Link>
+                                    </Link>
+                                </Button>
                             </div>
                         </section>
                     </AnimateIn>
@@ -242,7 +242,7 @@ export default async function ServicesPage() {
                     {/* IMPRESSORAS */}
                     <AnimateIn direction="left">
                         <section id="impressoras" className="scroll-mt-28 grid md:grid-cols-2 gap-8 md:gap-12 items-center">
-                            <div className="order-2 md:order-1">
+                            <div className="order-2 md:order-1 relative z-10">
                                 <div className="inline-flex gap-2 items-center text-pink-400 font-bold mb-4 bg-pink-400/10 px-3 py-1 rounded-full text-xs uppercase tracking-widest">
                                     <Printer className="w-4 h-4" /> Impressoras
                                 </div>
@@ -267,11 +267,11 @@ export default async function ServicesPage() {
                                         </li>
                                     </ul>
                                 </div>
-                                <Link href={whatsappLink} target="_blank">
-                                    <Button className="w-full md:w-auto bg-pink-500 hover:bg-pink-600 text-white font-bold px-8 rounded-full border-0 h-12">
+                                <Button asChild className="w-full md:w-auto bg-pink-500 hover:bg-pink-600 text-white font-bold px-8 rounded-full border-0 h-12 cursor-pointer relative z-20 shadow-lg shadow-pink-500/20 hover:shadow-pink-500/40 transition-all duration-300">
+                                    <Link href={whatsappLink} target="_blank">
                                         Consertar Impressora
-                                    </Button>
-                                </Link>
+                                    </Link>
+                                </Button>
                             </div>
                             <div className="order-1 md:order-2 bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl border border-white/5 aspect-square flex items-center justify-center relative overflow-hidden group shadow-2xl">
                                 <Image
@@ -285,40 +285,41 @@ export default async function ServicesPage() {
                             </div>
                         </section>
                     </AnimateIn>
-                </div>
 
-                {/* INSTAGRAM / BASTIDORES */}
-                <InstagramSection />
-
-                {/* FAQ */}
-                <section className="mt-32 pt-20 border-t border-white/5">
-                    <h2 className="text-2xl md:text-3xl font-bold text-white text-center mb-12">Dúvidas sobre o Processo Técnico</h2>
-                    <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-                        <div className="bg-white/[0.02] border border-white/5 p-6 rounded-2xl">
-                            <h3 className="font-bold text-white mb-2">Quanto tempo demora?</h3>
-                            <p className="text-slate-400 text-sm">A maioria dos serviços (formatação, limpeza) fica pronto em até 24h. E não se preocupe: oferecemos <strong>90 dias de garantia</strong> em todos os reparos.</p>
-                        </div>
-                        <div className="bg-white/[0.02] border border-white/5 p-6 rounded-2xl">
-                            <h3 className="font-bold text-white mb-2">Vocês buscam o equipamento?</h3>
-                            <p className="text-slate-400 text-sm">Sim, temos serviço de logística. Podemos retirar no seu local e devolver pronto. Consulte a taxa para sua região.</p>
-                        </div>
-                        <div className="bg-white/[0.02] border border-white/5 p-6 rounded-2xl">
-                            <h3 className="font-bold text-white mb-2">Valem a pena consertar meu PC antigo?</h3>
-                            <p className="text-slate-400 text-sm">Geralmente sim! Um SSD novo faz um computador de 5-7 anos parecer novo. Faremos uma análise honesta se compensa ou não.</p>
-                        </div>
+                    {/* INSTAGRAM / BASTIDORES */}
+                    <div className="mt-24">
+                        <InstagramSection />
                     </div>
-                </section>
 
-                {/* FOOTER CTA */}
-                <section className="text-center py-20 mt-12">
-                    <h3 className="text-2xl font-bold text-white mb-6">Pronto para resolver?</h3>
-                    <Link href={whatsappLink} target="_blank">
-                        <Button size="lg" className="bg-primary hover:bg-primary/90 text-slate-950 px-6 md:px-10 py-6 text-base md:text-lg font-bold rounded-full shadow-xl shadow-primary/20 w-full md:w-auto">
-                            Falar com Especialista no WhatsApp
+                    {/* FAQ */}
+                    <section className="mt-32 pt-20 border-t border-white/5">
+                        <h2 className="text-2xl md:text-3xl font-bold text-white text-center mb-12">Dúvidas sobre o Processo Técnico</h2>
+                        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                            <SpotlightCard className="p-6 rounded-2xl bg-slate-900/50 border-white/5">
+                                <h3 className="font-bold text-white mb-2">Quanto tempo demora?</h3>
+                                <p className="text-slate-400 text-sm">A maioria dos serviços (formatação, limpeza) fica pronto em até 24h. E não se preocupe: oferecemos <strong>90 dias de garantia</strong> em todos os reparos.</p>
+                            </SpotlightCard>
+                            <SpotlightCard className="p-6 rounded-2xl bg-slate-900/50 border-white/5">
+                                <h3 className="font-bold text-white mb-2">Vocês buscam o equipamento?</h3>
+                                <p className="text-slate-400 text-sm">Sim, temos serviço de logística. Podemos retirar no seu local e devolver pronto. Consulte a taxa para sua região.</p>
+                            </SpotlightCard>
+                            <SpotlightCard className="p-6 rounded-2xl bg-slate-900/50 border-white/5">
+                                <h3 className="font-bold text-white mb-2">Valem a pena consertar meu PC antigo?</h3>
+                                <p className="text-slate-400 text-sm">Geralmente sim! Um SSD novo faz um computador de 5-7 anos parecer novo. Faremos uma análise honesta se compensa ou não.</p>
+                            </SpotlightCard>
+                        </div>
+                    </section>
+
+                    {/* FOOTER CTA */}
+                    <section className="text-center py-20 mt-12">
+                        <h3 className="text-2xl font-bold text-white mb-6">Pronto para resolver?</h3>
+                        <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-slate-950 px-6 md:px-10 py-6 text-base md:text-lg font-bold rounded-full shadow-xl shadow-primary/20 hover:shadow-primary/40 transition-all duration-300 w-full md:w-auto cursor-pointer">
+                            <Link href={whatsappLink} target="_blank">
+                                Falar com Especialista no WhatsApp
+                            </Link>
                         </Button>
-                    </Link>
-                </section>
-
+                    </section>
+                </div>
             </main>
         </div>
     )
