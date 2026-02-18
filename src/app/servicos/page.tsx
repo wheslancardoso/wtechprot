@@ -319,6 +319,20 @@ export default async function ServicesPage() {
                             </Link>
                         </Button>
                     </section>
+
+                    {/* VOLTAR PARA HOME / OUTRAS SOLUÇÕES */}
+                    <section className="text-center py-12 border-t border-white/5 mt-12 bg-slate-950/50 rounded-3xl">
+                        <h3 className="text-xl font-bold text-slate-300 mb-6">Procurando outro tipo de serviço?</h3>
+                        <Link href="/">
+                            <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-full px-10 h-11 border border-slate-700 hover:border-slate-600 transition-all hover:scale-105 shadow-lg shadow-black/20 cursor-pointer relative z-20">
+                                Conhecer todas as Soluções
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-right ml-2 w-4 h-4" aria-hidden="true">
+                                    <path d="M5 12h14"></path>
+                                    <path d="m12 5 7 7-7 7"></path>
+                                </svg>
+                            </button>
+                        </Link>
+                    </section>
                 </div>
             </main>
         </div>
