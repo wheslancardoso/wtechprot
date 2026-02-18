@@ -326,7 +326,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             <div className="mt-12 text-center">
               <Link href="/servicos">
-                <Button size="lg" className="bg-primary hover:bg-white/90 text-slate-950 font-bold rounded-full px-10 shadow-lg shadow-white/10 hover:shadow-white/20 transition-all hover:scale-105">
+                <Button size="lg" className="bg-slate-800 hover:bg-blue-700 text-white font-bold rounded-full px-10 h-11 border border-blue-700 hover:border-blue-600 transition-all hover:scale-105 shadow-lg shadow-black/20">
                   Conhecer todas as Soluções <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </Link>
