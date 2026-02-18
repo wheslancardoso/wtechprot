@@ -29,13 +29,13 @@ export function InstagramSection() {
                     </h2>
 
                     <p className="text-lg text-slate-400 mb-10 leading-relaxed max-w-2xl mx-auto">
-                        Veja fotos reais dos nossos reparos, bancada e o padrão de qualidade que aplicamos em cada equipamento. Transparência total.
+                        Veja fotos reais dos nossos processos, a organização do laboratório e o padrão de qualidade que aplicamos em cada equipamento. Transparência total.
                     </p>
 
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
                         <Button
                             size="lg"
-                            className="group relative overflow-hidden rounded-full font-bold px-8 h-14 w-full sm:w-auto transition-all duration-300 text-white border-0 bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 sm:bg-none sm:bg-slate-900 sm:border sm:border-white/10 sm:hover:border-white/20"
+                            className="group relative overflow-hidden rounded-full font-bold px-8 h-14 w-full sm:w-auto transition-all duration-300 text-white border-0 bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 sm:bg-none sm:bg-slate-900 sm:border sm:border-white/10 sm:hover:border-white/20 hover:bg-slate-900 hover:text-white"
                             asChild
                         >
                             <Link href={instagramUrl} target="_blank">
