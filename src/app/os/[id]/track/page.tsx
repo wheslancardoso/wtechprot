@@ -23,6 +23,7 @@ import {
     CheckCircle2,
     MapPin,
     Smartphone,
+    Star,
 } from 'lucide-react'
 
 // Status config
@@ -169,6 +170,7 @@ export default async function TrackingPage({ params }: PageProps) {
                                 >
                                     <Link href={`/feedback/${order.id}`}>
                                         <div className="flex items-center justify-center gap-2">
+                                            <Star className="h-4 w-4 fill-current" />
                                             <span>AVALIAR SERVIÇO AGORA</span>
                                         </div>
                                     </Link>
