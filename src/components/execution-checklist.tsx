@@ -9,6 +9,7 @@ import {
     getPresets,
     savePreset,
     deletePreset,
+    getExecutionTasks,
 } from '@/lib/execution-tasks-actions'
 import type { ExecutionTask, TaskPreset } from '@/lib/execution-tasks-types'
 
@@ -82,6 +83,25 @@ export default function ExecutionChecklist({
             })
         }
     }, [showPresets, availablePresets.length])
+
+    // Load Tasks on Mount (Ensure Freshness)
+    useEffect(() => {
+        // Se já tiver tasks via server (initialTasks), ótimo. 
+        // Mas vamos buscar novamente para garantir que não estamos vendo dados cacheados (stale)
+        // principalmente se o status mudou recentemente.
+        const loadFreshTasks = async () => {
+            const result = await getExecutionTasks(orderId)
+            if (result.success && result.data) {
+                setTasks(prev => {
+                    // Evita re-render desnecessário se for igual
+                    if (JSON.stringify(prev) === JSON.stringify(result.data)) return prev
+                    return result.data!
+                })
+            }
+        }
+
+        loadFreshTasks()
+    }, [orderId])
 
     // Toggle task
     async function handleToggle(taskId: string, currentCompleted: boolean) {

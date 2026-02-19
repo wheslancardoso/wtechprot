@@ -63,7 +63,7 @@ export default function FeedbackPage({ params }: { params: Promise<{ id: string 
                                     className="w-full gap-2 bg-gray-800 hover:bg-gray-700 border-gray-700 text-gray-200"
                                     onClick={async () => {
                                         await trackGoogleReviewClick(id)
-                                        window.open('https://search.google.com/local/writereview?placeid=YOUR_PLACE_ID', '_blank')
+                                        window.open('https://g.page/r/CSEBt1JqKDjlEAE/review', '_blank')
                                     }}
                                 >
                                     <Store className="w-4 h-4" />
