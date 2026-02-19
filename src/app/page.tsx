@@ -111,7 +111,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             <AnimateIn delay={0.3}>
               <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed px-4">
-                Do upgrade no seu notebook pessoal à gestão de TI da sua empresa. Tecnologia que funciona para você.
+                Da manutenção do seu notebook pessoal à gestão de TI da sua empresa. Tecnologia que funciona para você.
               </p>
             </AnimateIn>
 
