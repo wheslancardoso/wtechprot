@@ -161,7 +161,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   em Tempo Real.
                 </h2>
                 <p className="text-lg text-slate-400 leading-relaxed max-w-xl mx-auto lg:mx-0">
-                  Nosso sistema de Acompanhamento Técnico permite que você visualize cada etapa do reparo. Transparência total para sua segurança.
+                  Nosso sistema de acompanhamento permite que você visualize cada etapa do reparo. Transparência total para sua segurança.
                 </p>
 
                 <ul className="space-y-3 text-slate-300 max-w-sm mx-auto lg:mx-0 text-left">
@@ -250,7 +250,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   Exclusivo.
                 </h2>
                 <p className="text-lg text-slate-400 leading-relaxed max-w-xl mx-auto lg:mx-0">
-                  Planeje sua visita ou atendimento técnico no conforto de casa. Você recebe um link exclusivo, escolhe o dia e horário, e nossa equipe é notificada na mesma hora para aguardar você.
+                  Planeje sua visita ou atendimento no conforto de casa. Você recebe um link exclusivo, escolhe o dia e horário, e nossa equipe é notificada na mesma hora para aguardar você.
                 </p>
 
                 <ul className="space-y-3 text-slate-300 max-w-sm mx-auto lg:mx-0 text-left">
@@ -532,7 +532,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <div className="bg-white/[0.02] border border-white/5 p-8 rounded-2xl relative flex flex-col justify-between h-full">
                 <div className="absolute -top-4 -left-4 w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center text-blue-400 text-4xl font-serif">"</div>
                 <p className="text-slate-300 italic mb-6 leading-relaxed">
-                  "Precisava formatar meu PC mas tinha medo de perder meus arquivos de trabalho. Eles fizeram o backup de tudo com total segurança e deixaram o sistema voando. Profissionalismo raro de encontrar."
+                  "Precisava reinstalar o sistema do meu PC mas tinha medo de perder meus arquivos de trabalho. Foi feito o backup de tudo com total segurança e otimização. Profissionalismo raro de encontrar."
                 </p>
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center font-bold text-slate-500">A</div>
@@ -603,7 +603,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
               {[
                 { icon: MessageCircle, title: '1. Agendamento', desc: 'Solicite atendimento via WhatsApp ou Portal. Triagem inicial rápida da sua necessidade.' },
-                { icon: Wrench, title: '2. Diagnóstico', desc: 'Análise técnica do equipamento e envio de orçamento detalhado para aprovação.' },
+                { icon: Wrench, title: '2. Diagnóstico', desc: 'Análise do equipamento e envio de orçamento detalhado para aprovação.' },
                 { icon: CheckCircle2, title: '3. Manutenção', desc: 'Execução do serviço com peças de qualidade e laboratório especializado.' },
                 { icon: Server, title: '4. Entrega', desc: 'Equipamento testado, higienizado e pronto para uso com garantia.' },
               ].map((step, i) => (
