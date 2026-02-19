@@ -112,7 +112,7 @@ export default async function FeedbacksPage() {
 
                             const whatsappLink = phone
                                 ? `https://wa.me/55${phone.replace(/\D/g, '')}?text=${encodeURIComponent(
-                                    `Olá ${customerName.split(' ')[0]}, aqui é da WFIX. Vi sua avaliação sobre a OS ${orderId}. 😔\nGostaria de entender melhor o que houve para podermos melhorar a sua experiência. Pode me contar?`
+                                    `Olá ${customerName.split(' ')[0]}, aqui é da WFIX. Vi sua avaliação sobre a OS ${orderId}. \uD83D\uDE14\nGostaria de entender melhor o que houve para podermos melhorar a sua experiência. Pode me contar?`
                                 )}`
                                 : null
 
@@ -192,9 +192,9 @@ export default async function FeedbacksPage() {
                                 const isGreen = feedback.score >= 4
                                 const isRed = feedback.score <= 2
 
-                                const whatsappMsg = isRed
-                                    ? `Olá ${customerName.split(' ')[0]}, aqui é da WFIX. Vi sua avaliação sobre a OS ${orderId}. 😔\nGostaria de entender melhor o que houve para podermos melhorar. Pode me contar?`
-                                    : `Olá ${customerName.split(' ')[0]}, aqui é da WFIX. Vi sua avaliação positiva sobre a OS ${orderId}. ⭐\nMuito obrigado! Fico feliz que tenha dado tudo certo. Qualquer coisa estamos à disposição!`
+                                const whatsappMsg = feedback.score < 5
+                                    ? `Olá ${customerName.split(' ')[0]}, aqui é da WFIX. Vi sua avaliação sobre a OS ${orderId}. \uD83D\uDE14\nGostaria de entender melhor o que houve para podermos melhorar. Pode me contar?`
+                                    : `Olá ${customerName.split(' ')[0]}, vi sua avaliação positiva... \u2B50\nMuito obrigado! Fico feliz que tenha dado tudo certo. Qualquer coisa estamos à disposição!`
 
                                 const whatsappLink = phone
                                     ? `https://wa.me/55${phone.replace(/\D/g, '')}?text=${encodeURIComponent(whatsappMsg)}`
