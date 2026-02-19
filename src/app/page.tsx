@@ -63,7 +63,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div className="w-12 h-12 relative flex items-center justify-center">
               <Image src="/logo.svg" alt="Logo" width={48} height={48} className="object-contain" />
             </div>
-            <span className="text-primary">{brandName}</span>
+            <span className="text-primary">{brandName} Tech</span>
           </div>
 
           <a href="https://instagram.com/wfixtech" target="_blank" className="md:hidden text-slate-400 hover:text-primary transition-colors" aria-label="Siga-nos no Instagram">
