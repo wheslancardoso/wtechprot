@@ -55,8 +55,8 @@ export async function middleware(request: NextRequest) {
     // REGRAS DE PROTEÇÃO
     // ============================================
 
-    // 0. Rotas públicas: /os/* (visualização do cliente)
-    const isPublicViewRoute = pathname.startsWith('/os/')
+    // 0. Rotas públicas: /os/* (visualização do cliente) e /agendar/* (agendamento)
+    const isPublicViewRoute = pathname.startsWith('/os/') || pathname.startsWith('/agendar/')
     if (isPublicViewRoute) {
         return supabaseResponse // Deixar passar sem verificar auth
     }

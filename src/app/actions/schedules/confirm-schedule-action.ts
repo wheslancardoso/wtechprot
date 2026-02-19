@@ -1,0 +1,88 @@
+'use server'
+
+import { createAdminClient } from '@/lib/supabase/server'
+
+export type ConfirmScheduleResult = {
+    success: boolean
+    error?: string
+}
+
+interface ConfirmParams {
+    token: string
+    selectedDate: string
+    selectedTime: string
+    customerName?: string
+    customerPhone?: string
+}
+
+/**
+ * Confirma o agendamento do cliente: grava data/hora escolhidos e marca como confirmado.
+ * Usa adminClient (bypass RLS) porque o cliente não está autenticado.
+ */
+export async function confirmSchedule(params: ConfirmParams): Promise<ConfirmScheduleResult> {
+    try {
+        const supabase = await createAdminClient()
+
+        // 1. Buscar agendamento pelo token
+        const { data: schedule, error: fetchError } = await supabase
+            .from('schedules')
+            .select('*')
+            .eq('token', params.token)
+            .single()
+
+        if (fetchError || !schedule) {
+            return { success: false, error: 'Link de agendamento inválido.' }
+        }
+
+        // Verificar expiração
+        if (new Date(schedule.expires_at) < new Date()) {
+            return { success: false, error: 'Este link expirou. Solicite um novo ao técnico.' }
+        }
+
+        // Verificar se já foi confirmado
+        if (schedule.status === 'confirmed') {
+            return { success: false, error: 'Este agendamento já foi confirmado anteriormente.' }
+        }
+
+        if (schedule.status === 'canceled') {
+            return { success: false, error: 'Este agendamento foi cancelado.' }
+        }
+
+        // 2. Verificar se o horário ainda está disponível (double-check concorrência)
+        const { data: conflict } = await supabase
+            .from('schedules')
+            .select('id')
+            .eq('user_id', schedule.user_id)
+            .eq('scheduled_date', params.selectedDate)
+            .eq('scheduled_time', params.selectedTime)
+            .eq('status', 'confirmed')
+            .maybeSingle()
+
+        if (conflict) {
+            return { success: false, error: 'Este horário acabou de ser reservado por outra pessoa. Escolha outro horário.' }
+        }
+
+        // 3. Confirmar agendamento
+        const { error: updateError } = await supabase
+            .from('schedules')
+            .update({
+                scheduled_date: params.selectedDate,
+                scheduled_time: params.selectedTime,
+                customer_name: params.customerName || schedule.customer_name,
+                customer_phone: params.customerPhone || schedule.customer_phone,
+                status: 'confirmed',
+                confirmed_at: new Date().toISOString(),
+            })
+            .eq('id', schedule.id)
+
+        if (updateError) {
+            console.error('Erro ao confirmar agendamento:', updateError)
+            return { success: false, error: 'Erro ao confirmar agendamento. Tente novamente.' }
+        }
+
+        return { success: true }
+    } catch (err) {
+        console.error('Erro inesperado confirmSchedule:', err)
+        return { success: false, error: 'Erro interno. Tente novamente.' }
+    }
+}
