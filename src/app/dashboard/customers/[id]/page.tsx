@@ -215,7 +215,7 @@ export default async function CustomerDetailPage({ params }: PageProps) {
                                     </div>
 
                                     {/* Desktop Table */}
-                                    <div className="hidden md:block rounded-md border">
+                                    <div className="hidden md:block rounded-md border bg-card">
                                         <Table>
                                             <TableHeader>
                                                 <TableRow>
@@ -303,7 +303,7 @@ export default async function CustomerDetailPage({ params }: PageProps) {
                                     </div>
 
                                     {/* Desktop Table */}
-                                    <div className="hidden md:block rounded-md border">
+                                    <div className="hidden md:block rounded-md border bg-card">
                                         <Table>
                                             <TableHeader>
                                                 <TableRow>

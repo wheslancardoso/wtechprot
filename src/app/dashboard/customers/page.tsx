@@ -191,7 +191,7 @@ export default function CustomersPage() {
                         </Card>
                     ) : (
                         <>
-                            <div className="rounded-md border hidden md:block">
+                            <div className="rounded-md border bg-card hidden md:block">
                                 <Table>
                                     <TableHeader>
                                         <TableRow>

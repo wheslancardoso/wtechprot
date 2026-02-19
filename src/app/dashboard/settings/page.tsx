@@ -562,7 +562,7 @@ export default function SettingsPage() {
                                     </span>
                                 </p>
                             ) : (
-                                <div className="rounded-md border">
+                                <div className="rounded-md border bg-card">
                                     <Table>
                                         <TableHeader>
                                             <TableRow>
