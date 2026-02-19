@@ -16,7 +16,7 @@ export async function submitFeedback(
         let resolvedOrderId = orderId
         const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(orderId)
 
-        let query = supabase.from('orders').select('id, customer_id')
+        let query = supabase.from('orders').select('id, customer_id, display_id')
 
         if (isUuid) {
             query = query.eq('id', orderId)
@@ -47,6 +47,16 @@ export async function submitFeedback(
                 return { success: false, error: 'Feedback já enviado para esta ordem.' }
             }
             throw insertError
+        }
+
+        // 3. Revalidate Client Pages to update UI immediately
+        revalidatePath(`/os/${resolvedOrderId}`)
+        revalidatePath(`/os/${resolvedOrderId}/track`)
+
+        // Also revalidate display_id path if available (it usually is)
+        if (order.display_id) {
+            revalidatePath(`/os/${order.display_id}`)
+            revalidatePath(`/os/${order.display_id}/track`) // Just in case
         }
 
         return { success: true }

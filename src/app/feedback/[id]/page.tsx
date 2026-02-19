@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Star, CheckCircle, Store, ExternalLink } from 'lucide-react'
+import { Star, CheckCircle, Store, ExternalLink, Instagram } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
@@ -72,6 +72,22 @@ export default function FeedbackPage({ params }: { params: Promise<{ id: string 
                                 </Button>
                             </div>
                         )}
+
+                        {/* Instagram Link (Always shown) */}
+                        <div className="pt-4 border-t border-gray-800">
+                            <Button
+                                variant="default"
+                                className="w-full gap-2 bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 hover:opacity-90 text-white font-bold border-0"
+                                onClick={() => window.open('https://instagram.com/wfixtech', '_blank')}
+                            >
+                                <Instagram className="w-5 h-5" />
+                                Seguir @wfixtech
+                                <ExternalLink className="w-3 h-3 ml-1 opacity-70" />
+                            </Button>
+                            <p className="text-xs text-gray-500 text-center mt-2">
+                                Veja bastidores e dicas exclusivas!
+                            </p>
+                        </div>
                     </CardContent>
                 </Card>
             </div>
