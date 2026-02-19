@@ -18,6 +18,8 @@ interface GenerateLinkParams {
     notes?: string
 }
 
+import { headers } from 'next/headers'
+
 export async function generateScheduleLink(params: GenerateLinkParams): Promise<GenerateLinkResult> {
     try {
         const supabase = await createClient()
@@ -64,8 +66,12 @@ export async function generateScheduleLink(params: GenerateLinkParams): Promise<
             return { success: false, error: 'Erro ao gerar link de agendamento.' }
         }
 
-        // Montar URL
-        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_SITE_URL || ''
+        // Montar URL detectando o domínio atual
+        const headersList = await headers()
+        const host = headersList.get('host') || 'wfixtech.com.br'
+        const protocol = host.includes('localhost') ? 'http' : 'https'
+
+        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_SITE_URL || `${protocol}://${host}`
         const link = `${baseUrl}/agendar/${token}`
 
         return { success: true, link, token }
