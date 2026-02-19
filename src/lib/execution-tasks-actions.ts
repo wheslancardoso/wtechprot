@@ -99,6 +99,29 @@ export async function deletePreset(id: string): Promise<{ success: boolean; mess
     }
 }
 
+export async function renamePreset(
+    id: string,
+    newName: string
+): Promise<{ success: boolean; message: string }> {
+    try {
+        const supabase = await createClient()
+        const { error } = await supabase
+            .from('task_presets')
+            .update({ name: newName })
+            .eq('id', id)
+
+        if (error) return { success: false, message: error.message }
+
+        revalidatePath('/dashboard/orders/[id]', 'page')
+        return { success: true, message: 'Preset renomeado!' }
+    } catch (error) {
+        return {
+            success: false,
+            message: `Erro: ${error instanceof Error ? error.message : 'Desconhecido'}`,
+        }
+    }
+}
+
 // ==================================================
 // EXECUTION TASKS ACTIONS
 // ==================================================
