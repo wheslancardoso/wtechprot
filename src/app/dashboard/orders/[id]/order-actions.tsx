@@ -257,7 +257,22 @@ export default function OrderActions({
                             onClick={() => {
                                 const phone = orderData?.customerPhone?.replace(/\D/g, '') || ''
                                 if (!phone) return alert('Cliente sem telefone.')
-                                const url = `https://wa.me/55${phone}?text=${encodeURIComponent(`Olá ${customerName}! 👋\n\nSua OS #${displayId} foi finalizada. Poderia avaliar? 👉 ${window.location.origin}/feedback/${orderId}`)}`
+
+                                const baseUrl = window.location.origin
+                                // Agora usamos o displayId na URL de feedback também!
+                                const feedbackLink = `${baseUrl}/feedback/${displayId}`
+                                const firstName = customerName.split(' ')[0]
+
+                                const message = `Olá ${firstName}! 👋
+
+Sua OS #${displayId} foi finalizada. Poderia nos avaliar?
+
+🔗 ${feedbackLink}
+
+Atenciosamente,
+WTECH`
+
+                                const url = `https://api.whatsapp.com/send?phone=55${phone}&text=${encodeURIComponent(message)}`
                                 window.open(url, '_blank')
                             }}
                         >

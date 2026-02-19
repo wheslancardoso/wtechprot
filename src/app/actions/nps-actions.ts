@@ -12,20 +12,30 @@ export async function submitFeedback(
     try {
         const supabase = await createAdminClient()
 
-        // 1. Validate if order exists
-        const { data: order, error: orderError } = await supabase
-            .from('orders')
-            .select('customer_id')
-            .eq('id', orderId)
-            .single()
+        // 1. Resolve Order ID (support both UUID and DisplayID)
+        let resolvedOrderId = orderId
+        const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(orderId)
+
+        let query = supabase.from('orders').select('id, customer_id')
+
+        if (isUuid) {
+            query = query.eq('id', orderId)
+        } else {
+            // Assume input is display_id
+            query = query.eq('display_id', orderId)
+        }
+
+        const { data: order, error: orderError } = await query.single()
 
         if (orderError || !order) {
             return { success: false, error: 'Ordem de serviço não encontrada.' }
         }
 
+        resolvedOrderId = order.id
+
         // 2. Save Feedback (no coupon - just internal quality tracking)
         const { error: insertError } = await supabase.from('nps_feedbacks').insert({
-            order_id: orderId,
+            order_id: resolvedOrderId,
             customer_id: order.customer_id!,
             score,
             comment,
@@ -134,10 +144,25 @@ export async function trackGoogleReviewClick(orderId: string): Promise<void> {
     try {
         const supabase = await createAdminClient()
 
+        const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(orderId)
+
+        let targetOrderId = orderId
+
+        if (!isUuid) {
+            const { data } = await supabase
+                .from('orders')
+                .select('id')
+                .eq('display_id', orderId)
+                .single()
+
+            if (data) targetOrderId = data.id
+            else return // Not found
+        }
+
         await supabase
             .from('nps_feedbacks')
             .update({ clicked_google_review: true, clicked_google_review_at: new Date().toISOString() })
-            .eq('order_id', orderId)
+            .eq('order_id', targetOrderId)
     } catch (error) {
         console.error('Error tracking Google review click:', error)
     }
