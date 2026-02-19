@@ -205,12 +205,12 @@ export default async function ClientOrderPage({ params }: PageProps) {
             {/* Header */}
             <header className="sticky top-0 z-50 bg-background border-b">
                 <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
+                    <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
                         <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
                             <Wrench className="w-5 h-5 text-primary-foreground" />
                         </div>
                         <span className="font-bold text-lg">{tenant?.trade_name || 'InforTech'}</span>
-                    </div>
+                    </Link>
                     <Badge variant={order.status as OrderStatus} className="text-sm">
                         {statusLabels[order.status as OrderStatus] || order.status}
                     </Badge>

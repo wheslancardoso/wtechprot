@@ -100,14 +100,14 @@ export default async function TrackingPage({ params }: PageProps) {
                         </Link>
                     </Button>
 
-                    <div className="flex items-center gap-2">
+                    <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
                         <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                             <Wrench className="w-4 h-4 text-primary-foreground" />
                         </div>
                         <span className="font-bold text-sm hidden sm:inline-block">
                             {settings?.trade_name || 'Minha Assistência'}
                         </span>
-                    </div>
+                    </Link>
                 </div>
             </header>
 
