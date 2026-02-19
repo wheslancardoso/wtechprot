@@ -15,47 +15,7 @@ import type { Metadata } from 'next'
 export const dynamic = 'force-dynamic'
 
 // Cache de dados do tenant por 1 hora para evitar stale data no Edge Cache
-const getTenantData = unstable_cache(
-  async () => {
-    let whatsappNumber = '5561999999999' // Fallback
-    let formattedPhone = '(61) 99999-9999'
-    let brandName = 'WFIX Tech' // Fallback Brand
-
-    try {
-      const supabase = await createAdminClient()
-
-      // Buscar tenant padrão diretamente pelo ID
-      const DEFAULT_TENANT_ID = '8132d666-06c0-46a7-b362-a30393be96c0'
-
-      const { data: tenant, error } = await supabase
-        .from('tenants')
-        .select('phone, trade_name')
-        .eq('id', DEFAULT_TENANT_ID)
-        .single()
-
-      if (error) {
-        console.error('Erro ao buscar tenant padrão:', error)
-      }
-
-      if (tenant) {
-        if (tenant.phone) {
-          const cleanPhone = tenant.phone.replace(/\D/g, '')
-          whatsappNumber = `55${cleanPhone} `
-          formattedPhone = tenant.phone
-        }
-        if (tenant.trade_name && tenant.trade_name !== 'Minha Assistência') {
-          brandName = tenant.trade_name
-        }
-      }
-    } catch (error) {
-      console.error('Erro ao buscar dados da home:', error)
-    }
-
-    return { whatsappNumber, formattedPhone, brandName }
-  },
-  ['tenant-data'],
-  { revalidate: 3600, tags: ['tenant'] }
-)
+import { getTenantData } from '@/lib/get-tenant-data'
 
 export async function generateMetadata() {
   const { brandName } = await getTenantData()
@@ -754,7 +714,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <ul className="space-y-2">
                 <li><Link href="/politica-privacidade" className="hover:text-primary">Política de Privacidade</Link></li>
                 <li><Link href="/termos-uso" className="hover:text-primary">Termos de Uso</Link></li>
-                {/* <li><Link href="/" className="hover:text-primary font-bold">Acesso Corporativo</Link></li> */}
+                <li><Link href="/para-empresas" className="hover:text-primary font-bold text-blue-400">Soluções para Empresas</Link></li>
               </ul>
             </div>
           </div>
