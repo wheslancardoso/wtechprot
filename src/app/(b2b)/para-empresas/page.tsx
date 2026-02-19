@@ -1,5 +1,5 @@
 import { LeadForm } from "@/components/leads/lead-form"
-import { ShieldCheck, Zap, BarChart3, Clock, CheckCircle2, Server, Laptop, Wifi, Store, Bot, Settings, Smartphone, Wrench, ArrowRight } from "lucide-react"
+import { ShieldCheck, Zap, BarChart3, Clock, CheckCircle2, Server, Laptop, Wifi, Store, Bot, Settings, Smartphone, Wrench, ArrowRight, XCircle, TrendingUp } from "lucide-react"
 import type { Metadata } from 'next'
 import { SpotlightCard } from "@/components/ui/spotlight-card"
 import { Button } from "@/components/ui/button"
@@ -41,7 +41,7 @@ export default function B2BPage() {
                                     <a href="#contato">Falar com Consultor</a>
                                 </Button>
                                 <Button variant="outline" size="lg" className="h-14 px-8 text-lg rounded-full border-slate-700 hover:bg-slate-800 text-slate-300 hover:text-white" asChild>
-                                    <a href="#servicos">Conhecer Soluções</a>
+                                    <a href="#solucoes">Conhecer Soluções</a>
                                 </Button>
                             </div>
 
@@ -119,12 +119,81 @@ export default function B2BPage() {
                 </div>
             </section>
 
-            {/* SERVICES */}
-            <section id="servicos" className="py-32 bg-slate-950 relative">
+            {/* PROBLEMAS (DORES) - NEW SECTION */}
+            <section id="vantagens" className="py-24 bg-slate-900 relative border-y border-slate-800">
+                <div className="container mx-auto px-4">
+                    <div className="mb-16 text-center">
+                        <h2 className="text-3xl font-bold text-white mb-4">O que impede seu crescimento?</h2>
+                        <p className="text-slate-400">Identificamos os gargalos mais comuns em pequenos negócios.</p>
+                    </div>
+
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {/* Problem 1 */}
+                        <div className="bg-slate-950 p-8 rounded-2xl border border-slate-800 relative group overflow-hidden">
+                            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                                <XCircle className="w-24 h-24 text-red-500" />
+                            </div>
+                            <h3 className="text-xl font-bold text-red-400 mb-2 flex items-center gap-2">
+                                <XCircle className="w-5 h-5" /> Atendimento Lento
+                            </h3>
+                            <p className="text-slate-400 mb-6 text-sm">
+                                Clientes esperando para agendar? Perde vendas porque não pode atender o WhatsApp na hora?
+                            </p>
+                            <div className="pt-6 border-t border-slate-800">
+                                <h4 className="text-green-400 font-bold text-sm mb-1 flex items-center gap-2">
+                                    <CheckCircle2 className="w-4 h-4" /> A Solução WFIX
+                                </h4>
+                                <p className="text-slate-300 text-sm">Agendamento Online 24/7. Seu cliente marca sozinho, você só recebe.</p>
+                            </div>
+                        </div>
+
+                        {/* Problem 2 */}
+                        <div className="bg-slate-950 p-8 rounded-2xl border border-slate-800 relative group overflow-hidden">
+                            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                                <XCircle className="w-24 h-24 text-red-500" />
+                            </div>
+                            <h3 className="text-xl font-bold text-red-400 mb-2 flex items-center gap-2">
+                                <XCircle className="w-5 h-5" /> Wi-Fi Instável
+                            </h3>
+                            <p className="text-slate-400 mb-6 text-sm">
+                                Internet cai na hora de passar o cartão? Clientes reclamam que o sinal é fraco?
+                            </p>
+                            <div className="pt-6 border-t border-slate-800">
+                                <h4 className="text-green-400 font-bold text-sm mb-1 flex items-center gap-2">
+                                    <CheckCircle2 className="w-4 h-4" /> A Solução WFIX
+                                </h4>
+                                <p className="text-slate-300 text-sm">Rede Mesh Corporativa. Sinal forte em todo o ambiente e rede separada para visitantes.</p>
+                            </div>
+                        </div>
+
+                        {/* Problem 3 */}
+                        <div className="bg-slate-950 p-8 rounded-2xl border border-slate-800 relative group overflow-hidden">
+                            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                                <XCircle className="w-24 h-24 text-red-500" />
+                            </div>
+                            <h3 className="text-xl font-bold text-red-400 mb-2 flex items-center gap-2">
+                                <XCircle className="w-5 h-5" /> Computador Lento
+                            </h3>
+                            <p className="text-slate-400 mb-6 text-sm">
+                                O sistema trava com o cliente no balcão? Perde tempo reiniciando a máquina?
+                            </p>
+                            <div className="pt-6 border-t border-slate-800">
+                                <h4 className="text-green-400 font-bold text-sm mb-1 flex items-center gap-2">
+                                    <CheckCircle2 className="w-4 h-4" /> A Solução WFIX
+                                </h4>
+                                <p className="text-slate-300 text-sm">Otimização Profissional. Deixamos seu PC rápido como novo sem precisar formatar.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* SERVICES - EXPANDED */}
+            <section id="solucoes" className="py-32 bg-slate-950 relative">
                 <div className="container mx-auto px-4 relative z-10">
                     <div className="text-center max-w-2xl mx-auto mb-20">
-                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Soluções Sob Medida</h2>
-                        <p className="text-xl text-slate-400">Entendemos a realidade do microempreendedor. Soluções práticas, sem burocracia e com alto impacto.</p>
+                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Explore nossas Soluções</h2>
+                        <p className="text-xl text-slate-400">Ferramentas desenhadas para simplificar a sua rotina.</p>
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
@@ -134,14 +203,19 @@ export default function B2BPage() {
                                 <Smartphone className="w-7 h-7" />
                             </div>
                             <h3 className="text-2xl font-bold mb-4 text-white">Sistemas & Apps</h3>
-                            <p className="text-slate-400 leading-relaxed mb-8">
-                                Implantação de sistemas de gestão (ERP), controle de estoque e aplicativos de agendamento online para otimizar seu tempo.
+                            <p className="text-slate-400 leading-relaxed mb-6">
+                                Ideal para: Barbearias, Clínicas, PetShops.
                             </p>
-                            <ul className="space-y-3 text-sm text-slate-300">
-                                <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-indigo-500 shrink-0" /> <span>Agendamento Online</span></li>
-                                <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-indigo-500 shrink-0" /> <span>Gestão Financeira</span></li>
-                                <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-indigo-500 shrink-0" /> <span>Controle de Estoque</span></li>
-                            </ul>
+                            <div className="space-y-4">
+                                <div className="bg-slate-950/50 p-4 rounded-lg border border-slate-800">
+                                    <h4 className="text-indigo-400 font-bold text-sm mb-1">Como funciona?</h4>
+                                    <p className="text-sm text-slate-500">Nós configuramos o sistema de agendamento e treinamos sua equipe.</p>
+                                </div>
+                                <ul className="space-y-3 text-sm text-slate-300">
+                                    <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-indigo-500 shrink-0" /> <span>Link de Agendamento no Instagram</span></li>
+                                    <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-indigo-500 shrink-0" /> <span>Lembretes Automáticos (WhatsApp)</span></li>
+                                </ul>
+                            </div>
                         </SpotlightCard>
 
                         {/* Service 2: Networks & Wi-Fi */}
@@ -150,14 +224,19 @@ export default function B2BPage() {
                                 <Wifi className="w-7 h-7" />
                             </div>
                             <h3 className="text-2xl font-bold mb-4 text-white">Redes & Wi-Fi</h3>
-                            <p className="text-slate-400 leading-relaxed mb-8">
-                                Wi-Fi rápido e seguro. Separe a rede dos clientes da rede interna e evite lentidão ou riscos de segurança.
+                            <p className="text-slate-400 leading-relaxed mb-6">
+                                Ideal para: Cafés, Restaurantes, Escritórios.
                             </p>
-                            <ul className="space-y-3 text-sm text-slate-300">
-                                <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-purple-500 shrink-0" /> <span>Wi-Fi Check-in (Social)</span></li>
-                                <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-purple-500 shrink-0" /> <span>Rede Administrativa</span></li>
-                                <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-purple-500 shrink-0" /> <span>Cimalhamento de Dados</span></li>
-                            </ul>
+                            <div className="space-y-4">
+                                <div className="bg-slate-950/50 p-4 rounded-lg border border-slate-800">
+                                    <h4 className="text-purple-400 font-bold text-sm mb-1">Como funciona?</h4>
+                                    <p className="text-sm text-slate-500">Instalamos pontos de acesso profissionais que cobrem todo o ambiente.</p>
+                                </div>
+                                <ul className="space-y-3 text-sm text-slate-300">
+                                    <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-purple-500 shrink-0" /> <span>Cliente faz check-in para acessar</span></li>
+                                    <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-purple-500 shrink-0" /> <span>Você ganha o contato do cliente</span></li>
+                                </ul>
+                            </div>
                         </SpotlightCard>
 
                         {/* Service 3: Maintenance */}
@@ -166,14 +245,19 @@ export default function B2BPage() {
                                 <Wrench className="w-7 h-7" />
                             </div>
                             <h3 className="text-2xl font-bold mb-4 text-white">Suporte Técnico</h3>
-                            <p className="text-slate-400 leading-relaxed mb-8">
-                                Seu computador travou? Resolvemos rápido. Manutenção preventiva e otimização para garantir produtividade.
+                            <p className="text-slate-400 leading-relaxed mb-6">
+                                Ideal para: Todos os negócios com computadores.
                             </p>
-                            <ul className="space-y-3 text-sm text-slate-300">
-                                <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" /> <span>Otimização de Performance</span></li>
-                                <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" /> <span>Remoção de Vírus</span></li>
-                                <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" /> <span>Configuração de E-mail</span></li>
-                            </ul>
+                            <div className="space-y-4">
+                                <div className="bg-slate-950/50 p-4 rounded-lg border border-slate-800">
+                                    <h4 className="text-emerald-400 font-bold text-sm mb-1">Como funciona?</h4>
+                                    <p className="text-sm text-slate-500">Acesso remoto imediato ou visita técnica para resolver problemas críticos.</p>
+                                </div>
+                                <ul className="space-y-3 text-sm text-slate-300">
+                                    <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" /> <span>PC lento vira PC rápido</span></li>
+                                    <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" /> <span>Backup Automático na Nuvem</span></li>
+                                </ul>
+                            </div>
                         </SpotlightCard>
                     </div>
                 </div>
@@ -192,17 +276,17 @@ export default function B2BPage() {
                                     Modernize seu negócio hoje.
                                 </h2>
                                 <p className="text-lg text-slate-400 mb-10 relative z-10">
-                                    Seja uma barbearia, lojinha ou escritório. Temos a solução certa para você faturar mais e ter menos dor de cabeça com TI.
+                                    Pare de perder tempo com tecnologia que não funciona. Deixe a WFIX Tech cuidar disso para você focar em vender.
                                 </p>
 
                                 <div className="space-y-8 relative z-10">
                                     <div className="flex items-start gap-4 group">
                                         <div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 shrink-0 group-hover:bg-indigo-500/20 transition-colors">
-                                            <Bot className="w-6 h-6" />
+                                            <TrendingUp className="w-6 h-6" />
                                         </div>
                                         <div>
-                                            <h4 className="text-lg font-bold text-white mb-1">IA & Automação</h4>
-                                            <p className="text-sm text-slate-400">Atenda seus clientes 24h por dia com agendamento online e chatbots.</p>
+                                            <h4 className="text-lg font-bold text-white mb-1">Crescimento Acelerado</h4>
+                                            <p className="text-sm text-slate-400">Empresas com tecnologia certa crescem 2x mais rápido.</p>
                                         </div>
                                     </div>
 
@@ -211,8 +295,8 @@ export default function B2BPage() {
                                             <ShieldCheck className="w-6 h-6" />
                                         </div>
                                         <div>
-                                            <h4 className="text-lg font-bold text-white mb-1">Segurança de Dados</h4>
-                                            <p className="text-sm text-slate-400">Backups automáticos e proteção contra invasões para sua tranquilidade.</p>
+                                            <h4 className="text-lg font-bold text-white mb-1">Garantia WFIX</h4>
+                                            <p className="text-sm text-slate-400">Suporte humanizado e garantia de satisfação em todos os serviços.</p>
                                         </div>
                                     </div>
                                 </div>
