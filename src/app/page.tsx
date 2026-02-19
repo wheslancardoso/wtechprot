@@ -15,47 +15,7 @@ import type { Metadata } from 'next'
 export const dynamic = 'force-dynamic'
 
 // Cache de dados do tenant por 1 hora para evitar stale data no Edge Cache
-const getTenantData = unstable_cache(
-  async () => {
-    let whatsappNumber = '5561999999999' // Fallback
-    let formattedPhone = '(61) 99999-9999'
-    let brandName = 'WFIX Tech' // Fallback Brand
-
-    try {
-      const supabase = await createAdminClient()
-
-      // Buscar tenant padrão diretamente pelo ID
-      const DEFAULT_TENANT_ID = '8132d666-06c0-46a7-b362-a30393be96c0'
-
-      const { data: tenant, error } = await supabase
-        .from('tenants')
-        .select('phone, trade_name')
-        .eq('id', DEFAULT_TENANT_ID)
-        .single()
-
-      if (error) {
-        console.error('Erro ao buscar tenant padrão:', error)
-      }
-
-      if (tenant) {
-        if (tenant.phone) {
-          const cleanPhone = tenant.phone.replace(/\D/g, '')
-          whatsappNumber = `55${cleanPhone} `
-          formattedPhone = tenant.phone
-        }
-        if (tenant.trade_name && tenant.trade_name !== 'Minha Assistência') {
-          brandName = tenant.trade_name
-        }
-      }
-    } catch (error) {
-      console.error('Erro ao buscar dados da home:', error)
-    }
-
-    return { whatsappNumber, formattedPhone, brandName }
-  },
-  ['tenant-data'],
-  { revalidate: 3600, tags: ['tenant'] }
-)
+import { getTenantData } from '@/lib/get-tenant-data'
 
 export async function generateMetadata() {
   const { brandName } = await getTenantData()
@@ -103,7 +63,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div className="w-12 h-12 relative flex items-center justify-center">
               <Image src="/logo.svg" alt="Logo" width={48} height={48} className="object-contain" />
             </div>
-            <span className="text-primary">{brandName}</span>
+            <span className="text-primary">{brandName} Tech</span>
           </div>
 
           <a href="https://instagram.com/wfixtech" target="_blank" className="md:hidden text-slate-400 hover:text-primary transition-colors" aria-label="Siga-nos no Instagram">
@@ -151,7 +111,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             <AnimateIn delay={0.3}>
               <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed px-4">
-                Fale agora mesmo com um <b>Especialista em Tecnologia</b>. Atendimento profissional, logística segura ou consultoria para garantir a continuidade do seu trabalho.
+                Da manutenção do seu notebook pessoal à gestão de TI da sua empresa. Tecnologia que funciona para você.
               </p>
             </AnimateIn>
 
@@ -699,6 +659,32 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 
 
+        {/* CALLOUT B2B (DESABILITADO TEMPORARIAMENTE)
+        <section className="py-20 bg-slate-950 relative overflow-hidden border-t border-white/10">
+             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-indigo-500/10 blur-[100px] rounded-full pointer-events-none" />
+             
+             <div className="container relative mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-8">
+                 <div className="text-center md:text-left max-w-2xl">
+                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-xs font-bold text-indigo-400 mb-4 uppercase tracking-wider">
+                        <Briefcase className="w-3 h-3" /> Para Empresas
+                     </div>
+                     <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">Procurando soluções para seu negócio?</h2>
+                     <p className="text-slate-400 text-lg">
+                         Consultoria, Redes Wi-Fi e Gestão de TI completa. Estabilidade e segurança para garantir a continuidade da sua operação.
+                     </p>
+                 </div>
+                 <div className="flex-shrink-0">
+                    <Button size="lg" className="whitespace-nowrap rounded-full px-8 h-14 text-lg shadow-[0_0_30px_rgba(79,70,229,0.3)] hover:shadow-[0_0_40px_rgba(79,70,229,0.5)] hover:scale-105 transition-all bg-indigo-600 hover:bg-indigo-500 text-white border-0" asChild>
+                        <Link href="/para-empresas">
+                            Conhecer Soluções <ArrowRight className="ml-2 w-5 h-5" />
+                        </Link>
+                    </Button>
+                 </div>
+             </div>
+        </section>
+        */}
+
+
         <a
           id="cta-whatsapp-float"
           href={whatsappLink}
@@ -754,7 +740,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <ul className="space-y-2">
                 <li><Link href="/politica-privacidade" className="hover:text-primary">Política de Privacidade</Link></li>
                 <li><Link href="/termos-uso" className="hover:text-primary">Termos de Uso</Link></li>
-                {/* <li><Link href="/" className="hover:text-primary font-bold">Acesso Corporativo</Link></li> */}
+                <li><Link href="/para-empresas" className="hover:text-primary font-bold text-blue-400">Soluções para Empresas</Link></li>
               </ul>
             </div>
           </div>
@@ -768,6 +754,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           </div>
         </div>
       </footer>
-    </div>
+    </div >
   )
 }
