@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { getOrderTimeline } from './timeline-actions'
 import type { OrderLog } from './timeline-actions'
 import { formatDateToLocal } from '@/lib/date-utils'
@@ -77,30 +77,49 @@ interface OrderTimelineProps {
     currentStatus: string
 }
 
+// Cache global de timeline por orderId — sobrevive entre montagens/desmontagens do componente
+const timelineCache = new Map<string, { data: OrderLog[]; timestamp: number }>()
+const CACHE_TTL = 2 * 60 * 1000 // 2 minutos
+
 // ==================================================
 // Component
 // ==================================================
 export default function OrderTimeline({ orderId, currentStatus }: OrderTimelineProps) {
-    const [logs, setLogs] = useState<OrderLog[]>([])
-    const [isLoading, setIsLoading] = useState(true)
+    const cached = timelineCache.get(orderId)
+    const isCacheValid = cached && (Date.now() - cached.timestamp < CACHE_TTL)
+
+    const [logs, setLogs] = useState<OrderLog[]>(isCacheValid ? cached.data : [])
+    const [isLoading, setIsLoading] = useState(!isCacheValid)
     const [error, setError] = useState<string | null>(null)
 
-    useEffect(() => {
-        async function fetchTimeline() {
-            setIsLoading(true)
-            const result = await getOrderTimeline(orderId)
+    const fetchTimeline = React.useCallback(async (forceRefresh = false) => {
+        const entry = timelineCache.get(orderId)
+        const isValid = entry && (Date.now() - entry.timestamp < CACHE_TTL)
 
-            if (result.success) {
-                setLogs(result.data || [])
-            } else {
-                setError(result.message || 'Erro ao carregar timeline')
-            }
-
+        // Se já tem cache válido e não é refresh forçado, usa o cache
+        if (!forceRefresh && isValid) {
+            setLogs(entry.data)
             setIsLoading(false)
+            return
         }
 
-        fetchTimeline()
+        setIsLoading(true)
+        const result = await getOrderTimeline(orderId)
+
+        if (result.success) {
+            const data = result.data || []
+            timelineCache.set(orderId, { data, timestamp: Date.now() })
+            setLogs(data)
+        } else {
+            setError(result.message || 'Erro ao carregar timeline')
+        }
+
+        setIsLoading(false)
     }, [orderId])
+
+    useEffect(() => {
+        fetchTimeline()
+    }, [fetchTimeline])
 
     // Calcular tempo em "Aguardando Peças" (se aplicável)
     const waitingPartsLog = logs.find(l => l.new_status === 'waiting_parts')
