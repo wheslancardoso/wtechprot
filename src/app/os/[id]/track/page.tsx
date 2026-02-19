@@ -7,7 +7,6 @@ import type { ExecutionTask } from '@/lib/execution-tasks-types'
 // Components
 // Components
 import RealtimeTracker from '@/components/realtime-tracker'
-import OrderRealtimeListener from '@/components/order-realtime-listener'
 
 // UI Components
 import { Badge } from '@/components/ui/badge'
@@ -144,8 +143,7 @@ export default async function TrackingPage({ params }: PageProps) {
                         initialTasks={(order.execution_tasks || []) as ExecutionTask[]}
                     />
 
-                    {/* Listener de Status (Polling para Public - Otimizado) */}
-                    <OrderRealtimeListener orderId={order.id} strategy="polling" pollingInterval={15000} />
+                    {/* O RealtimeTracker já tem seu próprio listener Supabase Realtime */}
                 </div>
 
                 {/* Footer Info */}

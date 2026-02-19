@@ -13,7 +13,7 @@ interface RealtimeTrackerProps {
     initialTasks: ExecutionTask[]
 }
 
-// Helper para formatar data e hora (Client-side usage only)
+// Helper para formatar data e hora
 function formatDateTime(dateString: string | null) {
     if (!dateString) return null
     const date = new Date(dateString)
@@ -23,9 +23,6 @@ function formatDateTime(dateString: string | null) {
     }
 }
 
-// Intervalo de fallback caso o realtime falhe (60s em vez de 4s)
-const FALLBACK_POLLING_INTERVAL = 60000
-
 export default function RealtimeTracker({ orderId, initialTasks }: RealtimeTrackerProps) {
     const [tasks, setTasks] = useState<ExecutionTask[]>(initialTasks)
     const [isConnected, setIsConnected] = useState(false)
@@ -34,31 +31,37 @@ export default function RealtimeTracker({ orderId, initialTasks }: RealtimeTrack
     const [isAnimating, setIsAnimating] = useState(false)
     const supabaseRef = useRef(createClient())
 
-    // Evitar hydration mismatch
     useEffect(() => {
         setMounted(true)
         setLastUpdate(new Date())
     }, [])
 
-    // Fetch manual (usado apenas como fallback)
+    // Fetch tasks via API (usado como transporte de dados após notificação do realtime)
     const fetchTasks = useCallback(async () => {
         try {
             const res = await fetch(`/api/orders/${orderId}/tasks?t=${Date.now()}`)
             const data = await res.json()
 
             if (res.ok && data.tasks) {
+                const newTasks = data.tasks as ExecutionTask[]
                 setTasks((prev) => {
-                    const newTasks = data.tasks
+                    // Só atualiza se houve mudança real
                     return JSON.stringify(prev) !== JSON.stringify(newTasks) ? newTasks : prev
                 })
                 setLastUpdate(new Date())
+
+                // Flash de animação
+                setIsAnimating(true)
+                setTimeout(() => setIsAnimating(false), 1500)
             }
         } catch (error) {
-            console.error('Erro ao buscar tarefas (fallback):', error)
+            console.error('Erro ao buscar tarefas:', error)
         }
     }, [orderId])
 
-    // Supabase Realtime + Fallback Polling
+    // Supabase Realtime: escuta UPDATE na tabela orders, depois busca dados via API
+    // Estratégia: Realtime como "push notification", fetch como "data transport"
+    // Isso evita o problema de REPLICA IDENTITY não incluir JSONB no payload
     useEffect(() => {
         const supabase = supabaseRef.current
         let fallbackInterval: ReturnType<typeof setInterval> | null = null
@@ -74,18 +77,10 @@ export default function RealtimeTracker({ orderId, initialTasks }: RealtimeTrack
                     table: 'orders',
                     filter: `id=eq.${orderId}`,
                 },
-                (payload) => {
-                    console.log('🔄 Tracker: update recebido via realtime')
-                    const newRecord = payload.new as { execution_tasks?: ExecutionTask[] }
-
-                    if (newRecord.execution_tasks) {
-                        // Flash de animação ao receber update
-                        setIsAnimating(true)
-                        setTimeout(() => setIsAnimating(false), 1500)
-
-                        setTasks(newRecord.execution_tasks)
-                        setLastUpdate(new Date())
-                    }
+                () => {
+                    // Recebeu notificação de update → busca dados frescos
+                    console.log('🔄 Tracker: update detectado via realtime, buscando dados...')
+                    fetchTasks()
                 }
             )
             .subscribe((status, err) => {
@@ -93,7 +88,6 @@ export default function RealtimeTracker({ orderId, initialTasks }: RealtimeTrack
 
                 if (status === 'SUBSCRIBED') {
                     setIsConnected(true)
-                    // Uma vez conectado, não precisa de polling
                     if (fallbackInterval) {
                         clearInterval(fallbackInterval)
                         fallbackInterval = null
@@ -103,13 +97,12 @@ export default function RealtimeTracker({ orderId, initialTasks }: RealtimeTrack
                 if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
                     console.warn('⚠️ Tracker: realtime falhou, ativando polling fallback (60s)')
                     setIsConnected(false)
-                    // Ativar polling apenas se o realtime falhar
                     if (!fallbackInterval) {
                         fallbackInterval = setInterval(() => {
                             if (document.visibilityState === 'visible') {
                                 fetchTasks()
                             }
-                        }, FALLBACK_POLLING_INTERVAL)
+                        }, 60000)
                     }
                 }
 
@@ -130,9 +123,7 @@ export default function RealtimeTracker({ orderId, initialTasks }: RealtimeTrack
     const totalCount = tasks.length
     const progress = totalCount > 0 ? (completedCount / totalCount) * 100 : 0
 
-    if (!mounted) {
-        return null
-    }
+    if (!mounted) return null
 
     return (
         <Card className="border-primary/20 shadow-md overflow-hidden relative">
@@ -165,9 +156,9 @@ export default function RealtimeTracker({ orderId, initialTasks }: RealtimeTrack
                                 )}
                             </span>
                             {isConnected
-                                ? 'Conectado — Atualização automática'
+                                ? 'Conectado — Atualiza ao vivo'
                                 : lastUpdate
-                                    ? `Verificando a cada 60s — Última: ${lastUpdate.toLocaleTimeString()}`
+                                    ? `Reconectando... Última: ${lastUpdate.toLocaleTimeString()}`
                                     : 'Conectando...'
                             }
                         </CardDescription>
@@ -199,7 +190,6 @@ export default function RealtimeTracker({ orderId, initialTasks }: RealtimeTrack
                     <div className="divide-y divide-border/50">
                         {tasks.map((task, index) => {
                             const timestamp = formatDateTime(task.completed_at)
-
                             return (
                                 <div
                                     key={task.id || index}
