@@ -27,8 +27,6 @@ import {
     Receipt,
     ExternalLink,
     AlertTriangle,
-    Activity,
-    ArrowRight,
 } from 'lucide-react'
 
 // Status config
@@ -333,32 +331,7 @@ export default async function ClientOrderPage({ params }: PageProps) {
 
 
 
-                        {/* Card: Acompanhar Progresso */}
-                        {['in_progress', 'waiting_parts'].includes(order.status) && (
-                            <Card className="border-primary/20 bg-primary/5">
-                                <CardContent className="py-5">
-                                    <div className="flex items-center justify-between gap-4">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                                                <Activity className="h-5 w-5 text-primary" />
-                                            </div>
-                                            <div>
-                                                <p className="font-semibold text-sm">Acompanhe em tempo real</p>
-                                                <p className="text-xs text-muted-foreground">
-                                                    Veja cada etapa da execução do serviço
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <Button size="sm" asChild>
-                                            <Link href={`/os/${order.display_id || order.id}/track`}>
-                                                Rastrear
-                                                <ArrowRight className="ml-1 h-4 w-4" />
-                                            </Link>
-                                        </Button>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        )}
+                        {/* Rastreamento via banner fixo no ClientActions */}
                     </div>
 
                     <div className="space-y-6">
