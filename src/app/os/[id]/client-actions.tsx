@@ -257,8 +257,7 @@ export default function ClientActions({ orderId, displayId, hasParts, status, cu
                             className="w-full h-14 text-lg font-bold bg-yellow-500 hover:bg-yellow-600 text-white shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all animate-pulse-slow"
                             onClick={() => router.push(`/feedback/${orderId}`)}
                         >
-                            <PartyPopper className="mr-2 h-5 w-5" />
-                            AVALIAR SERVIÇO AGORA
+                            {'⭐'} AVALIAR SERVIÇO AGORA
                         </Button>
                     ) : (
                         <Button
