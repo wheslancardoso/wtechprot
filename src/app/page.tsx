@@ -326,8 +326,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
                   {/* Bottom Action - Animated */}
                   <div className="mt-8 pt-6 border-t border-white/5 opacity-0 animate-[fadeInUp_0.6s_ease-out_forwards]" style={{ animationDelay: '1.5s' }}>
-                    <div className="w-full py-3 bg-emerald-500 text-slate-950 font-bold rounded-lg flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/30">
-                      Confirmar Agendamento <CheckCircle2 className="w-5 h-5" />
+                    <div className="w-full py-3 bg-emerald-500/5 text-emerald-400 font-bold text-xs uppercase tracking-wider border border-dashed border-emerald-500/30 rounded-lg flex items-center justify-center gap-2">
+                      <CheckCircle2 className="w-4 h-4" /> Notificação Enviada ao Técnico
                     </div>
                   </div>
                 </div>

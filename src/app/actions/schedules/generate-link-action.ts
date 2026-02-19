@@ -39,8 +39,8 @@ export async function generateScheduleLink(params: GenerateLinkParams): Promise<
 
         const expiryHours = settings?.token_expiry_hours ?? 48
 
-        // Gerar token único
-        const token = randomBytes(32).toString('hex')
+        // Gerar token único e mais curto (12 caracteres hexadecimais)
+        const token = randomBytes(6).toString('hex')
 
         // Calcular data de expiração
         const expiresAt = new Date()

@@ -23,6 +23,7 @@ import {
     CalendarCheck,
     CalendarX,
     CalendarClock,
+    MessageCircle,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -323,15 +324,40 @@ export function ScheduleDashboardClient({
                             </div>
 
                             {(schedule.status === 'pending' || schedule.status === 'confirmed') && (
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => handleCancel(schedule.id)}
-                                    className="text-red-400 hover:text-red-300 hover:bg-red-500/10 shrink-0"
-                                >
-                                    <X className="w-4 h-4 mr-1" />
-                                    Cancelar
-                                </Button>
+                                <div className="flex items-center gap-1 shrink-0">
+                                    {schedule.customer_phone && schedule.status === 'confirmed' && (
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => {
+                                                const phoneStr = schedule.customer_phone?.replace(/\D/g, '')
+                                                if (!phoneStr) return
+                                                const dateParsed = schedule.scheduled_date ? format(parseISO(schedule.scheduled_date), "dd/MM", { locale: ptBR }) : ''
+                                                const timeStr = schedule.scheduled_time?.substring(0, 5) ?? ''
+                                                const finalPhone = phoneStr.startsWith('55') ? phoneStr : `55${phoneStr}`
+
+                                                const text = encodeURIComponent(
+                                                    `Olá${schedule.customer_name ? ` ${schedule.customer_name.split(' ')[0]}` : ''}! Tudo bem? \n\nAqui é da WFIX Tech. Passando apenas para lembrar do nosso agendamento amanhã, dia ${dateParsed} às ${timeStr}.\n\nPara qualquer imprevisto, basta me avisar por aqui.`
+                                                )
+
+                                                window.open(`https://api.whatsapp.com/send?phone=${finalPhone}&text=${text}`, '_blank')
+                                            }}
+                                            className="text-emerald-500 hover:text-emerald-400 hover:bg-emerald-500/10"
+                                            title="Enviar lembrete amigável via WhatsApp"
+                                        >
+                                            <MessageCircle className="w-4 h-4 mr-1" />
+                                            Lembrar
+                                        </Button>
+                                    )}
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => handleCancel(schedule.id)}
+                                        className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                                    >
+                                        <X className="w-4 h-4" />
+                                    </Button>
+                                </div>
                             )}
                         </div>
                     ))
