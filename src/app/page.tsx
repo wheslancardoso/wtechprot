@@ -335,8 +335,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             <div className="mt-12 text-center">
               <Link href="/servicos">
-                <Button size="lg" className="bg-slate-800 hover:bg-blue-700 text-white font-bold rounded-full px-10 h-11 border border-blue-700 hover:border-blue-600 transition-all hover:scale-105 shadow-lg shadow-black/20">
-                  Conhecer todas as Soluções <ArrowRight className="ml-2 w-4 h-4" />
+                <Button size="lg" className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-full px-12 h-14 text-lg border-0 shadow-xl shadow-blue-500/30 hover:shadow-blue-500/50 transition-all duration-300 hover:scale-105">
+                  Conhecer todas as Soluções <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </Link>
             </div>
