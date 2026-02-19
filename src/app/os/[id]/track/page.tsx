@@ -74,8 +74,17 @@ export default async function TrackingPage({ params }: PageProps) {
     const { data: settings } = await supabase
         .from('tenants')
         .select('trade_name')
-        .eq('id', order.user_id) // tenants.id is the user_id
+        .eq('id', order.user_id)
         .single()
+
+    // Verificar se já existe feedback para esta OS
+    const { data: existingFeedback } = await supabase
+        .from('nps_feedbacks')
+        .select('id')
+        .eq('order_id', order.id)
+        .maybeSingle()
+
+    const hasExistingFeedback = !!existingFeedback
 
     const equipment = order.equipment
 
@@ -161,19 +170,28 @@ export default async function TrackingPage({ params }: PageProps) {
                                     : 'Seu equipamento está pronto. Venha buscar em horário comercial.'}
                             </p>
 
-                            {/* CTA para Avaliação se Finalizado */}
+                            {/* CTA para Avaliação se Finalizado e ainda não avaliou */}
                             {order.status === 'finished' && (
-                                <Button
-                                    size="sm"
-                                    className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold shadow-sm"
-                                    asChild
-                                >
-                                    <Link href={`/feedback/${order.id}`}>
-                                        <div className="flex items-center justify-center gap-2">
-                                            <span>{'⭐'} AVALIAR SERVIÇO AGORA</span>
-                                        </div>
-                                    </Link>
-                                </Button>
+                                hasExistingFeedback ? (
+                                    <div className="text-center py-2">
+                                        <p className="text-sm text-green-700 dark:text-green-300 font-medium flex items-center justify-center gap-2">
+                                            <CheckCircle2 className="h-4 w-4" />
+                                            Obrigado pela sua avaliação!
+                                        </p>
+                                    </div>
+                                ) : (
+                                    <Button
+                                        size="sm"
+                                        className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold shadow-sm"
+                                        asChild
+                                    >
+                                        <Link href={`/feedback/${order.id}`}>
+                                            <div className="flex items-center justify-center gap-2">
+                                                <span>{'⭐'} AVALIAR SERVIÇO AGORA</span>
+                                            </div>
+                                        </Link>
+                                    </Button>
+                                )
                             )}
                         </AlertDescription>
                     </Alert>

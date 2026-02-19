@@ -49,11 +49,12 @@ interface ClientActionsProps {
     status: string
     customerName: string
     techPhone?: string
+    hasExistingFeedback?: boolean
 }
 
 type WizardStep = 'TERMS' | 'PROCESSING' | 'SUCCESS'
 
-export default function ClientActions({ orderId, displayId, hasParts, status, customerName, techPhone }: ClientActionsProps) {
+export default function ClientActions({ orderId, displayId, hasParts, status, customerName, techPhone, hasExistingFeedback = false }: ClientActionsProps) {
     const router = useRouter()
 
     // Use displayId if available for prettier URLs, otherwise fallback to orderId
@@ -252,13 +253,22 @@ export default function ClientActions({ orderId, displayId, hasParts, status, cu
                     </p>
 
                     {status === 'finished' ? (
-                        <Button
-                            size="lg"
-                            className="w-full h-14 text-lg font-bold bg-yellow-500 hover:bg-yellow-600 text-white shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all animate-pulse-slow"
-                            onClick={() => router.push(`/feedback/${orderId}`)}
-                        >
-                            {'⭐'} AVALIAR SERVIÇO AGORA
-                        </Button>
+                        hasExistingFeedback ? (
+                            <div className="text-center py-2">
+                                <p className="text-sm text-green-600 dark:text-green-400 font-medium flex items-center justify-center gap-2">
+                                    <CheckCircle className="h-4 w-4" />
+                                    Obrigado pela sua avaliação!
+                                </p>
+                            </div>
+                        ) : (
+                            <Button
+                                size="lg"
+                                className="w-full h-14 text-lg font-bold bg-yellow-500 hover:bg-yellow-600 text-white shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all animate-pulse-slow"
+                                onClick={() => router.push(`/feedback/${orderId}`)}
+                            >
+                                {'⭐'} AVALIAR SERVIÇO AGORA
+                            </Button>
+                        )
                     ) : (
                         <Button
                             size="lg"

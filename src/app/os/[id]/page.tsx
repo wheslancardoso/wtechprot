@@ -165,6 +165,15 @@ export default async function ClientOrderPage({ params }: PageProps) {
         equipment = eq
     }
 
+    // Verificar se já existe feedback para esta OS
+    const { data: existingFeedback } = await supabase
+        .from('nps_feedbacks')
+        .select('id')
+        .eq('order_id', order.id)
+        .maybeSingle()
+
+    const hasExistingFeedback = !!existingFeedback
+
     // Prepare data for PDF/Report if exists
     const orderData: OrderData = {
         displayId: String(order.display_id),
@@ -222,22 +231,7 @@ export default async function ClientOrderPage({ params }: PageProps) {
                                     {statusDescriptions[order.status as OrderStatus]}
                                 </div>
 
-                                {/* Banner de Avaliação (Aparece apenas quando Finalizado) */}
-                                {(order.status === 'finished' || order.status === 'ready' || order.status === 'delivered') && (
-                                    <div className="bg-muted/50 border border-primary/20 p-4 mt-4 rounded-lg">
-                                        <div className="flex justify-between items-center flex-wrap gap-2">
-                                            <div>
-                                                <p className="font-semibold text-foreground">Avalie nosso serviço!</p>
-                                                <p className="text-sm text-muted-foreground">Sua opinião é importante e você pode ganhar um cupom.</p>
-                                            </div>
-                                            <Button size="sm" variant="outline" className="shrink-0 border-primary/20 hover:bg-primary/5" asChild>
-                                                <Link href={`/feedback/${order.id}`}>
-                                                    Avaliar Agora
-                                                </Link>
-                                            </Button>
-                                        </div>
-                                    </div>
-                                )}
+                                {/* Banner de Avaliação — renderizado apenas no ClientActions (rodapé fixo) */}
                             </AlertDescription>
                         </Alert>
 
@@ -394,6 +388,7 @@ export default async function ClientOrderPage({ params }: PageProps) {
                 status={order.status}
                 customerName={order.customer?.name || 'Cliente'}
                 techPhone={tenant?.phone}
+                hasExistingFeedback={hasExistingFeedback}
             />
         </div>
     )
