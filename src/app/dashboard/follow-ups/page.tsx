@@ -332,7 +332,7 @@ export default async function FollowUpsPage() {
 // Follow-up item component
 function FollowUpItem({ followUp, isOverdue = false }: { followUp: any; isOverdue?: boolean }) {
     return (
-        <div className={`flex flex-col md:flex-row md:items-center gap-3 p-3 rounded-lg border ${isOverdue ? 'bg-orange-500/5 border-orange-500/30' : 'hover:bg-muted/50'
+        <div className={`flex flex-col md:flex-row md:items-center gap-3 p-3 rounded-lg border transition-all duration-200 ${isOverdue ? 'bg-orange-500/5 border-orange-500/30' : 'hover:bg-muted/50 hover:border-primary/10'
             }`}>
             {/* Header Mobile: Badge + Date */}
             <div className="flex items-center justify-between w-full md:w-auto gap-2">

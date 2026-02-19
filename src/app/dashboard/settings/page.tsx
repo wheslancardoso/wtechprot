@@ -573,7 +573,7 @@ export default function SettingsPage() {
                                         </TableHeader>
                                         <TableBody>
                                             {logs.map((log) => (
-                                                <TableRow key={log.id}>
+                                                <TableRow key={log.id} className="table-row-interactive">
                                                     <TableCell className="text-sm">
                                                         {log.formatted_date}
                                                     </TableCell>

@@ -122,7 +122,7 @@ export default async function DashboardHomePage() {
                     {/* Cards de Métricas */}
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                         {/* Faturamento Anual */}
-                        <Card className="bg-slate-950/50 border-white/5 backdrop-blur-sm">
+                        <Card className="bg-card border-white/5 backdrop-blur-sm card-hover animate-fade-in-up" style={{ '--stagger': '0ms' } as React.CSSProperties}>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium">
                                     Faturamento {currentYear}
@@ -140,7 +140,7 @@ export default async function DashboardHomePage() {
                         </Card>
 
                         {/* Ticket Médio */}
-                        <Card className="bg-slate-950/50 border-white/5 backdrop-blur-sm">
+                        <Card className="bg-card border-white/5 backdrop-blur-sm card-hover animate-fade-in-up" style={{ '--stagger': '80ms' } as React.CSSProperties}>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium">
                                     Ticket Médio
@@ -158,7 +158,7 @@ export default async function DashboardHomePage() {
                         </Card>
 
                         {/* OS em Aberto */}
-                        <Card className="bg-slate-950/50 border-white/5 backdrop-blur-sm">
+                        <Card className="bg-card border-white/5 backdrop-blur-sm card-hover animate-fade-in-up" style={{ '--stagger': '160ms' } as React.CSSProperties}>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium">
                                     OS em Andamento
@@ -176,7 +176,7 @@ export default async function DashboardHomePage() {
                         </Card>
 
                         {/* Total Clientes */}
-                        <Card className="bg-slate-950/50 border-white/5 backdrop-blur-sm">
+                        <Card className="bg-card border-white/5 backdrop-blur-sm card-hover animate-fade-in-up" style={{ '--stagger': '240ms' } as React.CSSProperties}>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium">
                                     Clientes
@@ -195,7 +195,7 @@ export default async function DashboardHomePage() {
                     </div>
 
                     {/* Progresso MEI */}
-                    <Card className="bg-slate-950/50 border-white/5 backdrop-blur-sm">
+                    <Card className="bg-card border-white/5 backdrop-blur-sm animate-fade-in-up" style={{ '--stagger': '300ms' } as React.CSSProperties}>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <TrendingUp className="h-5 w-5 text-green-500" />
@@ -238,7 +238,7 @@ export default async function DashboardHomePage() {
                     {/* Atenção Necessária */}
                     <div className="grid gap-4 md:grid-cols-2">
                         {/* Aguardando Aprovação */}
-                        <Card className={`bg-slate-950/50 border-white/5 backdrop-blur-sm ${waitingApproval && waitingApproval.length > 0 ? 'border-yellow-500/50' : ''}`}>
+                        <Card className={`bg-card border-white/5 backdrop-blur-sm card-hover ${waitingApproval && waitingApproval.length > 0 ? 'border-yellow-500/50' : ''}`}>
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2 text-lg">
                                     <Clock className="h-5 w-5 text-yellow-500" />
@@ -287,7 +287,7 @@ export default async function DashboardHomePage() {
                         </Card>
 
                         {/* Aguardando Peças */}
-                        <Card className={`bg-slate-950/50 border-white/5 backdrop-blur-sm ${waitingParts && waitingParts.length > 0 ? 'border-purple-500/50' : ''}`}>
+                        <Card className={`bg-card border-white/5 backdrop-blur-sm card-hover ${waitingParts && waitingParts.length > 0 ? 'border-purple-500/50' : ''}`}>
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2 text-lg">
                                     <Package className="h-5 w-5 text-purple-500" />

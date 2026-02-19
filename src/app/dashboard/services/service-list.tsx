@@ -111,7 +111,7 @@ export default function ServiceList({ initialServices }: ServiceListProps) {
                             </TableRow>
                         ) : (
                             filteredServices.map((service) => (
-                                <TableRow key={service.id}>
+                                <TableRow key={service.id} className="table-row-interactive">
                                     <TableCell className="font-medium">
                                         <div>{service.name}</div>
                                         <div className="text-xs text-muted-foreground truncate max-w-[300px]">
@@ -145,7 +145,7 @@ export default function ServiceList({ initialServices }: ServiceListProps) {
                     <div className="text-center py-8 text-muted-foreground">Nenhum serviço encontrado.</div>
                 )}
                 {filteredServices.map((service) => (
-                    <Card key={service.id}>
+                    <Card key={service.id} className="card-hover">
                         <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
                             <div className="space-y-1">
                                 <CardTitle className="text-base font-medium leading-none">

@@ -184,18 +184,18 @@ export default function OrdersPage() {
                     {orders.length === 0 ? (
                         <EmptyState />
                     ) : (
-                        <>
+                        <div className="animate-fade-in">
                             {/* Results count */}
                             <p className="text-sm text-muted-foreground">
                                 {orders.length} ordem(ns) encontrada(s)
                             </p>
-                            <div className="hidden md:block">
+                            <div className="hidden md:block mt-4">
                                 <OrdersTable orders={orders} />
                             </div>
-                            <div className="md:hidden">
+                            <div className="md:hidden mt-4">
                                 <MobileOrdersList orders={orders} />
                             </div>
-                        </>
+                        </div>
                     )}
                 </>
             )}
@@ -251,7 +251,7 @@ function OrdersTable({ orders }: OrdersTableProps) {
                 </TableHeader>
                 <TableBody>
                     {orders.map((order) => (
-                        <TableRow key={order.id}>
+                        <TableRow key={order.id} className="table-row-interactive">
                             {/* ID */}
                             <TableCell className="font-mono font-medium">
                                 {order.display_id}
@@ -313,8 +313,8 @@ function OrdersTable({ orders }: OrdersTableProps) {
 function MobileOrdersList({ orders }: OrdersTableProps) {
     return (
         <div className="space-y-4">
-            {orders.map((order) => (
-                <Card key={order.id} className="overflow-hidden">
+            {orders.map((order, index) => (
+                <Card key={order.id} className="overflow-hidden card-hover animate-fade-in-up" style={{ '--stagger': `${index * 50}ms` } as React.CSSProperties}>
                     <CardContent className="p-0">
                         <div className="p-4 space-y-3">
                             {/* Header: ID + Status */}

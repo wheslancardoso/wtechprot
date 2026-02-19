@@ -175,7 +175,7 @@ export default async function CustomerDetailPage({ params }: PageProps) {
                                         {customer.orders.map((order) => {
                                             const eq = order.equipment
                                             return (
-                                                <Card key={order.id} className="overflow-hidden">
+                                                <Card key={order.id} className="overflow-hidden card-hover">
                                                     <CardContent className="p-4">
                                                         <div className="flex justify-between items-start mb-2">
                                                             <div>
@@ -231,7 +231,7 @@ export default async function CustomerDetailPage({ params }: PageProps) {
                                                 {customer.orders.map((order) => {
                                                     const eq = order.equipment
                                                     return (
-                                                        <TableRow key={order.id}>
+                                                        <TableRow key={order.id} className="table-row-interactive">
                                                             <TableCell className="font-mono font-medium">
                                                                 #{String(order.display_id).padStart(4, '0')}
                                                             </TableCell>
@@ -279,7 +279,7 @@ export default async function CustomerDetailPage({ params }: PageProps) {
                                     {/* Mobile List (Cards) */}
                                     <div className="grid gap-4 md:hidden">
                                         {customer.equipments.map((eq) => (
-                                            <Card key={eq.id}>
+                                            <Card key={eq.id} className="card-hover">
                                                 <CardContent className="p-4 flex items-center gap-4">
                                                     <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded-full">
                                                         <Smartphone className="h-6 w-6 text-blue-600 dark:text-blue-400" />
@@ -315,7 +315,7 @@ export default async function CustomerDetailPage({ params }: PageProps) {
                                             </TableHeader>
                                             <TableBody>
                                                 {customer.equipments.map((eq) => (
-                                                    <TableRow key={eq.id}>
+                                                    <TableRow key={eq.id} className="table-row-interactive">
                                                         <TableCell className="capitalize font-medium">
                                                             {eq.type}
                                                         </TableCell>

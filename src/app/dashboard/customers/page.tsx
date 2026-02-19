@@ -206,7 +206,7 @@ export default function CustomersPage() {
                                     </TableHeader>
                                     <TableBody>
                                         {customers.map((customer) => (
-                                            <TableRow key={customer.id}>
+                                            <TableRow key={customer.id} className="table-row-interactive">
                                                 <TableCell className="font-medium">
                                                     {customer.name}
                                                 </TableCell>
@@ -265,7 +265,7 @@ function MobileCustomersList({ customers, onUpdate }: { customers: CustomerWithS
     return (
         <div className="space-y-4">
             {customers.map((customer) => (
-                <Card key={customer.id} className="overflow-hidden">
+                <Card key={customer.id} className="overflow-hidden card-hover">
                     <CardContent className="p-0">
                         <div className="p-4 space-y-3">
                             {/* Header: Name + Badge */}

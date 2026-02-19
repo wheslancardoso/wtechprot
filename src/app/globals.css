@@ -152,3 +152,121 @@ body {
     transform: translateY(0);
   }
 }
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ==================================================
+   Dashboard Micro-Interaction Utilities
+   ================================================== */
+
+/* Fade-in with stagger support via CSS custom property */
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s ease-out both;
+  animation-delay: var(--stagger, 0ms);
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out both;
+  animation-delay: var(--stagger, 0ms);
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out both;
+  animation-delay: var(--stagger, 0ms);
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.3s ease-out both;
+  animation-delay: var(--stagger, 0ms);
+}
+
+/* Card hover lift effect */
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  border-color: hsl(var(--primary) / 0.15);
+}
+
+/* Table row interactive highlight */
+.table-row-interactive {
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.table-row-interactive:hover {
+  background-color: hsl(var(--primary) / 0.04);
+  box-shadow: inset 3px 0 0 hsl(var(--primary) / 0.5);
+}
+
+/* Subtle pulse for attention items */
+@keyframes subtlePulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-subtle-pulse {
+  animation: subtlePulse 2s ease-in-out infinite;
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+
+  .animate-fade-in-up,
+  .animate-fade-in,
+  .animate-scale-in,
+  .animate-slide-in-right {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .card-hover:hover {
+    transform: none;
+  }
+
+  .animate-subtle-pulse {
+    animation: none !important;
+  }
+}
