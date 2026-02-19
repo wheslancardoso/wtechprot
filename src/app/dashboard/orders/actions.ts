@@ -821,3 +821,80 @@ export async function deleteOrder(orderId: string): Promise<ActionResult> {
         return { success: false, message: 'Erro inesperado ao excluir' }
     }
 }
+
+// ==================================================
+// Server Action: Reabrir OS (Voltar ao Status Anterior)
+// ==================================================
+export async function reopenOrder(orderId: string): Promise<ActionResult> {
+    try {
+        const supabase = await createClient()
+
+        // Verificar usuário autenticado
+        const { data: { user }, error: authError } = await supabase.auth.getUser()
+        if (authError || !user) {
+            return { success: false, message: 'Usuário não autenticado' }
+        }
+
+        // Buscar o último log de mudança de status para encontrar o status anterior
+        // O log mais recente mostra old_status → new_status (finished/canceled)
+        // Queremos restaurar o old_status desse log
+        const { data: lastLog, error: logError } = await supabase
+            .from('order_logs')
+            .select('old_status, new_status')
+            .eq('order_id', orderId)
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .maybeSingle()
+
+        // Determinar o status de destino
+        let targetStatus = 'in_progress' // Fallback inteligente
+
+        if (!logError && lastLog?.old_status) {
+            // Usar o status anterior ao cancelamento/finalização
+            targetStatus = lastLog.old_status
+
+            // Se o status anterior também era terminal, usar 'in_progress'
+            if (['finished', 'canceled'].includes(targetStatus)) {
+                targetStatus = 'in_progress'
+            }
+        }
+
+        // Atualizar o status
+        const { error: updateError } = await supabase
+            .from('orders')
+            .update({
+                status: targetStatus,
+                finished_at: null, // Limpar data de finalização
+            })
+            .eq('id', orderId)
+            .eq('user_id', user.id)
+
+        if (updateError) {
+            console.error('Erro ao reabrir OS:', updateError)
+            return { success: false, message: `Erro ao reabrir: ${updateError.message}` }
+        }
+
+        const statusLabels: Record<string, string> = {
+            open: 'Aberta',
+            analyzing: 'Em Análise',
+            waiting_approval: 'Aguardando Aprovação',
+            waiting_parts: 'Aguardando Peças',
+            in_progress: 'Em Reparo',
+            ready: 'Pronta para Retirada',
+        }
+
+        revalidatePath('/dashboard/orders')
+        revalidatePath(`/dashboard/orders/${orderId}`)
+
+        return {
+            success: true,
+            message: `OS reaberta com status "${statusLabels[targetStatus] || targetStatus}"!`
+        }
+    } catch (error) {
+        console.error('Erro ao reabrir OS:', error)
+        return {
+            success: false,
+            message: `Erro inesperado: ${error instanceof Error ? error.message : 'Desconhecido'}`
+        }
+    }
+}

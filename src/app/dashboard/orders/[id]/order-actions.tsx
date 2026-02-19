@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
 // Server Actions
-import { updateOrderStatus, confirmPartArrival, deleteOrder } from '../actions'
+import { updateOrderStatus, confirmPartArrival, deleteOrder, reopenOrder } from '../actions'
 
 // Components
 import BudgetModal from './budget-modal'
@@ -151,10 +151,30 @@ export default function OrderActions({
     }
 
     async function handleReopen() {
-        if (!window.confirm('Deseja reabrir esta OS? Ela voltará para o status "Aberta".')) {
+        if (!window.confirm('Deseja reabrir esta OS? Ela voltará para o status anterior.')) {
             return
         }
-        await handleStatusChange('open')
+
+        setIsPending(true)
+        setFeedback(null)
+
+        try {
+            const result = await reopenOrder(orderId)
+
+            if (result.success) {
+                setFeedback({ type: 'success', message: result.message })
+                router.refresh()
+            } else {
+                setFeedback({ type: 'error', message: result.message })
+            }
+        } catch (error) {
+            setFeedback({
+                type: 'error',
+                message: `Erro inesperado: ${error instanceof Error ? error.message : 'Desconhecido'}`
+            })
+        } finally {
+            setIsPending(false)
+        }
     }
 
     return (
