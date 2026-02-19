@@ -195,40 +195,42 @@ export default async function FollowUpsPage() {
                                         return (
                                             <div
                                                 key={order.id}
-                                                className={`flex items-center gap-3 p-3 rounded-lg border ${isExpiringSoon ? 'border-yellow-500/50 bg-yellow-500/5' : 'hover:bg-muted/50'
+                                                className={`flex flex-col md:flex-row md:items-center gap-3 p-3 rounded-lg border ${isExpiringSoon ? 'border-yellow-500/50 bg-yellow-500/5' : 'hover:bg-muted/50'
                                                     }`}
                                             >
                                                 <Link
                                                     href={`/dashboard/orders/${order.id}`}
-                                                    className="flex-1 min-w-0"
+                                                    className="flex-1 min-w-0 w-full"
                                                 >
-                                                    <div className="font-medium">
+                                                    <div className="font-medium truncate">
                                                         OS {order.display_id} - {order.customer?.name || 'Cliente'}
                                                     </div>
-                                                    <div className="text-sm text-muted-foreground">
+                                                    <div className="text-sm text-muted-foreground truncate">
                                                         {order.equipments?.brand} {order.equipments?.model}
                                                     </div>
                                                 </Link>
 
-                                                <Badge
-                                                    variant={isExpiringSoon ? 'destructive' : 'secondary'}
-                                                    className={isExpiringSoon ? 'bg-yellow-500 hover:bg-yellow-600' : ''}
-                                                >
-                                                    {daysRemaining} dias restantes
-                                                </Badge>
+                                                <div className="flex items-center justify-between w-full md:w-auto gap-3">
+                                                    <Badge
+                                                        variant={isExpiringSoon ? 'destructive' : 'secondary'}
+                                                        className={isExpiringSoon ? 'bg-yellow-500 hover:bg-yellow-600' : ''}
+                                                    >
+                                                        {daysRemaining} dias restantes
+                                                    </Badge>
 
-                                                {order.customer?.phone && (
-                                                    <FollowUpActions
-                                                        followUpId={null}
-                                                        orderId={order.id}
-                                                        displayId={order.display_id}
-                                                        customerName={order.customer?.name || 'Cliente'}
-                                                        customerPhone={order.customer?.phone}
-                                                        deviceType={order.equipments?.model || null}
-                                                        type="warranty_expiring"
-                                                        daysRemaining={daysRemaining}
-                                                    />
-                                                )}
+                                                    {order.customer?.phone && (
+                                                        <FollowUpActions
+                                                            followUpId={null}
+                                                            orderId={order.id}
+                                                            displayId={order.display_id}
+                                                            customerName={order.customer?.name || 'Cliente'}
+                                                            customerPhone={order.customer?.phone}
+                                                            deviceType={order.equipments?.model || null}
+                                                            type="warranty_expiring"
+                                                            daysRemaining={daysRemaining}
+                                                        />
+                                                    )}
+                                                </div>
                                             </div>
                                         )
                                     })}
@@ -256,21 +258,38 @@ export default async function FollowUpsPage() {
                                     {completedFollowUps.map(followUp => (
                                         <div
                                             key={followUp.id}
-                                            className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50"
+                                            className="flex flex-col md:flex-row md:items-center gap-3 p-3 rounded-lg hover:bg-muted/50"
                                         >
-                                            <div className={`p-2 rounded-full ${followUp.status === 'completed'
-                                                ? 'bg-green-500/10'
-                                                : 'bg-gray-500/10'
-                                                }`}>
-                                                {followUp.status === 'completed'
-                                                    ? <CheckCircle2 className="h-4 w-4 text-green-500" />
-                                                    : <SkipForward className="h-4 w-4 text-gray-500" />
-                                                }
+                                            <div className="flex items-center gap-3 w-full md:w-auto">
+                                                <div className={`p-2 rounded-full shrink-0 ${followUp.status === 'completed'
+                                                    ? 'bg-green-500/10'
+                                                    : 'bg-gray-500/10'
+                                                    }`}>
+                                                    {followUp.status === 'completed'
+                                                        ? <CheckCircle2 className="h-4 w-4 text-green-500" />
+                                                        : <SkipForward className="h-4 w-4 text-gray-500" />
+                                                    }
+                                                </div>
+
+                                                <div className="md:hidden flex-1 min-w-0">
+                                                    <Link
+                                                        href={`/dashboard/orders/${followUp.order_id}`}
+                                                        className="block"
+                                                    >
+                                                        <div className="font-medium truncate">
+                                                            OS {followUp.order?.display_id} - {followUp.order?.customer?.name || 'Cliente'}
+                                                        </div>
+                                                    </Link>
+                                                </div>
+
+                                                <span className="md:hidden text-xs text-muted-foreground shrink-0">
+                                                    {new Date(followUp.completed_at || followUp.skipped_at || '').toLocaleDateString('pt-BR')}
+                                                </span>
                                             </div>
 
                                             <Link
                                                 href={`/dashboard/orders/${followUp.order_id}`}
-                                                className="flex-1 min-w-0"
+                                                className="hidden md:block flex-1 min-w-0"
                                             >
                                                 <div className="font-medium">
                                                     OS {followUp.order?.display_id} - {followUp.order?.customer?.name || 'Cliente'}
@@ -282,13 +301,22 @@ export default async function FollowUpsPage() {
                                                 )}
                                             </Link>
 
-                                            <Badge className={typeLabels[followUp.type]?.color || ''}>
-                                                {typeLabels[followUp.type]?.label || followUp.type}
-                                            </Badge>
+                                            {/* Mobile Notes */}
+                                            {followUp.notes && (
+                                                <div className="md:hidden text-sm text-muted-foreground truncate w-full pl-11">
+                                                    {followUp.notes}
+                                                </div>
+                                            )}
 
-                                            <span className="text-xs text-muted-foreground shrink-0">
-                                                {new Date(followUp.completed_at || followUp.skipped_at || '').toLocaleDateString('pt-BR')}
-                                            </span>
+                                            <div className="flex items-center justify-between w-full md:w-auto pl-11 md:pl-0 gap-3">
+                                                <Badge className={typeLabels[followUp.type]?.color || ''}>
+                                                    {typeLabels[followUp.type]?.label || followUp.type}
+                                                </Badge>
+
+                                                <span className="hidden md:block text-xs text-muted-foreground shrink-0">
+                                                    {new Date(followUp.completed_at || followUp.skipped_at || '').toLocaleDateString('pt-BR')}
+                                                </span>
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
@@ -304,39 +332,48 @@ export default async function FollowUpsPage() {
 // Follow-up item component
 function FollowUpItem({ followUp, isOverdue = false }: { followUp: any; isOverdue?: boolean }) {
     return (
-        <div className={`flex items-center gap-3 p-3 rounded-lg border ${isOverdue ? 'bg-orange-500/5 border-orange-500/30' : 'hover:bg-muted/50'
+        <div className={`flex flex-col md:flex-row md:items-center gap-3 p-3 rounded-lg border ${isOverdue ? 'bg-orange-500/5 border-orange-500/30' : 'hover:bg-muted/50'
             }`}>
-            <Badge className={typeLabels[followUp.type]?.color || ''}>
-                {typeLabels[followUp.type]?.label || followUp.type}
-            </Badge>
+            {/* Header Mobile: Badge + Date */}
+            <div className="flex items-center justify-between w-full md:w-auto gap-2">
+                <Badge className={typeLabels[followUp.type]?.color || ''}>
+                    {typeLabels[followUp.type]?.label || followUp.type}
+                </Badge>
+                <span className={`text-xs md:hidden ${isOverdue ? 'text-orange-500 font-medium' : 'text-muted-foreground'}`}>
+                    {new Date(followUp.scheduled_for).toLocaleDateString('pt-BR')}
+                </span>
+            </div>
 
             <Link
                 href={`/dashboard/orders/${followUp.order_id}`}
-                className="flex-1 min-w-0"
+                className="flex-1 min-w-0 w-full"
             >
-                <div className="font-medium">
+                <div className="font-medium truncate">
                     OS {followUp.order?.display_id} - {followUp.order?.customer?.name || 'Cliente'}
                 </div>
-                <div className="text-sm text-muted-foreground">
+                <div className="text-sm text-muted-foreground truncate">
                     {followUp.order?.equipments?.brand} {followUp.order?.equipments?.model}
                 </div>
             </Link>
 
-            <span className={`text-xs shrink-0 ${isOverdue ? 'text-orange-500 font-medium' : 'text-muted-foreground'}`}>
+            {/* Date Desktop */}
+            <span className={`hidden md:block text-xs shrink-0 ${isOverdue ? 'text-orange-500 font-medium' : 'text-muted-foreground'}`}>
                 {new Date(followUp.scheduled_for).toLocaleDateString('pt-BR')}
             </span>
 
-            {followUp.order?.customer?.phone && (
-                <FollowUpActions
-                    followUpId={followUp.id}
-                    orderId={followUp.order_id}
-                    displayId={followUp.order?.display_id}
-                    customerName={followUp.order?.customer?.name || 'Cliente'}
-                    customerPhone={followUp.order?.customer?.phone}
-                    deviceType={followUp.order?.equipments?.model || null}
-                    type={followUp.type}
-                />
-            )}
+            <div className="flex justify-end w-full md:w-auto">
+                {followUp.order?.customer?.phone && (
+                    <FollowUpActions
+                        followUpId={followUp.id}
+                        orderId={followUp.order_id}
+                        displayId={followUp.order?.display_id}
+                        customerName={followUp.order?.customer?.name || 'Cliente'}
+                        customerPhone={followUp.order?.customer?.phone}
+                        deviceType={followUp.order?.equipments?.model || null}
+                        type={followUp.type}
+                    />
+                )}
+            </div>
         </div>
     )
 }
