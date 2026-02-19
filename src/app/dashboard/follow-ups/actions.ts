@@ -1,6 +1,6 @@
 'use server'
 
-import { createAdminClient } from '@/lib/supabase/server'
+import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
 export interface FollowUp {
@@ -37,7 +37,7 @@ export interface FollowUpStats {
 
 // Get follow-ups with filters
 export async function getFollowUps(filter: 'pending' | 'completed' | 'all' = 'pending'): Promise<FollowUp[]> {
-    const supabase = await createAdminClient()
+    const supabase = await createClient()
 
     let query = supabase
         .from('follow_ups')
@@ -79,7 +79,7 @@ export async function getFollowUps(filter: 'pending' | 'completed' | 'all' = 'pe
 
 // Get active warranties
 export async function getActiveWarranties() {
-    const supabase = await createAdminClient()
+    const supabase = await createClient()
 
     const { data, error } = await supabase
         .from('orders')
@@ -108,7 +108,7 @@ export async function getActiveWarranties() {
 
 // Get stats
 export async function getFollowUpStats(): Promise<FollowUpStats> {
-    const supabase = await createAdminClient()
+    const supabase = await createClient()
     const now = new Date()
     const today = now.toISOString().split('T')[0]
     const in7Days = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString()
@@ -153,7 +153,7 @@ export async function getFollowUpStats(): Promise<FollowUpStats> {
 
 // Complete a follow-up
 export async function completeFollowUp(id: string, notes?: string): Promise<{ success: boolean; error?: string }> {
-    const supabase = await createAdminClient()
+    const supabase = await createClient()
 
     const { error } = await supabase
         .from('follow_ups')
@@ -176,7 +176,7 @@ export async function completeFollowUp(id: string, notes?: string): Promise<{ su
 
 // Skip a follow-up
 export async function skipFollowUp(id: string, reason?: string): Promise<{ success: boolean; error?: string }> {
-    const supabase = await createAdminClient()
+    const supabase = await createClient()
 
     const { error } = await supabase
         .from('follow_ups')
@@ -203,7 +203,7 @@ export async function createFollowUp(
     scheduledFor: string,
     notes?: string
 ): Promise<{ success: boolean; error?: string }> {
-    const supabase = await createAdminClient()
+    const supabase = await createClient()
 
     // Get customer_id from order
     const { data: order } = await supabase
