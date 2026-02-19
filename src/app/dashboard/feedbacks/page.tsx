@@ -145,7 +145,7 @@ export default async function FeedbacksPage() {
 
                                         {feedback.order?.equipment && (
                                             <div className="text-xs text-muted-foreground bg-muted inline-block px-1.5 py-0.5 rounded">
-                                                {feedback.order.equipment}
+                                                {feedback.order.equipment.type} {feedback.order.equipment.brand}
                                             </div>
                                         )}
 

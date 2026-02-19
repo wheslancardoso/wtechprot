@@ -12,7 +12,11 @@ export interface FeedbackWithOrder {
     clicked_google_review_at: string | null
     order: {
         display_id: string
-        equipment?: string
+        equipment: {
+            type: string
+            brand: string | null
+            model: string | null
+        } | null
         customer: {
             name: string
             phone: string | null
@@ -42,7 +46,7 @@ export async function getFeedbacks(filter?: 'all' | 'low' | 'high'): Promise<Fee
             clicked_google_review_at,
             order:orders!inner(
                 display_id,
-                equipment,
+                equipment:equipments(type, brand, model),
                 customer:customers(name, phone)
             )
         `)
