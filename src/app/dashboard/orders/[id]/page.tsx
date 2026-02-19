@@ -16,11 +16,12 @@ import OrderRealtimeListener from '@/components/order-realtime-listener'
 import WithdrawalTermButton from '@/components/home-care/withdrawal-term-pdf'
 import { AIBudgetAssistant } from '@/components/budget/ai-budget-assistant'
 import TelemetryTab from './telemetry-tab'
+import { ResponsiveOrderTabs } from './responsive-order-tabs'
 
 // UI Components
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { TabsContent } from "@/components/ui/tabs"
 import { OrderStatusStepper } from '@/components/order-status-stepper'
 
 // Icons
@@ -236,17 +237,7 @@ export default async function OrderDetailPage({ params }: PageProps) {
             </div>
 
             {/* TABBED LAYOUT */}
-            <Tabs defaultValue="overview" className="w-full space-y-6">
-                <div className="w-full overflow-x-auto -mx-1 px-1" style={{ WebkitOverflowScrolling: 'touch' }}>
-                    <TabsList className="inline-flex w-max min-w-full bg-muted/50 p-1 border">
-                        <TabsTrigger value="overview" className="text-xs sm:text-sm px-2 sm:px-3">Geral</TabsTrigger>
-                        <TabsTrigger value="technical" className="text-xs sm:text-sm px-2 sm:px-3">Técnico</TabsTrigger>
-                        <TabsTrigger value="execution" className="text-xs sm:text-sm px-2 sm:px-3">Exec.</TabsTrigger>
-                        <TabsTrigger value="telemetry" className="text-xs sm:text-sm px-2 sm:px-3">HW</TabsTrigger>
-                        <TabsTrigger value="evidence" className="text-xs sm:text-sm px-2 sm:px-3">Anexos</TabsTrigger>
-                    </TabsList>
-                </div>
-
+            <ResponsiveOrderTabs defaultValue="overview">
                 {/* 1. Visão Geral */}
                 <TabsContent value="overview" className="space-y-6">
                     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -474,7 +465,7 @@ export default async function OrderDetailPage({ params }: PageProps) {
                         tenantId={order.tenant_id}
                     />
                 </TabsContent>
-            </Tabs>
+            </ResponsiveOrderTabs>
 
             {/* Listener de Realtime (Invisible) */}
             <OrderRealtimeListener orderId={order.id} />
