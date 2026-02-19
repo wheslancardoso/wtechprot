@@ -49,16 +49,29 @@ export async function savePreset(
 ): Promise<{ success: boolean; message: string }> {
     try {
         const supabase = await createClient()
+
+        // Buscar o usuário autenticado para incluir o user_id
+        const { data: { user }, error: authError } = await supabase.auth.getUser()
+        if (authError || !user) {
+            console.error('[SavePreset] Erro de autenticação:', authError)
+            return { success: false, message: 'Usuário não autenticado' }
+        }
+
         const { error } = await supabase.from('task_presets').insert({
             name,
             tasks,
+            user_id: user.id,
         })
 
-        if (error) return { success: false, message: error.message }
+        if (error) {
+            console.error('[SavePreset] Erro ao salvar:', error)
+            return { success: false, message: error.message }
+        }
 
         revalidatePath('/dashboard/orders/[id]', 'page')
         return { success: true, message: 'Preset salvo com sucesso!' }
     } catch (error) {
+        console.error('[SavePreset] Crash:', error)
         return {
             success: false,
             message: `Erro: ${error instanceof Error ? error.message : 'Desconhecido'}`,
