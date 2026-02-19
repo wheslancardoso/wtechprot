@@ -70,12 +70,12 @@ export default function OrderRealtimeListener({
 
                 // Fallback: se não conseguir conectar ao realtime, usar polling
                 if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
-                    console.warn('⚠️ Realtime falhou, ativando polling fallback (10s)')
+                    console.warn('⚠️ Realtime falhou, ativando polling fallback (30s)')
                     const fallbackInterval = setInterval(() => {
                         if (document.visibilityState === 'visible') {
                             router.refresh()
                         }
-                    }, 10000)
+                    }, 30000)
 
                     // Cleanup do fallback quando o canal for removido
                     channel.unsubscribe().then(() => clearInterval(fallbackInterval))

@@ -436,22 +436,11 @@ export default async function OrderDetailPage({ params }: PageProps) {
                 <TabsContent value="execution" className="space-y-6">
                     <div className="grid gap-6 lg:grid-cols-3">
                         <div className="lg:col-span-2">
-                            {['in_progress', 'waiting_parts', 'analyzing', 'ready', 'finished'].includes(order.status) ? (
-                                <ExecutionChecklist
-                                    orderId={order.id}
-                                    initialTasks={(order.execution_tasks || []) as ExecutionTask[]}
-                                    isEditable={!['ready', 'finished'].includes(order.status)}
-                                />
-                            ) : (
-                                <Card>
-                                    <CardHeader>
-                                        <CardTitle>Checklist de Execução</CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <p className="text-muted-foreground">O checklist fica disponível quando a ordem está em análise ou andamento.</p>
-                                    </CardContent>
-                                </Card>
-                            )}
+                            <ExecutionChecklist
+                                orderId={order.id}
+                                initialTasks={(order.execution_tasks || []) as ExecutionTask[]}
+                                isEditable={!['ready', 'finished', 'canceled'].includes(order.status)}
+                            />
                         </div>
                         <div>
                             <OrderTimeline orderId={order.id} currentStatus={order.status} />

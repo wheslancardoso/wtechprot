@@ -1,11 +1,12 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import type { ExecutionTask } from '@/lib/execution-tasks-types'
-import { CheckCircle2, Circle, Loader2, RefreshCw, Calendar, Clock, Radio } from 'lucide-react'
+import { CheckCircle2, Circle, Loader2, Wifi, WifiOff, Calendar, Clock } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
+import { createClient } from '@/lib/supabase/client'
 
 interface RealtimeTrackerProps {
     orderId: string
@@ -22,13 +23,16 @@ function formatDateTime(dateString: string | null) {
     }
 }
 
-const POLLING_INTERVAL = 4000 // 4 segundos (mais rápido)
+// Intervalo de fallback caso o realtime falhe (60s em vez de 4s)
+const FALLBACK_POLLING_INTERVAL = 60000
 
 export default function RealtimeTracker({ orderId, initialTasks }: RealtimeTrackerProps) {
     const [tasks, setTasks] = useState<ExecutionTask[]>(initialTasks)
-    const [isUpdating, setIsUpdating] = useState(false)
-    const [lastUpdate, setLastUpdate] = useState<Date | null>(null) // Inicializa null para evitar hydration mismatch
+    const [isConnected, setIsConnected] = useState(false)
+    const [lastUpdate, setLastUpdate] = useState<Date | null>(null)
     const [mounted, setMounted] = useState(false)
+    const [isAnimating, setIsAnimating] = useState(false)
+    const supabaseRef = useRef(createClient())
 
     // Evitar hydration mismatch
     useEffect(() => {
@@ -36,10 +40,9 @@ export default function RealtimeTracker({ orderId, initialTasks }: RealtimeTrack
         setLastUpdate(new Date())
     }, [])
 
+    // Fetch manual (usado apenas como fallback)
     const fetchTasks = useCallback(async () => {
         try {
-            setIsUpdating(true)
-            // Adiciona timestamp para evitar cache do navegador
             const res = await fetch(`/api/orders/${orderId}/tasks?t=${Date.now()}`)
             const data = await res.json()
 
@@ -51,23 +54,76 @@ export default function RealtimeTracker({ orderId, initialTasks }: RealtimeTrack
                 setLastUpdate(new Date())
             }
         } catch (error) {
-            console.error('Erro ao buscar tarefas:', error)
-        } finally {
-            setIsUpdating(false)
+            console.error('Erro ao buscar tarefas (fallback):', error)
         }
     }, [orderId])
 
-    // Polling Effect
+    // Supabase Realtime + Fallback Polling
     useEffect(() => {
-        // Busca inicial imediata
-        fetchTasks()
+        const supabase = supabaseRef.current
+        let fallbackInterval: ReturnType<typeof setInterval> | null = null
 
-        // Configura intervalo
-        const intervalId = setInterval(fetchTasks, POLLING_INTERVAL)
+        const channelName = `tracker-${orderId}`
+        const channel = supabase
+            .channel(channelName)
+            .on(
+                'postgres_changes',
+                {
+                    event: 'UPDATE',
+                    schema: 'public',
+                    table: 'orders',
+                    filter: `id=eq.${orderId}`,
+                },
+                (payload) => {
+                    console.log('🔄 Tracker: update recebido via realtime')
+                    const newRecord = payload.new as { execution_tasks?: ExecutionTask[] }
 
-        // Limpeza
-        return () => clearInterval(intervalId)
-    }, [fetchTasks])
+                    if (newRecord.execution_tasks) {
+                        // Flash de animação ao receber update
+                        setIsAnimating(true)
+                        setTimeout(() => setIsAnimating(false), 1500)
+
+                        setTasks(newRecord.execution_tasks)
+                        setLastUpdate(new Date())
+                    }
+                }
+            )
+            .subscribe((status, err) => {
+                console.log(`📡 Tracker [${channelName}]: ${status}`)
+
+                if (status === 'SUBSCRIBED') {
+                    setIsConnected(true)
+                    // Uma vez conectado, não precisa de polling
+                    if (fallbackInterval) {
+                        clearInterval(fallbackInterval)
+                        fallbackInterval = null
+                    }
+                }
+
+                if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+                    console.warn('⚠️ Tracker: realtime falhou, ativando polling fallback (60s)')
+                    setIsConnected(false)
+                    // Ativar polling apenas se o realtime falhar
+                    if (!fallbackInterval) {
+                        fallbackInterval = setInterval(() => {
+                            if (document.visibilityState === 'visible') {
+                                fetchTasks()
+                            }
+                        }, FALLBACK_POLLING_INTERVAL)
+                    }
+                }
+
+                if (err) {
+                    console.error('❌ Tracker error:', err)
+                    setIsConnected(false)
+                }
+            })
+
+        return () => {
+            if (fallbackInterval) clearInterval(fallbackInterval)
+            supabase.removeChannel(channel)
+        }
+    }, [orderId, fetchTasks])
 
     // Calcular progresso
     const completedCount = tasks.filter((t) => t.completed).length
@@ -75,14 +131,14 @@ export default function RealtimeTracker({ orderId, initialTasks }: RealtimeTrack
     const progress = totalCount > 0 ? (completedCount / totalCount) * 100 : 0
 
     if (!mounted) {
-        return null // Ou um skeleton loader
+        return null
     }
 
     return (
         <Card className="border-primary/20 shadow-md overflow-hidden relative">
             {/* Background Pulse Effect on Update */}
             <div
-                className={`absolute inset-0 bg-primary/5 pointer-events-none transition-opacity duration-1000 ${isUpdating ? 'opacity-100' : 'opacity-0'
+                className={`absolute inset-0 bg-primary/5 pointer-events-none transition-opacity duration-1000 ${isAnimating ? 'opacity-100' : 'opacity-0'
                     }`}
             />
 
@@ -90,15 +146,30 @@ export default function RealtimeTracker({ orderId, initialTasks }: RealtimeTrack
                 <div className="flex items-center justify-between">
                     <div>
                         <CardTitle className="flex items-center gap-2 text-lg">
-                            <RefreshCw className={`h-4 w-4 text-primary ${isUpdating ? 'animate-spin' : ''}`} />
+                            {isConnected ? (
+                                <Wifi className="h-4 w-4 text-green-500" />
+                            ) : (
+                                <WifiOff className="h-4 w-4 text-muted-foreground" />
+                            )}
                             Acompanhamento ao Vivo
                         </CardTitle>
                         <CardDescription className="flex items-center gap-1.5 text-xs">
                             <span className="relative flex h-2 w-2">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                                {isConnected ? (
+                                    <>
+                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                        <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                                    </>
+                                ) : (
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span>
+                                )}
                             </span>
-                            {lastUpdate ? `Atualizado às ${lastUpdate.toLocaleTimeString()}` : 'Conectando...'}
+                            {isConnected
+                                ? 'Conectado — Atualização automática'
+                                : lastUpdate
+                                    ? `Verificando a cada 60s — Última: ${lastUpdate.toLocaleTimeString()}`
+                                    : 'Conectando...'
+                            }
                         </CardDescription>
                     </div>
                     <Badge variant="outline" className="bg-background font-mono">
@@ -133,8 +204,8 @@ export default function RealtimeTracker({ orderId, initialTasks }: RealtimeTrack
                                 <div
                                     key={task.id || index}
                                     className={`flex items-start gap-4 p-4 transition-all duration-500 ${task.completed
-                                            ? 'bg-green-50/40 dark:bg-green-950/20'
-                                            : 'bg-background hover:bg-muted/30'
+                                        ? 'bg-green-50/40 dark:bg-green-950/20'
+                                        : 'bg-background hover:bg-muted/30'
                                         }`}
                                 >
                                     <div className="mt-0.5 shrink-0">
@@ -151,8 +222,8 @@ export default function RealtimeTracker({ orderId, initialTasks }: RealtimeTrack
                                     <div className="flex-1 min-w-0">
                                         <p
                                             className={`font-medium text-base leading-none mb-1.5 ${task.completed
-                                                    ? 'text-green-800 dark:text-green-300'
-                                                    : 'text-foreground/80'
+                                                ? 'text-green-800 dark:text-green-300'
+                                                : 'text-foreground/80'
                                                 }`}
                                         >
                                             {task.title || (task as any).label}
