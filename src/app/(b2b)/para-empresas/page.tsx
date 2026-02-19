@@ -3,6 +3,7 @@ import { ShieldCheck, Zap, BarChart3, Clock, CheckCircle2, Server, Laptop, Wifi,
 import type { Metadata } from 'next'
 import { SpotlightCard } from "@/components/ui/spotlight-card"
 import { Button } from "@/components/ui/button"
+import { redirect } from "next/navigation"
 
 export const metadata: Metadata = {
     title: 'WFIX Tech | Soluções Empresariais',
@@ -10,6 +11,9 @@ export const metadata: Metadata = {
 }
 
 export default function B2BPage() {
+    // DESABILITADO TEMPORARIAMENTE
+    redirect('/')
+
     return (
         <div className="flex flex-col min-h-screen bg-slate-950 text-slate-50 selection:bg-indigo-500/30">
 
