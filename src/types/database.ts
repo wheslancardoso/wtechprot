@@ -47,7 +47,7 @@ export interface Equipment {
 
 export interface Order {
     id: string
-    display_id: number
+    display_id: string
     user_id: string
     customer_id: string | null
     equipment_id: string | null

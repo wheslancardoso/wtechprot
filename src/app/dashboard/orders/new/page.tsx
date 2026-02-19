@@ -9,6 +9,7 @@ import { z } from 'zod'
 
 // Server Action
 import { createOrder, getCustomerByCpf } from '../actions'
+import { formatOrderId } from '@/lib/order-utils'
 
 // UI Components
 import { Button } from '@/components/ui/button'
@@ -194,7 +195,11 @@ export default function NewOrderPage() {
                 reset() // Limpar formulário
 
                 // Redirecionar após 1.5s para o usuário ver o feedback
-                if (result.orderId) {
+                if (result.displayId) {
+                    setTimeout(() => {
+                        router.push(`/dashboard/orders/${result.displayId}`)
+                    }, 1500)
+                } else if (result.orderId) {
                     setTimeout(() => {
                         router.push(`/dashboard/orders/${result.orderId}`)
                     }, 1500)

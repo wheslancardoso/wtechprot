@@ -4,6 +4,8 @@ import { createClient } from '@/lib/supabase/server'
 import type { OrderStatus } from '@/types/database'
 import type { TechnicalReport } from '@/types/technical-report'
 
+export const dynamic = 'force-dynamic'
+
 // Components
 import OrderActions from './order-actions'
 import EvidenceSection from './evidence-section'
@@ -17,6 +19,7 @@ import WithdrawalTermButton from '@/components/home-care/withdrawal-term-pdf'
 import { AIBudgetAssistant } from '@/components/budget/ai-budget-assistant'
 import TelemetryTab from './telemetry-tab'
 import { ResponsiveOrderTabs } from './responsive-order-tabs'
+import { isUuid, parseOrderId } from '@/lib/order-utils'
 
 // UI Components
 import { Badge } from '@/components/ui/badge'
@@ -81,29 +84,42 @@ export default async function OrderDetailPage({ params }: PageProps) {
     const { id } = await params
     const supabase = await createClient()
 
-    // Fetch order with relations
-    const { data: order, error } = await supabase
+    // Obter usuário autenticado primeiro (necessário para RLS em display_id)
+    const { data: { user } } = await supabase.auth.getUser()
+
+    let query = supabase
         .from('orders')
         .select(`
       *,
       customer:customers(*),
       equipment:equipments(*)
     `)
-        .eq('id', id)
-        .single()
+
+    // Buscar por UUID ou display_id (string no banco, ex: '2026WF-0009')
+    if (isUuid(id)) {
+        query = query.eq('id', id)
+    } else {
+        query = query.eq('display_id', id)
+    }
+
+    const { data: order, error } = await query.single()
+
+    if (error || !order) {
+        notFound()
+    }
 
     // Fetch tenant settings for PDF
     const { data: tenant } = await supabase
         .from('tenants')
         .select('*')
-        .eq('id', (await supabase.auth.getUser()).data.user?.id)
+        .eq('id', user?.id)
         .single()
 
-    // Fetch technical report
+    // Fetch technical report (usar order.id UUID, não o id da URL)
     const { data: technicalReport } = await supabase
         .from('technical_reports')
         .select('*')
-        .eq('order_id', id)
+        .eq('order_id', order.id)
         .maybeSingle()
 
     if (error || !order) {

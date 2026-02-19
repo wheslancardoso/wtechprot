@@ -35,6 +35,7 @@ type ActionResult = {
     success: boolean
     message: string
     orderId?: string
+    displayId?: string
 }
 
 // ==================================================
@@ -175,6 +176,7 @@ export async function createOrder(formData: FormData): Promise<ActionResult> {
             success: true,
             message: `OS #${order.display_id} criada com sucesso!`,
             orderId: order.id,
+            displayId: order.display_id,
         }
 
     } catch (error) {

@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import { formatOrderId } from '@/lib/order-utils'
 import { createClient } from '@/lib/supabase/client'
 import { formatDateToLocal, getDaysAgo, getStartOfMonth } from '@/lib/date-utils'
 import type { OrderStatus, Order, Customer, Equipment } from '@/types/database'
@@ -292,7 +293,7 @@ function OrdersTable({ orders }: OrdersTableProps) {
                             {/* Ações */}
                             <TableCell className="text-right">
                                 <Button variant="ghost" size="icon" asChild>
-                                    <Link href={`/dashboard/orders/${order.id}`}>
+                                    <Link href={`/dashboard/orders/${order.display_id}`}>
                                         <Eye className="h-4 w-4" />
                                         <span className="sr-only">Ver detalhes</span>
                                     </Link>
@@ -353,7 +354,7 @@ function MobileOrdersList({ orders }: OrdersTableProps) {
                                     {formatDateToLocal(order.created_at, 'dd/MM/yy HH:mm')}
                                 </span>
                                 <Button size="sm" variant="outline" asChild>
-                                    <Link href={`/dashboard/orders/${order.id}`}>
+                                    <Link href={`/dashboard/orders/${order.display_id}`}>
                                         Ver Detalhes
                                     </Link>
                                 </Button>
