@@ -740,7 +740,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <ul className="space-y-2">
                 <li><Link href="/politica-privacidade" className="hover:text-primary">Política de Privacidade</Link></li>
                 <li><Link href="/termos-uso" className="hover:text-primary">Termos de Uso</Link></li>
-                {/* <li><Link href="/para-empresas" className="hover:text-primary font-bold text-blue-400">Soluções para Empresas</Link></li> */}
+                <li><Link href="/para-empresas" className="hover:text-primary font-bold text-blue-400">Soluções para Empresas</Link></li>
               </ul>
             </div>
           </div>

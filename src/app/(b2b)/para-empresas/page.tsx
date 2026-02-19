@@ -11,9 +11,6 @@ export const metadata: Metadata = {
 }
 
 export default function B2BPage() {
-    // DESABILITADO TEMPORARIAMENTE
-    redirect('/')
-
     return (
         <div className="flex flex-col min-h-screen bg-slate-950 text-slate-50 selection:bg-indigo-500/30">
 
