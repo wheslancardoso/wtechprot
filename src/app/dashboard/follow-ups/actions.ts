@@ -52,7 +52,7 @@ export async function getFollowUps(filter: 'pending' | 'completed' | 'all' = 'pe
             skipped_at,
             notes,
             created_at,
-            order:orders(
+            order:orders!inner(
                 display_id,
                 warranty_end_date,
                 equipments:equipments(brand, model),
@@ -124,7 +124,7 @@ export async function getFollowUpStats(): Promise<FollowUpStats> {
     // Pending today or overdue
     const { count: pendingToday } = await supabase
         .from('follow_ups')
-        .select('*', { count: 'exact', head: true })
+        .select('*, order:orders!inner(id)', { count: 'exact', head: true })
         .eq('status', 'pending')
         .lte('scheduled_for', today)
 
@@ -139,7 +139,7 @@ export async function getFollowUpStats(): Promise<FollowUpStats> {
     // Completed this week
     const { count: completedThisWeek } = await supabase
         .from('follow_ups')
-        .select('*', { count: 'exact', head: true })
+        .select('*, order:orders!inner(id)', { count: 'exact', head: true })
         .eq('status', 'completed')
         .gte('completed_at', weekAgo)
 
