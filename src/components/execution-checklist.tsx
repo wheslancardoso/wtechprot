@@ -145,8 +145,21 @@ export default function ExecutionChecklist({
         const result = await applyTaskPreset(orderId, tasks)
 
         if (result.success) {
-            // Reload page to get new tasks
-            window.location.reload()
+            // Buscar tasks atualizadas do servidor (sem recarregar a página)
+            const freshResult = await getExecutionTasks(orderId)
+            if (freshResult.success && freshResult.data) {
+                setTasks(freshResult.data)
+            }
+            toast({
+                title: 'Preset aplicado!',
+                description: `${tasks.length} tarefas adicionadas ao checklist.`,
+            })
+        } else {
+            toast({
+                title: 'Erro',
+                description: result.message || 'Falha ao aplicar preset',
+                variant: 'destructive'
+            })
         }
     }
 
