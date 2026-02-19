@@ -435,11 +435,15 @@ export default function WarrantyPdfButton({ orderData, storeSettings, className,
             className={className}
         >
             {({ loading }) => (
-                <Button variant={variant} disabled={loading} className="w-full">
+                <Button
+                    variant={variant}
+                    disabled={loading}
+                    className={`w-full ${icon ? 'p-0 h-full bg-transparent hover:bg-transparent' : ''}`}
+                >
                     {loading ? (
                         <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Gerando PDF...
+                            <Loader2 className={`animate-spin ${icon ? 'h-4 w-4' : 'mr-2 h-4 w-4'}`} />
+                            {!icon && "Gerando PDF..."}
                         </>
                     ) : (
                         <>

@@ -283,14 +283,14 @@ WTECH`
                 </div>
 
                 {/* Secondary Actions Group (Share, PDF, More) */}
-                <div className="flex gap-2 justify-end">
+                <div className="flex gap-2 justify-end flex-wrap sm:flex-nowrap">
                     {/* Share Button (Always Visible) */}
                     <ShareActions
                         orderId={orderId}
                         displayId={displayId}
                         customerName={customerName}
                         storeName={storeSettings?.trade_name}
-                        className="h-12 w-12 p-0 flex items-center justify-center rounded-lg border-2 border-slate-700 bg-slate-800 text-slate-200 hover:bg-slate-700 hover:border-slate-600 transition-colors"
+                        className="h-12 w-12 p-0 flex items-center justify-center rounded-lg border-2 border-slate-700 bg-slate-800 text-slate-200 hover:bg-slate-700 hover:border-slate-600 transition-colors shrink-0"
                         icon={<Share2 className="h-5 w-5" />}
                         variant="ghost"
                     />
@@ -300,7 +300,7 @@ WTECH`
                         <PdfButtonWrapper
                             orderData={orderData!}
                             storeSettings={storeSettings!}
-                            className="h-12 w-12 p-0 flex items-center justify-center rounded-lg border-2 border-slate-700 bg-slate-800 text-slate-200 hover:bg-slate-700 hover:border-slate-600 transition-colors"
+                            className="h-12 w-12 p-0 flex items-center justify-center rounded-lg border-2 border-slate-700 bg-slate-800 text-slate-200 hover:bg-slate-700 hover:border-slate-600 transition-colors shrink-0"
                             variant="ghost"
                             icon={<FileDown className="h-5 w-5" />}
                         />
@@ -311,7 +311,7 @@ WTECH`
                         <DropdownMenuTrigger asChild>
                             <Button
                                 variant="outline"
-                                className="h-12 w-12 p-0 border-2 border-slate-700 bg-slate-800 text-slate-200 hover:bg-slate-700 hover:border-slate-600 transition-colors rounded-lg"
+                                className="h-12 w-12 p-0 border-2 border-slate-700 bg-slate-800 text-slate-200 hover:bg-slate-700 hover:border-slate-600 transition-colors rounded-lg shrink-0"
                             >
                                 <MoreHorizontal className="h-5 w-5" />
                             </Button>
