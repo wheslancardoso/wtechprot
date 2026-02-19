@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { createAdminClient } from '@/lib/supabase/server'
 import type { OrderStatus } from '@/types/database'
+import OrderRealtimeListener from '@/components/order-realtime-listener'
 import type { TechnicalReport } from '@/types/technical-report'
 import type { OrderData, StoreSettings } from '@/components/warranty-pdf'
 import TechnicalReportPdfWrapper from '@/components/technical-report-pdf-wrapper'
@@ -26,6 +27,8 @@ import {
     Receipt,
     ExternalLink,
     AlertTriangle,
+    Activity,
+    ArrowRight,
 } from 'lucide-react'
 
 // Status config
@@ -189,6 +192,9 @@ export default async function ClientOrderPage({ params }: PageProps) {
 
     return (
         <div className="min-h-screen bg-muted/30 pb-32 sm:pb-40">
+            {/* Realtime Listener — atualiza a página quando o status da OS muda */}
+            <OrderRealtimeListener orderId={order.id} />
+
             {/* Header */}
             <header className="sticky top-0 z-50 bg-background border-b">
                 <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -327,7 +333,32 @@ export default async function ClientOrderPage({ params }: PageProps) {
 
 
 
-                        {/* Card: Progresso movido para /track */}
+                        {/* Card: Acompanhar Progresso */}
+                        {['in_progress', 'waiting_parts'].includes(order.status) && (
+                            <Card className="border-primary/20 bg-primary/5">
+                                <CardContent className="py-5">
+                                    <div className="flex items-center justify-between gap-4">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                                                <Activity className="h-5 w-5 text-primary" />
+                                            </div>
+                                            <div>
+                                                <p className="font-semibold text-sm">Acompanhe em tempo real</p>
+                                                <p className="text-xs text-muted-foreground">
+                                                    Veja cada etapa da execução do serviço
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <Button size="sm" asChild>
+                                            <Link href={`/os/${order.display_id || order.id}/track`}>
+                                                Rastrear
+                                                <ArrowRight className="ml-1 h-4 w-4" />
+                                            </Link>
+                                        </Button>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        )}
                     </div>
 
                     <div className="space-y-6">
