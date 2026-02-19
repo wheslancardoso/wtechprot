@@ -10,11 +10,11 @@ export default async function LeadsPage() {
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Leads Corporativos</h1>
-                    <p className="text-muted-foreground">Gerencie as solicitações vindas da página para empresas.</p>
-                </div>
+            <div className="flex flex-col items-center justify-between space-y-2 text-center">
+                <h2 className="text-3xl font-bold tracking-tight">Leads Corporativos</h2>
+                <p className="text-muted-foreground">
+                    Gerencie as solicitações vindas da página para empresas.
+                </p>
             </div>
 
             <div className="grid gap-4">

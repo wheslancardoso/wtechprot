@@ -13,7 +13,8 @@ import {
     MessageSquare,
     Bell,
     Menu,
-    X
+    X,
+    Briefcase
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -21,6 +22,7 @@ const menuItems = [
     { href: '/dashboard', label: 'Início', icon: Home },
     { href: '/dashboard/orders', label: 'Ordens de Serviço', icon: ClipboardList },
     { href: '/dashboard/customers', label: 'Clientes', icon: Users },
+    { href: '/dashboard/leads', label: 'Leads B2B', icon: Briefcase },
     { href: '/dashboard/feedbacks', label: 'Feedbacks', icon: MessageSquare },
     { href: '/dashboard/follow-ups', label: 'Follow-ups', icon: Bell },
     { href: '/dashboard/metrics', label: 'Métricas', icon: BarChart3 },
@@ -78,8 +80,8 @@ export function DashboardNav() {
                                     href={item.href}
                                     onClick={() => setIsOpen(false)}
                                     className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md transition-colors ${isActive
-                                            ? 'bg-primary/10 text-primary'
-                                            : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                                        ? 'bg-primary/10 text-primary'
+                                        : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                                         }`}
                                 >
                                     <Icon className="h-5 w-5" />
