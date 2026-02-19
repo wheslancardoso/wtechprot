@@ -55,39 +55,57 @@ export default function FeedbackPage({ params }: { params: Promise<{ id: string 
                             Agradecemos seu feedback. Trabalhamos todos os dias para melhorar nosso atendimento!
                         </div>
 
-                        {/* Only show Google review button for high ratings (4-5 stars) */}
-                        {finalScore >= 4 && (
+                        {/* Conditional Actions based on Score */}
+                        {finalScore >= 4 ? (
+                            <>
+                                {/* High Score: Google Review Priority */}
+                                <div className="pt-4 border-t border-gray-800">
+                                    <Button
+                                        variant="default"
+                                        className="w-full gap-2 bg-green-600 hover:bg-green-700 text-white font-bold h-12 text-lg shadow-lg hover:shadow-green-900/20"
+                                        onClick={async () => {
+                                            await trackGoogleReviewClick(id)
+                                            window.open('https://g.page/r/CSEBt1JqKDjlEAE/review', '_blank')
+                                        }}
+                                    >
+                                        <Store className="w-5 h-5" />
+                                        Avaliar no Google
+                                        <ExternalLink className="w-4 h-4 ml-1 opacity-70" />
+                                    </Button>
+                                    <p className="text-xs text-green-400/70 text-center mt-2">
+                                        Isso nos ajuda muito! ⭐
+                                    </p>
+                                </div>
+
+                                {/* Secondary Action: Instagram */}
+                                <div className="pt-4">
+                                    <Button
+                                        variant="ghost"
+                                        className="w-full gap-2 text-gray-400 hover:text-white hover:bg-gray-800"
+                                        onClick={() => window.open('https://instagram.com/wfixtech', '_blank')}
+                                    >
+                                        <Instagram className="w-4 h-4" />
+                                        Ou siga nosso Instagram @wfixtech
+                                    </Button>
+                                </div>
+                            </>
+                        ) : (
+                            /* Lower Score: Instagram Priority (Retention) */
                             <div className="pt-4 border-t border-gray-800">
                                 <Button
-                                    variant="outline"
-                                    className="w-full gap-2 bg-gray-800 hover:bg-gray-700 border-gray-700 text-gray-200"
-                                    onClick={async () => {
-                                        await trackGoogleReviewClick(id)
-                                        window.open('https://g.page/r/CSEBt1JqKDjlEAE/review', '_blank')
-                                    }}
+                                    variant="default"
+                                    className="w-full gap-2 bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 hover:opacity-90 text-white font-bold border-0 h-12"
+                                    onClick={() => window.open('https://instagram.com/wfixtech', '_blank')}
                                 >
-                                    <Store className="w-4 h-4" />
-                                    Avaliar também no Google
-                                    <ExternalLink className="w-3 h-3 ml-1" />
+                                    <Instagram className="w-5 h-5" />
+                                    Seguir @wfixtech
+                                    <ExternalLink className="w-3 h-3 ml-1 opacity-70" />
                                 </Button>
+                                <p className="text-xs text-gray-500 text-center mt-2">
+                                    Veja bastidores e dicas exclusivas!
+                                </p>
                             </div>
                         )}
-
-                        {/* Instagram Link (Always shown) */}
-                        <div className="pt-4 border-t border-gray-800">
-                            <Button
-                                variant="default"
-                                className="w-full gap-2 bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 hover:opacity-90 text-white font-bold border-0"
-                                onClick={() => window.open('https://instagram.com/wfixtech', '_blank')}
-                            >
-                                <Instagram className="w-5 h-5" />
-                                Seguir @wfixtech
-                                <ExternalLink className="w-3 h-3 ml-1 opacity-70" />
-                            </Button>
-                            <p className="text-xs text-gray-500 text-center mt-2">
-                                Veja bastidores e dicas exclusivas!
-                            </p>
-                        </div>
                     </CardContent>
                 </Card>
             </div>

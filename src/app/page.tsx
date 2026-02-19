@@ -60,7 +60,7 @@ const getTenantData = unstable_cache(
 export async function generateMetadata() {
   const { brandName } = await getTenantData()
   return {
-    title: 'WFIX Tech | Especialista em Hardware e Performance ',
+    title: 'WFIX Tech | Solucoes em Tecnologia',
     description: 'Diagnóstico avançado, setups de alta performance e consultoria em tecnologia para profissionais e empresas.',
   }
 }
