@@ -429,11 +429,11 @@ export default async function OrderDetailPage({ params }: PageProps) {
                 <TabsContent value="execution" className="space-y-6">
                     <div className="grid gap-6 lg:grid-cols-3">
                         <div className="lg:col-span-2">
-                            {['in_progress', 'waiting_parts', 'analyzing'].includes(order.status) ? (
+                            {['in_progress', 'waiting_parts', 'analyzing', 'ready', 'finished'].includes(order.status) ? (
                                 <ExecutionChecklist
                                     orderId={order.id}
                                     initialTasks={(order.execution_tasks || []) as ExecutionTask[]}
-                                    isEditable={true}
+                                    isEditable={!['ready', 'finished'].includes(order.status)}
                                 />
                             ) : (
                                 <Card>

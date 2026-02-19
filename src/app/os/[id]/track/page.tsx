@@ -171,7 +171,7 @@ export default async function TrackingPage({ params }: PageProps) {
                                 >
                                     <Link href={`/feedback/${order.id}`}>
                                         <div className="flex items-center justify-center gap-2">
-                                            <span>\u2B50 AVALIAR SERVIÇO AGORA</span>
+                                            <span>AVALIAR SERVIÇO AGORA</span>
                                         </div>
                                     </Link>
                                 </Button>
