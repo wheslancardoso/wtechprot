@@ -100,3 +100,6 @@ CREATE POLICY "Técnicos podem inserir suas configurações"
 CREATE POLICY "Técnicos podem atualizar suas configurações"
     ON schedule_settings FOR UPDATE
     USING (auth.uid() = user_id);
+
+-- Enable Realtime for the schedules table
+ALTER PUBLICATION supabase_realtime ADD TABLE schedules;

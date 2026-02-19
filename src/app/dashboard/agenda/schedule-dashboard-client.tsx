@@ -1,12 +1,13 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState, useTransition, useEffect } from 'react'
 import { format, parseISO, isAfter, isBefore, startOfToday } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import type { Schedule, ScheduleSettings } from '@/types/database'
 import { generateScheduleLink } from '@/app/actions/schedules/generate-link-action'
 import { cancelSchedule, saveScheduleSettings } from '@/app/actions/schedules/schedule-actions'
 import { useToast } from '@/hooks/use-toast'
+import { createClient } from '@/lib/supabase/client'
 import {
     Calendar,
     Clock,
@@ -47,6 +48,43 @@ export function ScheduleDashboardClient({
     const [copied, setCopied] = useState(false)
     const [isPending, startTransition] = useTransition()
     const { toast } = useToast()
+    const supabase = createClient()
+
+    // Realtime Subscription
+    useEffect(() => {
+        const channel = supabase
+            .channel('schedules-changes')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'public',
+                    table: 'schedules',
+                },
+                (payload) => {
+                    if (payload.eventType === 'INSERT') {
+                        setSchedules((prev) => [...prev, payload.new as Schedule])
+                    } else if (payload.eventType === 'UPDATE') {
+                        setSchedules((prev) =>
+                            prev.map((s) => (s.id === payload.new.id ? (payload.new as Schedule) : s))
+                        )
+                        if (payload.new.status === 'confirmed') {
+                            toast({
+                                title: 'Novo agendamento!',
+                                description: 'Um cliente confirmou um agendamento agora.',
+                            })
+                        }
+                    } else if (payload.eventType === 'DELETE') {
+                        setSchedules((prev) => prev.filter((s) => s.id !== payload.old.id))
+                    }
+                }
+            )
+            .subscribe()
+
+        return () => {
+            supabase.removeChannel(channel)
+        }
+    }, [supabase, toast])
 
     // Tab: upcoming | past | all
     const [tab, setTab] = useState<'upcoming' | 'past' | 'all'>('upcoming')
