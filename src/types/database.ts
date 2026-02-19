@@ -16,6 +16,9 @@ export type OrderStatus =
 // Enum de tipo de item da ordem
 export type OrderItemType = 'service' | 'part_external'
 
+// Enum de status de agendamento
+export type ScheduleStatus = 'pending' | 'confirmed' | 'canceled' | 'expired'
+
 // ==================================================
 // Row Types (dados vindos do banco)
 // ==================================================
@@ -99,6 +102,39 @@ export interface OrderItem {
     created_at: string
 }
 
+export interface Schedule {
+    id: string
+    user_id: string
+    customer_id: string | null
+    order_id: string | null
+    token: string
+    status: ScheduleStatus
+    scheduled_date: string | null
+    scheduled_time: string | null
+    customer_name: string | null
+    customer_phone: string | null
+    notes: string | null
+    expires_at: string
+    confirmed_at: string | null
+    created_at: string
+    updated_at: string
+}
+
+export interface ScheduleSettings {
+    id: string
+    user_id: string
+    work_days: number[]
+    start_time: string
+    end_time: string
+    slot_duration_minutes: number
+    lunch_start: string | null
+    lunch_end: string | null
+    max_advance_days: number
+    token_expiry_hours: number
+    created_at: string
+    updated_at: string
+}
+
 // ==================================================
 // Insert Types (para criar registros)
 // ==================================================
@@ -167,6 +203,34 @@ export interface OrderItemInsert {
     notes?: string | null
 }
 
+export interface ScheduleInsert {
+    id?: string
+    user_id: string
+    customer_id?: string | null
+    order_id?: string | null
+    token: string
+    status?: ScheduleStatus
+    scheduled_date?: string | null
+    scheduled_time?: string | null
+    customer_name?: string | null
+    customer_phone?: string | null
+    notes?: string | null
+    expires_at: string
+}
+
+export interface ScheduleSettingsInsert {
+    id?: string
+    user_id: string
+    work_days?: number[]
+    start_time?: string
+    end_time?: string
+    slot_duration_minutes?: number
+    lunch_start?: string | null
+    lunch_end?: string | null
+    max_advance_days?: number
+    token_expiry_hours?: number
+}
+
 // ==================================================
 // Update Types (para atualizar registros)
 // ==================================================
@@ -176,6 +240,8 @@ export type EquipmentUpdate = Partial<Omit<EquipmentInsert, 'customer_id'>>
 export type OrderUpdate = Partial<Omit<OrderInsert, 'user_id'>>
 export type OrderItemUpdate = Partial<Omit<OrderItemInsert, 'order_id'>>
 export type NpsFeedbackUpdate = Partial<NpsFeedbackInsert>
+export type ScheduleUpdate = Partial<Omit<ScheduleInsert, 'user_id' | 'token'>>
+export type ScheduleSettingsUpdate = Partial<Omit<ScheduleSettingsInsert, 'user_id'>>
 
 // ==================================================
 // Database Schema (para tipagem do Supabase Client)
@@ -209,6 +275,16 @@ export interface Database {
                 Insert: NpsFeedbackInsert
                 Update: NpsFeedbackUpdate
             }
+            schedules: {
+                Row: Schedule
+                Insert: ScheduleInsert
+                Update: ScheduleUpdate
+            }
+            schedule_settings: {
+                Row: ScheduleSettings
+                Insert: ScheduleSettingsInsert
+                Update: ScheduleSettingsUpdate
+            }
         }
         Views: {
             [_ in never]: never
@@ -219,6 +295,7 @@ export interface Database {
         Enums: {
             order_status: OrderStatus
             order_item_type: OrderItemType
+            schedule_status: ScheduleStatus
         }
     }
 }

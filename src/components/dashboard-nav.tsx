@@ -14,7 +14,8 @@ import {
     Bell,
     Menu,
     X,
-    Briefcase
+    Briefcase,
+    CalendarCheck,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -22,6 +23,7 @@ const menuItems = [
     { href: '/dashboard', label: 'Início', icon: Home },
     { href: '/dashboard/orders', label: 'Ordens de Serviço', icon: ClipboardList },
     { href: '/dashboard/customers', label: 'Clientes', icon: Users },
+    { href: '/dashboard/agenda', label: 'Agenda', icon: CalendarCheck },
     { href: '/dashboard/leads', label: 'Leads B2B', icon: Briefcase },
     { href: '/dashboard/feedbacks', label: 'Feedbacks', icon: MessageSquare },
     { href: '/dashboard/follow-ups', label: 'Follow-ups', icon: Bell },
@@ -41,17 +43,21 @@ export function DashboardNav() {
                 {menuItems.map((item) => {
                     const Icon = item.icon
                     const isActive = pathname === item.href
+                    const isSettings = item.label === 'Configurações'
+
                     return (
                         <Link
                             key={item.href}
                             href={item.href}
-                            className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${isActive
-                                ? 'bg-primary/10 text-primary'
-                                : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                            title={isSettings ? item.label : undefined}
+                            className={`flex items-center gap-2 py-2 text-sm font-medium rounded-md transition-colors ${isSettings ? 'px-2' : 'px-3'
+                                } ${isActive
+                                    ? 'bg-primary/10 text-primary'
+                                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                                 }`}
                         >
                             <Icon className="h-4 w-4" />
-                            <span>{item.label}</span>
+                            {!isSettings && <span>{item.label}</span>}
                         </Link>
                     )
                 })}
