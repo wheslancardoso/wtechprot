@@ -82,13 +82,14 @@ export default function ClientActions({ orderId, displayId, hasParts, status, cu
             const result = await confirmPartArrival(orderId)
 
             if (result.success) {
-                // Redirecionar para WhatsApp
+                // Atualizar a página primeiro (remove o banner de peças)
+                router.refresh()
+
+                // Abrir WhatsApp em nova aba
                 if (techPhone) {
                     const message = encodeURIComponent(`Olá! Confirmo que as peças da OS #${trackingId} já chegaram no meu endereço. Podemos agendar a visita técnica para instalação?`)
                     const whatsappUrl = `https://api.whatsapp.com/send?phone=55${techPhone.replace(/\D/g, '')}&text=${message}`
-                    window.location.href = whatsappUrl
-                } else {
-                    router.refresh()
+                    window.open(whatsappUrl, '_blank')
                 }
             } else {
                 alert(result.message) // Fallback simples
