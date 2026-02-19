@@ -430,14 +430,14 @@ export default function ExecutionChecklist({
                                                             <>
                                                                 <div className="flex-1 min-w-0">
                                                                     <p className="text-sm font-medium truncate">{preset.name}</p>
-                                                                    <p className="text-xs text-muted-foreground">
+                                                                    <span className="text-xs text-muted-foreground flex items-center gap-1">
                                                                         {preset.tasks.length} etapas
                                                                         {preset.user_id === 'system' && (
                                                                             <Badge variant="secondary" className="ml-2 text-[10px] px-1 py-0">
                                                                                 padrão
                                                                             </Badge>
                                                                         )}
-                                                                    </p>
+                                                                    </span>
                                                                 </div>
                                                                 <div className="flex items-center gap-0.5 shrink-0">
                                                                     {/* Preview */}
