@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowLeft, Monitor, Laptop, Wifi, Headset, CheckCircle2, ArrowRight, Printer, Star, Quote, Building2, Cpu, Globe, FileText, Server, ShieldCheck, Instagram, Clock, Briefcase, Smartphone, UserCheck, MessageCircle, Wrench, MapPin } from 'lucide-react'
+import { ArrowLeft, Monitor, Laptop, Wifi, Headset, CheckCircle2, ArrowRight, Printer, Star, Quote, Building2, Cpu, Globe, FileText, Server, ShieldCheck, Instagram, Clock, Briefcase, Smartphone, UserCheck, MessageCircle, Wrench, MapPin, Calendar } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { AnimateIn } from '@/components/ui/animate-in'
 import { SpotlightCard } from '@/components/ui/spotlight-card'
@@ -224,6 +224,110 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   <div className="mt-8 pt-6 border-t border-white/5 opacity-0 animate-[fadeInUp_0.6s_ease-out_forwards]" style={{ animationDelay: '2s' }}>
                     <div className="w-full py-3 bg-white/5 rounded-lg border border-dashed border-white/20 flex items-center justify-center gap-2 text-slate-400 text-xs uppercase tracking-wider">
                       <FileText className="w-4 h-4" /> Laudo Técnico Incluso
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* AGENDAMENTO DIGITAL SPOTLIGHT SECTION */}
+        <section className="py-24 bg-gradient-to-t from-primary/5 to-slate-950 border-b border-white/5 relative overflow-hidden">
+          {/* Decorative blob */}
+          <div className="absolute top-1/2 right-0 md:right-1/4 -translate-y-1/2 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
+
+          <div className="container relative mx-auto px-4">
+            <div className="flex flex-col lg:flex-row-reverse items-center gap-16">
+              {/* Text Content */}
+              <div className="flex-1 space-y-6 text-center lg:text-left">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-medium text-emerald-400 mb-2">
+                  <Calendar className="w-3 h-3" />
+                  Conveniência e Rapidez
+                </div>
+                <h2 className="text-3xl md:text-5xl font-bold leading-tight">
+                  Agendamento Digital <br />
+                  Exclusivo.
+                </h2>
+                <p className="text-lg text-slate-400 leading-relaxed max-w-xl mx-auto lg:mx-0">
+                  Planeje sua visita ou atendimento técnico no conforto de casa. Você recebe um link exclusivo, escolhe o dia e horário, e nossa equipe é notificada na mesma hora para aguardar você.
+                </p>
+
+                <ul className="space-y-3 text-slate-300 max-w-sm mx-auto lg:mx-0 text-left">
+                  {[
+                    "Sem Filas ou Tempo de Espera",
+                    "Acesso à Agenda em Tempo Real",
+                    "Horários Personalizados",
+                    "Confirmação Imediata"
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-center gap-3">
+                      <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Visual UI Mockup */}
+              <div className="flex-1 w-full max-w-md lg:max-w-full perspective-1000">
+                <div className="relative bg-slate-900 border border-white/10 rounded-2xl p-6 shadow-2xl shadow-emerald-900/20 overflow-hidden transform lg:-rotate-y-12 lg:rotate-x-6 lg:hover:rotate-0 transition-all duration-700 ease-out group">
+
+                  {/* Floating status badges */}
+                  <div className="absolute top-6 right-6 flex flex-col gap-2">
+                    <div className="bg-primary/20 text-primary px-3 py-1 rounded-full text-xs font-bold border border-primary/20 shadow-lg">
+                      Link Válido
+                    </div>
+                  </div>
+
+                  {/* Header Mock */}
+                  <div className="flex items-center gap-4 mb-8 border-b border-white/5 pb-6">
+                    <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                      <Calendar className="w-6 h-6 text-emerald-400" />
+                    </div>
+                    <div>
+                      <div className="h-4 w-40 bg-white/10 rounded mb-2" />
+                      <div className="h-3 w-24 bg-white/5 rounded" />
+                    </div>
+                  </div>
+
+                  {/* Calendar Mock - Animated */}
+                  <div className="space-y-4 relative">
+                    <div className="grid grid-cols-5 gap-2 mb-4">
+                      {[1, 2, 3, 4, 5].map(d => (
+                        <div key={d} className={`h-10 rounded-lg flex items-center justify-center text-xs font-medium border transition-colors ${d === 3 ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50 ring-2 ring-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-white/5 text-slate-500 border-transparent'}`}>
+                          {d + 10}
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="space-y-3">
+                      {[
+                        { time: "09:00", status: "Indisponível", color: "bg-slate-800 text-slate-600 border-transparent", delay: "0s" },
+                        { time: "10:30", status: "Selecionar Horário", color: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/50 hover:bg-emerald-500/20 cursor-pointer shadow-[0_0_20px_rgba(16,185,129,0.1)] relative overflow-hidden", delay: "0.5s", active: true },
+                        { time: "14:00", status: "Disponível", color: "bg-white/5 text-slate-400 border border-white/5", delay: "1s" },
+                      ].map((slot, i) => (
+                        <div
+                          key={i}
+                          className={`w-full py-3 px-4 rounded-xl flex items-center justify-between opacity-0 animate-[fadeInUp_0.6s_ease-out_forwards] border ${slot.color}`}
+                          style={{ animationDelay: slot.delay }}
+                        >
+                          {slot.active && (
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-400/10 to-transparent -translate-x-[100%] animate-[shimmer_2s_infinite]" />
+                          )}
+                          <div className="flex items-center gap-2 relative z-10">
+                            <Clock className="w-4 h-4" />
+                            <span className="font-bold">{slot.time}</span>
+                          </div>
+                          <span className="text-xs uppercase tracking-wider font-semibold relative z-10">{slot.status}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Bottom Action - Animated */}
+                  <div className="mt-8 pt-6 border-t border-white/5 opacity-0 animate-[fadeInUp_0.6s_ease-out_forwards]" style={{ animationDelay: '1.5s' }}>
+                    <div className="w-full py-3 bg-emerald-500 text-slate-950 font-bold rounded-lg flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/30">
+                      Confirmar Agendamento <CheckCircle2 className="w-5 h-5" />
                     </div>
                   </div>
                 </div>
