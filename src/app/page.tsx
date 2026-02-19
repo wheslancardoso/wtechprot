@@ -659,6 +659,32 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 
 
+        {/* CALLOUT B2B */}
+        <section className="py-16 bg-gradient-to-r from-blue-900 to-indigo-900 relative overflow-hidden border-t border-white/10">
+          {/* Background Pattern */}
+          <div className="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
+
+          <div className="container relative mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="text-center md:text-left max-w-2xl">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs font-bold text-blue-200 mb-4 uppercase tracking-wider">
+                <Briefcase className="w-3 h-3" /> Para Empresas
+              </div>
+              <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">Procurando soluções para seu negócio?</h2>
+              <p className="text-blue-100/80 text-lg">
+                Consultoria, Redes Wi-Fi e Gestão de TI completa. Estabilidade e segurança para garantir a continuidade da sua operação.
+              </p>
+            </div>
+            <div className="flex-shrink-0">
+              <Button size="lg" variant="secondary" className="whitespace-nowrap rounded-full px-8 h-14 text-lg shadow-xl hover:scale-105 transition-transform bg-white text-blue-900 hover:bg-blue-50" asChild>
+                <Link href="/para-empresas">
+                  Conhecer Soluções Corporate <ArrowRight className="ml-2 w-5 h-5" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </section>
+
+
         <a
           id="cta-whatsapp-float"
           href={whatsappLink}
