@@ -12,7 +12,8 @@ import {
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { TabsContent } from '@/components/ui/tabs'
+import { ResponsiveTabs } from '@/components/ui/responsive-tabs'
 import { getFollowUps, getActiveWarranties, getFollowUpStats } from './actions'
 import { FollowUpActions } from './follow-up-actions'
 
@@ -90,24 +91,41 @@ export default async function FollowUpsPage() {
             </div>
 
             {/* Main Content */}
-            <Tabs defaultValue="pending" className="space-y-4">
-                <TabsList>
-                    <TabsTrigger value="pending" className="gap-2">
-                        <Clock className="h-4 w-4" />
-                        Pendentes
-                        {pendingFollowUps.length > 0 && (
-                            <Badge variant="secondary" className="ml-1">{pendingFollowUps.length}</Badge>
-                        )}
-                    </TabsTrigger>
-                    <TabsTrigger value="warranties" className="gap-2">
-                        <Shield className="h-4 w-4" />
-                        Garantias
-                    </TabsTrigger>
-                    <TabsTrigger value="history" className="gap-2">
-                        <CheckCircle2 className="h-4 w-4" />
-                        Histórico
-                    </TabsTrigger>
-                </TabsList>
+            <ResponsiveTabs
+                defaultValue="pending"
+                items={[
+                    {
+                        value: 'pending',
+                        label: (
+                            <div className="flex items-center gap-2">
+                                <Clock className="h-4 w-4" />
+                                Pendentes
+                                {pendingFollowUps.length > 0 && (
+                                    <Badge variant="secondary" className="ml-1">{pendingFollowUps.length}</Badge>
+                                )}
+                            </div>
+                        )
+                    },
+                    {
+                        value: 'warranties',
+                        label: (
+                            <div className="flex items-center gap-2">
+                                <Shield className="h-4 w-4" />
+                                Garantias
+                            </div>
+                        )
+                    },
+                    {
+                        value: 'history',
+                        label: (
+                            <div className="flex items-center gap-2">
+                                <CheckCircle2 className="h-4 w-4" />
+                                Histórico
+                            </div>
+                        )
+                    }
+                ]}
+            >
 
                 {/* Pending Follow-ups */}
                 <TabsContent value="pending" className="space-y-4">
@@ -278,7 +296,7 @@ export default async function FollowUpsPage() {
                         </CardContent>
                     </Card>
                 </TabsContent>
-            </Tabs>
+            </ResponsiveTabs>
         </div>
     )
 }
