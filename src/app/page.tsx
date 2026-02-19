@@ -763,30 +763,29 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 
 
-        {/* CALLOUT B2B (DESABILITADO TEMPORARIAMENTE)
+        {/* CALLOUT B2B */}
         <section className="py-20 bg-slate-950 relative overflow-hidden border-t border-white/10">
-             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-indigo-500/10 blur-[100px] rounded-full pointer-events-none" />
-             
-             <div className="container relative mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-8">
-                 <div className="text-center md:text-left max-w-2xl">
-                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-xs font-bold text-indigo-400 mb-4 uppercase tracking-wider">
-                        <Briefcase className="w-3 h-3" /> Para Empresas
-                     </div>
-                     <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">Procurando soluções para seu negócio?</h2>
-                     <p className="text-slate-400 text-lg">
-                         Consultoria, Redes Wi-Fi e Gestão de TI completa. Estabilidade e segurança para garantir a continuidade da sua operação.
-                     </p>
-                 </div>
-                 <div className="flex-shrink-0">
-                    <Button size="lg" className="whitespace-nowrap rounded-full px-8 h-14 text-lg shadow-[0_0_30px_rgba(79,70,229,0.3)] hover:shadow-[0_0_40px_rgba(79,70,229,0.5)] hover:scale-105 transition-all bg-indigo-600 hover:bg-indigo-500 text-white border-0" asChild>
-                        <Link href="/para-empresas">
-                            Conhecer Soluções <ArrowRight className="ml-2 w-5 h-5" />
-                        </Link>
-                    </Button>
-                 </div>
-             </div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-indigo-500/10 blur-[100px] rounded-full pointer-events-none" />
+
+          <div className="container relative mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="text-center md:text-left max-w-2xl">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-xs font-bold text-indigo-400 mb-4 uppercase tracking-wider">
+                <Briefcase className="w-3 h-3" /> Para Empresas
+              </div>
+              <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">Procurando soluções para seu negócio?</h2>
+              <p className="text-slate-400 text-lg">
+                Consultoria, Redes Wi-Fi e Gestão de TI completa. Estabilidade e segurança para garantir a continuidade da sua operação.
+              </p>
+            </div>
+            <div className="flex-shrink-0">
+              <Button size="lg" className="whitespace-nowrap rounded-full px-8 h-14 text-lg shadow-[0_0_30px_rgba(79,70,229,0.3)] hover:shadow-[0_0_40px_rgba(79,70,229,0.5)] hover:scale-105 transition-all bg-indigo-600 hover:bg-indigo-500 text-white border-0" asChild>
+                <Link href="/para-empresas">
+                  Conhecer Soluções <ArrowRight className="ml-2 w-5 h-5" />
+                </Link>
+              </Button>
+            </div>
+          </div>
         </section>
-        */}
 
 
         <a
