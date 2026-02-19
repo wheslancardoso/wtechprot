@@ -1,6 +1,7 @@
 import Link from 'next/link'
-import { Star, MessageSquare, TrendingUp, MousePointer2, AlertTriangle } from 'lucide-react'
+import { Star, MessageSquare, TrendingUp, MousePointer2, AlertTriangle, Phone } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { getFeedbacks, getFeedbackStats } from './actions'
 
@@ -104,32 +105,68 @@ export default async function FeedbacksPage() {
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-3">
-                        {lowRatings.map(feedback => (
-                            <div key={feedback.id} className="flex items-start gap-3 p-3 bg-background rounded-lg border">
-                                <div className="flex items-center gap-1 shrink-0">
-                                    {Array.from({ length: 5 }).map((_, i) => (
-                                        <Star
-                                            key={i}
-                                            className={`h-4 w-4 ${i < feedback.score ? 'fill-red-400 text-red-400' : 'text-muted'}`}
-                                        />
-                                    ))}
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <Link
-                                        href={`/dashboard/orders/${feedback.order_id}`}
-                                        className="font-medium hover:underline"
-                                    >
-                                        OS {feedback.order?.display_id} - {feedback.order?.customer?.name || 'Cliente'}
-                                    </Link>
-                                    {feedback.comment && (
-                                        <p className="text-sm text-muted-foreground mt-1">{feedback.comment}</p>
+                        {lowRatings.map(feedback => {
+                            const customerName = feedback.order?.customer?.name || 'Cliente'
+                            const phone = feedback.order?.customer?.phone
+                            const orderId = feedback.order?.display_id
+
+                            const whatsappLink = phone
+                                ? `https://wa.me/55${phone.replace(/\D/g, '')}?text=${encodeURIComponent(
+                                    `Olá ${customerName.split(' ')[0]}, aqui é da WFIX. Vi sua avaliação sobre a OS ${orderId}. 😔\nGostaria de entender melhor o que houve para podermos melhorar a sua experiência. Pode me contar?`
+                                )}`
+                                : null
+
+                            return (
+                                <div key={feedback.id} className="flex items-start gap-4 p-4 bg-background rounded-lg border shadow-sm">
+                                    <div className="flex flex-col gap-1 shrink-0">
+                                        <div className="flex text-red-500">
+                                            {Array.from({ length: 5 }).map((_, i) => (
+                                                <Star
+                                                    key={i}
+                                                    className={`h-4 w-4 ${i < feedback.score ? 'fill-current' : 'text-gray-200'}`}
+                                                />
+                                            ))}
+                                        </div>
+                                        <span className="text-xs text-muted-foreground font-mono">
+                                            {new Date(feedback.created_at).toLocaleDateString('pt-BR')}
+                                        </span>
+                                    </div>
+
+                                    <div className="flex-1 min-w-0 space-y-1">
+                                        <div className="flex items-center gap-2">
+                                            <Link
+                                                href={`/dashboard/orders/${feedback.order_id}`}
+                                                className="font-bold hover:underline"
+                                            >
+                                                OS {feedback.order?.display_id}
+                                            </Link>
+                                            <span className="text-muted-foreground text-sm">- {customerName}</span>
+                                        </div>
+
+                                        {feedback.order?.equipment && (
+                                            <div className="text-xs text-muted-foreground bg-muted inline-block px-1.5 py-0.5 rounded">
+                                                {feedback.order.equipment}
+                                            </div>
+                                        )}
+
+                                        {feedback.comment && (
+                                            <p className="text-sm text-gray-700 dark:text-gray-300 mt-2 bg-muted/50 p-2 rounded border-l-2 border-red-300 italic">
+                                                "{feedback.comment}"
+                                            </p>
+                                        )}
+                                    </div>
+
+                                    {whatsappLink && (
+                                        <Button size="sm" variant="outline" className="text-green-600 hover:text-green-700 hover:bg-green-50 border-green-200 shrink-0 gap-2" asChild>
+                                            <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
+                                                <Phone className="h-4 w-4" />
+                                                <span className="hidden sm:inline">Contatar</span>
+                                            </a>
+                                        </Button>
                                     )}
                                 </div>
-                                <span className="text-xs text-muted-foreground shrink-0">
-                                    {new Date(feedback.created_at).toLocaleDateString('pt-BR')}
-                                </span>
-                            </div>
-                        ))}
+                            )
+                        })}
                     </CardContent>
                 </Card>
             )}
@@ -148,54 +185,88 @@ export default async function FeedbacksPage() {
                         </div>
                     ) : (
                         <div className="space-y-2">
-                            {feedbacks.map(feedback => (
-                                <div
-                                    key={feedback.id}
-                                    className="flex items-center gap-3 p-3 hover:bg-muted/50 rounded-lg transition-colors"
-                                >
-                                    <div className="flex items-center gap-0.5 shrink-0">
-                                        {Array.from({ length: 5 }).map((_, i) => (
-                                            <Star
-                                                key={i}
-                                                className={`h-3 w-3 ${i < feedback.score
-                                                        ? feedback.score <= 2
+                            {feedbacks.map(feedback => {
+                                const customerName = feedback.order?.customer?.name || 'Cliente'
+                                const phone = feedback.order?.customer?.phone
+                                const orderId = feedback.order?.display_id
+                                const isGreen = feedback.score >= 4
+                                const isRed = feedback.score <= 2
+
+                                const whatsappMsg = isRed
+                                    ? `Olá ${customerName.split(' ')[0]}, aqui é da WFIX. Vi sua avaliação sobre a OS ${orderId}. 😔\nGostaria de entender melhor o que houve para podermos melhorar. Pode me contar?`
+                                    : `Olá ${customerName.split(' ')[0]}, aqui é da WFIX. Vi sua avaliação positiva sobre a OS ${orderId}. ⭐\nMuito obrigado! Fico feliz que tenha dado tudo certo. Qualquer coisa estamos à disposição!`
+
+                                const whatsappLink = phone
+                                    ? `https://wa.me/55${phone.replace(/\D/g, '')}?text=${encodeURIComponent(whatsappMsg)}`
+                                    : null
+
+                                return (
+                                    <div
+                                        key={feedback.id}
+                                        className="flex items-center gap-3 p-3 hover:bg-muted/50 rounded-lg transition-colors group"
+                                    >
+                                        <div className="flex items-center gap-0.5 shrink-0 w-24">
+                                            {Array.from({ length: 5 }).map((_, i) => (
+                                                <Star
+                                                    key={i}
+                                                    className={`h-3 w-3 ${i < feedback.score
+                                                        ? isRed
                                                             ? 'fill-red-400 text-red-400'
                                                             : feedback.score === 3
                                                                 ? 'fill-yellow-400 text-yellow-400'
                                                                 : 'fill-green-400 text-green-400'
-                                                        : 'text-muted'
-                                                    }`}
-                                            />
-                                        ))}
+                                                        : 'text-muted-foreground/20'
+                                                        }`}
+                                                />
+                                            ))}
+                                        </div>
+
+                                        <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
+                                            <Link
+                                                href={`/dashboard/orders/${feedback.order_id}`}
+                                                className="hover:underline truncate font-medium text-sm"
+                                            >
+                                                <span className="text-muted-foreground mr-1">#{feedback.order?.display_id}</span>
+                                                {customerName}
+                                            </Link>
+
+                                            <div className="flex gap-2">
+                                                {feedback.comment && (
+                                                    <Badge variant="outline" className="shrink-0 h-5 px-1.5 text-[10px] gap-1">
+                                                        <MessageSquare className="h-3 w-3" />
+                                                        Comentário
+                                                    </Badge>
+                                                )}
+
+                                                {feedback.clicked_google_review && (
+                                                    <Badge variant="secondary" className="shrink-0 bg-blue-500/10 text-blue-500 h-5 px-1.5 text-[10px] gap-1">
+                                                        <MousePointer2 className="h-3 w-3" />
+                                                        Google
+                                                    </Badge>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        <span className="text-xs text-muted-foreground shrink-0 w-20 text-right">
+                                            {new Date(feedback.created_at).toLocaleDateString('pt-BR')}
+                                        </span>
+
+                                        {whatsappLink && (
+                                            <Button
+                                                size="icon"
+                                                variant="ghost"
+                                                className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-50 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                asChild
+                                                title="Enviar mensagem no WhatsApp"
+                                            >
+                                                <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
+                                                    <Phone className="h-4 w-4" />
+                                                </a>
+                                            </Button>
+                                        )}
                                     </div>
-
-                                    <Link
-                                        href={`/dashboard/orders/${feedback.order_id}`}
-                                        className="flex-1 min-w-0 hover:underline truncate"
-                                    >
-                                        <span className="font-medium">OS {feedback.order?.display_id}</span>
-                                        <span className="text-muted-foreground"> - {feedback.order?.customer?.name || 'Cliente'}</span>
-                                    </Link>
-
-                                    {feedback.comment && (
-                                        <Badge variant="outline" className="shrink-0">
-                                            <MessageSquare className="h-3 w-3 mr-1" />
-                                            Comentário
-                                        </Badge>
-                                    )}
-
-                                    {feedback.clicked_google_review && (
-                                        <Badge variant="secondary" className="shrink-0 bg-blue-500/10 text-blue-500">
-                                            <MousePointer2 className="h-3 w-3 mr-1" />
-                                            Google
-                                        </Badge>
-                                    )}
-
-                                    <span className="text-xs text-muted-foreground shrink-0">
-                                        {new Date(feedback.created_at).toLocaleDateString('pt-BR')}
-                                    </span>
-                                </div>
-                            ))}
+                                )
+                            })}
                         </div>
                     )}
                 </CardContent>
