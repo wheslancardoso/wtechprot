@@ -360,7 +360,7 @@ export default function AgendarPage() {
 
                 {/* Footer */}
                 <p className="text-center text-xs text-gray-600 mt-4">
-                    Powered by WTECH
+                    Powered by WFIX Tech
                 </p>
             </div>
         </div>
