@@ -25,6 +25,9 @@ import {
     CalendarClock,
     MessageCircle,
     Trash2,
+    FileText,
+    Edit2,
+    Save,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -182,6 +185,34 @@ export function ScheduleDashboardClient({
         })
     }
 
+    // Edição inline de nome e telefone
+    const [editingId, setEditingId] = useState<string | null>(null)
+    const [editName, setEditName] = useState('')
+    const [editPhone, setEditPhone] = useState('')
+
+    function startEditing(schedule: Schedule) {
+        setEditingId(schedule.id)
+        setEditName(schedule.customer_name || '')
+        setEditPhone(schedule.customer_phone || '')
+    }
+
+    async function saveEditing(id: string) {
+        startTransition(async () => {
+            const { error } = await supabase
+                .from('schedules')
+                .update({ customer_name: editName, customer_phone: editPhone })
+                .eq('id', id)
+
+            if (error) {
+                toast({ title: 'Erro ao salvar', description: error.message, variant: 'destructive' })
+            } else {
+                setSchedules(prev => prev.map(s => s.id === id ? { ...s, customer_name: editName, customer_phone: editPhone } : s))
+                setEditingId(null)
+                toast({ title: 'Dados atualizados' })
+            }
+        })
+    }
+
     // Contadores
     const confirmedCount = schedules.filter(s => s.status === 'confirmed').length
     const pendingCount = schedules.filter(s => s.status === 'pending').length
@@ -307,12 +338,44 @@ export function ScheduleDashboardClient({
                                     </div>
                                     <div className="min-w-0 flex-1">
                                         <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 flex-wrap">
-                                            {schedule.customer_name && (
-                                                <span className="text-sm font-medium text-foreground truncate block">
-                                                    {schedule.customer_name}
-                                                </span>
+                                            {editingId === schedule.id ? (
+                                                <div className="flex items-center gap-2">
+                                                    <input
+                                                        type="text"
+                                                        value={editName}
+                                                        onChange={(e) => setEditName(e.target.value)}
+                                                        placeholder="Nome do Cliente"
+                                                        className="text-sm bg-background border rounded px-2 py-1 h-7 w-[140px]"
+                                                        autoFocus
+                                                    />
+                                                    <input
+                                                        type="text"
+                                                        value={editPhone}
+                                                        onChange={(e) => setEditPhone(e.target.value)}
+                                                        placeholder="WhatsApp"
+                                                        className="text-sm bg-background border rounded px-2 py-1 h-7 w-[120px]"
+                                                    />
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="h-7 w-7 text-emerald-500 hover:text-emerald-400 hover:bg-emerald-500/10"
+                                                        onClick={() => saveEditing(schedule.id)}
+                                                    >
+                                                        <Save className="w-4 h-4" />
+                                                    </Button>
+                                                </div>
+                                            ) : (
+                                                <>
+                                                    <span className="text-sm font-medium text-foreground truncate block flex items-center gap-2">
+                                                        {schedule.customer_name ? schedule.customer_name : 'Sem nome'}
+                                                        {schedule.customer_phone ? ` • ${schedule.customer_phone}` : ''}
+                                                    </span>
+                                                    <Button variant="ghost" size="icon" className="h-5 w-5 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-primary" onClick={() => startEditing(schedule)}>
+                                                        <Edit2 className="w-3 h-3" />
+                                                    </Button>
+                                                </>
                                             )}
-                                            <div className="self-start sm:self-auto">
+                                            <div className="self-start sm:self-auto ml-0 sm:ml-auto">
                                                 {statusBadge(schedule.status)}
                                             </div>
                                         </div>
@@ -341,6 +404,24 @@ export function ScheduleDashboardClient({
 
                             {(schedule.status === 'pending' || schedule.status === 'confirmed') && (
                                 <div className="flex items-center gap-1 shrink-0">
+                                    {schedule.status === 'confirmed' && (
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => {
+                                                const url = new URL('/dashboard/orders/new', window.location.origin)
+                                                if (schedule.customer_name) url.searchParams.set('name', schedule.customer_name)
+                                                if (schedule.customer_phone) url.searchParams.set('phone', schedule.customer_phone)
+                                                window.location.href = url.toString()
+                                            }}
+                                            className="text-primary hover:text-primary hover:bg-primary/10"
+                                            title="Gerar Ordem de Serviço (OS)"
+                                        >
+                                            <FileText className="w-4 h-4 mr-1" />
+                                            Gerar OS
+                                        </Button>
+                                    )}
+
                                     {schedule.customer_phone && schedule.status === 'confirmed' && (
                                         <Button
                                             variant="ghost"
