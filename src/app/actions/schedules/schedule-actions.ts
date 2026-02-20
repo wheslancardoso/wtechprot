@@ -143,3 +143,31 @@ export async function saveScheduleSettings(
     revalidatePath('/dashboard/agenda')
     return { success: true }
 }
+
+// ==================================================
+// Atualizar dados do cliente no agendamento
+// ==================================================
+export async function updateScheduleCustomer(
+    scheduleId: string,
+    customerName: string,
+    customerPhone: string
+): Promise<{ success: boolean; error?: string }> {
+    const supabase = await createClient()
+
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { success: false, error: 'Não autenticado.' }
+
+    const { error } = await supabase
+        .from('schedules')
+        .update({ customer_name: customerName, customer_phone: customerPhone })
+        .eq('id', scheduleId)
+        .eq('user_id', user.id)
+
+    if (error) {
+        console.error('Erro ao atualizar agendamento:', error)
+        return { success: false, error: 'Erro ao salvar.' }
+    }
+
+    revalidatePath('/dashboard/agenda')
+    return { success: true }
+}

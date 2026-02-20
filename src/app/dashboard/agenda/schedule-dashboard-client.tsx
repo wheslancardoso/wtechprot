@@ -5,7 +5,7 @@ import { format, parseISO, isAfter, isBefore, startOfToday } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import type { Schedule, ScheduleSettings } from '@/types/database'
 import { generateScheduleLink } from '@/app/actions/schedules/generate-link-action'
-import { cancelSchedule, deleteSchedule, saveScheduleSettings } from '@/app/actions/schedules/schedule-actions'
+import { cancelSchedule, deleteSchedule, saveScheduleSettings, updateScheduleCustomer } from '@/app/actions/schedules/schedule-actions'
 import { useToast } from '@/hooks/use-toast'
 import { createClient } from '@/lib/supabase/client'
 import {
@@ -198,13 +198,10 @@ export function ScheduleDashboardClient({
 
     async function saveEditing(id: string) {
         startTransition(async () => {
-            const { error } = await supabase
-                .from('schedules')
-                .update({ customer_name: editName, customer_phone: editPhone })
-                .eq('id', id)
+            const result = await updateScheduleCustomer(id, editName, editPhone)
 
-            if (error) {
-                toast({ title: 'Erro ao salvar', description: error.message, variant: 'destructive' })
+            if (!result.success) {
+                toast({ title: 'Erro ao salvar', description: result.error, variant: 'destructive' })
             } else {
                 setSchedules(prev => prev.map(s => s.id === id ? { ...s, customer_name: editName, customer_phone: editPhone } : s))
                 setEditingId(null)

@@ -1,6 +1,7 @@
 'use server'
 
 import { createAdminClient } from '@/lib/supabase/server'
+import { revalidatePath } from 'next/cache'
 
 export type ConfirmScheduleResult = {
     success: boolean
@@ -79,6 +80,8 @@ export async function confirmSchedule(params: ConfirmParams): Promise<ConfirmSch
             console.error('Erro ao confirmar agendamento:', updateError)
             return { success: false, error: 'Erro ao confirmar agendamento. Tente novamente.' }
         }
+
+        revalidatePath('/dashboard/agenda')
 
         return { success: true }
     } catch (err) {
