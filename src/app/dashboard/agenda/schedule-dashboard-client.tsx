@@ -442,7 +442,7 @@ export function ScheduleDashboardClient({
                                                 const finalPhone = phoneStr.startsWith('55') ? phoneStr : `55${phoneStr}`
 
                                                 const text = encodeURIComponent(
-                                                    `Olá${schedule.customer_name ? ` ${schedule.customer_name.split(' ')[0]}` : ''}! Tudo bem? 👋 Passando apenas para lembrar do nosso agendamento amanhã, dia ${dateParsed} às ${timeStr}. 📅\n\nPara qualquer imprevisto, basta me avisar por aqui.`
+                                                    `Olá${schedule.customer_name ? ` ${schedule.customer_name.split(' ')[0]}` : ''}! Tudo bem? 👋 Passando apenas para lembrar do nosso agendamento amanhã, dia ${dateParsed} às ${timeStr}.\n\nPara qualquer imprevisto, basta me avisar por aqui.`
                                                 )
 
                                                 window.open(`https://api.whatsapp.com/send?phone=${finalPhone}&text=${text}`, '_blank')
