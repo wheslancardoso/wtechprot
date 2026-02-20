@@ -339,30 +339,41 @@ export function ScheduleDashboardClient({
                                     <div className="min-w-0 flex-1">
                                         <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 flex-wrap">
                                             {editingId === schedule.id ? (
-                                                <div className="flex items-center gap-2">
+                                                <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full mb-2 sm:mb-0">
                                                     <input
                                                         type="text"
                                                         value={editName}
                                                         onChange={(e) => setEditName(e.target.value)}
                                                         placeholder="Nome do Cliente"
-                                                        className="text-sm bg-background border rounded px-2 py-1 h-7 w-[140px]"
+                                                        className="text-sm bg-background border rounded px-2 py-1 h-8 w-full sm:w-[160px]"
                                                         autoFocus
                                                     />
-                                                    <input
-                                                        type="text"
-                                                        value={editPhone}
-                                                        onChange={(e) => setEditPhone(e.target.value)}
-                                                        placeholder="WhatsApp"
-                                                        className="text-sm bg-background border rounded px-2 py-1 h-7 w-[120px]"
-                                                    />
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        className="h-7 w-7 text-emerald-500 hover:text-emerald-400 hover:bg-emerald-500/10"
-                                                        onClick={() => saveEditing(schedule.id)}
-                                                    >
-                                                        <Save className="w-4 h-4" />
-                                                    </Button>
+                                                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                                                        <input
+                                                            type="text"
+                                                            value={editPhone}
+                                                            onChange={(e) => setEditPhone(e.target.value)}
+                                                            placeholder="WhatsApp"
+                                                            className="text-sm bg-background border rounded px-2 py-1 h-8 flex-1 sm:w-[130px]"
+                                                        />
+                                                        <Button
+                                                            variant="default"
+                                                            size="sm"
+                                                            className="h-8 bg-emerald-600 hover:bg-emerald-700 text-white shrink-0"
+                                                            onClick={() => saveEditing(schedule.id)}
+                                                        >
+                                                            <Save className="w-4 h-4 sm:mr-1" />
+                                                            <span className="hidden sm:inline">Salvar</span>
+                                                        </Button>
+                                                        <Button
+                                                            variant="outline"
+                                                            size="icon"
+                                                            className="h-8 w-8 shrink-0 text-muted-foreground"
+                                                            onClick={() => setEditingId(null)}
+                                                        >
+                                                            <X className="w-4 h-4" />
+                                                        </Button>
+                                                    </div>
                                                 </div>
                                             ) : (
                                                 <div className="flex items-center gap-2 mb-1 sm:mb-0">
