@@ -53,6 +53,30 @@ export async function cancelSchedule(scheduleId: string): Promise<{ success: boo
 }
 
 // ==================================================
+// Excluir agendamento
+// ==================================================
+export async function deleteSchedule(scheduleId: string): Promise<{ success: boolean; error?: string }> {
+    const supabase = await createClient()
+
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { success: false, error: 'Não autenticado.' }
+
+    const { error } = await supabase
+        .from('schedules')
+        .delete()
+        .eq('id', scheduleId)
+        .eq('user_id', user.id)
+
+    if (error) {
+        console.error('Erro ao excluir agendamento:', error)
+        return { success: false, error: 'Erro ao excluir agendamento.' }
+    }
+
+    revalidatePath('/dashboard/agenda')
+    return { success: true }
+}
+
+// ==================================================
 // Buscar configurações de horário
 // ==================================================
 export async function getScheduleSettings(): Promise<ScheduleSettings | null> {
@@ -114,6 +138,34 @@ export async function saveScheduleSettings(
             console.error('Erro ao criar configurações:', error)
             return { success: false, error: 'Erro ao salvar configurações.' }
         }
+    }
+
+    revalidatePath('/dashboard/agenda')
+    return { success: true }
+}
+
+// ==================================================
+// Atualizar dados do cliente no agendamento
+// ==================================================
+export async function updateScheduleCustomer(
+    scheduleId: string,
+    customerName: string,
+    customerPhone: string
+): Promise<{ success: boolean; error?: string }> {
+    const supabase = await createClient()
+
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { success: false, error: 'Não autenticado.' }
+
+    const { error } = await supabase
+        .from('schedules')
+        .update({ customer_name: customerName, customer_phone: customerPhone })
+        .eq('id', scheduleId)
+        .eq('user_id', user.id)
+
+    if (error) {
+        console.error('Erro ao atualizar agendamento:', error)
+        return { success: false, error: 'Erro ao salvar.' }
     }
 
     revalidatePath('/dashboard/agenda')

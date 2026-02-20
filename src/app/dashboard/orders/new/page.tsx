@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
@@ -127,6 +127,16 @@ export default function NewOrderPage() {
 
     const hasAccessories = watch('hasAccessories')
     const cpfValue = watch('customerCpf')
+
+    // Read query params on mount to pre-fill info from Schedule page
+    useEffect(() => {
+        const queryParams = new URLSearchParams(window.location.search)
+        const nameParam = queryParams.get('name')
+        const phoneParam = queryParams.get('phone')
+
+        if (nameParam) setValue('customerName', nameParam)
+        if (phoneParam) setValue('customerPhone', phoneParam)
+    }, [setValue])
 
     // Handle CPF input with mask + Auto search
     async function handleCpfChange(e: React.ChangeEvent<HTMLInputElement>) {

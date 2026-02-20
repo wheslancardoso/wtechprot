@@ -5,7 +5,7 @@ import { format, parseISO, isAfter, isBefore, startOfToday } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import type { Schedule, ScheduleSettings } from '@/types/database'
 import { generateScheduleLink } from '@/app/actions/schedules/generate-link-action'
-import { cancelSchedule, saveScheduleSettings } from '@/app/actions/schedules/schedule-actions'
+import { cancelSchedule, deleteSchedule, saveScheduleSettings, updateScheduleCustomer } from '@/app/actions/schedules/schedule-actions'
 import { useToast } from '@/hooks/use-toast'
 import { createClient } from '@/lib/supabase/client'
 import {
@@ -24,6 +24,10 @@ import {
     CalendarX,
     CalendarClock,
     MessageCircle,
+    Trash2,
+    FileText,
+    Edit2,
+    Save,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -166,6 +170,46 @@ export function ScheduleDashboardClient({
         })
     }
 
+    // Excluir agendamento (somente cancelados)
+    async function handleDelete(id: string) {
+        if (!confirm('Tem certeza que deseja apagar este agendamento? Esta ação não pode ser desfeita.')) return
+
+        startTransition(async () => {
+            const result = await deleteSchedule(id)
+            if (result.success) {
+                setSchedules(prev => prev.filter(s => s.id !== id))
+                toast({ title: 'Agendamento excluído definitivamente.' })
+            } else {
+                toast({ title: 'Erro', description: result.error, variant: 'destructive' })
+            }
+        })
+    }
+
+    // Edição inline de nome e telefone
+    const [editingId, setEditingId] = useState<string | null>(null)
+    const [editName, setEditName] = useState('')
+    const [editPhone, setEditPhone] = useState('')
+
+    function startEditing(schedule: Schedule) {
+        setEditingId(schedule.id)
+        setEditName(schedule.customer_name || '')
+        setEditPhone(schedule.customer_phone || '')
+    }
+
+    async function saveEditing(id: string) {
+        startTransition(async () => {
+            const result = await updateScheduleCustomer(id, editName, editPhone)
+
+            if (!result.success) {
+                toast({ title: 'Erro ao salvar', description: result.error, variant: 'destructive' })
+            } else {
+                setSchedules(prev => prev.map(s => s.id === id ? { ...s, customer_name: editName, customer_phone: editPhone } : s))
+                setEditingId(null)
+                toast({ title: 'Dados atualizados' })
+            }
+        })
+    }
+
     // Contadores
     const confirmedCount = schedules.filter(s => s.status === 'confirmed').length
     const pendingCount = schedules.filter(s => s.status === 'pending').length
@@ -233,7 +277,7 @@ export function ScheduleDashboardClient({
                 <SettingsPanel
                     settings={settings}
                     onSave={(newSettings) => {
-                        setSettings(prev => prev ? { ...prev, ...newSettings } : null)
+                        setSettings(prev => prev ? { ...prev, ...newSettings } : newSettings as ScheduleSettings)
                         setShowSettings(false)
                     }}
                 />
@@ -291,12 +335,55 @@ export function ScheduleDashboardClient({
                                     </div>
                                     <div className="min-w-0 flex-1">
                                         <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 flex-wrap">
-                                            {schedule.customer_name && (
-                                                <span className="text-sm font-medium text-foreground truncate block">
-                                                    {schedule.customer_name}
-                                                </span>
+                                            {editingId === schedule.id ? (
+                                                <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full mb-2 sm:mb-0">
+                                                    <input
+                                                        type="text"
+                                                        value={editName}
+                                                        onChange={(e) => setEditName(e.target.value)}
+                                                        placeholder="Nome do Cliente"
+                                                        className="text-sm bg-background border rounded px-2 py-1 h-8 w-full sm:w-[160px]"
+                                                        autoFocus
+                                                    />
+                                                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                                                        <input
+                                                            type="text"
+                                                            value={editPhone}
+                                                            onChange={(e) => setEditPhone(e.target.value)}
+                                                            placeholder="WhatsApp"
+                                                            className="text-sm bg-background border rounded px-2 py-1 h-8 flex-1 sm:w-[130px]"
+                                                        />
+                                                        <Button
+                                                            variant="default"
+                                                            size="sm"
+                                                            className="h-8 bg-emerald-600 hover:bg-emerald-700 text-white shrink-0"
+                                                            onClick={() => saveEditing(schedule.id)}
+                                                        >
+                                                            <Save className="w-4 h-4 sm:mr-1" />
+                                                            <span className="hidden sm:inline">Salvar</span>
+                                                        </Button>
+                                                        <Button
+                                                            variant="outline"
+                                                            size="icon"
+                                                            className="h-8 w-8 shrink-0 text-muted-foreground"
+                                                            onClick={() => setEditingId(null)}
+                                                        >
+                                                            <X className="w-4 h-4" />
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <div className="flex items-center gap-2 mb-1 sm:mb-0">
+                                                    <span className="text-sm font-medium text-foreground truncate block flex items-center gap-2">
+                                                        {schedule.customer_name ? schedule.customer_name : 'Cliente Anônimo'}
+                                                        {schedule.customer_phone ? <span className="text-muted-foreground font-normal">• {schedule.customer_phone}</span> : ''}
+                                                    </span>
+                                                    <Button variant="outline" size="sm" className="h-6 px-2 text-xs text-muted-foreground hover:text-primary transition-colors" onClick={() => startEditing(schedule)}>
+                                                        {schedule.customer_name ? <><Edit2 className="w-3 h-3 mr-1" /> Editar</> : <><Plus className="w-3 h-3 mr-1" /> Cliente</>}
+                                                    </Button>
+                                                </div>
                                             )}
-                                            <div className="self-start sm:self-auto">
+                                            <div className="self-start sm:self-auto ml-0 sm:ml-auto">
                                                 {statusBadge(schedule.status)}
                                             </div>
                                         </div>
@@ -325,6 +412,24 @@ export function ScheduleDashboardClient({
 
                             {(schedule.status === 'pending' || schedule.status === 'confirmed') && (
                                 <div className="flex items-center gap-1 shrink-0">
+                                    {schedule.status === 'confirmed' && (
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => {
+                                                const url = new URL('/dashboard/orders/new', window.location.origin)
+                                                if (schedule.customer_name) url.searchParams.set('name', schedule.customer_name)
+                                                if (schedule.customer_phone) url.searchParams.set('phone', schedule.customer_phone)
+                                                window.location.href = url.toString()
+                                            }}
+                                            className="text-primary hover:text-primary hover:bg-primary/10"
+                                            title="Gerar Ordem de Serviço (OS)"
+                                        >
+                                            <FileText className="w-4 h-4 mr-1" />
+                                            Gerar OS
+                                        </Button>
+                                    )}
+
                                     {schedule.customer_phone && schedule.status === 'confirmed' && (
                                         <Button
                                             variant="ghost"
@@ -337,7 +442,7 @@ export function ScheduleDashboardClient({
                                                 const finalPhone = phoneStr.startsWith('55') ? phoneStr : `55${phoneStr}`
 
                                                 const text = encodeURIComponent(
-                                                    `Olá${schedule.customer_name ? ` ${schedule.customer_name.split(' ')[0]}` : ''}! Tudo bem? \n\nAqui é da WFIX Tech. Passando apenas para lembrar do nosso agendamento amanhã, dia ${dateParsed} às ${timeStr}.\n\nPara qualquer imprevisto, basta me avisar por aqui.`
+                                                    `Olá${schedule.customer_name ? ` ${schedule.customer_name.split(' ')[0]}` : ''}! Tudo bem? 👋 Passando apenas para lembrar do nosso agendamento amanhã, dia ${dateParsed} às ${timeStr}.\n\nPara qualquer imprevisto, basta me avisar por aqui.`
                                                 )
 
                                                 window.open(`https://api.whatsapp.com/send?phone=${finalPhone}&text=${text}`, '_blank')
@@ -354,8 +459,23 @@ export function ScheduleDashboardClient({
                                         size="sm"
                                         onClick={() => handleCancel(schedule.id)}
                                         className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                                        title="Cancelar agendamento"
                                     >
                                         <X className="w-4 h-4" />
+                                    </Button>
+                                </div>
+                            )}
+
+                            {(schedule.status === 'canceled' || schedule.status === 'expired') && (
+                                <div className="flex items-center gap-1 shrink-0">
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => handleDelete(schedule.id)}
+                                        className="text-muted-foreground hover:text-red-400 hover:bg-red-500/10"
+                                        title="Excluir agendamento"
+                                    >
+                                        <Trash2 className="w-4 h-4" />
                                     </Button>
                                 </div>
                             )}

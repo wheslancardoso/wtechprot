@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { randomBytes } from 'crypto'
+import { revalidatePath } from 'next/cache'
 
 export type GenerateLinkResult = {
     success: boolean
@@ -73,6 +74,8 @@ export async function generateScheduleLink(params: GenerateLinkParams): Promise<
 
         const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_SITE_URL || `${protocol}://${host}`
         const link = `${baseUrl}/agendar/${token}`
+
+        revalidatePath('/dashboard/agenda')
 
         return { success: true, link, token }
     } catch (err) {
