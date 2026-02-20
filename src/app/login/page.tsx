@@ -58,7 +58,7 @@ export default function LoginPage() {
                     <div>
                         <CardTitle className="text-2xl font-bold">Acessar WTECH</CardTitle>
                         <CardDescription>
-                            Sistema de Gestão para Assistência Técnica
+                            Sistema de Gestão para Centros de Soluções em Tecnologia
                         </CardDescription>
                     </div>
                 </CardHeader>

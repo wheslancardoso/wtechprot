@@ -116,7 +116,7 @@ export default async function ServicesPage() {
                                 </div>
                                 <h3 className="text-xl font-bold text-white mb-3">Serviço Técnico</h3>
                                 <p className="text-slate-400 text-sm leading-relaxed px-4">
-                                    Usamos peças de qualidade e ferramentas certas. Limpeza, organização dos cabos e cuidado em cada detalhe.
+                                    Alocamos componentes de alto padrão com precisão técnica. Manutenção preventiva, gerenciamento estrutural de cabos e proteção do seu patrimônio em cada detalhe.
                                 </p>
                             </div>
 
@@ -156,7 +156,7 @@ export default async function ServicesPage() {
                                         </li>
                                         <li className="flex gap-3 text-slate-300 text-sm">
                                             <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0" />
-                                            <span><strong>Limpeza Técnica:</strong> Higienização interna e troca de pasta térmica (Silver/Gold).</span>
+                                            <span><strong>Manutenção Preventiva Térmica:</strong> Higienização interna e aplicação de composto térmico de elite.</span>
                                         </li>
                                         <li className="flex gap-3 text-slate-300 text-sm">
                                             <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0" />
@@ -226,7 +226,7 @@ export default async function ServicesPage() {
                                         </li>
                                         <li className="flex gap-3 text-slate-300 text-sm">
                                             <CheckCircle2 className="w-5 h-5 text-blue-500 shrink-0" />
-                                            <span><strong>Limpeza Completa:</strong> Remoção de poeira e cable management.</span>
+                                            <span><strong>Manutenção Preventiva Completa:</strong> Desoxidação e organização estrutural (cable management).</span>
                                         </li>
                                     </ul>
                                 </div>
@@ -297,7 +297,7 @@ export default async function ServicesPage() {
                         <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
                             <SpotlightCard className="p-6 rounded-2xl bg-slate-900/50 border-white/5">
                                 <h3 className="font-bold text-white mb-2">Quanto tempo demora?</h3>
-                                <p className="text-slate-400 text-sm">A maioria dos serviços (formatação, limpeza) fica pronto em até 24h. E não se preocupe: oferecemos <strong>90 dias de garantia</strong> em todos os reparos.</p>
+                                <p className="text-slate-400 text-sm">A maioria das soluções sob demanda (otimização de software, manutenção preventiva) tem SLA de até 24h. E não se preocupe: oferecemos <strong>90 dias de garantia</strong> estrutural e técnica.</p>
                             </SpotlightCard>
                             <SpotlightCard className="p-6 rounded-2xl bg-slate-900/50 border-white/5">
                                 <h3 className="font-bold text-white mb-2">Vocês buscam o equipamento?</h3>

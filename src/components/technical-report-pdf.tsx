@@ -232,7 +232,7 @@ function TechnicalReportDocument({
                 ) : (
                     <View style={styles.header}>
                         <Text style={styles.title}>{settings.trade_name.toUpperCase()}</Text>
-                        <Text style={styles.subtitle}>Assistência Técnica Especializada</Text>
+                        <Text style={styles.subtitle}>Soluções Especializadas em Tecnologia</Text>
                     </View>
                 )}
 

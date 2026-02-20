@@ -67,7 +67,7 @@ export async function generateBudget(userDescription: string, equipmentContext?:
         - Se o valor do equipamento for > R$ 5.000, use o "price_max" do serviço.
         - Se o valor do equipamento for < R$ 2.000, use o "price_min" do serviço.
         - Para outros casos, use estritamente o "price_avg".
-        - MUDANÇA DE REGRA: Se o serviço for 'Limpeza' ou 'Formatação' simples, prefira a média, salvo se o equipamento for de luxo (Macbook/Gamer).
+        - MUDANÇA DE REGRA: Se o serviço for 'Manutenção Preventiva' ou 'Formatação' simples, prefira a média, salvo se o equipamento for de luxo (Macbook/Gamer).
 
             --- REGRAS DE ESTILO E FORMATAÇÃO (PADRÃO WFIX V2) ---
             O campo 'commercial_description' deve seguir estritamente este formato visual:
@@ -84,14 +84,14 @@ export async function generateBudget(userDescription: string, equipmentContext?:
             (Comece com verbos de ação impessoais: 'Realizada...', 'Efetuada...', 'Executada desoxidação...')
             
             [BLOCO 3: PROCEDIMENTOS COMPLEMENTARES]
-            (Ex: 'Aplicação de pasta térmica à base de prata e limpeza dos dutos de ar...')
+            (Ex: 'Aplicação de pasta térmica de alta condutividade e manutenção preventiva do sistema de ar...')
             
             [BLOCO 4: UPGRADE/SUGESTÃO] (Opcional)
             (Se houver oportunidade, sugira melhoria. Ex: 'Recomendada instalação de SSD para performance...')
 
             3. VOCABULÁRIO (AUTORIDADE TÉCNICA):
             - Não use: 'Eu limpei', 'Nós trocamos'.
-            - Use: 'Realizada limpeza técnica', 'Efetuada substituição do componente'.
+            - Use: 'Realizada manutenção preventiva', 'Efetuada substituição do componente'.
             - Seja cirúrgico e profissional.
 
             --- SAÍDA JSON OBRIGATÓRIA ---

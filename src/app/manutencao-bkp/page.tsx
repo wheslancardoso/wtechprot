@@ -168,7 +168,7 @@ export default async function Home() {
                                     do seu equipamento online.
                                 </h2>
                                 <p className="text-lg text-slate-400 leading-relaxed max-w-xl mx-auto lg:mx-0">
-                                    Nosso sistema de <b>Rastreamento em Tempo Real</b> permite que você acompanhe cada etapa do conserto pelo seu celular. Fotos do diagnóstico, aprovação de orçamento e aviso de conclusão.
+                                    Nosso sistema de <b>Rastreamento em Tempo Real</b> permite que você acompanhe cada etapa da solução técnica pelo seu celular. Fotos do diagnóstico, aprovação de orçamento e aviso de conclusão.
                                 </p>
 
                                 <ul className="space-y-3 text-slate-300 max-w-sm mx-auto lg:mx-0 text-left">

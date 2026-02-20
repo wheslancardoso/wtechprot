@@ -51,12 +51,12 @@ const COMMON_TESTS = [
     "Inspeção Visual (Microscópio)",
     "Teste de Teclado/Touchpad",
     "Teste de Áudio/Câmera",
-    "Limpeza Química",
+    "Manutenção Preventiva (Higienização Química)",
 ]
 
 const COMMON_CONCLUSIONS = [
     "Reparo realizado com sucesso.",
-    "Equipamento sem conserto (PT - Perda Total).",
+    "Equipamento sem viabilidade técnica (PT - Perda Total).",
     "Defeito intermitente (não reproduzido em bancada).",
     "Cliente reprovou o orçamento.",
     "Aguardando peças para conclusão."

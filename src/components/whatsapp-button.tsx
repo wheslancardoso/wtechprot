@@ -50,7 +50,7 @@ ${publicLink}
 
 Qualquer dúvida, estou à disposição!
 
-_WTECH Assistência Técnica_`
+_WTECH Soluções em Tecnologia_`
 
         case 'waiting_parts':
             return `Olá ${firstName}! 👋
@@ -61,7 +61,7 @@ Confirmo o recebimento da sua peça. ✅
 
 Vou iniciar o reparo agora. Te aviso assim que estiver pronto!
 
-_WTECH Assistência Técnica_`
+_WTECH Soluções em Tecnologia_`
 
         case 'in_progress':
             return `Olá ${firstName}! 👋
@@ -72,7 +72,7 @@ Seu equipamento está em reparo! 🔧
 
 Te aviso assim que estiver pronto para retirada.
 
-_WTECH Assistência Técnica_`
+_WTECH Soluções em Tecnologia_`
 
         case 'ready':
         case 'finished':
@@ -88,7 +88,7 @@ Pode vir retirar quando quiser. Aceitamos PIX, dinheiro ou cartão.
 Endereço: [Seu endereço aqui]
 Horário: Seg-Sex 9h às 18h
 
-_WTECH Assistência Técnica_`
+_WTECH Soluções em Tecnologia_`
 
         default:
             return `Olá ${firstName}! 👋
@@ -97,7 +97,7 @@ Tenho uma atualização sobre sua OS #${osNumber}.
 
 Veja os detalhes aqui: ${publicLink}
 
-_WTECH Assistência Técnica_`
+_WTECH Soluções em Tecnologia_`
     }
 }
 

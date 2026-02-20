@@ -10,7 +10,7 @@ export const APPROVAL_TERMS = [
     {
         id: 'data_backup',
         title: '3. Dados e Backup (LGPD)',
-        content: 'Declaro que possuo backup prévio de todos os meus dados (fotos, contatos, arquivos). Isento a assistência técnica de responsabilidade por eventual perda de dados decorrente de falhas de hardware (memória/placa) ou necessidade de formatação/restauração de software.',
+        content: 'Declaro que possuo backup prévio de todos os meus dados (fotos, contatos, arquivos). Isento a central de soluções técnicas de responsabilidade por eventual perda de dados decorrente de falhas de hardware (memória/placa) ou necessidade de formatação/restauração de software.',
         required: true,
         icon: 'database'
     },

@@ -517,7 +517,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <div className="bg-white/[0.02] border border-white/5 p-8 rounded-2xl relative flex flex-col justify-between h-full">
                 <div className="absolute -top-4 -left-4 w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center text-primary text-4xl font-serif">"</div>
                 <p className="text-slate-300 italic mb-6 leading-relaxed">
-                  "Meu notebook estava esquentando muito e desligando sozinho no meio das reuniões. Fizeram uma limpeza completa e trocaram a pasta térmica. Agora funciona perfeitamente, silencioso e não esquenta nada. Serviço impecável!"
+                  "Minha estação móvel estava sofrendo estrangulamento térmico (superaquecendo) durante transmissões e reuniões cruciais. A equipe executou uma manutenção preventiva especializada com renovação completa do composto térmico. O silêncio e o desempenho absoluto retornaram. Solução irretocável!"
                 </p>
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center font-bold text-slate-500">R</div>

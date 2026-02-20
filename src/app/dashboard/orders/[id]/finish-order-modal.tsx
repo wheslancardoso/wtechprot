@@ -155,7 +155,7 @@ export default function FinishOrderModal({ orderId, open, onOpenChange, orderDat
 
         const text = `
 ═══════════════════════════════════
-        ${storeSettings?.trade_name?.toUpperCase() || 'WTECH ASSISTÊNCIA TÉCNICA'}
+        ${storeSettings?.trade_name?.toUpperCase() || 'WTECH SOLUÇÕES EM TECNOLOGIA'}
 ═══════════════════════════════════
 RECIBO DE PAGAMENTO
 
@@ -167,7 +167,7 @@ Forma: ${receiptData.method}
 ───────────────────────────────────
 TERMO DE GARANTIA
 
-A ${storeSettings?.trade_name?.toUpperCase() || 'WTECH ASSISTÊNCIA TÉCNICA'} oferece
+A ${storeSettings?.trade_name?.toUpperCase() || 'WTECH SOLUÇÕES EM TECNOLOGIA'} oferece
 garantia de 90 (noventa) dias sobre
 a MÃO DE OBRA do serviço prestado.
 

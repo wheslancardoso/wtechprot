@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         .eq('id', order.user_id)
         .single()
 
-    const tradeName = tenant?.trade_name || 'Assistência Técnica'
+    const tradeName = tenant?.trade_name || 'Soluções em Tecnologia'
 
     return {
         title: `Assinar Termo OS #${order.display_id} | ${tradeName}`,

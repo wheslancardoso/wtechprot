@@ -74,7 +74,7 @@ export default function SignupPage() {
                     <div>
                         <CardTitle className="text-2xl font-bold">Criar Conta</CardTitle>
                         <CardDescription>
-                            Cadastre-se para gerenciar sua assistência técnica
+                            Cadastre-se para gerenciar sua central de operações
                         </CardDescription>
                     </div>
                 </CardHeader>
