@@ -5,7 +5,7 @@ import { format, parseISO, isAfter, isBefore, startOfToday } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import type { Schedule, ScheduleSettings } from '@/types/database'
 import { generateScheduleLink } from '@/app/actions/schedules/generate-link-action'
-import { cancelSchedule, saveScheduleSettings } from '@/app/actions/schedules/schedule-actions'
+import { cancelSchedule, deleteSchedule, saveScheduleSettings } from '@/app/actions/schedules/schedule-actions'
 import { useToast } from '@/hooks/use-toast'
 import { createClient } from '@/lib/supabase/client'
 import {
@@ -24,6 +24,7 @@ import {
     CalendarX,
     CalendarClock,
     MessageCircle,
+    Trash2,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -160,6 +161,21 @@ export function ScheduleDashboardClient({
             if (result.success) {
                 setSchedules(prev => prev.map(s => s.id === id ? { ...s, status: 'canceled' as const } : s))
                 toast({ title: 'Agendamento cancelado.' })
+            } else {
+                toast({ title: 'Erro', description: result.error, variant: 'destructive' })
+            }
+        })
+    }
+
+    // Excluir agendamento (somente cancelados)
+    async function handleDelete(id: string) {
+        if (!confirm('Tem certeza que deseja apagar este agendamento? Esta ação não pode ser desfeita.')) return
+
+        startTransition(async () => {
+            const result = await deleteSchedule(id)
+            if (result.success) {
+                setSchedules(prev => prev.filter(s => s.id !== id))
+                toast({ title: 'Agendamento excluído definitivamente.' })
             } else {
                 toast({ title: 'Erro', description: result.error, variant: 'destructive' })
             }
@@ -354,8 +370,23 @@ export function ScheduleDashboardClient({
                                         size="sm"
                                         onClick={() => handleCancel(schedule.id)}
                                         className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                                        title="Cancelar agendamento"
                                     >
                                         <X className="w-4 h-4" />
+                                    </Button>
+                                </div>
+                            )}
+
+                            {(schedule.status === 'canceled' || schedule.status === 'expired') && (
+                                <div className="flex items-center gap-1 shrink-0">
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => handleDelete(schedule.id)}
+                                        className="text-muted-foreground hover:text-red-400 hover:bg-red-500/10"
+                                        title="Excluir agendamento"
+                                    >
+                                        <Trash2 className="w-4 h-4" />
                                     </Button>
                                 </div>
                             )}
