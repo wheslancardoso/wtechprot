@@ -249,7 +249,7 @@ export function ScheduleDashboardClient({
                 <SettingsPanel
                     settings={settings}
                     onSave={(newSettings) => {
-                        setSettings(prev => prev ? { ...prev, ...newSettings } : null)
+                        setSettings(prev => prev ? { ...prev, ...newSettings } : newSettings as ScheduleSettings)
                         setShowSettings(false)
                     }}
                 />
