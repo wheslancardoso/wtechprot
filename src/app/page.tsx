@@ -167,7 +167,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <ul className="space-y-3 text-slate-300 max-w-sm mx-auto lg:mx-0 text-left">
                   {[
                     "Portal do Cliente",
-                    "Fotos das Peças Trocadas",
+                    "Fotos dos Componentes Substituídos",
                     "Aprovação de Orçamento Online",
                     "Histórico Completo do Aparelho"
                   ].map((item, i) => (
