@@ -1,5 +1,6 @@
 'use server'
 
+import { createAdminClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { sendScheduleConfirmationAlert } from '@/lib/email'
 import { format, parseISO } from 'date-fns'
