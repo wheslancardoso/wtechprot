@@ -2,6 +2,7 @@
 
 import { createAdminClient } from '@/lib/supabase/server'
 import { format, addDays, parseISO } from 'date-fns'
+import { toZonedTime, format as formatTz } from 'date-fns-tz'
 
 export type AvailabilityResult = {
     success: boolean
@@ -69,16 +70,19 @@ export async function getAvailability(
             maxAdvanceDays: settings?.max_advance_days ?? 30,
         }
 
-        // 3. Gerar datas disponíveis (dias úteis dentro do range)
-        const today = new Date()
-        today.setHours(0, 0, 0, 0)
+        // 3. Gerar datas disponíveis (dias úteis dentro do range) fixando TIMEZONE
+        const TIMEZONE = 'America/Sao_Paulo'
+        const nowZoned = toZonedTime(new Date(), TIMEZONE)
+        // Zerar os horários no fuso local para evitar avanço/recuo indevido no addDays
+        nowZoned.setHours(0, 0, 0, 0)
+
         const availableDates: string[] = []
 
         for (let i = 1; i <= config.maxAdvanceDays; i++) {
-            const date = addDays(today, i)
+            const date = addDays(nowZoned, i)
             const dayOfWeek = date.getDay()
             if (config.workDays.includes(dayOfWeek)) {
-                availableDates.push(format(date, 'yyyy-MM-dd'))
+                availableDates.push(formatTz(date, 'yyyy-MM-dd', { timeZone: TIMEZONE }))
             }
         }
 
