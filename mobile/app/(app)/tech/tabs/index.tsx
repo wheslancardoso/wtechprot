@@ -3,9 +3,11 @@ import { useAuth } from '../../../../ctx';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '../../../../lib/supabase';
-import { router } from 'expo-router';
+import { router, useNavigation } from 'expo-router';
+import { DrawerActions } from '@react-navigation/native';
 
 export default function Dashboard() {
+    const navigation = useNavigation();
     const { session, signOut } = useAuth();
     const [schedules, setSchedules] = useState<any[]>([]);
     const [orders, setOrders] = useState<any[]>([]);
@@ -79,18 +81,7 @@ export default function Dashboard() {
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#22c55e" />
             }
         >
-            <View className="flex-row justify-between items-center mb-6">
-                <View>
-                    <Text className="text-gray-400 text-sm">Painel do Técnico,</Text>
-                    <Text className="text-white text-2xl font-bold tracking-tight">{session?.user.email}</Text>
-                </View>
-
-                <TouchableOpacity onPress={signOut} className="bg-dark p-3 rounded-full border border-gray-800">
-                    <MaterialIcons name="logout" size={22} color="#ef4444" />
-                </TouchableOpacity>
-            </View>
-
-            {/* AÇÕES RÁPIDAS (NOVO) */}
+            {/* O cabeçalho global do Drawer agora renderiza esta área superior nativamente. */}
             <View className="mb-8">
                 <Text className="text-white text-lg font-bold mb-4">Ações Rápidas</Text>
                 <View className="flex-row justify-between flex-wrap">

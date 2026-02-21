@@ -21,8 +21,6 @@ export default function AppLayout() {
     return (
         <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="index" />
-            <Stack.Screen name="tech" />
-            <Stack.Screen name="client" />
         </Stack>
     );
 }
