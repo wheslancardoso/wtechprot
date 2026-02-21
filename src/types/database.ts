@@ -118,6 +118,7 @@ export interface Schedule {
     confirmed_at: string | null
     created_at: string
     updated_at: string
+    duration_minutes: number
 }
 
 export interface ScheduleSettings {
@@ -216,6 +217,7 @@ export interface ScheduleInsert {
     customer_phone?: string | null
     notes?: string | null
     expires_at: string
+    duration_minutes?: number
 }
 
 export interface ScheduleSettingsInsert {
