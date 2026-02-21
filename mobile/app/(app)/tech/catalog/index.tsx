@@ -1,0 +1,1 @@
+import { View, Text } from 'react-native'; export default function Catalog() { return <View className="flex-1 bg-darker justify-center items-center"><Text className="text-white">Catálogo</Text></View>; }

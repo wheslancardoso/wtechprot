@@ -1,0 +1,1 @@
+import { View, Text } from 'react-native'; export default function Feedbacks() { return <View className="flex-1 bg-darker justify-center items-center"><Text className="text-white">Feedbacks</Text></View>; }
