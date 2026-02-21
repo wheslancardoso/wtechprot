@@ -358,8 +358,8 @@ WTECH`
                                 </DropdownMenuItem>
                             )}
 
-                            {/* Certificado de Auditoria (Se houver assinatura digital) */}
-                            {orderData?.signatureEvidence && (
+                            {/* Certificado de Auditoria (Se houver assinatura digital Final ou de Retirada) */}
+                            {(orderData?.signatureEvidence || orderData?.custodyEvidence) && (
                                 <div className="px-2 py-1">
                                     <AuditReportPdfWrapper
                                         orderData={orderData}

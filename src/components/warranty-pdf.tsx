@@ -188,6 +188,12 @@ interface OrderData {
         method?: string
         integrity_hash?: string
     } | null
+    custodyEvidence?: {
+        custody_signed_at?: string
+        custody_ip?: string
+        custody_signature_url?: string
+        custody_integrity_hash?: string
+    } | null
 }
 
 // ==================================================

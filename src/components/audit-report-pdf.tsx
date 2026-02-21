@@ -165,25 +165,31 @@ function formatAddress(address?: StoreSettings['address']): string {
 export function AuditReportDocument({ data, settings }: { data: OrderData; settings: StoreSettings }) {
     const osNumber = String(data.displayId).padStart(4, '0')
     const evidence = data.signatureEvidence
+    const custodyEvidence = data.custodyEvidence
 
-    // Se não houver evidência formal, a geração desse PDF não faz sentido, mas renderizamos amigavelmente
-    if (!evidence) {
+    // Se não houver NENHUMA evidência formal, a geração desse PDF não faz sentido
+    if (!evidence && !custodyEvidence) {
         return (
             <Document>
                 <Page size="A4" style={styles.page}>
                     <View style={styles.header}>
                         <Text style={styles.title}>CERTIFICADO DE AUDITORIA INDISPONÍVEL</Text>
-                        <Text style={styles.subtitle}>Esta Ordem de Serviço não possui assinatura digital Click-Wrap.</Text>
+                        <Text style={styles.subtitle}>Esta Ordem de Serviço não possui nenhuma assinatura digital.</Text>
                     </View>
                 </Page>
             </Document>
         )
     }
 
-    const acceptedAt = evidence.accepted_at ? formatDateToLocal(evidence.accepted_at, "dd/MM/yyyy 'às' HH:mm:ss") : 'N/A'
-    const ipAddress = evidence.ip_address || 'N/A'
-    const userAgent = evidence.device_fingerprint || 'N/A'
-    const hash = evidence.integrity_hash || 'N/A'
+    // Prepare evidence formatting
+    const approvalAcceptedAt = evidence?.accepted_at ? formatDateToLocal(evidence.accepted_at, "dd/MM/yyyy 'às' HH:mm:ss") : 'N/A'
+    const approvalIp = evidence?.ip_address || 'N/A'
+    const approvalUserAgent = evidence?.device_fingerprint || 'N/A'
+    const approvalHash = evidence?.integrity_hash || 'N/A'
+
+    const custodyAcceptedAt = custodyEvidence?.custody_signed_at ? formatDateToLocal(custodyEvidence.custody_signed_at, "dd/MM/yyyy 'às' HH:mm:ss") : 'N/A'
+    const custodyIp = custodyEvidence?.custody_ip || 'N/A'
+    const custodyHash = custodyEvidence?.custody_integrity_hash || 'N/A'
 
     return (
         <Document>
@@ -243,32 +249,65 @@ export function AuditReportDocument({ data, settings }: { data: OrderData; setti
                     </View>
                 </View>
 
-                {/* Registro de Auditoria (Evidências) */}
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>2. REGISTRO ELETRÔNICO DE CONSENTIMENTO (LOG DE AUDITORIA)</Text>
-                    <View style={styles.auditBox}>
-                        <View style={styles.auditRow}>
-                            <Text style={styles.auditLabel}>Tipo de Assinatura:</Text>
-                            <Text style={styles.auditValue}>Aceite Eletrônico (Click-Wrap Agreement)</Text>
-                        </View>
-                        <View style={styles.auditRow}>
-                            <Text style={styles.auditLabel}>Data e Hora do Aceite (Local):</Text>
-                            <Text style={styles.auditValue}>{acceptedAt}</Text>
-                        </View>
-                        <View style={styles.auditRow}>
-                            <Text style={styles.auditLabel}>Endereço IP de Origem:</Text>
-                            <Text style={[styles.auditValue, { fontWeight: 'bold' }]}>{ipAddress}</Text>
-                        </View>
-                        <View style={styles.auditRow}>
-                            <Text style={styles.auditLabel}>Dispositivo (User-Agent):</Text>
-                            <Text style={styles.auditValue}>{userAgent}</Text>
-                        </View>
-                        <View style={styles.auditRowLast}>
-                            <Text style={styles.auditLabel}>Hash de Integridade (SHA-256):</Text>
-                            <Text style={[styles.auditValue, styles.hashText]}>{hash}</Text>
+                {/* Registro de Auditoria: CUSTÓDIA */}
+                {custodyEvidence && (
+                    <View style={styles.section}>
+                        <Text style={styles.sectionTitle}>REGISTRO ELETRÔNICO DE CUSTÓDIA (HOME CARE)</Text>
+                        <View style={styles.auditBox}>
+                            <View style={styles.auditRow}>
+                                <Text style={styles.auditLabel}>Tipo de Assinatura:</Text>
+                                <Text style={styles.auditValue}>Aceite de Retirada (Caneta na Tela / Click-Wrap)</Text>
+                            </View>
+                            <View style={styles.auditRow}>
+                                <Text style={styles.auditLabel}>Data e Hora do Aceite (Local):</Text>
+                                <Text style={styles.auditValue}>{custodyAcceptedAt}</Text>
+                            </View>
+                            <View style={styles.auditRow}>
+                                <Text style={styles.auditLabel}>Endereço IP de Origem:</Text>
+                                <Text style={[styles.auditValue, { fontWeight: 'bold' }]}>{custodyIp}</Text>
+                            </View>
+                            {custodyEvidence.custody_signature_url && (
+                                <View style={styles.auditRow}>
+                                    <Text style={styles.auditLabel}>Assinatura Gráfica:</Text>
+                                    <Text style={styles.auditValue}>Registrada na plataforma (Disponível em nuvem)</Text>
+                                </View>
+                            )}
+                            <View style={styles.auditRowLast}>
+                                <Text style={styles.auditLabel}>Hash de Integridade (SHA-256):</Text>
+                                <Text style={[styles.auditValue, styles.hashText]}>{custodyHash}</Text>
+                            </View>
                         </View>
                     </View>
-                </View>
+                )}
+
+                {/* Registro de Auditoria: APROVAÇÃO E GARANTIA (Evidências) */}
+                {evidence && (
+                    <View style={styles.section}>
+                        <Text style={styles.sectionTitle}>REGISTRO ELETRÔNICO DE ORÇAMENTO (APROVAÇÃO FINAL)</Text>
+                        <View style={styles.auditBox}>
+                            <View style={styles.auditRow}>
+                                <Text style={styles.auditLabel}>Tipo de Assinatura:</Text>
+                                <Text style={styles.auditValue}>Aceite Eletrônico (Click-Wrap Agreement)</Text>
+                            </View>
+                            <View style={styles.auditRow}>
+                                <Text style={styles.auditLabel}>Data e Hora do Aceite (Local):</Text>
+                                <Text style={styles.auditValue}>{approvalAcceptedAt}</Text>
+                            </View>
+                            <View style={styles.auditRow}>
+                                <Text style={styles.auditLabel}>Endereço IP de Origem:</Text>
+                                <Text style={[styles.auditValue, { fontWeight: 'bold' }]}>{approvalIp}</Text>
+                            </View>
+                            <View style={styles.auditRow}>
+                                <Text style={styles.auditLabel}>Dispositivo (User-Agent):</Text>
+                                <Text style={styles.auditValue}>{approvalUserAgent}</Text>
+                            </View>
+                            <View style={styles.auditRowLast}>
+                                <Text style={styles.auditLabel}>Hash de Integridade (SHA-256):</Text>
+                                <Text style={[styles.auditValue, styles.hashText]}>{approvalHash}</Text>
+                            </View>
+                        </View>
+                    </View>
+                )}
 
                 {/* Footer / Base de Conhecimento */}
                 <View style={styles.footer}>

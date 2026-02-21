@@ -143,6 +143,12 @@ export default async function OrderDetailPage({ params }: PageProps) {
         finishedAt: order.finished_at || new Date().toISOString(),
         externalParts: [],
         signatureEvidence: order.signature_evidence || null,
+        custodyEvidence: order.custody_signed_at ? {
+            custody_signed_at: order.custody_signed_at,
+            custody_ip: order.custody_ip,
+            custody_signature_url: order.custody_signature_url,
+            custody_integrity_hash: order.custody_integrity_hash,
+        } : null,
     }
 
     // Configurações da Loja
