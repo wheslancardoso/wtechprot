@@ -764,6 +764,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 
         {/* CALLOUT B2B */}
+        {/*
         <section className="py-20 bg-slate-950 relative overflow-hidden border-t border-white/10">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-indigo-500/10 blur-[100px] rounded-full pointer-events-none" />
 
@@ -786,6 +787,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </div>
           </div>
         </section>
+        */}
 
 
         <a
