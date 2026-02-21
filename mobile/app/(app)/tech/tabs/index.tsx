@@ -97,7 +97,7 @@ export default function Dashboard() {
 
                     <TouchableOpacity
                         className="w-[48%] bg-primary-500/10 p-4 rounded-2xl mb-4 border border-primary-500/20 items-center justify-center flex-col"
-                        onPress={() => console.log("Navigate Nova OS")}
+                        onPress={() => router.push('/(app)/tech/orders/new')}
                     >
                         <MaterialIcons name="add-circle-outline" size={32} color="#22c55e" />
                         <Text className="text-white font-bold mt-2">Nova O.S.</Text>
@@ -105,7 +105,7 @@ export default function Dashboard() {
 
                     <TouchableOpacity
                         className="w-[48%] bg-dark p-4 rounded-2xl mb-4 border border-gray-800 items-center justify-center flex-col"
-                        onPress={() => console.log("Navigate Clientes")}
+                        onPress={() => router.push('/(app)/tech/customers')}
                     >
                         <MaterialIcons name="people-outline" size={32} color="#3b82f6" />
                         <Text className="text-white font-bold mt-2">Clientes</Text>
@@ -113,7 +113,7 @@ export default function Dashboard() {
 
                     <TouchableOpacity
                         className="w-[48%] bg-dark p-4 rounded-2xl mb-4 border border-gray-800 items-center justify-center flex-col"
-                        onPress={() => console.log("Navigate Agenda")}
+                        onPress={() => router.push('/(app)/tech/agenda')}
                     >
                         <MaterialIcons name="calendar-today" size={32} color="#a855f7" />
                         <Text className="text-white font-bold mt-2">Agenda</Text>
@@ -121,7 +121,7 @@ export default function Dashboard() {
 
                     <TouchableOpacity
                         className="w-[48%] bg-dark p-4 rounded-2xl mb-4 border border-gray-800 items-center justify-center flex-col"
-                        onPress={() => console.log("Navigate Métricas")}
+                        onPress={() => router.push('/(app)/tech/metrics')}
                     >
                         <MaterialIcons name="bar-chart" size={32} color="#eab308" />
                         <Text className="text-white font-bold mt-2">Métricas</Text>
