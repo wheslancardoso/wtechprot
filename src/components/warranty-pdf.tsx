@@ -208,11 +208,26 @@ function generateHash(data: OrderData, storeName: string): string {
 }
 
 // ==================================================
-// Função auxiliar para limpar IP e formatar
+// Função auxiliar para mascarar o IP (Segurança/LGPD)
 // ==================================================
-function cleanIp(ip?: string) {
+function maskIp(ip?: string) {
     if (!ip) return 'N/A'
-    return ip.replace('::ffff:', '')
+    const clean = ip.replace('::ffff:', '')
+
+    // Se for IPv4 (x.x.x.x)
+    if (clean.includes('.')) {
+        const parts = clean.split('.')
+        if (parts.length === 4) {
+            return `${parts[0]}.${parts[1]}.***.***`
+        }
+    }
+
+    // Se for IPv6 ou outro formato, mascara a metade final
+    if (clean.length > 8) {
+        return `${clean.substring(0, Math.floor(clean.length / 2))}***`
+    }
+
+    return '***'
 }
 
 // ==================================================
@@ -388,7 +403,10 @@ function WarrantyDocument({ data, settings }: { data: OrderData; settings: Store
                                 DOCUMENTO ASSINADO DIGITALMENTE VIA {settings.trade_name.toUpperCase()}
                             </Text>
                             <Text style={styles.digitalSignatureText}>
-                                Assinado por: {data.customerName} | Data/Hora: {formatDateToLocal(data.signatureEvidence.accepted_at, 'dd/MM/yyyy HH:mm:ss')} | IP: {cleanIp(data.signatureEvidence.ip_address)}
+                                Assinado por: {data.customerName} | Data/Hora: {formatDateToLocal(data.signatureEvidence.accepted_at, 'dd/MM/yyyy HH:mm:ss')}
+                            </Text>
+                            <Text style={styles.digitalSignatureText}>
+                                IP Registrado: {maskIp(data.signatureEvidence.ip_address)} (Registro de auditoria completo mantido em base segura via Hash)
                             </Text>
                             <Text style={styles.digitalSignatureText}>
                                 Hash de Integridade: {hash}
