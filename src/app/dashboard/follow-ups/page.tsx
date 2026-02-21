@@ -19,12 +19,14 @@ import { FollowUpActions } from './follow-up-actions'
 
 export const dynamic = 'force-dynamic'
 
-// Type labels
-const typeLabels: Record<string, { label: string; color: string }> = {
-    post_delivery: { label: 'Pós-Entrega', color: 'bg-blue-500/10 text-blue-500' },
-    warranty_check: { label: 'Check Garantia', color: 'bg-purple-500/10 text-purple-500' },
-    warranty_expiring: { label: 'Garantia Vencendo', color: 'bg-orange-500/10 text-orange-500' },
-    manual: { label: 'Manual', color: 'bg-gray-500/10 text-gray-500' },
+// Type labels — use variant instead of dynamic class strings (avoids Tailwind purge issues)
+type FollowUpType = 'post_delivery' | 'warranty_check' | 'warranty_expiring' | 'manual'
+
+const typeLabels: Record<string, { label: string; variant: 'default' | 'secondary' | 'outline' | 'destructive' }> = {
+    post_delivery: { label: 'Pós-Entrega', variant: 'default' },
+    warranty_check: { label: 'Check Garantia', variant: 'secondary' },
+    warranty_expiring: { label: 'Garantia Vencendo', variant: 'destructive' },
+    manual: { label: 'Manual', variant: 'outline' },
 }
 
 export default async function FollowUpsPage() {
@@ -43,8 +45,8 @@ export default async function FollowUpsPage() {
         <div className="container mx-auto py-6 px-4 space-y-6">
             {/* Header */}
             <div>
-                <h1 className="text-2xl font-bold">Follow-ups</h1>
-                <p className="text-muted-foreground">Acompanhamento de clientes e garantias</p>
+                <h1 className="text-3xl font-bold tracking-tight">Follow-ups</h1>
+                <p className="text-muted-foreground mt-1">Acompanhamento de clientes e garantias</p>
             </div>
 
             {/* Stats Cards */}
@@ -309,7 +311,7 @@ export default async function FollowUpsPage() {
                                             )}
 
                                             <div className="flex items-center justify-between w-full md:w-auto pl-11 md:pl-0 gap-3">
-                                                <Badge className={typeLabels[followUp.type]?.color || ''}>
+                                                <Badge variant={typeLabels[followUp.type]?.variant ?? 'secondary'}>
                                                     {typeLabels[followUp.type]?.label || followUp.type}
                                                 </Badge>
 
@@ -336,7 +338,7 @@ function FollowUpItem({ followUp, isOverdue = false }: { followUp: any; isOverdu
             }`}>
             {/* Header Mobile: Badge + Date */}
             <div className="flex items-center justify-between w-full md:w-auto gap-2">
-                <Badge className={typeLabels[followUp.type]?.color || ''}>
+                <Badge variant={typeLabels[followUp.type]?.variant ?? 'secondary'}>
                     {typeLabels[followUp.type]?.label || followUp.type}
                 </Badge>
                 <span className={`text-xs md:hidden ${isOverdue ? 'text-orange-500 font-medium' : 'text-muted-foreground'}`}>

@@ -99,7 +99,7 @@ export default async function CustomerDetailPage({ params }: PageProps) {
                     </div>
                     <div className="text-left sm:text-right">
                         <p className="text-sm text-muted-foreground">Lifetime Value</p>
-                        <p className="text-2xl font-bold text-green-600">
+                        <p className="text-2xl font-bold text-primary">
                             {formatMoney(customer.total_ltv)}
                         </p>
                     </div>
@@ -188,7 +188,7 @@ export default async function CustomerDetailPage({ params }: PageProps) {
                                                                 <Badge variant={order.status as 'open' | 'finished'}>
                                                                     {statusLabels[order.status] || order.status}
                                                                 </Badge>
-                                                                <p className="font-bold text-green-600 mt-1">
+                                                                <p className="font-bold text-primary mt-1">
                                                                     {order.labor_cost ? formatMoney(order.labor_cost) : '—'}
                                                                 </p>
                                                             </div>

@@ -23,6 +23,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
 
 // Icons
 import {
@@ -33,6 +34,7 @@ import {
     RefreshCw,
     AlertCircle,
 } from 'lucide-react'
+// Loader2 kept for potential future use; used in error retry button
 
 // Type for order with joined relations
 interface OrderWithRelations extends Order {
@@ -159,10 +161,25 @@ export default function OrdersPage() {
             {/* Filters */}
             <OrderFilters />
 
-            {/* Loading State */}
+            {/* Loading State — skeleton table preserves layout and reduces CLS */}
             {loading && (
-                <div className="flex h-[30vh] items-center justify-center">
-                    <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                <div className="rounded-md border bg-card">
+                    <div className="p-4 space-y-3">
+                        {/* Header row skeleton */}
+                        <div className="flex gap-4 pb-2 border-b">
+                            {[80, 180, 200, 160, 140, 60].map((w, i) => (
+                                <Skeleton key={i} className="h-4 rounded" style={{ width: w }} />
+                            ))}
+                        </div>
+                        {/* Data rows skeleton */}
+                        {Array.from({ length: 7 }).map((_, i) => (
+                            <div key={i} className="flex gap-4 py-2">
+                                {[80, 180, 200, 160, 140, 60].map((w, j) => (
+                                    <Skeleton key={j} className="h-4 rounded" style={{ width: w }} />
+                                ))}
+                            </div>
+                        ))}
+                    </div>
                 </div>
             )}
 

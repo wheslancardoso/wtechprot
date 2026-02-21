@@ -6,7 +6,7 @@ import { ptBR } from 'date-fns/locale'
 import type { Schedule, ScheduleSettings } from '@/types/database'
 import { generateScheduleLink } from '@/app/actions/schedules/generate-link-action'
 import { cancelSchedule, deleteSchedule, saveScheduleSettings, updateScheduleCustomer } from '@/app/actions/schedules/schedule-actions'
-import { useToast } from '@/hooks/use-toast'
+import { toast } from 'sonner'
 import { createClient } from '@/lib/supabase/client'
 import {
     Calendar,
@@ -30,6 +30,16 @@ import {
     Save,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 
 // ==================================================
 // Props
@@ -52,7 +62,7 @@ export function ScheduleDashboardClient({
     const [generatedLink, setGeneratedLink] = useState<string | null>(null)
     const [copied, setCopied] = useState(false)
     const [isPending, startTransition] = useTransition()
-    const { toast } = useToast()
+    const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null)
     const supabase = createClient()
 
     // Realtime Subscription
@@ -73,9 +83,8 @@ export function ScheduleDashboardClient({
                         setSchedules((prev) =>
                             prev.map((s) => (s.id === payload.new.id ? (payload.new as Schedule) : s))
                         )
-                        if (payload.new.status === 'confirmed') {
-                            toast({
-                                title: 'Novo agendamento!',
+                    if (payload.new.status === 'confirmed') {
+                            toast.success('Novo agendamento!', {
                                 description: 'Um cliente confirmou um agendamento agora.',
                             })
                         }
@@ -141,9 +150,9 @@ export function ScheduleDashboardClient({
             const result = await generateScheduleLink({})
             if (result.success && result.link) {
                 setGeneratedLink(result.link)
-                toast({ title: 'Link gerado!', description: 'Copie e envie ao cliente.' })
+                toast.success('Link gerado!', { description: 'Copie e envie ao cliente.' })
             } else {
-                toast({ title: 'Erro', description: result.error, variant: 'destructive' })
+                toast.error('Erro ao gerar link', { description: result.error })
             }
         })
     }
@@ -153,7 +162,7 @@ export function ScheduleDashboardClient({
         if (!generatedLink) return
         await navigator.clipboard.writeText(generatedLink)
         setCopied(true)
-        toast({ title: 'Link copiado!' })
+        toast.success('Link copiado!')
         setTimeout(() => setCopied(false), 2000)
     }
 
@@ -163,24 +172,30 @@ export function ScheduleDashboardClient({
             const result = await cancelSchedule(id)
             if (result.success) {
                 setSchedules(prev => prev.map(s => s.id === id ? { ...s, status: 'canceled' as const } : s))
-                toast({ title: 'Agendamento cancelado.' })
+                toast.success('Agendamento cancelado.')
             } else {
-                toast({ title: 'Erro', description: result.error, variant: 'destructive' })
+                toast.error('Erro ao cancelar', { description: result.error })
             }
         })
     }
 
-    // Excluir agendamento (somente cancelados)
-    async function handleDelete(id: string) {
-        if (!confirm('Tem certeza que deseja apagar este agendamento? Esta ação não pode ser desfeita.')) return
+    // Excluir agendamento (somente cancelados) — replaced confirm() with AlertDialog state
+    function handleDelete(id: string) {
+        setDeleteTargetId(id)
+    }
+
+    async function confirmDelete() {
+        if (!deleteTargetId) return
+        const id = deleteTargetId
+        setDeleteTargetId(null)
 
         startTransition(async () => {
             const result = await deleteSchedule(id)
             if (result.success) {
                 setSchedules(prev => prev.filter(s => s.id !== id))
-                toast({ title: 'Agendamento excluído definitivamente.' })
+                toast.success('Agendamento excluído definitivamente.')
             } else {
-                toast({ title: 'Erro', description: result.error, variant: 'destructive' })
+                toast.error('Erro ao excluir', { description: result.error })
             }
         })
     }
@@ -201,11 +216,11 @@ export function ScheduleDashboardClient({
             const result = await updateScheduleCustomer(id, editName, editPhone)
 
             if (!result.success) {
-                toast({ title: 'Erro ao salvar', description: result.error, variant: 'destructive' })
+                toast.error('Erro ao salvar', { description: result.error })
             } else {
                 setSchedules(prev => prev.map(s => s.id === id ? { ...s, customer_name: editName, customer_phone: editPhone } : s))
                 setEditingId(null)
-                toast({ title: 'Dados atualizados' })
+                toast.success('Dados atualizados')
             }
         })
     }
@@ -483,6 +498,27 @@ export function ScheduleDashboardClient({
                     ))
                 )}
             </div>
+
+            {/* Delete Confirmation Dialog — replaces native window.confirm() */}
+            <AlertDialog open={!!deleteTargetId} onOpenChange={(open) => !open && setDeleteTargetId(null)}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Excluir agendamento?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Esta ação não pode ser desfeita. O agendamento será removido permanentemente.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogAction
+                            onClick={confirmDelete}
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        >
+                            Excluir
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     )
 }
@@ -498,7 +534,6 @@ function SettingsPanel({
     onSave: (s: Partial<ScheduleSettings>) => void
 }) {
     const [isPending, startTransition] = useTransition()
-    const { toast } = useToast()
 
     const dayLabels = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
 
@@ -528,7 +563,7 @@ function SettingsPanel({
                 token_expiry_hours: tokenExpiry,
             })
             if (result.success) {
-                toast({ title: 'Configurações salvas!' })
+                toast.success('Configurações salvas!')
                 onSave({
                     work_days: workDays,
                     start_time: startTime,
@@ -539,7 +574,7 @@ function SettingsPanel({
                     token_expiry_hours: tokenExpiry,
                 })
             } else {
-                toast({ title: 'Erro', description: result.error, variant: 'destructive' })
+                toast.error('Erro ao salvar', { description: result.error })
             }
         })
     }

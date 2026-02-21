@@ -128,14 +128,23 @@
 /* ==================================================
    Base Styles
    ================================================== */
-* {
-  border-color: hsl(var(--border));
-}
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
 
-body {
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
-  font-family: var(--font-sans), system-ui, sans-serif;
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: var(--font-sans), system-ui, sans-serif;
+  }
+
+  /* Custom focus ring using brand neon green — WCAG 2.1 SC 2.4.7 */
+  *:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
 }
 
 /* ==================================================

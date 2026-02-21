@@ -2,11 +2,8 @@ import { SettingsProvider } from '@/components/settings-provider'
 import Link from 'next/link'
 import { Metadata } from 'next'
 import { getSettings } from '@/app/dashboard/settings/actions'
-import {
-
-    Bell,
-} from 'lucide-react'
 import { DashboardNav } from '@/components/dashboard-nav'
+import { DashboardPageTransition } from '@/components/dashboard-page-transition'
 
 export const dynamic = 'force-dynamic'
 
@@ -52,8 +49,12 @@ export default async function DashboardLayout({
                 <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
                     <div className="container mx-auto flex h-14 items-center justify-between px-4">
                         {/* Logo */}
-                        <Link href="/dashboard" className="font-bold text-lg mr-8 truncate max-w-[200px] text-primary">
-                            {brandName}
+                        <Link href="/dashboard" className="mr-8 shrink-0 flex items-center" aria-label="WFIX Tech - Início">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src="/logo.svg" alt="WFIX Tech" className="h-8 w-8 object-contain" />
+                            <span className="ml-2 font-bold text-base text-primary hidden sm:block truncate max-w-[140px]">
+                                {brandName}
+                            </span>
                         </Link>
 
                         {/* Navigation */}
@@ -63,7 +64,9 @@ export default async function DashboardLayout({
 
                 {/* Main Content */}
                 <main className="min-h-[calc(100vh-3.5rem)]">
-                    {children}
+                    <DashboardPageTransition>
+                        {children}
+                    </DashboardPageTransition>
                 </main>
             </div>
         </SettingsProvider>

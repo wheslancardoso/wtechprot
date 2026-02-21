@@ -20,16 +20,28 @@ import { Search, X, Filter, Loader2 } from 'lucide-react'
 // ==================================================
 // Status Options
 // ==================================================
+// Dot color map for each status (avoids emoji — screen reader safe)
+const STATUS_DOT: Record<string, string> = {
+    open: 'bg-blue-400',
+    analyzing: 'bg-yellow-400',
+    waiting_approval: 'bg-orange-400',
+    waiting_parts: 'bg-purple-400',
+    in_progress: 'bg-blue-500',
+    ready: 'bg-green-400',
+    finished: 'bg-emerald-500',
+    canceled: 'bg-red-500',
+}
+
 const STATUS_OPTIONS = [
-    { value: 'all', label: 'Todos os Status' },
-    { value: 'open', label: '🔵 Abertas' },
-    { value: 'analyzing', label: '🟡 Em Análise' },
-    { value: 'waiting_approval', label: '🟠 Aguardando Aprovação' },
-    { value: 'waiting_parts', label: '🟣 Aguardando Peças' },
-    { value: 'in_progress', label: '🔵 Em Reparo' },
-    { value: 'ready', label: '🟢 Prontas' },
-    { value: 'finished', label: '✅ Finalizadas' },
-    { value: 'canceled', label: '❌ Canceladas' },
+    { value: 'all', label: 'Todos os Status', dot: null },
+    { value: 'open', label: 'Abertas', dot: STATUS_DOT.open },
+    { value: 'analyzing', label: 'Em Análise', dot: STATUS_DOT.analyzing },
+    { value: 'waiting_approval', label: 'Aguardando Aprovação', dot: STATUS_DOT.waiting_approval },
+    { value: 'waiting_parts', label: 'Aguardando Peças', dot: STATUS_DOT.waiting_parts },
+    { value: 'in_progress', label: 'Em Reparo', dot: STATUS_DOT.in_progress },
+    { value: 'ready', label: 'Prontas', dot: STATUS_DOT.ready },
+    { value: 'finished', label: 'Finalizadas', dot: STATUS_DOT.finished },
+    { value: 'canceled', label: 'Canceladas', dot: STATUS_DOT.canceled },
 ]
 
 // ==================================================
@@ -135,7 +147,12 @@ export default function OrderFilters() {
                     <SelectContent>
                         {STATUS_OPTIONS.map((opt) => (
                             <SelectItem key={opt.value} value={opt.value}>
-                                {opt.label}
+                                <span className="flex items-center gap-2">
+                                    {opt.dot && (
+                                        <span className={`inline-block h-2 w-2 rounded-full shrink-0 ${opt.dot}`} aria-hidden="true" />
+                                    )}
+                                    {opt.label}
+                                </span>
                             </SelectItem>
                         ))}
                     </SelectContent>

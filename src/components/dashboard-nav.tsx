@@ -38,26 +38,25 @@ export function DashboardNav() {
 
     return (
         <>
-            {/* Desktop Nav */}
-            <nav className="hidden md:flex items-center gap-1">
+            {/* Desktop Nav — icon-only at md, icon+label at xl+ */}
+            <nav className="hidden md:flex items-center gap-0.5 overflow-x-auto">
                 {menuItems.map((item) => {
                     const Icon = item.icon
                     const isActive = pathname === item.href
-                    const isSettings = item.label === 'Configurações'
 
                     return (
                         <Link
                             key={item.href}
                             href={item.href}
-                            title={isSettings ? item.label : undefined}
-                            className={`flex items-center gap-2 py-2 text-sm font-medium rounded-md transition-colors ${isSettings ? 'px-2' : 'px-3'
-                                } ${isActive
+                            title={item.label}
+                            aria-label={item.label}
+                            className={`flex items-center gap-1.5 py-2 px-2 xl:px-3 text-xs xl:text-sm font-medium rounded-md transition-colors whitespace-nowrap ${isActive
                                     ? 'bg-primary/10 text-primary'
                                     : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                                 }`}
                         >
-                            <Icon className="h-4 w-4" />
-                            {!isSettings && <span>{item.label}</span>}
+                            <Icon className="h-4 w-4 shrink-0" />
+                            <span className="hidden xl:block">{item.label}</span>
                         </Link>
                     )
                 })}
