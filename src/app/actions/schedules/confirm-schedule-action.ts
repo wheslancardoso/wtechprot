@@ -99,7 +99,11 @@ export async function confirmSchedule(params: ConfirmParams): Promise<ConfirmSch
             serviceNotes: schedule.notes
         })
 
+        // Atualiza a visão do técnico
         revalidatePath('/dashboard/agenda')
+        // Invalida a URL pública do link gerado pra evitar que a Vercel continue exibindo a tela de confirmação após recarregar a página.
+        revalidatePath(`/agendar/${schedule.token}`)
+
         return { success: true }
     } catch (err) {
         console.error('Erro inesperado confirmSchedule:', err)
