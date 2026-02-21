@@ -173,23 +173,20 @@ interface OrderData {
     customerName: string
     customerPhone: string
     equipmentType: string
-    equipmentBrand?: string
-    equipmentModel?: string
-    diagnosisText?: string
+    equipmentBrand: string
+    equipmentModel: string
+    diagnosisText: string
     laborCost: number
-    externalParts: Array<{
-        name: string
-        url?: string
-        price?: number
-    }>
     photosCheckout: string[]
     finishedAt: string
+    externalParts: Array<{ name: string; price?: number }>
     signatureEvidence?: {
-        ip_address: string
+        ip_address?: string
         accepted_at: string
-        device_fingerprint: string
-        terms_version: string
-        method: string
+        device_fingerprint?: string
+        terms_version?: string
+        method?: string
+        integrity_hash?: string
     } | null
 }
 

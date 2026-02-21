@@ -11,6 +11,7 @@ import { updateOrderStatus, confirmPartArrival, deleteOrder, reopenOrder } from 
 import BudgetModal from './budget-modal'
 import FinishOrderModal from './finish-order-modal'
 import PdfButtonWrapper from './pdf-button-wrapper'
+import AuditReportPdfWrapper from '@/components/audit-report-pdf-wrapper'
 import ShareActions from '@/components/share-actions'
 
 // Types
@@ -48,7 +49,8 @@ import {
     MoreVertical,
     Share2,
     FileDown,
-    ArrowLeft
+    ArrowLeft,
+    ShieldCheck
 } from 'lucide-react'
 
 interface OrderActionsProps {
@@ -354,6 +356,19 @@ WTECH`
                                     <RefreshCcw className="mr-2 h-4 w-4" />
                                     Reabrir Ordem
                                 </DropdownMenuItem>
+                            )}
+
+                            {/* Certificado de Auditoria (Se houver assinatura digital) */}
+                            {orderData?.signatureEvidence && (
+                                <div className="px-2 py-1">
+                                    <AuditReportPdfWrapper
+                                        orderData={orderData}
+                                        storeSettings={storeSettings!}
+                                        variant="ghost"
+                                        className="w-full text-left font-normal h-8 p-2 rounded-sm hover:bg-slate-800 focus:bg-slate-800 text-sm"
+                                        icon={<ShieldCheck className="mr-2 h-4 w-4" />}
+                                    />
+                                </div>
                             )}
 
                             {/* Cancel (if active) */}

@@ -1,7 +1,9 @@
 'use server'
 
-import { createAdminClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
+import { sendScheduleConfirmationAlert } from '@/lib/email'
+import { format, parseISO } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 
 export type ConfirmScheduleResult = {
     success: boolean
@@ -78,11 +80,25 @@ export async function confirmSchedule(params: ConfirmParams): Promise<ConfirmSch
 
         if (updateError) {
             console.error('Erro ao confirmar agendamento:', updateError)
-            return { success: false, error: 'Erro ao confirmar agendamento. Tente novamente.' }
+            return { success: false, error: 'Erro ao processar confirmação. Tente contatar o técnico diretamente.' }
         }
 
-        revalidatePath('/dashboard/agenda')
+        // ===================================
+        // Disparo de Alerta Assíncrono (Resend)
+        // ===================================
+        const dateParsed = schedule.scheduled_date ? format(parseISO(schedule.scheduled_date), "dd/MM/yyyy", { locale: ptBR }) : ''
+        const timeParsed = schedule.scheduled_time?.substring(0, 5) ?? ''
 
+        // Fire and forget (não seguramos a requisição do usuário esperando o email ser enviado)
+        void sendScheduleConfirmationAlert({
+            customerName: schedule.customer_name ?? 'Cliente Anônimo',
+            customerPhone: schedule.customer_phone ?? 'Não informado',
+            scheduledDate: dateParsed,
+            scheduledTime: timeParsed,
+            serviceNotes: schedule.notes
+        })
+
+        revalidatePath('/dashboard/agenda')
         return { success: true }
     } catch (err) {
         console.error('Erro inesperado confirmSchedule:', err)
