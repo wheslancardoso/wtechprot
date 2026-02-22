@@ -353,56 +353,12 @@ const styles = StyleSheet.create({
     }
 })
 
-// ==================================================
-// Tipo de dados da Loja (Settings)
-// ==================================================
-interface StoreSettings {
-    trade_name: string
-    legal_document?: string | null
-    phone?: string | null
-    logo_url?: string | null
-    warranty_days_labor?: number
-    address?: {
-        street?: string
-        number?: string
-        neighborhood?: string
-        city?: string
-        state?: string
-        zip?: string
-    } | null
-}
+import type { StoreSettings } from '@/components/warranty-pdf'
 
-// ==================================================
-// Tipo de dados da OS
-// ==================================================
-interface OrderData {
-    displayId: string | number;
-    checkout_checklist?: Record<string, boolean> | null;
-    customerName: string
-    customerPhone: string
-    equipmentType: string
-    equipmentBrand: string
-    equipmentModel: string
-    diagnosisText: string
-    laborCost: number
+import type { OrderData as BaseOrderData } from '@/components/warranty-pdf'
+
+interface OrderData extends BaseOrderData {
     photosCheckin?: string[]
-    photosCheckout: string[]
-    finishedAt: string
-    externalParts: Array<{ name: string; price?: number }>
-    signatureEvidence?: {
-        ip_address?: string
-        accepted_at: string
-        device_fingerprint?: string
-        terms_version?: string
-        method?: string
-        integrity_hash?: string
-    } | null
-    custodyEvidence?: {
-        custody_signed_at?: string
-        custody_ip?: string
-        custody_signature_url?: string
-        custody_integrity_hash?: string
-    } | null
 }
 
 // ==================================================
@@ -470,11 +426,10 @@ function formatAddress(address?: StoreSettings['address']): string {
 // ==================================================
 // Componente PDF
 // ==================================================
-function WarrantyDocument({ data, settings }: { data: OrderData; settings: StoreSettings }) {
+function DeliveryReceiptDocument({ data, settings }: { data: OrderData; settings: StoreSettings }) {
     const osNumber = String(data.displayId).padStart(4, '0')
     const hash = generateHash(data, settings.trade_name)
     const finishedDate = formatDateToLocal(data.finishedAt, 'dd/MM/yyyy')
-    const warrantyDays = settings.warranty_days_labor || 90
 
     return (
         <Document>
@@ -489,7 +444,7 @@ function WarrantyDocument({ data, settings }: { data: OrderData; settings: Store
                         </View>
                     )}
                     <View style={styles.headerRight}>
-                        <Text style={styles.documentTitle}>Termo de Garantia</Text>
+                        <Text style={styles.documentTitle}>Termo de Entrega</Text>
                         <Text style={styles.companyName}>{settings.trade_name}</Text>
                         {settings.legal_document && (
                             <Text style={styles.companyInfo}>CNPJ/CPF: {settings.legal_document}</Text>
@@ -580,6 +535,31 @@ function WarrantyDocument({ data, settings }: { data: OrderData; settings: Store
                     </View>
                 </View>
 
+                {/* Checklist de Entrega */}
+                {data.checkout_checklist && Object.keys(data.checkout_checklist).length > 0 && (
+                    <View style={styles.section}>
+                        <View style={styles.sectionHeader}>
+                            <Text style={styles.sectionTitle}>Checklist e Validação na Entrega</Text>
+                        </View>
+                        <View style={styles.checklistGrid}>
+                            {Object.entries(data.checkout_checklist).map(([key, value]) => {
+                                const label = key === 'limpeza_ok' ? 'Limpeza higiênica realizada' :
+                                    key === 'testes_ok' ? 'Testes de bancada aprovados' :
+                                        key === 'acessorios_ok' ? 'Acessórios originais devolvidos' :
+                                            key === 'cliente_ciente' ? 'Ciente das regras de garantia' : key
+                                return (
+                                    <View key={key} style={styles.checklistItem}>
+                                        <View style={styles.iconWrapper}>
+                                            <Text style={value ? styles.checkIcon : styles.uncheckIcon}>{value ? '☑' : '☐'}</Text>
+                                        </View>
+                                        <Text style={value ? styles.checkText : styles.checkTextMuted}>{label}</Text>
+                                    </View>
+                                )
+                            })}
+                        </View>
+                    </View>
+                )}
+
                 {/* Peças Externas */}
                 {data.externalParts.length > 0 && (
                     <View style={styles.section}>
@@ -606,11 +586,25 @@ function WarrantyDocument({ data, settings }: { data: OrderData; settings: Store
                     </View>
                 )}
 
+                {/* Fotos de Entrada (Check-in) */}
+                {data.photosCheckin && data.photosCheckin.length > 0 && (
+                    <View style={styles.section}>
+                        <View style={styles.sectionHeader}>
+                            <Text style={styles.sectionTitle}>Evidências de Entrada (Check-in)</Text>
+                        </View>
+                        <View style={styles.photosGrid}>
+                            {data.photosCheckin.slice(0, 4).map((url, index) => (
+                                <Image key={index} style={styles.photoImage} src={url} />
+                            ))}
+                        </View>
+                    </View>
+                )}
+
                 {/* Fotos */}
                 {data.photosCheckout.length > 0 && (
                     <View style={styles.section}>
                         <View style={styles.sectionHeader}>
-                            <Text style={styles.sectionTitle}>Evidências de Entrega</Text>
+                            <Text style={styles.sectionTitle}>Evidências de Saída (Check-out)</Text>
                         </View>
                         <View style={styles.photosGrid}>
                             {data.photosCheckout.slice(0, 4).map((url, index) => (
@@ -643,11 +637,7 @@ function WarrantyDocument({ data, settings }: { data: OrderData; settings: Store
                     )}
 
                     <Text style={styles.warrantyText}>
-                        TERMO DE GARANTIA: A {settings.trade_name.toUpperCase()} assegura prazos de {warrantyDays} ({warrantyDays === 90 ? 'noventa' : warrantyDays}) dias
-                        de garantia única e exclusiva para o serviço (mão de obra) executado, a contar desta entrega.
-                    </Text>
-                    <Text style={styles.warrantyDisclaimer}>
-                        A interrupção inadvertida do lacre de segurança, falhas por descargas elétricas, quedas, líquidos, ou instalação inadequada por terceiros resultarão na invalidação e perda imediata desta garantia, isentando a prestadora de quaisquer obrigações.
+                        TERMO DE ENTREGA: Declaro que recebi o equipamento listado acima nas condições descritas, com os serviços executados a contento e os acessórios pertinentes devolvidos.
                     </Text>
                     <Text style={styles.legalText}>
                         Documento regido e válido conforme MP 2.200-2/2001 e Lei 14.063/2020 para Assinatura Eletrônica.
@@ -661,7 +651,7 @@ function WarrantyDocument({ data, settings }: { data: OrderData; settings: Store
 // ==================================================
 // Botão de Download
 // ==================================================
-interface WarrantyPdfButtonProps {
+interface DeliveryReceiptPdfButtonProps {
     orderData: OrderData
     storeSettings: StoreSettings
     className?: string
@@ -669,14 +659,14 @@ interface WarrantyPdfButtonProps {
     icon?: React.ReactNode
 }
 
-export default function WarrantyPdfButton({ orderData, storeSettings, className, variant = "outline", icon }: WarrantyPdfButtonProps) {
+export default function DeliveryReceiptPdfButton({ orderData, storeSettings, className, variant = "outline", icon }: DeliveryReceiptPdfButtonProps) {
     const osNumber = String(orderData.displayId).padStart(4, '0')
     const storeName = storeSettings.trade_name.replace(/\s+/g, '_').toUpperCase()
-    const fileName = `${storeName}_OS_${osNumber}_Garantia.pdf`
+    const fileName = `${storeName}_OS_${osNumber}_Entrega.pdf`
 
     return (
         <PDFDownloadLink
-            document={<WarrantyDocument data={orderData} settings={storeSettings} />}
+            document={<DeliveryReceiptDocument data={orderData} settings={storeSettings} />}
             fileName={fileName}
             className={className}
         >
@@ -694,7 +684,7 @@ export default function WarrantyPdfButton({ orderData, storeSettings, className,
                     ) : (
                         <>
                             {icon ? icon : <FileDown className="mr-2 h-4 w-4" />}
-                            {!icon && "Baixar Termo de Garantia"}
+                            {!icon && "Baixar Termo de Entrega"}
                         </>
                     )}
                 </Button>

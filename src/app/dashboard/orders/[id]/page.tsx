@@ -139,6 +139,7 @@ export default async function OrderDetailPage({ params }: PageProps) {
         equipmentModel: equipment?.model || '',
         diagnosisText: order.diagnosis_text || '',
         laborCost: order.labor_cost || 0,
+        photosCheckin: order.photos_checkin || [],
         photosCheckout: order.photos_checkout || [],
         finishedAt: order.finished_at || new Date().toISOString(),
         externalParts: [],
