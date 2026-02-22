@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react'
 import Image from 'next/image'
 import { createBrowserClient } from '@supabase/ssr'
+import imageCompression from 'browser-image-compression'
 
 // UI Components
 import { Button } from '@/components/ui/button'
@@ -70,23 +71,40 @@ export default function ImageUpload({
                     continue
                 }
 
-                // Validar tamanho (max 5MB)
-                if (file.size > 5 * 1024 * 1024) {
-                    setError(`Arquivo "${file.name}" excede 5MB`)
-                    continue
+                // Validar tamanho original para log (opcional)
+                const originalSizeMb = (file.size / 1024 / 1024).toFixed(2);
+                console.log(`Tamanho original de ${file.name}: ${originalSizeMb} MB`);
+
+                // Otimizar a imagem antes de fazer o upload
+                const options = {
+                    maxSizeMB: 0.5, // Máximo 500KB
+                    maxWidthOrHeight: 1920, // Resolução máxima Full HD
+                    useWebWorker: true,
+                    fileType: 'image/webp' as string // Converter para WebP para economizar mais
+                };
+
+                let compressedFile = file;
+                try {
+                    compressedFile = await imageCompression(file, options);
+                    const newSizeMb = (compressedFile.size / 1024 / 1024).toFixed(2);
+                    console.log(`Tamanho otimizado: ${newSizeMb} MB`);
+                } catch (error) {
+                    console.error("Erro ao comprimir imagem, usando o arquivo original", error);
                 }
 
                 // Gerar nome único
                 const timestamp = Date.now()
-                const ext = file.name.split('.').pop()
+                // Sempre usar extensão webp já que estamos forçando a conversão
+                const ext = 'webp'
                 const fileName = `${orderId}/${type}/${timestamp}_${i}.${ext}`
 
                 // Upload para Supabase Storage
                 const { data, error: uploadError } = await supabase.storage
                     .from('os-evidence')
-                    .upload(fileName, file, {
+                    .upload(fileName, compressedFile, {
                         cacheControl: '3600',
                         upsert: false,
+                        contentType: 'image/webp'
                     })
 
                 if (uploadError) {
@@ -145,7 +163,7 @@ export default function ImageUpload({
             }
 
             // Atualizar estado
-            const newImages = images.filter(img => img !== url)
+            const newImages = images.filter((img: string) => img !== url)
             setImages(newImages)
 
             if (onUploadComplete) {
@@ -216,7 +234,7 @@ export default function ImageUpload({
                                 Clique para adicionar fotos
                             </span>
                             <span className="text-xs text-muted-foreground">
-                                JPG, PNG ou WEBP (máx. 5MB cada)
+                                Otimização automática p/ web (PNG/JPG)
                             </span>
                         </>
                     )}
@@ -226,7 +244,7 @@ export default function ImageUpload({
             {/* Image Gallery */}
             {images.length > 0 && (
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                    {images.map((url, index) => (
+                    {images.map((url: string, index: number) => (
                         <div
                             key={url}
                             className="relative group aspect-square rounded-lg overflow-hidden border bg-muted"
