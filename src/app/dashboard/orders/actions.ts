@@ -497,9 +497,10 @@ export async function confirmPartArrival(orderId: string, origin: 'client' | 'ad
 export async function finishOrderWithPayment(
     orderId: string,
     amountReceived: number,
-    paymentMethod: 'pix' | 'cash' | 'card_machine'
+    paymentMethod: 'pix' | 'cash' | 'card_machine',
+    checkoutChecklist?: Record<string, boolean>
 ): Promise<ActionResult> {
-    console.log('💰 finishOrderWithPayment iniciado:', { orderId, amountReceived, paymentMethod })
+    console.log('💰 finishOrderWithPayment iniciado:', { orderId, amountReceived, paymentMethod, checklist: checkoutChecklist })
 
     try {
         // 1. Validar inputs
@@ -548,6 +549,7 @@ export async function finishOrderWithPayment(
                 payment_received_at: now.toISOString(),
                 finished_at: now.toISOString(),
                 store_snapshot: storeSnapshot,
+                checkout_checklist: checkoutChecklist || null,
                 // Warranty fields
                 warranty_days: warrantyDays,
                 warranty_start_date: now.toISOString(),

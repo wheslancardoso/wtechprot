@@ -169,7 +169,8 @@ interface StoreSettings {
 // Tipo de dados da OS
 // ==================================================
 interface OrderData {
-    displayId: string | number
+    displayId: number;
+    checkout_checklist?: Record<string, boolean> | null;
     customerName: string
     customerPhone: string
     equipmentType: string
@@ -382,6 +383,25 @@ function WarrantyDocument({ data, settings }: { data: OrderData; settings: Store
                                 A garantia das peças é de responsabilidade direta do vendedor, conforme Art. 18 do CDC.
                                 A {settings.trade_name} não se responsabiliza por defeitos nas peças externas.
                             </Text>
+                        </View>
+                    </View>
+                )}
+
+                {/* Checklist de Entrega */}
+                {data.checkout_checklist && (
+                    <View style={styles.section}>
+                        <Text style={styles.sectionTitle}>Checklist de Entrega / Conferência</Text>
+                        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
+                            {Object.entries(data.checkout_checklist).map(([key, value]) => (
+                                <Text key={key} style={{ fontSize: 9, color: value ? '#059669' : '#94a3b8' }}>
+                                    {value ? '☑' : '☐'} {
+                                        key === 'limpeza_ok' ? 'Limpeza realizada' :
+                                            key === 'testes_ok' ? 'Testes concluídos' :
+                                                key === 'acessorios_ok' ? 'Acessórios devolvidos' :
+                                                    key === 'cliente_ciente' ? 'Ciente da garantia' : key
+                                    }
+                                </Text>
+                            ))}
                         </View>
                     </View>
                 )}

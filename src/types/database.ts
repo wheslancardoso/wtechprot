@@ -62,6 +62,9 @@ export interface Order {
     created_at: string
     updated_at: string
     finished_at: string | null
+    photos_checkin: string[] | null // New field
+    photos_checkout: string[] | null // New field
+    checkout_checklist: Record<string, boolean> | null // New field
     // Home Care / Custody fields
     accessories_received: string[] | null // JSONB array of strings
     custody_conditions: string | null
@@ -171,6 +174,9 @@ export interface OrderInsert {
     parts_cost_external?: number
     diagnosis_text?: string | null
     solution_text?: string | null
+    photos_checkin?: string[] | null
+    photos_checkout?: string[] | null
+    checkout_checklist?: Record<string, boolean> | null
     // Home Care / Custody fields
     accessories_received?: string[] | null
     custody_conditions?: string | null

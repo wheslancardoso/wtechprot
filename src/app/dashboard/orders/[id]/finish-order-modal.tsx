@@ -39,7 +39,10 @@ import {
     Printer,
     Copy,
     FileDown,
+    CheckSquare,
 } from 'lucide-react'
+
+import { Checkbox } from '@/components/ui/checkbox'
 
 import PdfButtonWrapper from './pdf-button-wrapper'
 import type { OrderData, StoreSettings } from '@/components/warranty-pdf'
@@ -50,6 +53,7 @@ import type { OrderData, StoreSettings } from '@/components/warranty-pdf'
 const finishSchema = z.object({
     amountReceived: z.number().min(0, 'Valor inválido'),
     paymentMethod: z.enum(['pix', 'cash', 'card_machine']),
+    checkoutChecklist: z.record(z.boolean()).optional(),
 })
 
 type FinishFormData = z.infer<typeof finishSchema>
@@ -96,6 +100,12 @@ export default function FinishOrderModal({ orderId, open, onOpenChange, orderDat
         defaultValues: {
             amountReceived: initialAmount,
             paymentMethod: undefined,
+            checkoutChecklist: {
+                limpeza_ok: false,
+                testes_ok: false,
+                acessorios_ok: false,
+                cliente_ciente: false,
+            },
         },
     })
 
@@ -109,7 +119,8 @@ export default function FinishOrderModal({ orderId, open, onOpenChange, orderDat
             const result = await finishOrderWithPayment(
                 orderId,
                 data.amountReceived,
-                data.paymentMethod
+                data.paymentMethod,
+                data.checkoutChecklist as Record<string, boolean>
             )
 
             if (result.success) {
@@ -315,6 +326,55 @@ conforme CDC.
                                 {errors.amountReceived && (
                                     <p className="text-sm text-destructive">{errors.amountReceived.message}</p>
                                 )}
+                            </div>
+
+                            {/* Checklist de Saída */}
+                            <div className="space-y-3 pt-2 border-t">
+                                <Label className="text-sm font-bold flex items-center gap-2">
+                                    <CheckSquare className="h-4 w-4" /> Checklist de Saída (Opcional)
+                                </Label>
+                                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                                    <div className="flex items-center space-x-2">
+                                        <Checkbox
+                                            id="limpeza_ok"
+                                            checked={!!watch('checkoutChecklist.limpeza_ok')}
+                                            onCheckedChange={(checked) => setValue('checkoutChecklist.limpeza_ok', !!checked)}
+                                        />
+                                        <label htmlFor="limpeza_ok" className="text-xs font-medium leading-none cursor-pointer">
+                                            Limpeza realizada
+                                        </label>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                        <Checkbox
+                                            id="testes_ok"
+                                            checked={!!watch('checkoutChecklist.testes_ok')}
+                                            onCheckedChange={(checked) => setValue('checkoutChecklist.testes_ok', !!checked)}
+                                        />
+                                        <label htmlFor="testes_ok" className="text-xs font-medium leading-none cursor-pointer">
+                                            Testes concluídos
+                                        </label>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                        <Checkbox
+                                            id="acessorios_ok"
+                                            checked={!!watch('checkoutChecklist.acessorios_ok')}
+                                            onCheckedChange={(checked) => setValue('checkoutChecklist.acessorios_ok', !!checked)}
+                                        />
+                                        <label htmlFor="acessorios_ok" className="text-xs font-medium leading-none cursor-pointer">
+                                            Acessórios devolvidos
+                                        </label>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                        <Checkbox
+                                            id="cliente_ciente"
+                                            checked={!!watch('checkoutChecklist.cliente_ciente')}
+                                            onCheckedChange={(checked) => setValue('checkoutChecklist.cliente_ciente', !!checked)}
+                                        />
+                                        <label htmlFor="cliente_ciente" className="text-xs font-medium leading-none cursor-pointer">
+                                            Cliente ciente da garantia
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
 
                             {/* Método de Pagamento */}
