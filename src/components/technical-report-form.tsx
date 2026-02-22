@@ -249,7 +249,7 @@ export default function TechnicalReportForm({
                         onClick={() => {
                             const phone = orderData.customerPhone?.replace(/\D/g, '') || ''
                             const link = `${window.location.origin}/os/${orderData.displayId}`
-                            const message = `Olá, *${orderData.customerName}*!\nSeu equipamento já foi analisado.\nConfira o Laudo Técnico com o diagnóstico e as fotos do serviço no link seguro abaixo:\n${link}\n\nAtt, Equipe ${storeSettings.trade_name}.`
+                            const message = `Olá, *${orderData.customerName}*!\nSeu equipamento já foi analisado.\nConfira o Laudo Técnico com o diagnóstico e as fotos do serviço no link seguro abaixo:\n${link}`
 
                             const target = phone.length >= 10 ? `55${phone}` : ''
                             window.open(`https://api.whatsapp.com/send?phone=${target}&text=${encodeURIComponent(message)}`, '_blank')
