@@ -159,16 +159,16 @@ export default async function OrderDetailPage({ params }: PageProps) {
         legal_document: tenant.legal_document,
         phone: tenant.phone,
         logo_url: tenant.logo_url,
-        warranty_days_labor: tenant.warranty_days || 90,
+        warranty_days_labor: tenant.warranty_days || 180,
         address: tenant.address
     } : null
 
     const storeSettings: StoreSettings = snapshot || (currentSettings ? {
         ...currentSettings,
-        warranty_days_labor: currentSettings.warranty_days_labor || 90,
+        warranty_days_labor: currentSettings.warranty_days_labor || 180,
     } : {
         trade_name: 'Minha Assistência',
-        warranty_days_labor: 90
+        warranty_days_labor: 180
     })
 
     // Helper to get the correct customer report

@@ -11,7 +11,6 @@ import { updateOrderStatus, confirmPartArrival, deleteOrder, reopenOrder } from 
 import BudgetModal from './budget-modal'
 import FinishOrderModal from './finish-order-modal'
 import PdfButtonWrapper from './pdf-button-wrapper'
-import DeliveryReceiptPdfWrapper from './delivery-receipt-pdf-wrapper'
 import AuditReportPdfWrapper from '@/components/audit-report-pdf-wrapper'
 import ShareActions from '@/components/share-actions'
 
@@ -318,24 +317,15 @@ WTECH`
                         variant="outline"
                     />
 
-                    {/* PDF Buttons (Visible if finished/ready) */}
+                    {/* PDF Button (Visible if finished/ready) */}
                     {(currentStatus === 'finished' || currentStatus === 'ready') && (
-                        <>
-                            <DeliveryReceiptPdfWrapper
-                                orderData={orderData!}
-                                storeSettings={storeSettings!}
-                                className="flex-1 sm:flex-none h-12 sm:w-12 p-0 flex items-center justify-center rounded-lg transition-colors shrink-0 text-emerald-500 border-emerald-500/30 hover:bg-emerald-500/10"
-                                variant="outline"
-                                icon={<PackageCheck className="h-5 w-5" />}
-                            />
-                            <PdfButtonWrapper
-                                orderData={orderData!}
-                                storeSettings={storeSettings!}
-                                className="flex-1 sm:flex-none h-12 sm:w-12 p-0 flex items-center justify-center rounded-lg transition-colors shrink-0"
-                                variant="outline"
-                                icon={<ShieldCheck className="h-5 w-5" />}
-                            />
-                        </>
+                        <PdfButtonWrapper
+                            orderData={orderData!}
+                            storeSettings={storeSettings!}
+                            className="flex-1 sm:flex-none h-12 sm:w-12 p-0 flex items-center justify-center rounded-lg transition-colors shrink-0"
+                            variant="outline"
+                            icon={<FileDown className="h-5 w-5" />}
+                        />
                     )}
 
                     {/* Dropdown Menu for Less Common Actions */}

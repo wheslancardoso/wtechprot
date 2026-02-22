@@ -1,10 +1,44 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Document, Page, Text, View, StyleSheet, PDFDownloadLink, Image } from '@react-pdf/renderer'
+import { useState, useCallback } from 'react'
+import { Document, Page, Text, View, StyleSheet, pdf, Image } from '@react-pdf/renderer'
 import { Button } from '@/components/ui/button'
 import { FileDown, Loader2 } from 'lucide-react'
 import { formatDateToLocal } from '@/lib/date-utils'
+
+// ==================================================
+// Utilidade: Converter URL de imagem para base64 JPEG data URI
+// react-pdf NÃO suporta WebP, então re-codificamos via canvas
+// ==================================================
+async function imageUrlToBase64(url: string): Promise<string | null> {
+    try {
+        const response = await fetch(url)
+        if (!response.ok) return null
+        const blob = await response.blob()
+
+        // Usar canvas para re-codificar a imagem como JPEG
+        // Isso converte WebP (não suportado por react-pdf) para JPEG
+        return new Promise((resolve) => {
+            const img = new window.Image()
+            img.crossOrigin = 'anonymous'
+            img.onload = () => {
+                const canvas = document.createElement('canvas')
+                canvas.width = img.naturalWidth
+                canvas.height = img.naturalHeight
+                const ctx = canvas.getContext('2d')
+                if (!ctx) { resolve(null); return }
+                ctx.drawImage(img, 0, 0)
+                const jpegDataUri = canvas.toDataURL('image/jpeg', 0.85)
+                resolve(jpegDataUri)
+            }
+            img.onerror = () => resolve(null)
+            img.src = URL.createObjectURL(blob)
+        })
+    } catch {
+        console.error('Erro ao converter imagem para base64:', url)
+        return null
+    }
+}
 
 // ==================================================
 // Cores e Variáveis
@@ -37,10 +71,19 @@ const styles = StyleSheet.create({
         paddingBottom: 15,
         marginBottom: 20,
     },
-    logo: {
-        width: 120,
-        height: 50,
-        objectFit: 'contain',
+    logoContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    logoTextWfix: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: primaryColor,
+    },
+    logoTextTech: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#000000',
     },
     headerRight: {
         flex: 1,
@@ -88,7 +131,6 @@ const styles = StyleSheet.create({
         borderLeftWidth: 3,
         borderLeftColor: primaryColor,
         marginBottom: 10,
-        borderRadius: 2,
     },
     sectionTitle: {
         fontSize: 10,
@@ -474,23 +516,19 @@ function WarrantyDocument({ data, settings }: { data: OrderData; settings: Store
     const osNumber = String(data.displayId).padStart(4, '0')
     const hash = generateHash(data, settings.trade_name)
     const finishedDate = formatDateToLocal(data.finishedAt, 'dd/MM/yyyy')
-    const warrantyDays = settings.warranty_days_labor || 90
+    const warrantyDays = settings.warranty_days_labor || 180
 
     return (
         <Document>
             <Page size="A4" style={styles.page}>
                 {/* Header Section */}
                 <View style={styles.headerContainer}>
-                    {settings.logo_url ? (
-                        <Image style={styles.logo} src={settings.logo_url} />
-                    ) : (
-                        <View style={{ width: 120 }}>
-                            <Text style={styles.companyName}>{settings.trade_name.toUpperCase()}</Text>
-                        </View>
-                    )}
+                    <View style={styles.logoContainer}>
+                        <Text style={styles.logoTextWfix}>WFIX </Text>
+                        <Text style={styles.logoTextTech}>Tech</Text>
+                    </View>
                     <View style={styles.headerRight}>
                         <Text style={styles.documentTitle}>Termo de Garantia</Text>
-                        <Text style={styles.companyName}>{settings.trade_name}</Text>
                         {settings.legal_document && (
                             <Text style={styles.companyInfo}>CNPJ/CPF: {settings.legal_document}</Text>
                         )}
@@ -643,7 +681,7 @@ function WarrantyDocument({ data, settings }: { data: OrderData; settings: Store
                     )}
 
                     <Text style={styles.warrantyText}>
-                        TERMO DE GARANTIA: A {settings.trade_name.toUpperCase()} assegura prazos de {warrantyDays} ({warrantyDays === 90 ? 'noventa' : warrantyDays}) dias
+                        TERMO DE GARANTIA: A {settings.trade_name.toUpperCase()} assegura prazos de {warrantyDays} ({warrantyDays === 180 ? 'cento e oitenta' : warrantyDays === 90 ? 'noventa' : warrantyDays}) dias
                         de garantia única e exclusiva para o serviço (mão de obra) executado, a contar desta entrega.
                     </Text>
                     <Text style={styles.warrantyDisclaimer}>
@@ -670,36 +708,65 @@ interface WarrantyPdfButtonProps {
 }
 
 export default function WarrantyPdfButton({ orderData, storeSettings, className, variant = "outline", icon }: WarrantyPdfButtonProps) {
+    const [isGenerating, setIsGenerating] = useState(false)
     const osNumber = String(orderData.displayId).padStart(4, '0')
     const storeName = storeSettings.trade_name.replace(/\s+/g, '_').toUpperCase()
     const fileName = `${storeName}_OS_${osNumber}_Garantia.pdf`
 
+    const handleDownload = useCallback(async () => {
+        setIsGenerating(true)
+        try {
+            // Converter logo se for URL externa
+            let logoBase64: string | undefined
+            if (storeSettings.logo_url?.startsWith('http')) {
+                logoBase64 = (await imageUrlToBase64(storeSettings.logo_url)) || undefined
+            }
+
+            const settingsWithBase64: StoreSettings = {
+                ...storeSettings,
+                logo_url: logoBase64 || storeSettings.logo_url,
+            }
+
+            // Gerar o PDF blob
+            const blob = await pdf(
+                <WarrantyDocument data={orderData} settings={settingsWithBase64} />
+            ).toBlob()
+
+            // Trigger download
+            const url = URL.createObjectURL(blob)
+            const link = document.createElement('a')
+            link.href = url
+            link.download = fileName
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
+            URL.revokeObjectURL(url)
+        } catch (error) {
+            console.error('Erro ao gerar PDF:', error)
+        } finally {
+            setIsGenerating(false)
+        }
+    }, [orderData, storeSettings, fileName])
+
     return (
-        <PDFDownloadLink
-            document={<WarrantyDocument data={orderData} settings={storeSettings} />}
-            fileName={fileName}
-            className={className}
+        <Button
+            variant={variant}
+            disabled={isGenerating}
+            onClick={handleDownload}
+            className={`w-full ${icon ? 'p-0 h-full bg-transparent hover:bg-transparent' : ''} ${className || ''}`}
         >
-            {({ loading }) => (
-                <Button
-                    variant={variant}
-                    disabled={loading}
-                    className={`w-full ${icon ? 'p-0 h-full bg-transparent hover:bg-transparent' : ''}`}
-                >
-                    {loading ? (
-                        <>
-                            <Loader2 className={`animate-spin ${icon ? 'h-4 w-4' : 'mr-2 h-4 w-4'}`} />
-                            {!icon && "Gerando PDF..."}
-                        </>
-                    ) : (
-                        <>
-                            {icon ? icon : <FileDown className="mr-2 h-4 w-4" />}
-                            {!icon && "Baixar Termo de Garantia"}
-                        </>
-                    )}
-                </Button>
+            {isGenerating ? (
+                <>
+                    <Loader2 className={`animate-spin ${icon ? 'h-4 w-4' : 'mr-2 h-4 w-4'}`} />
+                    {!icon && "Gerando PDF..."}
+                </>
+            ) : (
+                <>
+                    {icon ? icon : <FileDown className="mr-2 h-4 w-4" />}
+                    {!icon && "Baixar Termo de Garantia"}
+                </>
             )}
-        </PDFDownloadLink>
+        </Button>
     )
 }
 export type { OrderData, StoreSettings }

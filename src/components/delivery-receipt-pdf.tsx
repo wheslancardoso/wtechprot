@@ -1,10 +1,49 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Document, Page, Text, View, StyleSheet, PDFDownloadLink, Image } from '@react-pdf/renderer'
+import { useState, useCallback } from 'react'
+import { Document, Page, Text, View, StyleSheet, pdf, Image } from '@react-pdf/renderer'
 import { Button } from '@/components/ui/button'
 import { FileDown, Loader2 } from 'lucide-react'
 import { formatDateToLocal } from '@/lib/date-utils'
+
+// ==================================================
+// Utilidade: Converter URL de imagem para base64 JPEG data URI
+// react-pdf NÃO suporta WebP, então re-codificamos via canvas
+// ==================================================
+async function imageUrlToBase64(url: string): Promise<string | null> {
+    try {
+        const response = await fetch(url)
+        if (!response.ok) return null
+        const blob = await response.blob()
+
+        // Usar canvas para re-codificar a imagem como JPEG
+        // Isso converte WebP (não suportado por react-pdf) para JPEG
+        return new Promise((resolve) => {
+            const img = new window.Image()
+            img.crossOrigin = 'anonymous'
+            img.onload = () => {
+                const canvas = document.createElement('canvas')
+                canvas.width = img.naturalWidth
+                canvas.height = img.naturalHeight
+                const ctx = canvas.getContext('2d')
+                if (!ctx) { resolve(null); return }
+                ctx.drawImage(img, 0, 0)
+                const jpegDataUri = canvas.toDataURL('image/jpeg', 0.85)
+                resolve(jpegDataUri)
+            }
+            img.onerror = () => resolve(null)
+            img.src = URL.createObjectURL(blob)
+        })
+    } catch {
+        console.error('Erro ao converter imagem para base64:', url)
+        return null
+    }
+}
+
+async function convertAllImages(urls: string[]): Promise<string[]> {
+    const results = await Promise.all(urls.map(imageUrlToBase64))
+    return results.filter((r): r is string => r !== null)
+}
 
 // ==================================================
 // Cores e Variáveis
@@ -37,10 +76,19 @@ const styles = StyleSheet.create({
         paddingBottom: 15,
         marginBottom: 20,
     },
-    logo: {
-        width: 120,
-        height: 50,
-        objectFit: 'contain',
+    logoContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    logoTextWfix: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: primaryColor,
+    },
+    logoTextTech: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#000000',
     },
     headerRight: {
         flex: 1,
@@ -88,7 +136,6 @@ const styles = StyleSheet.create({
         borderLeftWidth: 3,
         borderLeftColor: primaryColor,
         marginBottom: 10,
-        borderRadius: 2,
     },
     sectionTitle: {
         fontSize: 10,
@@ -436,16 +483,12 @@ function DeliveryReceiptDocument({ data, settings }: { data: OrderData; settings
             <Page size="A4" style={styles.page}>
                 {/* Header Section */}
                 <View style={styles.headerContainer}>
-                    {settings.logo_url ? (
-                        <Image style={styles.logo} src={settings.logo_url} />
-                    ) : (
-                        <View style={{ width: 120 }}>
-                            <Text style={styles.companyName}>{settings.trade_name.toUpperCase()}</Text>
-                        </View>
-                    )}
+                    <View style={styles.logoContainer}>
+                        <Text style={styles.logoTextWfix}>WFIX </Text>
+                        <Text style={styles.logoTextTech}>Tech</Text>
+                    </View>
                     <View style={styles.headerRight}>
                         <Text style={styles.documentTitle}>Termo de Entrega</Text>
-                        <Text style={styles.companyName}>{settings.trade_name}</Text>
                         {settings.legal_document && (
                             <Text style={styles.companyInfo}>CNPJ/CPF: {settings.legal_document}</Text>
                         )}
@@ -503,116 +546,64 @@ function DeliveryReceiptDocument({ data, settings }: { data: OrderData; settings
                     </View>
                 </View>
 
-                {/* Service Details Box */}
-                <View style={styles.section}>
-                    <View style={styles.sectionHeader}>
-                        <Text style={styles.sectionTitle}>Serviço Realizado</Text>
-                    </View>
-                    <View style={styles.serviceBox}>
-                        <Text style={styles.serviceText}>
-                            {data.diagnosisText || 'Manutenção técnica realizada conforme diagnóstico preliminar.'}
-                        </Text>
-                        <View style={styles.costContainer}>
-                            <Text style={styles.costLabel}>Total da Mão de Obra</Text>
-                            <Text style={styles.costValue}>{formatCurrency(data.laborCost)}</Text>
-                        </View>
-                    </View>
-                </View>
-
-                {/* Bônus: Suporte Remoto */}
-                <View style={styles.bonusSection}>
-                    <Text style={styles.bonusTitle}>BÔNUS EXCLUSIVO: SUPORTE REMOTO</Text>
-                    <Text style={styles.bonusText}>
-                        Como cortesia pela sua confiança, esta OS lhe dá direito a 02 (dois) Tickets de Suporte Técnico (Acesso Remoto ou WhatsApp) para dúvidas e ajustes finos pertinentes ao serviço.
-                    </Text>
-                    <View style={styles.bonusDetailsContainer}>
-                        <Text style={{ fontSize: 7, color: '#065f46' }}>
-                            <Text style={{ fontWeight: 'bold' }}>Validade:</Text> 30 dias após entrega.
-                        </Text>
-                        <Text style={{ fontSize: 7, color: '#065f46' }}>
-                            <Text style={{ fontWeight: 'bold' }}>Regra:</Text> Cada ticket = 1 suporte de até 30min.
-                        </Text>
-                    </View>
-                </View>
-
                 {/* Checklist de Entrega */}
-                {data.checkout_checklist && Object.keys(data.checkout_checklist).length > 0 && (
-                    <View style={styles.section}>
-                        <View style={styles.sectionHeader}>
-                            <Text style={styles.sectionTitle}>Checklist e Validação na Entrega</Text>
-                        </View>
-                        <View style={styles.checklistGrid}>
-                            {Object.entries(data.checkout_checklist).map(([key, value]) => {
-                                const label = key === 'limpeza_ok' ? 'Limpeza higiênica realizada' :
-                                    key === 'testes_ok' ? 'Testes de bancada aprovados' :
-                                        key === 'acessorios_ok' ? 'Acessórios originais devolvidos' :
-                                            key === 'cliente_ciente' ? 'Ciente das regras de garantia' : key
-                                return (
-                                    <View key={key} style={styles.checklistItem}>
-                                        <View style={styles.iconWrapper}>
-                                            <Text style={value ? styles.checkIcon : styles.uncheckIcon}>{value ? '☑' : '☐'}</Text>
-                                        </View>
-                                        <Text style={value ? styles.checkText : styles.checkTextMuted}>{label}</Text>
-                                    </View>
-                                )
-                            })}
-                        </View>
-                    </View>
-                )}
-
-                {/* Peças Externas */}
-                {data.externalParts.length > 0 && (
-                    <View style={styles.section}>
-                        <View style={styles.sectionHeader}>
-                            <Text style={styles.sectionTitle}>Peças de Fornecedores Externos</Text>
-                        </View>
-                        <View style={styles.table}>
-                            <View style={styles.tableHeaderRow}>
-                                <Text style={[styles.tableHeaderCell, styles.col1]}>Item Incorporado</Text>
-                                <Text style={[styles.tableHeaderCell, styles.col2]}>Valor Aprox.</Text>
+                {
+                    data.checkout_checklist && Object.keys(data.checkout_checklist).length > 0 && (
+                        <View style={styles.section}>
+                            <View style={styles.sectionHeader}>
+                                <Text style={styles.sectionTitle}>Checklist e Validação na Entrega</Text>
                             </View>
-                            {data.externalParts.map((part, index) => (
-                                <View key={index} style={[styles.tableRow, index === data.externalParts.length - 1 ? styles.tableRowLast : {}]}>
-                                    <Text style={[styles.tableCell, styles.col1]}>{part.name}</Text>
-                                    <Text style={[styles.tableCell, styles.col2]}>{part.price ? formatCurrency(part.price) : '—'}</Text>
-                                </View>
-                            ))}
+                            <View style={styles.checklistGrid}>
+                                {Object.entries(data.checkout_checklist).map(([key, value]) => {
+                                    const label = key === 'limpeza_ok' ? 'Limpeza higiênica realizada' :
+                                        key === 'testes_ok' ? 'Testes de bancada aprovados' :
+                                            key === 'acessorios_ok' ? 'Acessórios originais devolvidos' :
+                                                key === 'cliente_ciente' ? 'Ciente das regras de garantia' : key
+                                    return (
+                                        <View key={key} style={styles.checklistItem}>
+                                            <View style={styles.iconWrapper}>
+                                                <Text style={value ? styles.checkIcon : styles.uncheckIcon}>{value ? '☑' : '☐'}</Text>
+                                            </View>
+                                            <Text style={value ? styles.checkText : styles.checkTextMuted}>{label}</Text>
+                                        </View>
+                                    )
+                                })}
+                            </View>
                         </View>
-                        <View style={styles.warningBox}>
-                            <Text style={styles.warningText}>
-                                As peças listadas foram adquiridas em caráter de fornecimento de terceiros. A garantia destas peças recai diretamente sobre a distribuidora/fabricante original, não integrando a garantia de mão de obra descrita neste termo.
-                            </Text>
-                        </View>
-                    </View>
-                )}
+                    )
+                }
 
                 {/* Fotos de Entrada (Check-in) */}
-                {data.photosCheckin && data.photosCheckin.length > 0 && (
-                    <View style={styles.section}>
-                        <View style={styles.sectionHeader}>
-                            <Text style={styles.sectionTitle}>Evidências de Entrada (Check-in)</Text>
+                {
+                    data.photosCheckin && data.photosCheckin.length > 0 && (
+                        <View style={styles.section}>
+                            <View style={styles.sectionHeader}>
+                                <Text style={styles.sectionTitle}>Evidências de Entrada (Check-in)</Text>
+                            </View>
+                            <View style={styles.photosGrid}>
+                                {data.photosCheckin.slice(0, 4).map((src, index) => (
+                                    <Image key={index} style={styles.photoImage} src={src} />
+                                ))}
+                            </View>
                         </View>
-                        <View style={styles.photosGrid}>
-                            {data.photosCheckin.slice(0, 4).map((url, index) => (
-                                <Image key={index} style={styles.photoImage} src={url} />
-                            ))}
-                        </View>
-                    </View>
-                )}
+                    )
+                }
 
                 {/* Fotos */}
-                {data.photosCheckout.length > 0 && (
-                    <View style={styles.section}>
-                        <View style={styles.sectionHeader}>
-                            <Text style={styles.sectionTitle}>Evidências de Saída (Check-out)</Text>
+                {
+                    data.photosCheckout.length > 0 && (
+                        <View style={styles.section}>
+                            <View style={styles.sectionHeader}>
+                                <Text style={styles.sectionTitle}>Evidências de Saída (Check-out)</Text>
+                            </View>
+                            <View style={styles.photosGrid}>
+                                {data.photosCheckout.slice(0, 4).map((src, index) => (
+                                    <Image key={index} style={styles.photoImage} src={src} />
+                                ))}
+                            </View>
                         </View>
-                        <View style={styles.photosGrid}>
-                            {data.photosCheckout.slice(0, 4).map((url, index) => (
-                                <Image key={index} style={styles.photoImage} src={url} />
-                            ))}
-                        </View>
-                    </View>
-                )}
+                    )
+                }
 
                 {/* Footer Fixado (Absolute) */}
                 <View style={styles.footer}>
@@ -643,8 +634,8 @@ function DeliveryReceiptDocument({ data, settings }: { data: OrderData; settings
                         Documento regido e válido conforme MP 2.200-2/2001 e Lei 14.063/2020 para Assinatura Eletrônica.
                     </Text>
                 </View>
-            </Page>
-        </Document>
+            </Page >
+        </Document >
     )
 }
 
@@ -659,37 +650,80 @@ interface DeliveryReceiptPdfButtonProps {
     icon?: React.ReactNode
 }
 
+
 export default function DeliveryReceiptPdfButton({ orderData, storeSettings, className, variant = "outline", icon }: DeliveryReceiptPdfButtonProps) {
+    const [isGenerating, setIsGenerating] = useState(false)
     const osNumber = String(orderData.displayId).padStart(4, '0')
     const storeName = storeSettings.trade_name.replace(/\s+/g, '_').toUpperCase()
     const fileName = `${storeName}_OS_${osNumber}_Entrega.pdf`
 
+    const handleDownload = useCallback(async () => {
+        setIsGenerating(true)
+        try {
+            // Pré-converter todas as fotos para base64
+            const [checkinBase64, checkoutBase64] = await Promise.all([
+                orderData.photosCheckin ? convertAllImages(orderData.photosCheckin.slice(0, 4)) : Promise.resolve([]),
+                convertAllImages(orderData.photosCheckout.slice(0, 4)),
+            ])
+
+            // Converter logo se for URL externa
+            let logoBase64: string | undefined
+            if (storeSettings.logo_url?.startsWith('http')) {
+                logoBase64 = (await imageUrlToBase64(storeSettings.logo_url)) || undefined
+            }
+
+            // Criar dados com imagens em base64
+            const dataWithBase64: OrderData = {
+                ...orderData,
+                photosCheckin: checkinBase64,
+                photosCheckout: checkoutBase64,
+            }
+
+            const settingsWithBase64: StoreSettings = {
+                ...storeSettings,
+                logo_url: logoBase64 || storeSettings.logo_url,
+            }
+
+            // Gerar o PDF blob
+            const blob = await pdf(
+                <DeliveryReceiptDocument data={dataWithBase64} settings={settingsWithBase64} />
+            ).toBlob()
+
+            // Trigger download
+            const url = URL.createObjectURL(blob)
+            const link = document.createElement('a')
+            link.href = url
+            link.download = fileName
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
+            URL.revokeObjectURL(url)
+        } catch (error) {
+            console.error('Erro ao gerar PDF:', error)
+        } finally {
+            setIsGenerating(false)
+        }
+    }, [orderData, storeSettings, fileName])
+
     return (
-        <PDFDownloadLink
-            document={<DeliveryReceiptDocument data={orderData} settings={storeSettings} />}
-            fileName={fileName}
-            className={className}
+        <Button
+            variant={variant}
+            disabled={isGenerating}
+            onClick={handleDownload}
+            className={`w-full ${icon ? 'p-0 h-full bg-transparent hover:bg-transparent' : ''} ${className || ''}`}
         >
-            {({ loading }) => (
-                <Button
-                    variant={variant}
-                    disabled={loading}
-                    className={`w-full ${icon ? 'p-0 h-full bg-transparent hover:bg-transparent' : ''}`}
-                >
-                    {loading ? (
-                        <>
-                            <Loader2 className={`animate-spin ${icon ? 'h-4 w-4' : 'mr-2 h-4 w-4'}`} />
-                            {!icon && "Gerando PDF..."}
-                        </>
-                    ) : (
-                        <>
-                            {icon ? icon : <FileDown className="mr-2 h-4 w-4" />}
-                            {!icon && "Baixar Termo de Entrega"}
-                        </>
-                    )}
-                </Button>
+            {isGenerating ? (
+                <>
+                    <Loader2 className={`animate-spin ${icon ? 'h-4 w-4' : 'mr-2 h-4 w-4'}`} />
+                    {!icon && "Gerando PDF..."}
+                </>
+            ) : (
+                <>
+                    {icon ? icon : <FileDown className="mr-2 h-4 w-4" />}
+                    {!icon && "Baixar Termo de Entrega"}
+                </>
             )}
-        </PDFDownloadLink>
+        </Button>
     )
 }
 export type { OrderData, StoreSettings }
