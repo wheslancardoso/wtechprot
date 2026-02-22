@@ -131,12 +131,15 @@ export default async function OrderDetailPage({ params }: PageProps) {
 
     // Preparar dados para PDF de Garantia
     const orderData: OrderData = {
+        orderId: order.id,
         displayId: String(order.display_id),
         customerName: customer?.name || 'Cliente',
         customerPhone: customer?.phone || '',
+        customerDocument: customer?.document_id || null,
         equipmentType: equipment?.type || 'Equipamento',
         equipmentBrand: equipment?.brand || '',
         equipmentModel: equipment?.model || '',
+        equipmentSerial: equipment?.serial_number || null,
         diagnosisText: order.diagnosis_text || '',
         laborCost: order.labor_cost || 0,
         photosCheckin: order.photos_checkin || [],

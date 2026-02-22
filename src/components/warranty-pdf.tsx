@@ -1,10 +1,32 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { Document, Page, Text, View, StyleSheet, pdf, Image } from '@react-pdf/renderer'
+import { Document, Page, Text, View, StyleSheet, pdf } from '@react-pdf/renderer'
 import { Button } from '@/components/ui/button'
 import { FileDown, Loader2 } from 'lucide-react'
 import { formatDateToLocal } from '@/lib/date-utils'
+
+// ==================================================
+// SHA-256 Hash via Web Crypto API
+// ==================================================
+async function generateSHA256(input: string): Promise<string> {
+    try {
+        const encoder = new TextEncoder()
+        const data = encoder.encode(input)
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+        const hashArray = Array.from(new Uint8Array(hashBuffer))
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase()
+    } catch {
+        // Fallback simples caso crypto.subtle não esteja disponível
+        let hash = 0
+        for (let i = 0; i < input.length; i++) {
+            const char = input.charCodeAt(i)
+            hash = ((hash << 5) - hash) + char
+            hash = hash & hash
+        }
+        return 'FALLBACK-' + Math.abs(hash).toString(16).toUpperCase().padStart(16, '0')
+    }
+}
 
 // ==================================================
 // Utilidade: Converter URL de imagem para base64 JPEG data URI
@@ -16,8 +38,6 @@ async function imageUrlToBase64(url: string): Promise<string | null> {
         if (!response.ok) return null
         const blob = await response.blob()
 
-        // Usar canvas para re-codificar a imagem como JPEG
-        // Isso converte WebP (não suportado por react-pdf) para JPEG
         return new Promise((resolve) => {
             const img = new window.Image()
             img.crossOrigin = 'anonymous'
@@ -44,6 +64,7 @@ async function imageUrlToBase64(url: string): Promise<string | null> {
 // Cores e Variáveis
 // ==================================================
 const primaryColor = '#059669' // Emerald 600
+const primaryDark = '#047857' // Emerald 700
 const textColor = '#1e293b' // Slate 800
 const mutedColor = '#64748b' // Slate 500
 const borderColor = '#e2e8f0' // Slate 200
@@ -55,13 +76,14 @@ const bgColor = '#f8fafc' // Slate 50
 const styles = StyleSheet.create({
     page: {
         padding: 40,
-        paddingBottom: 150, // Aumentado para não sobrepor o footer fixo
+        paddingBottom: 140,
         fontSize: 10,
         fontFamily: 'Helvetica',
         color: textColor,
         backgroundColor: '#ffffff'
     },
-    // Header
+
+    // ── Header ──
     headerContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -91,87 +113,86 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     documentTitle: {
-        fontSize: 14,
+        fontSize: 13,
         fontWeight: 'bold',
         color: primaryColor,
         marginBottom: 4,
         textTransform: 'uppercase',
-        letterSpacing: 1,
-    },
-    companyName: {
-        fontSize: 11,
-        fontWeight: 'bold',
-        color: textColor,
-        marginBottom: 2,
+        letterSpacing: 1.5,
     },
     companyInfo: {
-        fontSize: 8,
+        fontSize: 7.5,
         color: mutedColor,
-        marginBottom: 2,
+        marginBottom: 1,
     },
 
-    // Layout
+    // ── Layout ──
     section: {
-        marginBottom: 15,
+        marginBottom: 14,
     },
     grid2Col: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        gap: 20,
+        gap: 16,
     },
     col: {
         flex: 1,
     },
 
-    // Box Title
+    // ── Section Headers ──
     sectionHeader: {
         backgroundColor: bgColor,
-        paddingVertical: 6,
+        paddingVertical: 5,
         paddingHorizontal: 10,
         borderLeftWidth: 3,
         borderLeftColor: primaryColor,
-        marginBottom: 10,
+        marginBottom: 8,
     },
     sectionTitle: {
-        fontSize: 10,
+        fontSize: 9,
         fontWeight: 'bold',
         color: textColor,
         textTransform: 'uppercase',
         letterSpacing: 0.5,
     },
+    sectionNumber: {
+        fontSize: 9,
+        fontWeight: 'bold',
+        color: primaryColor,
+        marginRight: 4,
+    },
 
-    // Key-Value Row
+    // ── Key-Value Row ──
     row: {
         flexDirection: 'row',
-        marginBottom: 4,
+        marginBottom: 3,
         alignItems: 'flex-start',
     },
     label: {
         width: '35%',
-        fontSize: 9,
+        fontSize: 8,
         fontWeight: 'bold',
         color: mutedColor,
     },
     value: {
         width: '65%',
-        fontSize: 9,
+        fontSize: 8.5,
         color: textColor,
     },
 
-    // Service Description Box
+    // ── Service Description Box ──
     serviceBox: {
         backgroundColor: '#ffffff',
         borderWidth: 1,
         borderColor: borderColor,
-        borderRadius: 4,
-        padding: 12,
-        marginBottom: 15,
+        padding: 10,
+        marginBottom: 10,
     },
     serviceText: {
-        fontSize: 10,
+        fontSize: 9,
         lineHeight: 1.4,
         color: textColor,
-        marginBottom: 12,
+        marginBottom: 10,
     },
     costContainer: {
         flexDirection: 'row',
@@ -179,76 +200,74 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderTopWidth: 1,
         borderTopColor: borderColor,
-        paddingTop: 10,
+        paddingTop: 8,
     },
     costLabel: {
-        fontSize: 9,
+        fontSize: 8,
         fontWeight: 'bold',
         color: mutedColor,
         textTransform: 'uppercase',
         marginRight: 10,
     },
     costValue: {
-        fontSize: 14,
+        fontSize: 13,
         fontWeight: 'bold',
         color: primaryColor,
     },
 
-    // Bonus section
+    // ── Bonus section ──
     bonusSection: {
         backgroundColor: '#ecfdf5',
         borderWidth: 1,
         borderColor: '#a7f3d0',
-        borderRadius: 4,
         padding: 10,
-        marginBottom: 15,
+        marginBottom: 14,
     },
     bonusTitle: {
-        fontSize: 9,
+        fontSize: 8,
         fontWeight: 'bold',
-        color: '#047857',
-        marginBottom: 4,
+        color: primaryDark,
+        marginBottom: 3,
         textTransform: 'uppercase',
     },
     bonusText: {
-        fontSize: 8,
+        fontSize: 7.5,
         color: '#064e3b',
         lineHeight: 1.3,
     },
     bonusDetailsContainer: {
         flexDirection: 'row',
-        marginTop: 6,
-        paddingTop: 6,
+        marginTop: 5,
+        paddingTop: 5,
         borderTopWidth: 1,
         borderTopColor: '#d1fae5',
         gap: 15,
     },
 
-    // Table
+    // ── Table ──
     table: {
         width: '100%',
         borderWidth: 1,
         borderColor: borderColor,
-        borderRadius: 4,
         overflow: 'hidden',
     },
     tableHeaderRow: {
         flexDirection: 'row',
         backgroundColor: bgColor,
-        paddingVertical: 6,
+        paddingVertical: 5,
         paddingHorizontal: 8,
         borderBottomWidth: 1,
         borderBottomColor: borderColor,
     },
     tableHeaderCell: {
-        fontSize: 8,
+        fontSize: 7.5,
         fontWeight: 'bold',
         color: mutedColor,
         textTransform: 'uppercase',
     },
     tableRow: {
         flexDirection: 'row',
-        paddingVertical: 6,
+        paddingVertical: 5,
         paddingHorizontal: 8,
         borderBottomWidth: 1,
         borderBottomColor: borderColor,
@@ -257,88 +276,56 @@ const styles = StyleSheet.create({
         borderBottomWidth: 0,
     },
     tableCell: {
-        fontSize: 9,
+        fontSize: 8.5,
         color: textColor,
     },
     col1: { flex: 3 },
     col2: { flex: 1, textAlign: 'right' },
 
-    // Warnings
+    // ── Warning Box ──
     warningBox: {
         backgroundColor: '#fffbeb',
         borderLeftWidth: 3,
         borderLeftColor: '#f59e0b',
         padding: 8,
-        marginTop: 8,
-        borderRadius: 2,
+        marginTop: 6,
     },
     warningText: {
-        fontSize: 7.5,
+        fontSize: 7,
         color: '#b45309',
         lineHeight: 1.3,
         textAlign: 'justify',
     },
 
-    // Checklist
-    checklistGrid: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        gap: 8,
-        backgroundColor: '#ffffff',
-        borderWidth: 1,
-        borderColor: borderColor,
-        borderRadius: 4,
-        padding: 10,
+    // ── Termos e Condições ──
+    clauseContainer: {
+        marginBottom: 6,
     },
-    checklistItem: {
-        width: '48%',
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    checkIcon: {
-        fontSize: 10,
-        color: primaryColor,
-    },
-    uncheckIcon: {
-        fontSize: 10,
-        color: '#cbd5e1',
-    },
-    checkText: {
+    clauseTitle: {
         fontSize: 8,
+        fontWeight: 'bold',
         color: textColor,
+        marginBottom: 2,
     },
-    checkTextMuted: {
-        fontSize: 8,
-        color: mutedColor,
+    clauseText: {
+        fontSize: 7.5,
+        color: '#475569',
+        lineHeight: 1.35,
+        textAlign: 'justify',
     },
-    iconWrapper: {
-        width: 14,
-        alignItems: 'center'
-    },
-
-    // Photos
-    photosGrid: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        gap: 10,
-        marginTop: 5,
-    },
-    photoImage: {
-        width: '23%',
-        height: 70,
-        borderRadius: 4,
-        objectFit: 'cover',
-        borderWidth: 1,
-        borderColor: borderColor,
+    clauseDivider: {
+        borderBottomWidth: 1,
+        borderBottomColor: '#f1f5f9',
+        marginBottom: 6,
     },
 
-    // Footer
+    // ── Footer ──
     footer: {
         position: 'absolute',
-        bottom: 30,
+        bottom: 25,
         left: 40,
         right: 40,
-        paddingTop: 10,
+        paddingTop: 8,
         borderTopWidth: 2,
         borderTopColor: primaryColor,
     },
@@ -346,52 +333,37 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         backgroundColor: bgColor,
         padding: 8,
-        borderRadius: 4,
         borderWidth: 1,
         borderColor: borderColor,
-        marginBottom: 8,
+        marginBottom: 6,
     },
     signatureIcon: {
-        width: 40,
+        width: 36,
         alignItems: 'center',
         justifyContent: 'center',
-        marginRight: 10,
+        marginRight: 8,
         borderRightWidth: 1,
         borderRightColor: borderColor,
-        paddingRight: 10
+        paddingRight: 8,
     },
     signatureTitle: {
         fontSize: 7,
         fontWeight: 'bold',
         color: primaryColor,
-        marginBottom: 4,
+        marginBottom: 3,
         textTransform: 'uppercase',
     },
     signatureText: {
-        fontSize: 6.5,
+        fontSize: 6,
         color: mutedColor,
         fontFamily: 'Courier',
-        marginBottom: 2,
-    },
-    warrantyText: {
-        fontSize: 7,
-        color: textColor,
-        fontWeight: 'bold',
-        textAlign: 'justify',
-        lineHeight: 1.3,
-        marginBottom: 2,
-    },
-    warrantyDisclaimer: {
-        fontSize: 7,
-        color: mutedColor,
-        textAlign: 'justify',
-        lineHeight: 1.3,
+        marginBottom: 1,
     },
     legalText: {
-        fontSize: 6,
+        fontSize: 5.5,
         color: '#94a3b8',
         textAlign: 'center',
-        marginTop: 6,
+        marginTop: 4,
     }
 })
 
@@ -418,13 +390,16 @@ interface StoreSettings {
 // Tipo de dados da OS
 // ==================================================
 interface OrderData {
-    displayId: string | number;
-    checkout_checklist?: Record<string, boolean> | null;
+    orderId?: string // UUID para SHA-256
+    displayId: string | number
+    checkout_checklist?: Record<string, boolean> | null
     customerName: string
     customerPhone: string
+    customerDocument?: string | null // CPF/CNPJ
     equipmentType: string
     equipmentBrand: string
     equipmentModel: string
+    equipmentSerial?: string | null // Nº Serial
     diagnosisText: string
     laborCost: number
     photosCheckin?: string[]
@@ -448,87 +423,57 @@ interface OrderData {
 }
 
 // ==================================================
-// Função para gerar hash simples
-// ==================================================
-function generateHash(data: OrderData, storeName: string): string {
-    const str = `${data.displayId}-${storeName}-${data.laborCost}-${data.finishedAt}`
-    let hash = 0
-    for (let i = 0; i < str.length; i++) {
-        const char = str.charCodeAt(i)
-        hash = ((hash << 5) - hash) + char
-        hash = hash & hash
-    }
-    return Math.abs(hash).toString(16).toUpperCase().padStart(8, '0')
-}
-
-// ==================================================
-// Função auxiliar para mascarar o IP (Segurança/LGPD)
+// Auxiliares
 // ==================================================
 function maskIp(ip?: string) {
     if (!ip) return 'N/A'
     const clean = ip.replace('::ffff:', '')
-
-    // Se for IPv4 (x.x.x.x)
     if (clean.includes('.')) {
         const parts = clean.split('.')
-        if (parts.length === 4) {
-            return `${parts[0]}.${parts[1]}.***.***`
-        }
+        if (parts.length === 4) return `${parts[0]}.${parts[1]}.***.***`
     }
-
-    // Se for IPv6 ou outro formato, mascara a metade final
-    if (clean.length > 8) {
-        return `${clean.substring(0, Math.floor(clean.length / 2))}***`
-    }
-
+    if (clean.length > 8) return `${clean.substring(0, Math.floor(clean.length / 2))}***`
     return '***'
 }
 
-// ==================================================
-// Formatar moeda
-// ==================================================
 function formatCurrency(value: number): string {
-    return new Intl.NumberFormat('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-    }).format(value)
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value)
 }
 
-// ==================================================
-// Formatar endereço
-// ==================================================
 function formatAddress(address?: StoreSettings['address']): string {
     if (!address) return ''
-    const parts = [
-        address.street,
-        address.number,
-        address.neighborhood,
-        address.city,
-        address.state,
-    ].filter(Boolean)
-    return parts.join(', ')
+    return [address.street, address.number, address.neighborhood, address.city, address.state].filter(Boolean).join(', ')
+}
+
+function maskDocument(doc?: string | null): string {
+    if (!doc) return 'Não informado'
+    const clean = doc.replace(/\D/g, '')
+    if (clean.length === 11) return `${clean.substring(0, 3)}.***.***.${clean.substring(9, 11)}`
+    if (clean.length === 14) return `${clean.substring(0, 2)}.***.***/****-${clean.substring(12, 14)}`
+    return doc
 }
 
 // ==================================================
-// Componente PDF
+// Componente PDF — Certificado de Garantia
 // ==================================================
-function WarrantyDocument({ data, settings }: { data: OrderData; settings: StoreSettings }) {
+function WarrantyDocument({ data, settings, integrityHash }: { data: OrderData; settings: StoreSettings; integrityHash: string }) {
     const osNumber = String(data.displayId).padStart(4, '0')
-    const hash = generateHash(data, settings.trade_name)
     const finishedDate = formatDateToLocal(data.finishedAt, 'dd/MM/yyyy')
     const warrantyDays = settings.warranty_days_labor || 180
+    const warrantyDaysText = warrantyDays === 180 ? 'cento e oitenta' : warrantyDays === 90 ? 'noventa' : String(warrantyDays)
 
     return (
         <Document>
             <Page size="A4" style={styles.page}>
-                {/* Header Section */}
+
+                {/* ── HEADER ── */}
                 <View style={styles.headerContainer}>
                     <View style={styles.logoContainer}>
                         <Text style={styles.logoTextWfix}>WFIX </Text>
                         <Text style={styles.logoTextTech}>Tech</Text>
                     </View>
                     <View style={styles.headerRight}>
-                        <Text style={styles.documentTitle}>Termo de Garantia</Text>
+                        <Text style={styles.documentTitle}>Certificado de Garantia</Text>
                         {settings.legal_document && (
                             <Text style={styles.companyInfo}>CNPJ/CPF: {settings.legal_document}</Text>
                         )}
@@ -541,15 +486,16 @@ function WarrantyDocument({ data, settings }: { data: OrderData; settings: Store
                     </View>
                 </View>
 
-                {/* 2-Column Grid for OS and Equipment Data */}
+                {/* ── §1 IDENTIFICAÇÃO ── */}
                 <View style={[styles.grid2Col, styles.section]}>
-                    {/* OS / Client Column */}
                     <View style={styles.col}>
                         <View style={styles.sectionHeader}>
-                            <Text style={styles.sectionTitle}>Dados do Cliente</Text>
+                            <Text style={styles.sectionTitle}>
+                                <Text style={styles.sectionNumber}>§1</Text> Identificação
+                            </Text>
                         </View>
                         <View style={styles.row}>
-                            <Text style={styles.label}>OS:</Text>
+                            <Text style={styles.label}>OS Nº:</Text>
                             <Text style={[styles.value, { fontWeight: 'bold' }]}>#{osNumber}</Text>
                         </View>
                         <View style={styles.row}>
@@ -557,16 +503,18 @@ function WarrantyDocument({ data, settings }: { data: OrderData; settings: Store
                             <Text style={styles.value}>{data.customerName}</Text>
                         </View>
                         <View style={styles.row}>
+                            <Text style={styles.label}>CPF/CNPJ:</Text>
+                            <Text style={styles.value}>{maskDocument(data.customerDocument)}</Text>
+                        </View>
+                        <View style={styles.row}>
                             <Text style={styles.label}>Telefone:</Text>
                             <Text style={styles.value}>{data.customerPhone}</Text>
                         </View>
                         <View style={styles.row}>
-                            <Text style={styles.label}>Entrega:</Text>
+                            <Text style={styles.label}>Data Entrega:</Text>
                             <Text style={styles.value}>{finishedDate}</Text>
                         </View>
                     </View>
-
-                    {/* Equipment Column */}
                     <View style={styles.col}>
                         <View style={styles.sectionHeader}>
                             <Text style={styles.sectionTitle}>Equipamento</Text>
@@ -583,46 +531,40 @@ function WarrantyDocument({ data, settings }: { data: OrderData; settings: Store
                             <Text style={styles.label}>Modelo:</Text>
                             <Text style={styles.value}>{data.equipmentModel}</Text>
                         </View>
+                        {data.equipmentSerial && (
+                            <View style={styles.row}>
+                                <Text style={styles.label}>Nº Série:</Text>
+                                <Text style={[styles.value, { fontFamily: 'Courier', fontSize: 8 }]}>{data.equipmentSerial}</Text>
+                            </View>
+                        )}
                     </View>
                 </View>
 
-                {/* Service Details Box */}
+                {/* ── §2 SERVIÇO EXECUTADO ── */}
                 <View style={styles.section}>
                     <View style={styles.sectionHeader}>
-                        <Text style={styles.sectionTitle}>Serviço Realizado</Text>
+                        <Text style={styles.sectionTitle}>
+                            <Text style={styles.sectionNumber}>§2</Text> Serviço Executado
+                        </Text>
                     </View>
                     <View style={styles.serviceBox}>
                         <Text style={styles.serviceText}>
                             {data.diagnosisText || 'Manutenção técnica realizada conforme diagnóstico preliminar.'}
                         </Text>
                         <View style={styles.costContainer}>
-                            <Text style={styles.costLabel}>Total da Mão de Obra</Text>
+                            <Text style={styles.costLabel}>Total Mão de Obra</Text>
                             <Text style={styles.costValue}>{formatCurrency(data.laborCost)}</Text>
                         </View>
                     </View>
                 </View>
 
-                {/* Bônus: Suporte Remoto */}
-                <View style={styles.bonusSection}>
-                    <Text style={styles.bonusTitle}>BÔNUS EXCLUSIVO: SUPORTE REMOTO</Text>
-                    <Text style={styles.bonusText}>
-                        Como cortesia pela sua confiança, esta OS lhe dá direito a 02 (dois) Tickets de Suporte Técnico (Acesso Remoto ou WhatsApp) para dúvidas e ajustes finos pertinentes ao serviço.
-                    </Text>
-                    <View style={styles.bonusDetailsContainer}>
-                        <Text style={{ fontSize: 7, color: '#065f46' }}>
-                            <Text style={{ fontWeight: 'bold' }}>Validade:</Text> 30 dias após entrega.
-                        </Text>
-                        <Text style={{ fontSize: 7, color: '#065f46' }}>
-                            <Text style={{ fontWeight: 'bold' }}>Regra:</Text> Cada ticket = 1 suporte de até 30min.
-                        </Text>
-                    </View>
-                </View>
-
-                {/* Peças Externas */}
+                {/* ── §3 PEÇAS EXTERNAS (Compra Assistida) ── */}
                 {data.externalParts.length > 0 && (
                     <View style={styles.section}>
                         <View style={styles.sectionHeader}>
-                            <Text style={styles.sectionTitle}>Peças de Fornecedores Externos</Text>
+                            <Text style={styles.sectionTitle}>
+                                <Text style={styles.sectionNumber}>§3</Text> Peças — Compra Assistida
+                            </Text>
                         </View>
                         <View style={styles.table}>
                             <View style={styles.tableHeaderRow}>
@@ -638,35 +580,81 @@ function WarrantyDocument({ data, settings }: { data: OrderData; settings: Store
                         </View>
                         <View style={styles.warningBox}>
                             <Text style={styles.warningText}>
-                                As peças listadas foram adquiridas em caráter de fornecimento de terceiros. A garantia destas peças recai diretamente sobre a distribuidora/fabricante original, não integrando a garantia de mão de obra descrita neste termo.
+                                As peças listadas foram adquiridas em regime de Compra Assistida (fornecimento de terceiros). A garantia destas peças recai diretamente sobre a distribuidora/fabricante original, conforme §5 (IV) deste certificado.
                             </Text>
                         </View>
                     </View>
                 )}
 
-                {/* Fotos */}
-                {data.photosCheckout.length > 0 && (
-                    <View style={styles.section}>
-                        <View style={styles.sectionHeader}>
-                            <Text style={styles.sectionTitle}>Evidências de Entrega</Text>
-                        </View>
-                        <View style={styles.photosGrid}>
-                            {data.photosCheckout.slice(0, 4).map((url, index) => (
-                                <Image key={index} style={styles.photoImage} src={url} />
-                            ))}
-                        </View>
+                {/* ── BÔNUS: SUPORTE REMOTO ── */}
+                <View style={styles.bonusSection}>
+                    <Text style={styles.bonusTitle}>Bônus Exclusivo: Suporte Remoto</Text>
+                    <Text style={styles.bonusText}>
+                        Como cortesia, esta OS concede 02 (dois) Tickets de Suporte Técnico (Acesso Remoto ou WhatsApp) para dúvidas e ajustes pertinentes ao serviço executado.
+                    </Text>
+                    <View style={styles.bonusDetailsContainer}>
+                        <Text style={{ fontSize: 7, color: '#065f46' }}>
+                            <Text style={{ fontWeight: 'bold' }}>Validade:</Text> 30 dias após entrega.
+                        </Text>
+                        <Text style={{ fontSize: 7, color: '#065f46' }}>
+                            <Text style={{ fontWeight: 'bold' }}>Regra:</Text> Cada ticket = 1 suporte de até 30min.
+                        </Text>
                     </View>
-                )}
+                </View>
 
-                {/* Footer Fixado (Absolute) */}
+                {/* ── §5 TERMOS E CONDIÇÕES DA GARANTIA ── */}
+                <View style={styles.section}>
+                    <View style={styles.sectionHeader}>
+                        <Text style={styles.sectionTitle}>
+                            <Text style={styles.sectionNumber}>§5</Text> Termos e Condições da Garantia
+                        </Text>
+                    </View>
+
+                    {/* I — Escopo */}
+                    <View style={styles.clauseContainer}>
+                        <Text style={styles.clauseTitle}>I — Escopo da Garantia</Text>
+                        <Text style={styles.clauseText}>
+                            A {settings.trade_name.toUpperCase()} assegura o prazo de {warrantyDays} ({warrantyDaysText}) dias de garantia, única e exclusivamente para o serviço (mão de obra) executado nesta Ordem de Serviço, a contar da data de entrega acima indicada.
+                        </Text>
+                    </View>
+                    <View style={styles.clauseDivider} />
+
+                    {/* II — Software */}
+                    <View style={styles.clauseContainer}>
+                        <Text style={styles.clauseTitle}>II — Garantia de Software</Text>
+                        <Text style={styles.clauseText}>
+                            Serviços relacionados a software (formatação, instalação de sistema operacional, remoção de vírus, configurações e ajustes de sistema) possuem garantia limitada de 15 (quinze) dias, devido à natureza variável e imprevisível do uso pelo cliente após a entrega.
+                        </Text>
+                    </View>
+                    <View style={styles.clauseDivider} />
+
+                    {/* III — Exclusões */}
+                    <View style={styles.clauseContainer}>
+                        <Text style={styles.clauseTitle}>III — Exclusões e Perda de Garantia</Text>
+                        <Text style={styles.clauseText}>
+                            A garantia será imediatamente invalidada nos seguintes casos: (a) Rompimento, adulteração ou remoção dos lacres de segurança aplicados pela {settings.trade_name.toUpperCase()}; (b) Intervenção técnica realizada por terceiros não autorizados; (c) Danos causados por mau uso, quedas, exposição a líquidos, descargas elétricas ou variações de tensão na rede; (d) Instalação de software não autorizado ou modificações no sistema operacional que comprometam o serviço realizado.
+                        </Text>
+                    </View>
+                    <View style={styles.clauseDivider} />
+
+                    {/* IV — Peças */}
+                    <View style={styles.clauseContainer}>
+                        <Text style={styles.clauseTitle}>IV — Peças de Terceiros (Compra Assistida)</Text>
+                        <Text style={styles.clauseText}>
+                            Peças adquiridas pelo cliente ou fornecidas por distribuidores externos à {settings.trade_name.toUpperCase()} possuem garantia própria do fabricante/vendedor original. A responsabilidade desta assistência limita-se exclusivamente à mão de obra de instalação, não abrangendo defeitos de fabricação, compatibilidade ou vida útil dos componentes.
+                        </Text>
+                    </View>
+                </View>
+
+                {/* ── FOOTER — Dossiê de Assinatura ── */}
                 <View style={styles.footer}>
                     {data.signatureEvidence && (
                         <View style={styles.signatureBox}>
                             <View style={styles.signatureIcon}>
-                                <Text style={{ fontSize: 24, color: primaryColor }}>☑</Text>
+                                <Text style={{ fontSize: 22, color: primaryColor }}>☑</Text>
                             </View>
                             <View style={{ flex: 1 }}>
-                                <Text style={styles.signatureTitle}>Assinatura Eletrônica Qualificada</Text>
+                                <Text style={styles.signatureTitle}>Dossiê de Assinatura Eletrônica</Text>
                                 <Text style={styles.signatureText}>
                                     Assinado por {data.customerName} em {formatDateToLocal(data.signatureEvidence.accepted_at, 'dd/MM/yyyy às HH:mm:ss')}
                                 </Text>
@@ -674,21 +662,31 @@ function WarrantyDocument({ data, settings }: { data: OrderData; settings: Store
                                     IP Validador: {maskIp(data.signatureEvidence.ip_address)} | Auth Method: OTP Secure
                                 </Text>
                                 <Text style={styles.signatureText}>
-                                    SHA-256 Hash: {hash}
+                                    SHA-256: {integrityHash.substring(0, 16)}...{integrityHash.substring(integrityHash.length - 16)}
                                 </Text>
                             </View>
                         </View>
                     )}
 
-                    <Text style={styles.warrantyText}>
-                        TERMO DE GARANTIA: A {settings.trade_name.toUpperCase()} assegura prazos de {warrantyDays} ({warrantyDays === 180 ? 'cento e oitenta' : warrantyDays === 90 ? 'noventa' : warrantyDays}) dias
-                        de garantia única e exclusiva para o serviço (mão de obra) executado, a contar desta entrega.
-                    </Text>
-                    <Text style={styles.warrantyDisclaimer}>
-                        A interrupção inadvertida do lacre de segurança, falhas por descargas elétricas, quedas, líquidos, ou instalação inadequada por terceiros resultarão na invalidação e perda imediata desta garantia, isentando a prestadora de quaisquer obrigações.
-                    </Text>
+                    {!data.signatureEvidence && (
+                        <View style={styles.signatureBox}>
+                            <View style={styles.signatureIcon}>
+                                <Text style={{ fontSize: 22, color: mutedColor }}>☐</Text>
+                            </View>
+                            <View style={{ flex: 1 }}>
+                                <Text style={styles.signatureTitle}>Verificação de Autenticidade</Text>
+                                <Text style={styles.signatureText}>
+                                    ID de Autenticidade (SHA-256): {integrityHash.substring(0, 16)}...{integrityHash.substring(integrityHash.length - 16)}
+                                </Text>
+                                <Text style={styles.signatureText}>
+                                    Emitido em: {formatDateToLocal(data.finishedAt, 'dd/MM/yyyy às HH:mm:ss')}
+                                </Text>
+                            </View>
+                        </View>
+                    )}
+
                     <Text style={styles.legalText}>
-                        Documento regido e válido conforme MP 2.200-2/2001 e Lei 14.063/2020 para Assinatura Eletrônica.
+                        Documento regido e válido conforme MP 2.200-2/2001 e Lei 14.063/2020 para Assinatura Eletrônica. Hash completo disponível mediante solicitação.
                     </Text>
                 </View>
             </Page>
@@ -716,6 +714,10 @@ export default function WarrantyPdfButton({ orderData, storeSettings, className,
     const handleDownload = useCallback(async () => {
         setIsGenerating(true)
         try {
+            // Gerar SHA-256 com dados sensíveis
+            const hashInput = `${orderData.orderId || orderData.displayId}|${orderData.finishedAt}|${orderData.customerDocument || 'N/A'}`
+            const integrityHash = await generateSHA256(hashInput)
+
             // Converter logo se for URL externa
             let logoBase64: string | undefined
             if (storeSettings.logo_url?.startsWith('http')) {
@@ -729,7 +731,7 @@ export default function WarrantyPdfButton({ orderData, storeSettings, className,
 
             // Gerar o PDF blob
             const blob = await pdf(
-                <WarrantyDocument data={orderData} settings={settingsWithBase64} />
+                <WarrantyDocument data={orderData} settings={settingsWithBase64} integrityHash={integrityHash} />
             ).toBlob()
 
             // Trigger download
@@ -763,7 +765,7 @@ export default function WarrantyPdfButton({ orderData, storeSettings, className,
             ) : (
                 <>
                     {icon ? icon : <FileDown className="mr-2 h-4 w-4" />}
-                    {!icon && "Baixar Termo de Garantia"}
+                    {!icon && "Baixar Certificado de Garantia"}
                 </>
             )}
         </Button>
