@@ -99,12 +99,12 @@ const styles = StyleSheet.create({
     photosContainer: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        gap: 10,
         marginTop: 5,
     },
     photoWrapper: {
         width: '30%',
         marginBottom: 10,
+        marginRight: '3%',
     },
     photo: {
         width: '100%',

@@ -80,7 +80,7 @@ export default function ImageUpload({
                     maxSizeMB: 0.5, // Máximo 500KB
                     maxWidthOrHeight: 1920, // Resolução máxima Full HD
                     useWebWorker: true,
-                    fileType: 'image/webp' as string // Converter para WebP para economizar mais
+                    fileType: 'image/jpeg' as string // Converter para JPEG para suportar em PDFs
                 };
 
                 let compressedFile = file;
@@ -94,8 +94,8 @@ export default function ImageUpload({
 
                 // Gerar nome único
                 const timestamp = Date.now()
-                // Sempre usar extensão webp já que estamos forçando a conversão
-                const ext = 'webp'
+                // Sempre usar extensão jpg para garantir compatibilidade com react-pdf
+                const ext = 'jpg'
                 const fileName = `${orderId}/${type}/${timestamp}_${i}.${ext}`
 
                 // Upload para Supabase Storage
@@ -104,7 +104,7 @@ export default function ImageUpload({
                     .upload(fileName, compressedFile, {
                         cacheControl: '3600',
                         upsert: false,
-                        contentType: 'image/webp'
+                        contentType: 'image/jpeg'
                     })
 
                 if (uploadError) {

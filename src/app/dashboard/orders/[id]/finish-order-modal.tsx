@@ -53,7 +53,7 @@ import type { OrderData, StoreSettings } from '@/components/warranty-pdf'
 const finishSchema = z.object({
     amountReceived: z.number().min(0, 'Valor inválido'),
     paymentMethod: z.enum(['pix', 'cash', 'card_machine']),
-    checkoutChecklist: z.record(z.boolean()).optional(),
+    checkoutChecklist: z.record(z.string(), z.boolean()).optional(),
 })
 
 type FinishFormData = z.infer<typeof finishSchema>
@@ -99,14 +99,14 @@ export default function FinishOrderModal({ orderId, open, onOpenChange, orderDat
         resolver: zodResolver(finishSchema),
         defaultValues: {
             amountReceived: initialAmount,
-            paymentMethod: undefined,
+            paymentMethod: undefined as unknown as "pix" | "cash" | "card_machine",
             checkoutChecklist: {
                 limpeza_ok: false,
                 testes_ok: false,
                 acessorios_ok: false,
                 cliente_ciente: false,
             },
-        },
+        } as any,
     })
 
     const paymentMethod = watch('paymentMethod')
@@ -382,7 +382,7 @@ conforme CDC.
                                 <Label htmlFor="paymentMethod">Forma de Pagamento *</Label>
                                 <Select
                                     value={paymentMethod}
-                                    onValueChange={(value) => setValue('paymentMethod', value as 'pix' | 'cash' | 'card_machine')}
+                                    onValueChange={(value) => setValue('paymentMethod', value as 'pix' | 'cash' | 'card_machine', { shouldValidate: true })}
                                     disabled={isSubmitting}
                                 >
                                     <SelectTrigger id="paymentMethod">
@@ -407,6 +407,18 @@ conforme CDC.
                                     sobre a mão de obra. Peças externas têm garantia com o vendedor original.
                                 </AlertDescription>
                             </Alert>
+
+                            {/* Mostrar erros genéricos do formulário se houver (para debug/alerta visual) */}
+                            {Object.keys(errors).length > 0 && (
+                                <Alert variant="destructive" className="py-2">
+                                    <AlertDescription className="text-xs">
+                                        Por favor, preencha todos os campos obrigatórios corretamente antes de finalizar.
+                                        {/* DEBUG - TO BE REMOVED */}
+                                        <br />
+                                        <span className="font-mono text-xs">{JSON.stringify(errors, null, 2)}</span>
+                                    </AlertDescription>
+                                </Alert>
+                            )}
 
                             {/* Footer */}
                             <DialogFooter>

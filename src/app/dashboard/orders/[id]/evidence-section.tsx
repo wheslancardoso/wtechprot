@@ -4,6 +4,7 @@ import { useState } from 'react'
 import ImageUpload from '@/components/image-upload'
 import WhatsAppButton from '@/components/whatsapp-button'
 import { saveEvidencePhotos } from '../actions'
+import { useToast } from '@/hooks/use-toast'
 
 // UI Components
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -45,6 +46,7 @@ export default function EvidenceSection({
     const [checkoutPhotos, setCheckoutPhotos] = useState<string[]>(photosCheckout)
     const [isSaving, setIsSaving] = useState(false)
     const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
+    const { toast } = useToast()
 
     // Determinar se pode editar
     const canEditCheckin = ['open', 'analyzing'].includes(status)
@@ -61,13 +63,28 @@ export default function EvidenceSection({
 
             if (result.success) {
                 setFeedback({ type: 'success', message: result.message })
+                toast({
+                    title: 'Sucesso!',
+                    description: type === 'checkin' ? 'Fotos de entrada salvas com sucesso.' : 'Fotos de saída salvas com sucesso.',
+                })
             } else {
                 setFeedback({ type: 'error', message: result.message })
+                toast({
+                    title: 'Erro!',
+                    description: result.message || 'Ocorreu um erro ao salvar as fotos.',
+                    variant: 'destructive'
+                })
             }
         } catch (error) {
+            const errorMsg = `Erro: ${error instanceof Error ? error.message : 'Desconhecido'}`
             setFeedback({
                 type: 'error',
-                message: `Erro: ${error instanceof Error ? error.message : 'Desconhecido'}`
+                message: errorMsg
+            })
+            toast({
+                title: 'Erro!',
+                description: 'Falha ao salvar as fotos.',
+                variant: 'destructive'
             })
         } finally {
             setIsSaving(false)

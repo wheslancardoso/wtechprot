@@ -48,9 +48,18 @@ export function parseHWMonitor_TXT(content: string): Partial<TelemetryInsert> {
         // Usually found under the Processor section
         const processorSection = content.split(/Processors Information/i)[1];
         if (processorSection) {
-            const tempMatch = processorSection.match(/Temperature 1\t\t(\d+)\s*degC.*\(Cores \(Max\)\)/i) ||
-                processorSection.match(/Temperature 0\t\t(\d+)\s*degC.*\(Package\)/i);
-            if (tempMatch) data.cpu_temp_max = parseInt(tempMatch[1], 10);
+            // Em arquivos HWMonitor, as temperaturas são "Current, Min, Max"
+            // Ex: Temperature 0        49 degC (120 degF)    37 degC (98 degF)    71 degC (159 degF)  (Package)
+            // Precisamos capturar a coluna Max
+            const matchLines = processorSection.split('\n').filter(l => l.includes('degC') && (l.includes('(Package)') || l.includes('Cores (Max)')));
+            if (matchLines.length > 0) {
+                const line = matchLines[0];
+                const matches = [...line.matchAll(/(\d+)\s*degC/g)];
+                if (matches.length > 0) {
+                    // Pega o último match, que geralmente é a coluna Max no HWMonitor
+                    data.cpu_temp_max = parseInt(matches[matches.length - 1][1], 10);
+                }
+            }
         }
 
         // 7. RAM - Total Memory Size
