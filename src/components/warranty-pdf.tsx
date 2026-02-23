@@ -654,7 +654,7 @@ function WarrantyDocument({ data, settings, integrityHash }: { data: OrderData; 
                                 <Text style={{ fontSize: 22, color: primaryColor }}>☑</Text>
                             </View>
                             <View style={{ flex: 1 }}>
-                                <Text style={styles.signatureTitle}>Dossiê de Assinatura Eletrônica</Text>
+                                <Text style={styles.signatureTitle}>Assinatura Digital</Text>
                                 <Text style={styles.signatureText}>
                                     Assinado por {data.customerName} em {formatDateToLocal(data.signatureEvidence.accepted_at, 'dd/MM/yyyy às HH:mm:ss')}
                                 </Text>
