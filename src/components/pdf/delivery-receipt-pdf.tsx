@@ -273,9 +273,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#fffbeb',
         borderLeftWidth: 3,
         borderLeftColor: '#f59e0b',
-        padding: 8,
+        paddingVertical: 8,
+        paddingHorizontal: 10,
         marginTop: 8,
-        borderRadius: 2,
     },
     warningText: {
         fontSize: 7.5,

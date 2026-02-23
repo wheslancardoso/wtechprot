@@ -282,12 +282,12 @@ const styles = StyleSheet.create({
     col1: { flex: 3 },
     col2: { flex: 1, textAlign: 'right' },
 
-    // ── Warning Box ──
     warningBox: {
         backgroundColor: '#fffbeb',
         borderLeftWidth: 3,
         borderLeftColor: '#f59e0b',
-        padding: 8,
+        paddingVertical: 8,
+        paddingHorizontal: 10,
         marginTop: 6,
     },
     warningText: {
