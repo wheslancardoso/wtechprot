@@ -1,10 +1,10 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import type { BudgetData, BudgetStoreSettings } from '@/components/budget-pdf'
+import type { BudgetData, BudgetStoreSettings } from '@/components/pdf/budget-pdf'
 
 const BudgetPdfButton = dynamic(
-    () => import('@/components/budget-pdf'),
+    () => import('@/components/pdf/budget-pdf'),
     { ssr: false }
 )
 

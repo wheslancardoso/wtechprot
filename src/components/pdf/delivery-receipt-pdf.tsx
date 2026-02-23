@@ -400,9 +400,9 @@ const styles = StyleSheet.create({
     }
 })
 
-import type { StoreSettings } from '@/components/warranty-pdf'
+import type { StoreSettings } from '@/components/pdf/warranty-pdf'
 
-import type { OrderData as BaseOrderData } from '@/components/warranty-pdf'
+import type { OrderData as BaseOrderData } from '@/components/pdf/warranty-pdf'
 
 interface OrderData extends BaseOrderData {
     photosCheckin?: string[]
@@ -598,7 +598,7 @@ function DeliveryReceiptDocument({ data, settings }: { data: OrderData; settings
                             </View>
                             <View style={styles.photosGrid}>
                                 {data.photosCheckout.slice(0, 4).map((src, index) => (
-                                    <Image key={index} style={styles.photoImage} src={src} />
+                                    <Image key={index} style={styles.photoImage} src={typeof src === 'string' ? src : src.url} />
                                 ))}
                             </View>
                         </View>
@@ -663,7 +663,7 @@ export default function DeliveryReceiptPdfButton({ orderData, storeSettings, cla
             // Pré-converter todas as fotos para base64
             const [checkinBase64, checkoutBase64] = await Promise.all([
                 orderData.photosCheckin ? convertAllImages(orderData.photosCheckin.slice(0, 4)) : Promise.resolve([]),
-                convertAllImages(orderData.photosCheckout.slice(0, 4)),
+                convertAllImages(orderData.photosCheckout.slice(0, 4).map(src => typeof src === 'string' ? src : src.url)),
             ])
 
             // Converter logo se for URL externa

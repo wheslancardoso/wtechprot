@@ -3,15 +3,15 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { createAdminClient } from '@/lib/supabase/server'
 import type { OrderStatus } from '@/types/database'
-import OrderRealtimeListener from '@/components/order-realtime-listener'
+import OrderRealtimeListener from '@/components/os/order-realtime-listener'
 import type { TechnicalReport } from '@/types/technical-report'
-import type { OrderData, StoreSettings } from '@/components/warranty-pdf'
-import TechnicalReportPdfWrapper from '@/components/technical-report-pdf-wrapper'
+import type { OrderData, StoreSettings } from '@/components/pdf/warranty-pdf'
+import TechnicalReportPdfWrapper from '@/components/pdf/technical-report-pdf-wrapper'
 import { ImageModal } from '@/components/ui/image-modal'
 
 // Components
 import ClientActions from './client-actions'
-import ExecutionChecklist from '@/components/execution-checklist'
+import ExecutionChecklist from '@/components/os/execution-checklist'
 import type { ExecutionTask } from '@/lib/execution-tasks-types'
 
 // UI Components

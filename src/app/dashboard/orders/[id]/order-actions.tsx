@@ -12,12 +12,12 @@ import BudgetModal from './budget-modal'
 import FinishOrderModal from './finish-order-modal'
 import PdfButtonWrapper from './pdf-button-wrapper'
 import BudgetPdfWrapper from './budget-pdf-wrapper'
-import AuditReportPdfWrapper from '@/components/audit-report-pdf-wrapper'
-import ShareActions from '@/components/share-actions'
+import AuditReportPdfWrapper from '@/components/pdf/audit-report-pdf-wrapper'
+import ShareActions from '@/components/os/share-actions'
 
 // Types
-import type { OrderData, StoreSettings } from '@/components/warranty-pdf'
-import type { BudgetData } from '@/components/budget-pdf'
+import type { OrderData, StoreSettings } from '@/components/pdf/warranty-pdf'
+import type { BudgetData } from '@/components/pdf/budget-pdf'
 import type { TechnicalReport } from '@/types/technical-report'
 
 // UI Components

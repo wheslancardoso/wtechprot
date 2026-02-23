@@ -3,10 +3,9 @@ import Link from 'next/link'
 import { Metadata } from 'next'
 import { getSettings } from '@/app/dashboard/settings/actions'
 import {
-
     Bell,
 } from 'lucide-react'
-import { DashboardNav } from '@/components/dashboard-nav'
+import { DashboardNav } from '@/components/dashboard/dashboard-nav'
 
 export const dynamic = 'force-dynamic'
 

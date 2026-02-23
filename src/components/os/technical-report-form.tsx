@@ -17,7 +17,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { toast } from '@/hooks/use-toast' // Assuming this exists, or use standard alert
 
 import ImageUpload from '@/components/image-upload'
-import TechnicalReportPdfButton from './technical-report-pdf'
+import TechnicalReportPdfButton from '@/components/pdf/technical-report-pdf'
 import { generateTechnicalReport } from '@/app/actions/generate-technical-report'
 import { type BudgetSuggestion } from '@/app/actions/generate-budget'
 import { Wand2, AlertTriangle, Copy, Check } from 'lucide-react'
@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/dialog"
 
 import type { TechnicalReport, TechnicalReportFormData } from '@/types/technical-report'
-import type { OrderData, StoreSettings } from '@/components/warranty-pdf'
+import type { OrderData, StoreSettings } from '@/components/pdf/warranty-pdf'
 
 interface TechnicalReportFormProps {
     orderId: string

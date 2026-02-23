@@ -45,7 +45,7 @@ import {
 import { Checkbox } from '@/components/ui/checkbox'
 
 import PdfButtonWrapper from './pdf-button-wrapper'
-import type { OrderData, StoreSettings } from '@/components/warranty-pdf'
+import type { OrderData, StoreSettings } from '@/components/pdf/warranty-pdf'
 
 // ==================================================
 // Zod Schema

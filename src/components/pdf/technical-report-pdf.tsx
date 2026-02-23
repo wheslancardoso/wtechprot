@@ -5,7 +5,7 @@ import { Document, Page, Text, View, StyleSheet, pdf, Image } from '@react-pdf/r
 import { Button } from '@/components/ui/button'
 import { FileDown, Loader2 } from 'lucide-react'
 import { formatDateToLocal } from '@/lib/date-utils'
-import type { OrderData, StoreSettings } from '@/components/warranty-pdf'
+import type { OrderData, StoreSettings } from '@/components/pdf/warranty-pdf'
 import type { TechnicalReport } from '@/types/technical-report'
 
 // ==================================================

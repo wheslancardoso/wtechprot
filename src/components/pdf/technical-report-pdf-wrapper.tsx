@@ -1,14 +1,14 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import type { OrderData, StoreSettings } from '@/components/warranty-pdf'
+import type { OrderData, StoreSettings } from '@/components/pdf/warranty-pdf'
 import type { TechnicalReport } from '@/types/technical-report'
 import { Button } from '@/components/ui/button'
 import { Loader2 } from 'lucide-react'
 
 // Dynamic import with SSR disabled
 const TechnicalReportPdfButtonBase = dynamic(
-    () => import('@/components/technical-report-pdf'),
+    () => import('@/components/pdf/technical-report-pdf'),
     {
         ssr: false,
         loading: () => (

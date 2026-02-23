@@ -1,11 +1,11 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import type { OrderData, StoreSettings } from '@/components/warranty-pdf'
+import type { OrderData, StoreSettings } from '@/components/pdf/warranty-pdf'
 
 // Dynamic import para evitar SSR (react-pdf não funciona no server)
 const DeliveryReceiptPdfButton = dynamic(
-    () => import('@/components/delivery-receipt-pdf'),
+    () => import('@/components/pdf/delivery-receipt-pdf'),
     {
         ssr: false,
         loading: () => (
