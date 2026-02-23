@@ -35,7 +35,7 @@ import {
 
 // Dynamic Import for PDF Button (Client-side only)
 const WithdrawalTermButton = dynamic(
-    () => import('@/components/home-care/withdrawal-term-pdf'),
+    () => import('@/components/pdf/withdrawal-term-pdf'),
     { ssr: false, loading: () => <Button variant="outline" disabled><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Carregando PDF...</Button> }
 )
 

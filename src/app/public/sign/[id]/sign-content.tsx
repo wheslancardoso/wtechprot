@@ -12,6 +12,7 @@ import { useToast } from '@/hooks/use-toast'
 import { createClient } from '@/lib/supabase/client'
 import { signCustodyTerm } from '@/app/os/[id]/actions'
 import { ImageModal } from '@/components/ui/image-modal'
+import WithdrawalTermButton from '@/components/pdf/withdrawal-term-pdf'
 import { Loader2, MapPin, CheckCircle2, ShieldAlert, Package, ArrowRight, FileSignature, Home } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
