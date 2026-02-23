@@ -54,6 +54,9 @@ interface ClientActionsProps {
 
 type WizardStep = 'TERMS' | 'PROCESSING' | 'SUCCESS'
 
+// Redirecionamento automático após aprovação (Fácil de alterar)
+const ENABLE_AUTO_REDIRECT = false
+
 export default function ClientActions({ orderId, displayId, hasParts, status, customerName, techPhone, hasExistingFeedback = false }: ClientActionsProps) {
     const router = useRouter()
 
@@ -132,11 +135,13 @@ export default function ClientActions({ orderId, displayId, hasParts, status, cu
                 setTimeout(() => {
                     setIsOpen(false)
                     // Se tiver peças, recarrega a página para mostrar o status "Aguardando Peças"
-                    // Se não tiver, vai para a tela de rastreamento
+                    // Se não tiver, segue a política de redirecionamento auto
                     if (hasParts) {
                         router.refresh()
-                    } else {
+                    } else if (ENABLE_AUTO_REDIRECT) {
                         router.push(`/os/${trackingId}/track`)
+                    } else {
+                        router.refresh()
                     }
                 }, 3000)
             } else {
@@ -403,7 +408,9 @@ export default function ClientActions({ orderId, displayId, hasParts, status, cu
                                         </div>
                                         <div>
                                             <h3 className="font-bold text-xl text-green-700">Aprovado com Sucesso!</h3>
-                                            <p className="text-sm text-muted-foreground mt-2">Redirecionando para rastreamento...</p>
+                                            <p className="text-sm text-muted-foreground mt-2">
+                                                {ENABLE_AUTO_REDIRECT && !hasParts ? 'Redirecionando para rastreamento...' : 'Atualizando status...'}
+                                            </p>
                                         </div>
                                     </>
                                 )}

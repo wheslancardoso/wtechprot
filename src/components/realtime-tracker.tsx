@@ -181,7 +181,7 @@ export default function RealtimeTracker({ orderId, initialTasks }: RealtimeTrack
             <CardContent className="p-0 relative z-10">
                 {tasks.length === 0 ? (
                     <div className="p-8 text-center bg-muted/30">
-                        <Loader2 className="h-8 w-8 animate-spin mx-auto text-muted-foreground mb-3" />
+                        <Clock className="h-8 w-8 mx-auto text-muted-foreground/40 mb-3" />
                         <p className="text-sm text-muted-foreground">
                             Aguardando início dos trabalhos...
                         </p>
