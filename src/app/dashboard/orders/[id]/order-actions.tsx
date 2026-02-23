@@ -11,11 +11,13 @@ import { updateOrderStatus, confirmPartArrival, deleteOrder, reopenOrder } from 
 import BudgetModal from './budget-modal'
 import FinishOrderModal from './finish-order-modal'
 import PdfButtonWrapper from './pdf-button-wrapper'
+import BudgetPdfWrapper from './budget-pdf-wrapper'
 import AuditReportPdfWrapper from '@/components/audit-report-pdf-wrapper'
 import ShareActions from '@/components/share-actions'
 
 // Types
 import type { OrderData, StoreSettings } from '@/components/warranty-pdf'
+import type { BudgetData } from '@/components/budget-pdf'
 import type { TechnicalReport } from '@/types/technical-report'
 
 // UI Components
@@ -57,6 +59,7 @@ interface OrderActionsProps {
     orderId: string
     currentStatus: string
     orderData?: OrderData
+    budgetData?: BudgetData
     storeSettings?: StoreSettings
     customerName: string
     displayId: number | string
@@ -69,6 +72,7 @@ export default function OrderActions({
     orderId,
     currentStatus,
     orderData,
+    budgetData,
     storeSettings,
     customerName,
     displayId,
@@ -325,6 +329,17 @@ WTECH`
                             className="flex-1 sm:flex-none h-12 sm:w-12 p-0 flex items-center justify-center rounded-lg transition-colors shrink-0"
                             variant="outline"
                             icon={<FileDown className="h-5 w-5" />}
+                        />
+                    )}
+
+                    {/* Budget PDF Button (Visible if budget exists) */}
+                    {budgetData && storeSettings && ['waiting_approval', 'approved', 'in_progress', 'waiting_parts', 'ready', 'finished'].includes(currentStatus) && (
+                        <BudgetPdfWrapper
+                            budgetData={budgetData}
+                            storeSettings={storeSettings}
+                            className="flex-1 sm:flex-none h-12 sm:w-12 p-0 flex items-center justify-center rounded-lg transition-colors shrink-0"
+                            variant="outline"
+                            icon={<Receipt className="h-5 w-5" />}
                         />
                     )}
 

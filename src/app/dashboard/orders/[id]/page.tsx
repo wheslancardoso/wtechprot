@@ -92,7 +92,8 @@ export default async function OrderDetailPage({ params }: PageProps) {
         .select(`
       *,
       customer:customers(*),
-      equipment:equipments(*)
+      equipment:equipments(*),
+      order_items(*)
     `)
 
     // Buscar por UUID ou display_id (string no banco, ex: '2026WF-0009')
@@ -154,6 +155,26 @@ export default async function OrderDetailPage({ params }: PageProps) {
             custody_integrity_hash: order.custody_integrity_hash,
         } : null,
     }
+
+    // Preparar dados para PDF de Orçamento (se houver orçamento enviado)
+    const budgetData = order.diagnosis_text ? {
+        displayId: String(order.display_id),
+        createdAt: order.updated_at || order.created_at,
+        customerName: customer?.name || 'Cliente',
+        customerPhone: customer?.phone || '',
+        customerDocument: customer?.document_id || null,
+        equipmentType: equipment?.type || 'Equipamento',
+        equipmentBrand: equipment?.brand || '',
+        equipmentModel: equipment?.model || '',
+        equipmentSerial: equipment?.serial_number || null,
+        diagnosisText: order.diagnosis_text,
+        laborCost: order.labor_cost || 0,
+        discountAmount: order.discount_amount || 0,
+        externalParts: (order.order_items || []).filter((item: { type: string }) => item.type === 'part_external').map((item: { name: string; purchase_url?: string }) => ({
+            name: item.name,
+            purchaseUrl: item.purchase_url,
+        })),
+    } : undefined
 
     // Configurações da Loja
     const snapshot = order.store_snapshot as StoreSettings | null
@@ -233,6 +254,7 @@ export default async function OrderDetailPage({ params }: PageProps) {
                         orderId={order.id}
                         currentStatus={order.status}
                         orderData={orderData}
+                        budgetData={budgetData}
                         storeSettings={storeSettings}
                         customerName={orderData.customerName}
                         displayId={order.display_id}
