@@ -5,7 +5,7 @@ import { Star, CheckCircle, Store, ExternalLink, Instagram } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
-import { submitFeedback, trackGoogleReviewClick } from '@/app/actions/nps-actions'
+import { submitFeedback, trackGoogleReviewClick } from '@/actions/nps-actions'
 
 export default function FeedbackPage({ params }: { params: Promise<{ id: string }> }) {
     const [score, setScore] = useState<number | null>(null)

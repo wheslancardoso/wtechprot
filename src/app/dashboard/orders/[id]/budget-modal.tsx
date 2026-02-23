@@ -10,8 +10,8 @@ import type { TechnicalReport } from '@/types/technical-report'
 
 // Server Action
 import { saveBudget } from '../actions'
-import { generateBudget } from '@/app/actions/generate-budget'
-import { validateCoupon, getAvailableCouponForOrder } from '@/app/actions/nps-actions'
+import { generateBudget } from '@/actions/generate-budget'
+import { validateCoupon, getAvailableCouponForOrder } from '@/actions/nps-actions'
 
 // UI Components
 import { Button } from '@/components/ui/button'

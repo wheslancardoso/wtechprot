@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useParams } from 'next/navigation'
-import { getAvailability } from '@/app/actions/schedules/get-availability-action'
-import { confirmSchedule } from '@/app/actions/schedules/confirm-schedule-action'
+import { getAvailability } from '@/actions/schedules/get-availability-action'
+import { confirmSchedule } from '@/actions/schedules/confirm-schedule-action'
 import { format, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import {

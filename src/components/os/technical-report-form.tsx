@@ -18,8 +18,8 @@ import { toast } from '@/hooks/use-toast' // Assuming this exists, or use standa
 
 import ImageUpload from '@/components/image-upload'
 import TechnicalReportPdfButton from '@/components/pdf/technical-report-pdf'
-import { generateTechnicalReport } from '@/app/actions/generate-technical-report'
-import { type BudgetSuggestion } from '@/app/actions/generate-budget'
+import { generateTechnicalReport } from '@/actions/generate-technical-report'
+import { type BudgetSuggestion } from '@/actions/generate-budget'
 import { Wand2, AlertTriangle, Copy, Check } from 'lucide-react'
 import {
     Dialog,
