@@ -588,16 +588,16 @@ function WarrantyDocument({ data, settings, integrityHash }: { data: OrderData; 
 
                 {/* ── BÔNUS: SUPORTE REMOTO ── */}
                 <View style={styles.bonusSection}>
-                    <Text style={styles.bonusTitle}>Bônus Exclusivo: Suporte Remoto</Text>
+                    <Text style={styles.bonusTitle}>Bônus Exclusivo: Suporte Pós-Serviço</Text>
                     <Text style={styles.bonusText}>
-                        Como cortesia, esta OS concede 02 (dois) Tickets de Suporte Técnico (Acesso Remoto ou WhatsApp) para dúvidas e ajustes pertinentes ao serviço executado.
+                        Como cortesia, esta OS concede 02 (dois) Tickets de Suporte Técnico (Acesso Remoto ou WhatsApp) para orientações, dúvidas de uso e ajustes finos pertinentes ao serviço executado. Este benefício não se confunde com a garantia técnica descrita no §5.
                     </Text>
                     <View style={styles.bonusDetailsContainer}>
                         <Text style={{ fontSize: 7, color: '#065f46' }}>
                             <Text style={{ fontWeight: 'bold' }}>Validade:</Text> 30 dias após entrega.
                         </Text>
                         <Text style={{ fontSize: 7, color: '#065f46' }}>
-                            <Text style={{ fontWeight: 'bold' }}>Regra:</Text> Cada ticket = 1 suporte de até 30min.
+                            <Text style={{ fontWeight: 'bold' }}>Regra:</Text> Cada ticket = 1 atendimento de até 30min.
                         </Text>
                     </View>
                 </View>
@@ -623,7 +623,7 @@ function WarrantyDocument({ data, settings, integrityHash }: { data: OrderData; 
                     <View style={styles.clauseContainer}>
                         <Text style={styles.clauseTitle}>II — Garantia de Software</Text>
                         <Text style={styles.clauseText}>
-                            Serviços relacionados a software (formatação, instalação de sistema operacional, remoção de vírus, configurações e ajustes de sistema) possuem garantia limitada de 15 (quinze) dias, devido à natureza variável e imprevisível do uso pelo cliente após a entrega.
+                            Serviços relacionados a software (formatação, instalação de sistema operacional, remoção de vírus, configurações e ajustes de sistema) possuem garantia de retrabalho limitada a 15 (quinze) dias. Esta cláusula não abrange suporte ao uso (coberto pelo bônus acima, quando aplicável), mas sim a correção gratuita de falhas diretamente atribuíveis ao serviço original.
                         </Text>
                     </View>
                     <View style={styles.clauseDivider} />

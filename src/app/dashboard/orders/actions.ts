@@ -535,7 +535,7 @@ export async function finishOrderWithPayment(
             address: tenant.address
         } : null
 
-        const warrantyDays = tenant?.warranty_days || 90
+        const warrantyDays = tenant?.warranty_days || 180
         const now = new Date()
         const warrantyEndDate = new Date(now.getTime() + warrantyDays * 24 * 60 * 60 * 1000)
 

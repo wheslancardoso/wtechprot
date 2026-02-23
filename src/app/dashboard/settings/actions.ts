@@ -85,7 +85,7 @@ export async function getSettings(): Promise<{
                 data: {
                     ...newSettings,
                     user_id: newSettings.id,
-                    warranty_days_labor: newSettings.warranty_days || 90,
+                    warranty_days_labor: newSettings.warranty_days || 180,
                     mei_limit_annual: newSettings.mei_limit_annual || 81000
                 }
             }
@@ -96,7 +96,7 @@ export async function getSettings(): Promise<{
             data: {
                 ...settings,
                 user_id: settings.id,
-                warranty_days_labor: settings.warranty_days || 90,
+                warranty_days_labor: settings.warranty_days || 180,
                 mei_limit_annual: settings.mei_limit_annual || 81000
             }
         }
