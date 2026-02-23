@@ -4,11 +4,13 @@ import { useState } from 'react'
 import ImageUpload from '@/components/image-upload'
 import WhatsAppButton from '@/components/whatsapp-button'
 import { saveEvidencePhotos } from '../actions'
+import { useToast } from '@/hooks/use-toast'
 
 // UI Components
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 // Icons
 import {
@@ -44,6 +46,7 @@ export default function EvidenceSection({
     const [checkoutPhotos, setCheckoutPhotos] = useState<string[]>(photosCheckout)
     const [isSaving, setIsSaving] = useState(false)
     const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
+    const { toast } = useToast()
 
     // Determinar se pode editar
     const canEditCheckin = ['open', 'analyzing'].includes(status)
@@ -60,13 +63,28 @@ export default function EvidenceSection({
 
             if (result.success) {
                 setFeedback({ type: 'success', message: result.message })
+                toast({
+                    title: 'Sucesso!',
+                    description: type === 'checkin' ? 'Fotos de entrada salvas com sucesso.' : 'Fotos de saída salvas com sucesso.',
+                })
             } else {
                 setFeedback({ type: 'error', message: result.message })
+                toast({
+                    title: 'Erro!',
+                    description: result.message || 'Ocorreu um erro ao salvar as fotos.',
+                    variant: 'destructive'
+                })
             }
         } catch (error) {
+            const errorMsg = `Erro: ${error instanceof Error ? error.message : 'Desconhecido'}`
             setFeedback({
                 type: 'error',
-                message: `Erro: ${error instanceof Error ? error.message : 'Desconhecido'}`
+                message: errorMsg
+            })
+            toast({
+                title: 'Erro!',
+                description: 'Falha ao salvar as fotos.',
+                variant: 'destructive'
             })
         } finally {
             setIsSaving(false)
@@ -114,66 +132,69 @@ export default function EvidenceSection({
                 </Card>
             )}
 
-            {/* Card Evidências Check-in */}
+            {/* Card Evidências Fotográficas */}
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-lg">
                         <Camera className="h-5 w-5" />
-                        Evidências Fotográficas
+                        Registro Fotográfico (Antes vs Depois)
                     </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-6">
-                    {/* Check-in */}
-                    <div className="space-y-4">
-                        <ImageUpload
-                            orderId={orderId}
-                            type="checkin"
-                            existingImages={checkinPhotos}
-                            onUploadComplete={setCheckinPhotos}
-                            disabled={!canEditCheckin}
-                        />
-                        {canEditCheckin && checkinPhotos.length > 0 && (
-                            <Button
-                                onClick={() => handleSavePhotos('checkin')}
-                                disabled={isSaving}
-                                className="w-full sm:w-auto"
-                            >
-                                {isSaving ? (
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                ) : (
-                                    <Save className="mr-2 h-4 w-4" />
-                                )}
-                                Salvar Fotos de Entrada
-                            </Button>
-                        )}
-                    </div>
+                <CardContent>
+                    <Tabs defaultValue="checkin" className="w-full">
+                        <TabsList className="grid w-full grid-cols-2 mb-6">
+                            <TabsTrigger value="checkin">📥 Entrada (Antes)</TabsTrigger>
+                            <TabsTrigger value="checkout">📤 Saída (Depois)</TabsTrigger>
+                        </TabsList>
 
-                    <hr />
+                        <TabsContent value="checkin" className="space-y-4">
+                            <ImageUpload
+                                orderId={orderId}
+                                type="checkin"
+                                existingImages={checkinPhotos}
+                                onUploadComplete={setCheckinPhotos}
+                                disabled={!canEditCheckin}
+                            />
+                            {canEditCheckin && checkinPhotos.length > 0 && (
+                                <Button
+                                    onClick={() => handleSavePhotos('checkin')}
+                                    disabled={isSaving}
+                                    className="w-full sm:w-auto"
+                                >
+                                    {isSaving ? (
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    ) : (
+                                        <Save className="mr-2 h-4 w-4" />
+                                    )}
+                                    Salvar Fotos de Entrada
+                                </Button>
+                            )}
+                        </TabsContent>
 
-                    {/* Check-out */}
-                    <div className="space-y-4">
-                        <ImageUpload
-                            orderId={orderId}
-                            type="checkout"
-                            existingImages={checkoutPhotos}
-                            onUploadComplete={setCheckoutPhotos}
-                            disabled={!canEditCheckout}
-                        />
-                        {canEditCheckout && checkoutPhotos.length > 0 && (
-                            <Button
-                                onClick={() => handleSavePhotos('checkout')}
-                                disabled={isSaving}
-                                className="w-full sm:w-auto"
-                            >
-                                {isSaving ? (
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                ) : (
-                                    <Save className="mr-2 h-4 w-4" />
-                                )}
-                                Salvar Fotos de Saída
-                            </Button>
-                        )}
-                    </div>
+                        <TabsContent value="checkout" className="space-y-4">
+                            <ImageUpload
+                                orderId={orderId}
+                                type="checkout"
+                                existingImages={checkoutPhotos}
+                                onUploadComplete={setCheckoutPhotos}
+                                disabled={!canEditCheckout}
+                            />
+                            {canEditCheckout && checkoutPhotos.length > 0 && (
+                                <Button
+                                    onClick={() => handleSavePhotos('checkout')}
+                                    disabled={isSaving}
+                                    className="w-full sm:w-auto"
+                                >
+                                    {isSaving ? (
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    ) : (
+                                        <Save className="mr-2 h-4 w-4" />
+                                    )}
+                                    Salvar Fotos de Saída
+                                </Button>
+                            )}
+                        </TabsContent>
+                    </Tabs>
                 </CardContent>
             </Card>
         </div>

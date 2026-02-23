@@ -11,6 +11,8 @@ import { Label } from '@/components/ui/label'
 import { useToast } from '@/hooks/use-toast'
 import { createClient } from '@/lib/supabase/client'
 import { signCustodyTerm } from '@/app/os/[id]/actions'
+import { ImageModal } from '@/components/ui/image-modal'
+import WithdrawalTermButton from '@/components/pdf/withdrawal-term-pdf'
 import { Loader2, MapPin, CheckCircle2, ShieldAlert, Package, ArrowRight, FileSignature, Home } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -40,9 +42,9 @@ export default function PublicSignContent() {
                 .from('orders')
                 .select(`
                     id, display_id, status, 
-                    accessories_received, custody_conditions,
                     equipment:equipments(type, brand, model, serial_number),
-                    customer:customers(name, document_id)
+                    customer:customers(name, document_id),
+                    custody_photos
                 `)
 
             if (isUuid) {
@@ -99,10 +101,7 @@ export default function PublicSignContent() {
     }
 
     const handleSign = async () => {
-        if (!geolocation) {
-            toast({ title: 'Localização Obrigatória', description: 'Clique em "Capturar Localização" antes de confirmar.', variant: 'destructive' })
-            return
-        }
+        // geolocation is optional, we fall back to IP if not present
         if (!acceptedTerms) {
             toast({ title: 'Aceite Obrigatório', description: 'Você precisa aceitar os termos para continuar.', variant: 'destructive' })
             return
@@ -224,22 +223,60 @@ export default function PublicSignContent() {
                                 ) : <p className="text-muted-foreground italic text-xs">Nenhum acessório registrado.</p>}
                             </div>
 
-                            {/* Condições */}
-                            <div className="bg-yellow-500/5 p-3 rounded-lg border border-yellow-500/20">
-                                <div className="flex items-center gap-2 mb-1">
-                                    <ShieldAlert className="h-4 w-4 text-yellow-600" />
-                                    <h3 className="font-semibold text-yellow-700 text-xs uppercase">Estado Físico Reportado</h3>
+                            {/* Condições & Fotos */}
+                            <div className="bg-yellow-500/5 p-4 rounded-xl border border-yellow-500/20 space-y-4">
+                                <div>
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <ShieldAlert className="h-4 w-4 text-yellow-600" />
+                                        <h3 className="font-semibold text-yellow-700 text-xs uppercase tracking-wider">Estado Físico Reportado</h3>
+                                    </div>
+                                    <p className="text-foreground/80 leading-relaxed text-sm bg-background/50 p-3 rounded-lg">
+                                        {order.custody_conditions || 'Sem avarias visíveis registradas em texto.'}
+                                    </p>
                                 </div>
-                                <p className="text-foreground/80 leading-relaxed text-xs">
-                                    {order.custody_conditions || 'Sem avarias visíveis.'}
-                                </p>
+
+                                {/* Galeria de Fotos do Check-in */}
+                                {order.custody_photos && order.custody_photos.length > 0 && (
+                                    <div className="pt-2">
+                                        <h4 className="text-xs font-semibold text-yellow-700 uppercase tracking-wider mb-3">Evidências Fotográficas</h4>
+                                        <div className="grid grid-cols-2 gap-3">
+                                            {order.custody_photos.map((photo: { url: string, label?: string }, index: number) => (
+                                                <div key={index} className="space-y-1.5">
+                                                    <ImageModal
+                                                        src={photo.url}
+                                                        alt={`Foto de Entrada ${index + 1}`}
+                                                        label={photo.label || `Foto ${index + 1}`}
+                                                        className="block aspect-video relative rounded-lg overflow-hidden border border-yellow-500/20 bg-muted/50 hover:opacity-90 transition-opacity group"
+                                                    >
+                                                        <Image
+                                                            src={photo.url}
+                                                            alt={`Foto de Entrada ${index + 1}`}
+                                                            fill
+                                                            className="object-cover transition-transform duration-300 group-hover:scale-105"
+                                                        />
+                                                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                                                            <span className="opacity-0 group-hover:opacity-100 bg-black/60 text-white text-[10px] px-2 py-1 rounded-full backdrop-blur-sm transition-opacity">
+                                                                Ampliar
+                                                            </span>
+                                                        </div>
+                                                    </ImageModal>
+                                                    {photo.label && (
+                                                        <p className="text-[10px] text-center text-muted-foreground font-medium uppercase tracking-wider">
+                                                            {photo.label}
+                                                        </p>
+                                                    )}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
 
-                            <div className="border-t border-dashed my-4" />
+                            <div className="border-t border-dashed my-4 border-border/60" />
 
                             {/* Termo Legal */}
-                            <div className="text-xs text-muted-foreground leading-relaxed h-32 overflow-y-auto bg-muted/30 p-3 rounded border">
-                                <p className="font-bold mb-2">Termos e Condições:</p>
+                            <div className="text-xs text-muted-foreground leading-relaxed bg-muted/30 p-4 rounded-xl border border-border/50">
+                                <p className="font-bold mb-2 text-foreground">Termos e Condições:</p>
                                 <p>Eu, {order.customer?.name}, declaro ser o responsável pelo equipamento acima descrito e autorizo sua retirada para análise técnica.</p>
                                 <p className="mt-2">Confirmo que a lista de acessórios e a descrição das condições físicas conferem com a realidade no momento da entrega.</p>
                                 <p className="mt-2">Concordo com o registro do meu IP e Geolocalização como assinatura digital deste termo.</p>
@@ -255,7 +292,7 @@ export default function PublicSignContent() {
                                     <p className="text-xs text-muted-foreground">
                                         {geolocation
                                             ? "Localização capturada com sucesso."
-                                            : "É necessário registrar o local da retirada."
+                                            : "Opcional. Ajuda na segurança do registro."
                                         }
                                     </p>
                                 </div>
@@ -296,7 +333,7 @@ export default function PublicSignContent() {
                         size="lg"
                         className="w-full bg-green-600 hover:bg-green-700 text-white shadow-lg h-12 text-base"
                         onClick={handleSign}
-                        disabled={submitting || !acceptedTerms || !geolocation}
+                        disabled={submitting || !acceptedTerms}
                     >
                         {submitting ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <CheckCircle2 className="mr-2 h-5 w-5" />}
                         Assinar e Confirmar

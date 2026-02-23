@@ -60,10 +60,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <header className="fixed top-0 w-full z-50 bg-slate-950/80 backdrop-blur-md border-b border-white/5">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2 font-bold text-xl tracking-tight">
-            <div className="w-12 h-12 relative flex items-center justify-center">
-              <Image src="/logo.svg" alt="Logo" width={48} height={48} className="object-contain" />
-            </div>
-            <span className="text-primary">{brandName} Tech</span>
+            <span className="text-primary">WFIX <span className="text-white">Tech</span></span>
           </div>
 
           <a href="https://instagram.com/wfixtech" target="_blank" className="md:hidden text-slate-400 hover:text-primary transition-colors" aria-label="Siga-nos no Instagram">
@@ -808,11 +805,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div className="space-y-4">
-              <div className="flex items-center gap-2 font-bold text-base text-white">
-                <div className="w-6 h-6 relative flex items-center justify-center">
-                  <Image src="/logo.svg" alt="Logo" width={24} height={24} className="object-contain" />
-                </div>
-                <span className="text-primary">{brandName}</span>
+              <div className="flex items-center font-bold text-base">
+                <span className="text-primary">WFIX <span className="text-white">Tech</span></span>
               </div>
               <p>Soluções em Tecnologia e Gestão de TI para Empresas.</p>
             </div>

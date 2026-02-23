@@ -1,10 +1,11 @@
 'use client'
 
-import { Document, Page, Text, View, StyleSheet, PDFDownloadLink, Image } from '@react-pdf/renderer'
+import { useState, useCallback } from 'react'
+import { Document, Page, Text, View, StyleSheet, pdf, Image } from '@react-pdf/renderer'
 import { Button } from '@/components/ui/button'
 import { FileDown, Loader2 } from 'lucide-react'
 import { formatDateToLocal } from '@/lib/date-utils'
-import type { OrderData, StoreSettings } from '@/components/warranty-pdf'
+import type { OrderData, StoreSettings } from '@/components/pdf/warranty-pdf'
 import type { TechnicalReport } from '@/types/technical-report'
 
 // ==================================================
@@ -30,10 +31,19 @@ const styles = StyleSheet.create({
         borderBottom: '2 solid #333',
         paddingBottom: 10,
     },
-    logo: {
-        width: 80,
-        height: 40,
-        objectFit: 'contain',
+    logoContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    logoTextWfix: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#059669',
+    },
+    logoTextTech: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#000000',
     },
     companyInfo: {
         flex: 1,
@@ -99,12 +109,12 @@ const styles = StyleSheet.create({
     photosContainer: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        gap: 10,
         marginTop: 5,
     },
     photoWrapper: {
         width: '30%',
         marginBottom: 10,
+        marginRight: '3%',
     },
     photo: {
         width: '100%',
@@ -215,9 +225,11 @@ function TechnicalReportDocument({
                 {/* Header */}
                 {settings.logo_url ? (
                     <View style={styles.headerWithLogo}>
-                        <Image style={styles.logo} src={settings.logo_url} />
+                        <View style={styles.logoContainer}>
+                            <Text style={styles.logoTextWfix}>WFIX </Text>
+                            <Text style={styles.logoTextTech}>Tech</Text>
+                        </View>
                         <View style={styles.companyInfo}>
-                            <Text style={styles.companyName}>{settings.trade_name}</Text>
                             {settings.legal_document && (
                                 <Text style={styles.companyDetail}>CNPJ/CPF: {settings.legal_document}</Text>
                             )}
@@ -334,8 +346,44 @@ function TechnicalReportDocument({
 }
 
 // ==================================================
-// Botão de Download
+// Utilidade: Converter URL de imagem para base64 JPEG data URI
+// react-pdf NÃO suporta WebP, então re-codificamos via canvas
 // ==================================================
+async function imageUrlToBase64(url: string): Promise<string | null> {
+    try {
+        const response = await fetch(url)
+        if (!response.ok) return null
+        const blob = await response.blob()
+
+        // Usar canvas para re-codificar a imagem como JPEG
+        // Isso converte WebP (não suportado por react-pdf) para JPEG
+        return new Promise((resolve) => {
+            const img = new window.Image()
+            img.crossOrigin = 'anonymous'
+            img.onload = () => {
+                const canvas = document.createElement('canvas')
+                canvas.width = img.naturalWidth
+                canvas.height = img.naturalHeight
+                const ctx = canvas.getContext('2d')
+                if (!ctx) { resolve(null); return }
+                ctx.drawImage(img, 0, 0)
+                const jpegDataUri = canvas.toDataURL('image/jpeg', 0.85)
+                resolve(jpegDataUri)
+            }
+            img.onerror = () => resolve(null)
+            img.src = URL.createObjectURL(blob)
+        })
+    } catch {
+        console.error('Erro ao converter imagem para base64:', url)
+        return null
+    }
+}
+
+async function convertAllImages(urls: string[]): Promise<string[]> {
+    const results = await Promise.all(urls.map(imageUrlToBase64))
+    return results.filter((r): r is string => r !== null)
+}
+
 interface TechnicalReportPdfButtonProps {
     report: TechnicalReport
     orderData: OrderData
@@ -351,29 +399,67 @@ export default function TechnicalReportPdfButton({
     label = "Baixar Laudo Técnico",
     variant = "outline"
 }: TechnicalReportPdfButtonProps) {
+    const [isGenerating, setIsGenerating] = useState(false)
     const osNumber = String(orderData.displayId).padStart(4, '0')
     const fileName = `Laudo_Tecnico_OS_${osNumber}.pdf`
 
+    const handleDownload = useCallback(async () => {
+        setIsGenerating(true)
+        try {
+            // Converter logo e evidências para base64
+            let logoBase64: string | undefined
+            if (storeSettings.logo_url?.startsWith('http')) {
+                logoBase64 = (await imageUrlToBase64(storeSettings.logo_url)) || undefined
+            }
+
+            const photoBase64 = report.photos_evidence
+                ? await convertAllImages(report.photos_evidence)
+                : []
+
+            const settingsWithBase64: StoreSettings = {
+                ...storeSettings,
+                logo_url: logoBase64 || storeSettings.logo_url,
+            }
+
+            const reportWithBase64 = {
+                ...report,
+                photos_evidence: photoBase64,
+            }
+
+            // Gerar o PDF blob
+            const blob = await pdf(
+                <TechnicalReportDocument report={reportWithBase64} order={orderData} settings={settingsWithBase64} />
+            ).toBlob()
+
+            // Trigger download
+            const url = URL.createObjectURL(blob)
+            const link = document.createElement('a')
+            link.href = url
+            link.download = fileName
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
+            URL.revokeObjectURL(url)
+        } catch (error) {
+            console.error('Erro ao gerar PDF:', error)
+        } finally {
+            setIsGenerating(false)
+        }
+    }, [report, orderData, storeSettings, fileName])
+
     return (
-        <PDFDownloadLink
-            document={<TechnicalReportDocument report={report} order={orderData} settings={storeSettings} />}
-            fileName={fileName}
-        >
-            {({ loading }: { loading: boolean }) => (
-                <Button variant={variant} disabled={loading} className="w-full sm:w-auto">
-                    {loading ? (
-                        <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Gerando...
-                        </>
-                    ) : (
-                        <>
-                            <FileDown className="mr-2 h-4 w-4" />
-                            {label}
-                        </>
-                    )}
-                </Button>
+        <Button variant={variant} disabled={isGenerating} onClick={handleDownload} className="w-full sm:w-auto">
+            {isGenerating ? (
+                <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Gerando...
+                </>
+            ) : (
+                <>
+                    <FileDown className="mr-2 h-4 w-4" />
+                    {label}
+                </>
             )}
-        </PDFDownloadLink>
+        </Button>
     )
 }

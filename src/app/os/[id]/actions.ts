@@ -282,7 +282,7 @@ interface CustodySignatureData {
     geolocation: {
         lat: number
         lng: number
-    }
+    } | null
 }
 
 export async function signCustodyTerm(
@@ -323,10 +323,10 @@ export async function signCustodyTerm(
             order_id: orderId,
             ip_address: clientIp,
             device_fingerprint: userAgent,
-            geolocation: {
+            geolocation: data.geolocation ? {
                 lat: data.geolocation.lat,
                 lng: data.geolocation.lng
-            },
+            } : null,
             content_summary: {
                 accessories: data.accessories.sort(), // Ordenar para consistência
                 conditions_hash: require('crypto').createHash('md5').update(data.conditions || '').digest('hex'),
@@ -352,8 +352,8 @@ export async function signCustodyTerm(
                 custody_signature_url: data.signatureUrl,
                 custody_signed_at: evidencePayload.signed_at,
                 custody_ip: clientIp, // Save IP explicitly
-                custody_geo_lat: data.geolocation.lat,
-                custody_geo_lng: data.geolocation.lng,
+                custody_geo_lat: data.geolocation?.lat || null,
+                custody_geo_lng: data.geolocation?.lng || null,
                 custody_integrity_hash: integrityHash,
                 status: 'analyzing' // Move para Em Análise
             })

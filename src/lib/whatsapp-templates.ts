@@ -115,7 +115,7 @@ export function templateProntoRetirada(
     message += `Seu aparelho está *PRONTO*!\n\n`
     message += `📋 OS: #${osNumber}\n`
     message += `💰 Valor: ${formatCurrency(order.laborCost)}\n`
-    message += `🛡️ Garantia: ${settings.warranty_days_labor || 90} dias sobre a mão de obra\n\n`
+    message += `🛡️ Garantia: ${settings.warranty_days_labor || 180} dias sobre a mão de obra\n\n`
 
     // Chave Pix
     if (settings.pix_key) {

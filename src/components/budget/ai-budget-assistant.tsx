@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { generateBudget, type BudgetSuggestion } from '@/app/actions/generate-budget'
+import { generateBudget, type BudgetSuggestion } from '@/actions/generate-budget'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'

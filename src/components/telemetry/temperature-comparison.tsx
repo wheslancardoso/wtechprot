@@ -128,7 +128,7 @@ export function TemperatureComparison({ telemetryData }: TemperatureComparisonPr
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         {renderMetricCard('Inicial', initialTemp, '°C', undefined, 'initial')}
                         {renderMetricCard('Pós-Reparo', postRepairTemp, '°C', postRepairDiff, 'post_repair')}
-                        {renderMetricCard('Diferença Final', finalTemp || postRepairTemp, '°C', finalDiff || postRepairDiff, final ? 'final' : 'post_repair')}
+                        {renderMetricCard('Diferença Final', finalTemp ?? postRepairTemp, '°C', finalDiff ?? postRepairDiff, final ? 'final' : 'post_repair')}
                     </div>
 
                     {(postRepairDiff !== null && postRepairDiff < 0) && (

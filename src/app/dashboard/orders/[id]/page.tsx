@@ -10,12 +10,12 @@ export const dynamic = 'force-dynamic'
 import OrderActions from './order-actions'
 import EvidenceSection from './evidence-section'
 import OrderTimeline from './order-timeline'
-import ExecutionChecklist from '@/components/execution-checklist'
-import TechnicalReportForm from '@/components/technical-report-form'
+import ExecutionChecklist from '@/components/os/execution-checklist'
+import TechnicalReportForm from '@/components/os/technical-report-form'
 import type { ExecutionTask } from '@/lib/execution-tasks-types'
-import type { OrderData, StoreSettings } from '@/components/warranty-pdf'
-import OrderRealtimeListener from '@/components/order-realtime-listener'
-import WithdrawalTermButton from '@/components/home-care/withdrawal-term-pdf'
+import type { OrderData, StoreSettings } from '@/components/pdf/warranty-pdf'
+import OrderRealtimeListener from '@/components/os/order-realtime-listener'
+import WithdrawalTermButton from '@/components/pdf/withdrawal-term-pdf'
 import { AIBudgetAssistant } from '@/components/budget/ai-budget-assistant'
 import TelemetryTab from './telemetry-tab'
 import { ResponsiveOrderTabs } from './responsive-order-tabs'
@@ -25,7 +25,7 @@ import { isUuid, parseOrderId } from '@/lib/order-utils'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { TabsContent } from "@/components/ui/tabs"
-import { OrderStatusStepper } from '@/components/order-status-stepper'
+import { OrderStatusStepper } from '@/components/os/order-status-stepper'
 
 // Icons
 import {
@@ -92,7 +92,8 @@ export default async function OrderDetailPage({ params }: PageProps) {
         .select(`
       *,
       customer:customers(*),
-      equipment:equipments(*)
+      equipment:equipments(*),
+      order_items(*)
     `)
 
     // Buscar por UUID ou display_id (string no banco, ex: '2026WF-0009')
@@ -131,14 +132,18 @@ export default async function OrderDetailPage({ params }: PageProps) {
 
     // Preparar dados para PDF de Garantia
     const orderData: OrderData = {
+        orderId: order.id,
         displayId: String(order.display_id),
         customerName: customer?.name || 'Cliente',
         customerPhone: customer?.phone || '',
+        customerDocument: customer?.document_id || null,
         equipmentType: equipment?.type || 'Equipamento',
         equipmentBrand: equipment?.brand || '',
         equipmentModel: equipment?.model || '',
+        equipmentSerial: equipment?.serial_number || null,
         diagnosisText: order.diagnosis_text || '',
         laborCost: order.labor_cost || 0,
+        photosCheckin: order.photos_checkin || [],
         photosCheckout: order.photos_checkout || [],
         finishedAt: order.finished_at || new Date().toISOString(),
         externalParts: [],
@@ -151,6 +156,26 @@ export default async function OrderDetailPage({ params }: PageProps) {
         } : null,
     }
 
+    // Preparar dados para PDF de Orçamento (se houver orçamento enviado)
+    const budgetData = order.diagnosis_text ? {
+        displayId: String(order.display_id),
+        createdAt: order.updated_at || order.created_at,
+        customerName: customer?.name || 'Cliente',
+        customerPhone: customer?.phone || '',
+        customerDocument: customer?.document_id || null,
+        equipmentType: equipment?.type || 'Equipamento',
+        equipmentBrand: equipment?.brand || '',
+        equipmentModel: equipment?.model || '',
+        equipmentSerial: equipment?.serial_number || null,
+        diagnosisText: order.diagnosis_text,
+        laborCost: order.labor_cost || 0,
+        discountAmount: order.discount_amount || 0,
+        externalParts: (order.order_items || []).filter((item: { type: string }) => item.type === 'part_external').map((item: { name: string; purchase_url?: string }) => ({
+            name: item.name,
+            purchaseUrl: item.purchase_url,
+        })),
+    } : undefined
+
     // Configurações da Loja
     const snapshot = order.store_snapshot as StoreSettings | null
     const currentSettings = tenant ? {
@@ -158,16 +183,16 @@ export default async function OrderDetailPage({ params }: PageProps) {
         legal_document: tenant.legal_document,
         phone: tenant.phone,
         logo_url: tenant.logo_url,
-        warranty_days_labor: tenant.warranty_days || 90,
+        warranty_days_labor: tenant.warranty_days || 180,
         address: tenant.address
     } : null
 
     const storeSettings: StoreSettings = snapshot || (currentSettings ? {
         ...currentSettings,
-        warranty_days_labor: currentSettings.warranty_days_labor || 90,
+        warranty_days_labor: currentSettings.warranty_days_labor || 180,
     } : {
         trade_name: 'Minha Assistência',
-        warranty_days_labor: 90
+        warranty_days_labor: 180
     })
 
     // Helper to get the correct customer report
@@ -229,6 +254,7 @@ export default async function OrderDetailPage({ params }: PageProps) {
                         orderId={order.id}
                         currentStatus={order.status}
                         orderData={orderData}
+                        budgetData={budgetData}
                         storeSettings={storeSettings}
                         customerName={orderData.customerName}
                         displayId={order.display_id}

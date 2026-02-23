@@ -1,4 +1,4 @@
-import { getSchedules, getScheduleSettings } from '@/app/actions/schedules/schedule-actions'
+import { getSchedules, getScheduleSettings } from '@/actions/schedules/schedule-actions'
 import { ScheduleDashboardClient } from './schedule-dashboard-client'
 
 export const dynamic = 'force-dynamic'

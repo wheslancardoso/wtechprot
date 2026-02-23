@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Progress } from '@/components/ui/progress'
-import { DashboardActivityFeed } from '@/components/dashboard-activity-feed'
+import { DashboardActivityFeed } from '@/components/dashboard/dashboard-activity-feed'
 
 // Icons
 import {
