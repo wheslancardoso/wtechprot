@@ -7,6 +7,7 @@ import OrderRealtimeListener from '@/components/order-realtime-listener'
 import type { TechnicalReport } from '@/types/technical-report'
 import type { OrderData, StoreSettings } from '@/components/warranty-pdf'
 import TechnicalReportPdfWrapper from '@/components/technical-report-pdf-wrapper'
+import { ImageModal } from '@/components/ui/image-modal'
 
 // Components
 import ClientActions from './client-actions'
@@ -27,7 +28,10 @@ import {
     Receipt,
     ExternalLink,
     AlertTriangle,
+    Camera,
+    Image as ImageIcon
 } from 'lucide-react'
+import Image from 'next/image'
 
 // Status config
 const statusLabels: Record<OrderStatus, string> = {
@@ -116,7 +120,8 @@ export default async function ClientOrderPage({ params }: PageProps) {
         .select(`
       *,
       order_items(*),
-      customer:customers(name, phone)
+      customer:customers(name, phone),
+      custody_photos
     `)
 
     // Aplicar filtro adequado
@@ -185,6 +190,7 @@ export default async function ClientOrderPage({ params }: PageProps) {
         diagnosisText: order.diagnosis_text || '',
         laborCost: order.labor_cost || 0,
         photosCheckout: order.photos_checkout || [],
+        custodyPhotos: order.custody_photos || [],
         finishedAt: order.finished_at || new Date().toISOString(),
         externalParts: [],
         signatureEvidence: order.signature_evidence || null,
@@ -234,6 +240,103 @@ export default async function ClientOrderPage({ params }: PageProps) {
                                 {/* Banner de Avaliação — renderizado apenas no ClientActions (rodapé fixo) */}
                             </AlertDescription>
                         </Alert>
+
+                        {/* Card: Galeria de Evidências */}
+                        {((orderData.custodyPhotos?.length ?? 0) > 0 || (orderData.photosCheckout?.length ?? 0) > 0) && (
+                            <Card className="overflow-hidden">
+                                <CardHeader className="pb-3 bg-muted/30 border-b border-border/40">
+                                    <CardTitle className="flex items-center gap-2 text-base">
+                                        <Camera className="h-5 w-5 text-primary" />
+                                        Galeria de Evidências
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="p-0">
+                                    <div className="divide-y divide-border/40">
+
+                                        {/* Fotos de Check-in */}
+                                        {(orderData.custodyPhotos?.length ?? 0) > 0 && (
+                                            <div className="p-4 sm:p-5">
+                                                <div className="flex items-center gap-2 mb-3">
+                                                    <div className="w-6 h-6 rounded-full bg-yellow-500/10 text-yellow-600 flex items-center justify-center shrink-0">
+                                                        <span className="text-xs font-bold">In</span>
+                                                    </div>
+                                                    <div>
+                                                        <h3 className="font-semibold text-sm">Entrada do Equipamento</h3>
+                                                        <p className="text-xs text-muted-foreground">Fotos tiradas no recebimento</p>
+                                                    </div>
+                                                </div>
+                                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                                    {orderData.custodyPhotos?.map((photo: { url: string, label?: string }, index: number) => (
+                                                        <ImageModal
+                                                            key={`in-${index}`}
+                                                            src={photo.url}
+                                                            alt={`Entrada ${index + 1}`}
+                                                            label={photo.label || `Foto ${index + 1}`}
+                                                            className="group block relative aspect-square rounded-lg overflow-hidden border bg-muted"
+                                                        >
+                                                            <Image
+                                                                src={photo.url}
+                                                                alt={`Entrada ${index + 1}`}
+                                                                fill
+                                                                className="object-cover transition-transform duration-300 group-hover:scale-105"
+                                                            />
+                                                            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-2 pt-6">
+                                                                <p className="text-[10px] text-white font-medium truncate">
+                                                                    {photo.label || `Foto ${index + 1}`}
+                                                                </p>
+                                                            </div>
+                                                        </ImageModal>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* Fotos de Check-out */}
+                                        {(orderData.photosCheckout?.length ?? 0) > 0 && (
+                                            <div className="p-4 sm:p-5 bg-green-50/30">
+                                                <div className="flex items-center gap-2 mb-3">
+                                                    <div className="w-6 h-6 rounded-full bg-green-500/10 text-green-600 flex items-center justify-center shrink-0">
+                                                        <span className="text-xs font-bold">Out</span>
+                                                    </div>
+                                                    <div>
+                                                        <h3 className="font-semibold text-sm">Pronto para Entrega</h3>
+                                                        <p className="text-xs text-muted-foreground">Fotos após o reparo / laudo</p>
+                                                    </div>
+                                                </div>
+                                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                                    {orderData.photosCheckout?.map((photo: any, index: number) => {
+                                                        const url = typeof photo === 'string' ? photo : photo.url;
+                                                        const label = typeof photo === 'string' ? `Foto ${index + 1}` : (photo.label || `Foto ${index + 1}`);
+                                                        return (
+                                                            <ImageModal
+                                                                key={`out-${index}`}
+                                                                src={url}
+                                                                alt={`Saída ${index + 1}`}
+                                                                label={label}
+                                                                className="group block relative aspect-square rounded-lg overflow-hidden border border-green-200 bg-muted"
+                                                            >
+                                                                <Image
+                                                                    src={url}
+                                                                    alt={`Saída ${index + 1}`}
+                                                                    fill
+                                                                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                                                                />
+                                                                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-2 pt-6">
+                                                                    <p className="text-[10px] text-white font-medium truncate">
+                                                                        {label}
+                                                                    </p>
+                                                                </div>
+                                                            </ImageModal>
+                                                        )
+                                                    })}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        )}
 
                         {/* Card: Diagnóstico */}
                         {order.diagnosis_text && (

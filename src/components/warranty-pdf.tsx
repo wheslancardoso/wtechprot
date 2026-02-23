@@ -403,7 +403,8 @@ interface OrderData {
     diagnosisText: string
     laborCost: number
     photosCheckin?: string[]
-    photosCheckout: string[]
+    photosCheckout: string[] | { url: string; label?: string }[]
+    custodyPhotos?: { url: string; label?: string }[]
     finishedAt: string
     externalParts: Array<{ name: string; price?: number }>
     signatureEvidence?: {
