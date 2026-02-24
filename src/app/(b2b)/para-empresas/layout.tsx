@@ -5,8 +5,8 @@ import { Button } from '@/components/ui/button'
 import { getTenantData } from '@/lib/get-tenant-data'
 
 export const metadata: Metadata = {
-    title: 'WFIX Tech Empresas | Gestão de TI e Sistemas',
-    description: 'Soluções de Tecnologia para pequenos negócios. Sistemas de gestão, automação com IA, e infraestrutura de redes.',
+    title: 'WFIX Tech Empresas | Gestão de TI e Infraestrutura',
+    description: 'Soluções de Tecnologia para pequenos negócios. Gestão de hardware, manutenção preventiva e infraestrutura de redes.',
 }
 
 export default async function B2BLayout({
@@ -22,7 +22,10 @@ export default async function B2BLayout({
             <header className="fixed top-0 w-full z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm">
                 <div className="container mx-auto px-4 h-16 flex items-center justify-between">
                     <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                        <span className="text-primary font-extrabold text-2xl tracking-tight">WFIX Tech</span>
+                        <span className="font-bold text-xl tracking-tight">
+                            <span className="text-primary">WFIX </span>
+                            <span className="text-slate-900 dark:text-white">Tech</span>
+                        </span>
                         <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs uppercase tracking-wider font-bold border border-slate-200 dark:border-slate-700">Empresas</span>
                     </Link>
 
@@ -51,14 +54,14 @@ export default async function B2BLayout({
                 <div className="container mx-auto px-4 grid md:grid-cols-4 gap-8">
                     <div className="col-span-2">
                         <span className="text-primary font-extrabold text-xl block mb-4">WFIX Tech Empresas</span>
-                        <p className="max-w-xs mb-4">Parceiro estratégico de tecnologia para pequenos negócios. Do sistema de gestão à infraestrutura.</p>
+                        <p className="max-w-xs mb-4">Parceiro estratégico de tecnologia para pequenos negócios. Da estabilidade dos computadores à infraestrutura.</p>
                     </div>
 
                     <div>
                         <h4 className="font-bold text-slate-900 dark:text-white mb-4">Soluções</h4>
                         <ul className="space-y-2">
-                            <li><a href="#" className="hover:text-primary">Sistemas de Gestão</a></li>
-                            <li><a href="#" className="hover:text-primary">Automação com IA</a></li>
+                            <li><a href="#" className="hover:text-primary">Gestão de Equipamentos</a></li>
+                            <li><a href="#" className="hover:text-primary">Suporte de Hardware</a></li>
                             <li><a href="#" className="hover:text-primary">Redes & Wi-Fi</a></li>
                         </ul>
                     </div>
