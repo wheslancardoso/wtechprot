@@ -624,62 +624,62 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <div className="container mx-auto px-4 max-w-3xl">
             <div className="text-center mb-16">
               <h2 className="text-3xl font-bold mb-4">Dúvidas Frequentes</h2>
-              <p className="text-slate-400">O que você precisa saber antes de iniciar seu atendimento.</p>
+              <p className="text-slate-400">O que você precisa saber antes de iniciar o atendimento no nosso laboratório.</p>
             </div>
 
             <div className="space-y-4">
               <details className="group bg-white/[0.02] border border-white/5 rounded-2xl overflow-hidden [&_summary::-webkit-details-marker]:hidden open:bg-white/[0.04] transition-colors duration-300">
                 <summary className="flex cursor-pointer items-center justify-between gap-1.5 p-6 text-slate-200 font-bold hover:text-white transition-colors">
-                  <h3 className="text-lg">Vocês realizam suporte on-site (presencial)?</h3>
+                  <h3 className="text-lg">Vocês fazem atendimento domiciliar ou presencial nas empresas?</h3>
                   <div className="white-space-nowrap text-primary group-open:-rotate-180 transition-transform duration-300">
                     <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
                   </div>
                 </summary>
                 <div className="px-6 pb-6 pt-2 text-slate-400 leading-relaxed border-t border-white/5 animate-in slide-in-from-top-2 fade-in duration-300">
                   <p>
-                    Sim. Atendemos presencialmente em toda a região metropolitana. Para serviços complexos de laboratório, oferecemos logística de retirada e devolução.
+                    Sim! Vamos até sua residência ou empresa caso não possa trazer a máquina ao nosso laboratório. Para serviços complexos, fazemos do recolhimento do seu aparelho em segurança.
                   </p>
                 </div>
               </details>
 
               <details className="group bg-white/[0.02] border border-white/5 rounded-2xl overflow-hidden [&_summary::-webkit-details-marker]:hidden open:bg-white/[0.04] transition-colors duration-300">
                 <summary className="flex cursor-pointer items-center justify-between gap-1.5 p-6 text-slate-200 font-bold hover:text-white transition-colors">
-                  <h3 className="text-lg">Montam PC com peças que eu comprei na internet?</h3>
+                  <h3 className="text-lg">Posso comprar peças na internet para montagem do meu PC?</h3>
                   <div className="white-space-nowrap text-primary group-open:-rotate-180 transition-transform duration-300">
                     <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
                   </div>
                 </summary>
                 <div className="px-6 pb-6 pt-2 text-slate-400 leading-relaxed border-t border-white/5 animate-in slide-in-from-top-2 fade-in duration-300">
                   <p>
-                    Sim. Realizamos a montagem técnica profissional com seus componentes ("Bring Your Own Parts"), incluindo organização de cabos e configuração de BIOS para máxima performance.
+                    Com certeza! Você compra as peças (Processador, Placa de Vídeo, etc.) e nós cobramos apenas o serviço físico no laboratório, realizando testes de refrigeração e instalação física do Windows limpo.
                   </p>
                 </div>
               </details>
 
               <details className="group bg-white/[0.02] border border-white/5 rounded-2xl overflow-hidden [&_summary::-webkit-details-marker]:hidden open:bg-white/[0.04] transition-colors duration-300">
                 <summary className="flex cursor-pointer items-center justify-between gap-1.5 p-6 text-slate-200 font-bold hover:text-white transition-colors">
-                  <h3 className="text-lg">Qual a garantia do serviço?</h3>
+                  <h3 className="text-lg">Como funciona a garantia das peças e mão de obra?</h3>
                   <div className="white-space-nowrap text-primary group-open:-rotate-180 transition-transform duration-300">
                     <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
                   </div>
                 </summary>
                 <div className="px-6 pb-6 pt-2 text-slate-400 leading-relaxed border-t border-white/5 animate-in slide-in-from-top-2 fade-in duration-300">
                   <p>
-                    Todos os serviços contam com garantia legal de <b>90 dias</b>. Emitimos laudo técnico e nota fiscal dos serviços prestados.
+                    Qualquer reparo na bancada conta com garantia mínima de <b>90 dias</b> contra defeitos do serviço prestado. Emitimos os termos de garantia diretamente para você.
                   </p>
                 </div>
               </details>
 
               <details className="group bg-white/[0.02] border border-white/5 rounded-2xl overflow-hidden [&_summary::-webkit-details-marker]:hidden open:bg-white/[0.04] transition-colors duration-300">
                 <summary className="flex cursor-pointer items-center justify-between gap-1.5 p-6 text-slate-200 font-bold hover:text-white transition-colors">
-                  <h3 className="text-lg">Como solicitar uma Análise Técnica?</h3>
+                  <h3 className="text-lg">Como solicitar um orçamento de conserto?</h3>
                   <div className="white-space-nowrap text-primary group-open:-rotate-180 transition-transform duration-300">
                     <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
                   </div>
                 </summary>
                 <div className="px-6 pb-6 pt-2 text-slate-400 leading-relaxed border-t border-white/5 animate-in slide-in-from-top-2 fade-in duration-300">
                   <p>
-                    A triagem inicial via WhatsApp é gratuita. Para diagnósticos avançados em laboratório que exijam desmontagem e testes de componentes, pode haver taxa de análise (abonada em caso de aprovação do serviço).
+                    Basta chamar pelo WhatsApp. Se for de fácil solução e direto, cotamos na hora. Para computadores difíceis ou mortos, é necessária a análise física no nosso laboratório antes de enviar os valores precisos.
                   </p>
                 </div>
               </details>
@@ -687,7 +687,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           </div>
         </section>
 
-        {/* MAPA - ÁREA DE ATENDIMENTO */}
         {/* MAPA E CONTATO */}
         <section className="py-24 bg-slate-950 border-t border-white/5">
           <div className="container mx-auto px-4">
@@ -695,9 +694,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               {/* Coluna 1: Info */}
               <div className="space-y-8">
                 <div>
-                  <h2 className="text-3xl font-bold mb-4">Atendimento em Goiânia e Região</h2>
+                  <h2 className="text-3xl font-bold mb-4">Laboratório e Atendimento Físico</h2>
                   <p className="text-slate-400">
-                    Nossa base técnica está pronta para receber seu equipamento ou agregar valor ao seu projeto no seu endereço.
+                    Bancada pronta para receber seu computador, notebook ou impressora em Goiânia e Região.
                   </p>
                 </div>
 
