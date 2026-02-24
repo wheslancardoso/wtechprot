@@ -775,8 +775,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </div>
             <div className="flex-shrink-0">
               <Button size="lg" className="whitespace-nowrap rounded-full px-8 h-14 text-lg shadow-[0_0_30px_rgba(79,70,229,0.3)] hover:shadow-[0_0_40px_rgba(79,70,229,0.5)] hover:scale-105 transition-all bg-indigo-600 hover:bg-indigo-500 text-white border-0" asChild>
-                <Link href={whatsappLink} target="_blank">
-                  Contactar Orçamento Empresarial <ArrowRight className="ml-2 w-5 h-5" />
+                <Link href="/para-empresas">
+                  Conhecer Soluções <ArrowRight className="ml-2 w-5 h-5" />
                 </Link>
               </Button>
             </div>
