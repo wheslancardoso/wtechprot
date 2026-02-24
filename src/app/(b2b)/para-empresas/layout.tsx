@@ -26,7 +26,6 @@ export default async function B2BLayout({
                             <span className="text-primary">WFIX </span>
                             <span className="text-slate-900 dark:text-white">Tech</span>
                         </span>
-                        <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs uppercase tracking-wider font-bold border border-slate-200 dark:border-slate-700">Empresas</span>
                     </Link>
 
                     <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600 dark:text-slate-400">
