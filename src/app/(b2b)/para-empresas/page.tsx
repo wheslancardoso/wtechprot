@@ -33,8 +33,8 @@ export default function B2BPage() {
                             </h1>
 
                             <p className="text-xl text-slate-400 mb-10 leading-relaxed max-w-2xl mx-auto lg:mx-0 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-200">
-                                Do sistema de agendamento da sua barbearia à rede Wi-Fi da sua loja.
-                                A <span className="text-white font-semibold">WFIX Tech</span> traz as ferramentas das grandes empresas para o seu dia a dia.
+                                Dos computadores da sua recepção à infraestrutura de rede do seu escritório.
+                                A <span className="text-white font-semibold">WFIX Tech</span> garante disponibilidade, performance e manutenção sem dor de cabeça para sua equipe.
                             </p>
 
                             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-in fade-in slide-in-from-bottom-16 duration-1000 delay-300">
@@ -51,10 +51,10 @@ export default function B2BPage() {
                                     <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" /> Suporte Ágil
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" /> Automação
+                                    <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" /> Infraestrutura
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <div className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" /> Gestão
+                                    <div className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" /> Laboratório Próprio
                                 </div>
                             </div>
                         </div>
@@ -135,16 +135,16 @@ export default function B2BPage() {
                                 <XCircle className="w-24 h-24 text-red-500" />
                             </div>
                             <h3 className="text-xl font-bold text-red-400 mb-2 flex items-center gap-2">
-                                <XCircle className="w-5 h-5" /> Atendimento Lento
+                                <XCircle className="w-5 h-5" /> Suporte Demorado
                             </h3>
                             <p className="text-slate-400 mb-6 text-sm">
-                                Clientes esperando para agendar? Perde vendas porque não pode atender o WhatsApp na hora?
+                                O computador parou e sua equipe fica ociosa esperando dias pelo "rapaz da TI"?
                             </p>
                             <div className="pt-6 border-t border-slate-800">
                                 <h4 className="text-green-400 font-bold text-sm mb-1 flex items-center gap-2">
                                     <CheckCircle2 className="w-4 h-4" /> A Solução WFIX
                                 </h4>
-                                <p className="text-slate-300 text-sm">Agendamento Online 24/7. Seu cliente marca sozinho, você só recebe.</p>
+                                <p className="text-slate-300 text-sm">Atendimento Rápido e Presencial. Laboratório próprio para diagnósticos imediatos.</p>
                             </div>
                         </div>
 
@@ -198,23 +198,23 @@ export default function B2BPage() {
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
-                        {/* Service 1: Systems & AI */}
+                        {/* Service 1: Hardware & Devices */}
                         <SpotlightCard className="p-8 h-full bg-slate-900/40 border-slate-800 hover:border-indigo-500/50 transition-colors group" spotlightColor="rgba(99, 102, 241, 0.2)">
                             <div className="w-14 h-14 bg-indigo-900/30 text-indigo-400 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300 border border-indigo-500/20">
-                                <Smartphone className="w-7 h-7" />
+                                <Laptop className="w-7 h-7" />
                             </div>
-                            <h3 className="text-2xl font-bold mb-4 text-white">Sistemas & Apps</h3>
+                            <h3 className="text-2xl font-bold mb-4 text-white">Gestão de Equipamentos</h3>
                             <p className="text-slate-400 leading-relaxed mb-6">
-                                Ideal para: Barbearias, Clínicas, PetShops.
+                                Ideal para: Escritórios, Clínicas, Call Centers.
                             </p>
                             <div className="space-y-4">
                                 <div className="bg-slate-950/50 p-4 rounded-lg border border-slate-800">
                                     <h4 className="text-indigo-400 font-bold text-sm mb-1">Como funciona?</h4>
-                                    <p className="text-sm text-slate-500">Nós configuramos o sistema de agendamento e treinamos sua equipe.</p>
+                                    <p className="text-sm text-slate-500">Padronizamos e gerenciamos o hardware dos seus colaboradores (PCs e Notebooks).</p>
                                 </div>
                                 <ul className="space-y-3 text-sm text-slate-300">
-                                    <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-indigo-500 shrink-0" /> <span>Link de Agendamento no Instagram</span></li>
-                                    <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-indigo-500 shrink-0" /> <span>Lembretes Automáticos (WhatsApp)</span></li>
+                                    <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-indigo-500 shrink-0" /> <span>Inventário e Ciclo de Vida</span></li>
+                                    <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-indigo-500 shrink-0" /> <span>Manutenção Preventiva Agendada</span></li>
                                 </ul>
                             </div>
                         </SpotlightCard>
