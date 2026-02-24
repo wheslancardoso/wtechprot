@@ -365,13 +365,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Especialista nos principais fabricantes do mercado (Ink Tank / Laser). Desobstrução de cabeçotes, troca de tracionador e manutenção de sistemas Bulk Ink.</p>
               </SpotlightCard>
 
-              {/* 4. Remoto */}
+              {/* 4. Laboratório Físico */}
               <SpotlightCard className="h-full p-6 flex flex-col group hover:-translate-y-1 transition-transform duration-300 bg-slate-900/50 border-white/5" spotlightColor="rgba(34, 211, 238, 0.2)">
                 <div className="mx-auto w-14 h-14 bg-cyan-500/10 rounded-full flex items-center justify-center text-cyan-400 mb-4 shadow-[inset_0_0_20px_rgba(34,211,238,0.2)] group-hover:scale-110 transition-transform">
                   <Globe className="w-7 h-7" />
                 </div>
-                <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Consultoria Remota</h3>
-                <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Consultoria técnica e suporte remoto seguro para ambientes de trabalho, com agilidade e total segurança.</p>
+                <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Infraestrutura e Laboratório</h3>
+                <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Diagnósticos avançados e reparos executados exclusivamente no nosso próprio laboratório técnico equipado.</p>
               </SpotlightCard>
 
               {/* 5. PC Gamer / Workstations */}

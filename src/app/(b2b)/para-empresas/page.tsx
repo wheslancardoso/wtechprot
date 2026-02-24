@@ -245,18 +245,18 @@ export default function B2BPage() {
                             <div className="w-14 h-14 bg-emerald-900/30 text-emerald-400 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300 border border-emerald-500/20">
                                 <Wrench className="w-7 h-7" />
                             </div>
-                            <h3 className="text-2xl font-bold mb-4 text-white">Suporte Técnico</h3>
+                            <h3 className="text-2xl font-bold mb-4 text-white">Gestão Contínua de TI</h3>
                             <p className="text-slate-400 leading-relaxed mb-6">
-                                Ideal para: Todos os negócios com computadores.
+                                Ideal para: Empresas que precisam de operação ininterrupta.
                             </p>
                             <div className="space-y-4">
                                 <div className="bg-slate-950/50 p-4 rounded-lg border border-slate-800">
                                     <h4 className="text-emerald-400 font-bold text-sm mb-1">Como funciona?</h4>
-                                    <p className="text-sm text-slate-500">Acesso remoto imediato ou visita técnica para resolver problemas críticos.</p>
+                                    <p className="text-sm text-slate-500">Contratos de manutenção preventiva com laboratório próprio no backstage.</p>
                                 </div>
                                 <ul className="space-y-3 text-sm text-slate-300">
-                                    <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" /> <span>PC lento vira PC rápido</span></li>
-                                    <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" /> <span>Backup Automático na Nuvem</span></li>
+                                    <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" /> <span>Reparo ágil no nosso laboratório</span></li>
+                                    <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" /> <span>Coberturas com SLA garantido</span></li>
                                 </ul>
                             </div>
                         </SpotlightCard>

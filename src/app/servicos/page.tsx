@@ -126,7 +126,7 @@ export default async function ServicesPage() {
                                 </div>
                                 <h3 className="text-xl font-bold text-white mb-3">Testes Finais</h3>
                                 <p className="text-slate-400 text-sm leading-relaxed px-4">
-                                    Antes de te entregar, testamos tudo. Áudio, vídeo, internet e velocidade. Você recebe pronto para usar.
+                                    Antes de te entregar, validamos tudo no laboratório. Áudio, vídeo, refrigeração e estabilidade. Você recebe pronto para uso intenso.
                                 </p>
                             </div>
                         </div>
@@ -263,7 +263,7 @@ export default async function ServicesPage() {
                                         </li>
                                         <li className="flex gap-3 text-slate-300 text-sm">
                                             <CheckCircle2 className="w-5 h-5 text-pink-500 shrink-0" />
-                                            <span><strong>Configuração de Rede:</strong> Instalação de impressoras Wi-Fi.</span>
+                                            <span><strong>Configuração de Rede Interna:</strong> Instalação local de impressoras Wi-Fi na sua rede.</span>
                                         </li>
                                     </ul>
                                 </div>
@@ -297,7 +297,7 @@ export default async function ServicesPage() {
                         <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
                             <SpotlightCard className="p-6 rounded-2xl bg-slate-900/50 border-white/5">
                                 <h3 className="font-bold text-white mb-2">Quanto tempo demora?</h3>
-                                <p className="text-slate-400 text-sm">A maioria das soluções sob demanda (otimização de software, manutenção preventiva) tem SLA de até 24h. E não se preocupe: oferecemos <strong>90 dias de garantia</strong> estrutural e técnica.</p>
+                                <p className="text-slate-400 text-sm">A maioria das baterias de testes em nosso laboratório (otimização térmica, manutenção física) tem SLA concluído entre 24h a 48h. E não se preocupe: oferecemos <strong>90 dias de garantia</strong> estrutural e técnica sobre a peça consertada.</p>
                             </SpotlightCard>
                             <SpotlightCard className="p-6 rounded-2xl bg-slate-900/50 border-white/5">
                                 <h3 className="font-bold text-white mb-2">Vocês buscam o equipamento?</h3>
