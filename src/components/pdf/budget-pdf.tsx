@@ -1,5 +1,7 @@
 'use client'
 
+import type { PartsSourcingMode } from '@/types/database'
+
 import { useState, useCallback } from 'react'
 import { Document, Page, Text, View, StyleSheet, pdf } from '@react-pdf/renderer'
 import { Button } from '@/components/ui/button'
@@ -355,7 +357,8 @@ interface BudgetData {
     diagnosisText: string
     laborCost: number
     discountAmount: number
-    externalParts: Array<{ name: string; purchaseUrl?: string }>
+    externalParts: Array<{ name: string; purchaseUrl?: string; price?: number }>
+    partsSourcingMode?: PartsSourcingMode
 }
 
 // ==================================================
@@ -377,7 +380,9 @@ function BudgetDocument({ data, settings }: { data: BudgetData; settings: Budget
     const osNumber = String(data.displayId).padStart(4, '0')
     const budgetDate = formatDateToLocal(data.createdAt, 'dd/MM/yyyy')
     const warrantyDays = settings.warranty_days_labor || 180
-    const subtotal = data.laborCost
+    const mode = data.partsSourcingMode || 'assisted'
+    const partsCost = data.externalParts.reduce((sum, p) => sum + (p.price || 0), 0)
+    const subtotal = mode === 'resale' ? data.laborCost + partsCost : data.laborCost
     const total = subtotal - data.discountAmount
 
     return (
@@ -482,12 +487,22 @@ function BudgetDocument({ data, settings }: { data: BudgetData; settings: Budget
                         </View>
 
                         {/* Mão de Obra */}
-                        <View style={[styles.tableRow, data.externalParts.length === 0 ? styles.tableRowLast : {}]}>
+                        <View style={[styles.tableRow, (mode !== 'resale' || data.externalParts.length === 0) ? styles.tableRowLast : {}]}>
                             <Text style={[styles.tableCell, styles.colDesc]}>Mão de Obra Técnica</Text>
                             <Text style={[styles.tableCell, styles.colUnit]}>{formatCurrency(data.laborCost)}</Text>
                             <Text style={[styles.tableCell, styles.colQty]}>1</Text>
                             <Text style={[styles.tableCell, styles.colTotal, { fontWeight: 'bold' }]}>{formatCurrency(data.laborCost)}</Text>
                         </View>
+
+                        {/* Peças na tabela (modo Revenda) */}
+                        {mode === 'resale' && data.externalParts.map((part, index) => (
+                            <View key={index} style={[styles.tableRow, index % 2 === 0 ? styles.tableRowAlt : {}, index === data.externalParts.length - 1 ? styles.tableRowLast : {}]}>
+                                <Text style={[styles.tableCell, styles.colDesc]}>Peça: {part.name}</Text>
+                                <Text style={[styles.tableCell, styles.colUnit]}>{formatCurrency(part.price || 0)}</Text>
+                                <Text style={[styles.tableCell, styles.colQty]}>1</Text>
+                                <Text style={[styles.tableCell, styles.colTotal, { fontWeight: 'bold' }]}>{formatCurrency(part.price || 0)}</Text>
+                            </View>
+                        ))}
                     </View>
 
                     {/* Totais */}
@@ -513,20 +528,30 @@ function BudgetDocument({ data, settings }: { data: BudgetData; settings: Budget
                     </View>
                 </View>
 
-                {/* ── PEÇAS EXTERNAS (Compra Assistida) ── */}
-                {data.externalParts.length > 0 && (
+                {/* ── PEÇAS EXTERNAS (Compra Assistida ou Link Parcelamento) ── */}
+                {data.externalParts.length > 0 && mode !== 'resale' && (
                     <View style={styles.section}>
                         <View style={styles.sectionHeader}>
-                            <Text style={styles.sectionTitle}>Peças — Compra Assistida</Text>
+                            <Text style={styles.sectionTitle}>
+                                {mode === 'assisted' ? 'Peças — Compra Assistida' : 'Peças — Link de Parcelamento'}
+                            </Text>
                         </View>
                         <View style={styles.table}>
                             <View style={styles.tableHeaderRow}>
                                 <Text style={[styles.tableHeaderCell, { flex: 3 }]}>Peça</Text>
-                                <Text style={[styles.tableHeaderCell, { flex: 2, textAlign: 'right' }]}>Link de Compra</Text>
+                                {mode === 'payment_link' && (
+                                    <Text style={[styles.tableHeaderCell, { flex: 1, textAlign: 'right' }]}>Valor</Text>
+                                )}
+                                <Text style={[styles.tableHeaderCell, { flex: 2, textAlign: 'right' }]}>
+                                    {mode === 'assisted' ? 'Link de Compra' : 'Link de Pagamento'}
+                                </Text>
                             </View>
                             {data.externalParts.map((part, index) => (
                                 <View key={index} style={[styles.tableRow, index % 2 === 1 ? styles.tableRowAlt : {}, index === data.externalParts.length - 1 ? styles.tableRowLast : {}]}>
                                     <Text style={[styles.tableCell, { flex: 3 }]}>{part.name}</Text>
+                                    {mode === 'payment_link' && (
+                                        <Text style={[styles.tableCell, { flex: 1, textAlign: 'right' }]}>{formatCurrency(part.price || 0)}</Text>
+                                    )}
                                     <Text style={[styles.tableCell, { flex: 2, textAlign: 'right', fontSize: 7, color: mutedColor }]}>
                                         {part.purchaseUrl ? 'Ver no link enviado' : '—'}
                                     </Text>
@@ -535,7 +560,9 @@ function BudgetDocument({ data, settings }: { data: BudgetData; settings: Budget
                         </View>
                         <View style={styles.partsInfoBox}>
                             <Text style={styles.partsInfoText}>
-                                As peças listadas acima são de fornecedores externos e devem ser adquiridas diretamente pelo cliente nos links indicados. O valor das peças não está incluso no total deste orçamento.
+                                {mode === 'assisted'
+                                    ? 'As peças listadas acima são de fornecedores externos e devem ser adquiridas diretamente pelo cliente nos links indicados. O valor das peças não está incluso no total deste orçamento.'
+                                    : 'As peças listadas acima devem ser pagas pelo cliente através dos links de pagamento indicados. Os valores são referentes às peças e serão cobrados separadamente.'}
                             </Text>
                         </View>
                     </View>
@@ -546,7 +573,15 @@ function BudgetDocument({ data, settings }: { data: BudgetData; settings: Budget
                     <Text style={styles.observationsTitle}>Observações</Text>
                     <Text style={styles.observationsText}>• Prazo estimado de execução: a combinar após aprovação.</Text>
                     <Text style={styles.observationsText}>• Validade deste orçamento: 7 (sete) dias corridos.</Text>
-                    <Text style={styles.observationsText}>• O valor das peças (se houver) será pago diretamente pelo cliente nos links indicados.</Text>
+                    {mode === 'assisted' && (
+                        <Text style={styles.observationsText}>• O valor das peças (se houver) será pago diretamente pelo cliente nos links indicados.</Text>
+                    )}
+                    {mode === 'resale' && (
+                        <Text style={styles.observationsText}>• O valor total inclui peças fornecidas pelo técnico e mão de obra.</Text>
+                    )}
+                    {mode === 'payment_link' && (
+                        <Text style={styles.observationsText}>• As peças serão pagas separadamente pelo cliente através dos links de pagamento enviados.</Text>
+                    )}
                     <Text style={styles.observationsText}>• Garantia sobre a mão de obra: {warrantyDays} dias após a conclusão do serviço.</Text>
                 </View>
 

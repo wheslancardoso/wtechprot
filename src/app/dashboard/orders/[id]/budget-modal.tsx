@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useEffect } from 'react'
 import type { TechnicalReport } from '@/types/technical-report'
+import type { PartsSourcingMode } from '@/types/database'
 
 // Server Action
 import { saveBudget } from '../actions'
@@ -40,6 +41,9 @@ import {
     MessageCircle,
     X,
     Wand2,
+    ShoppingCart,
+    Briefcase,
+    Link2,
 } from 'lucide-react'
 
 // ==================================================
@@ -52,6 +56,7 @@ const budgetSchema = z.object({
         z.object({
             name: z.string().min(2, 'Nome da peça obrigatório'),
             purchaseUrl: z.string().url('URL inválida').or(z.literal('')),
+            price: z.number().min(0, 'Valor inválido').optional(),
         })
     ),
 })
@@ -82,6 +87,7 @@ export default function BudgetModal({ orderId, displayId, open, onOpenChange, te
     const [showSuccess, setShowSuccess] = useState(false)
     const [publicLink, setPublicLink] = useState('')
     const [copied, setCopied] = useState(false)
+    const [sourcingMode, setSourcingMode] = useState<PartsSourcingMode>('assisted')
 
     // Coupon State
     const [couponCode, setCouponCode] = useState('')
@@ -181,9 +187,11 @@ export default function BudgetModal({ orderId, displayId, open, onOpenChange, te
                 data.externalParts.map(part => ({
                     name: part.name,
                     purchaseUrl: part.purchaseUrl,
+                    price: part.price,
                 })),
                 discountAmount,
-                couponSuccess ? couponCode : null
+                couponSuccess ? couponCode : null,
+                sourcingMode
             )
 
             if (result.success) {
@@ -483,15 +491,65 @@ export default function BudgetModal({ orderId, displayId, open, onOpenChange, te
                                 )}
                             </div>
 
-                            {/* Peças Externas */}
+                            {/* Peças — Seletor de Modalidade */}
                             <div className="space-y-4">
+                                <Label>Modalidade de Peças</Label>
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                    {/* Compra Assistida */}
+                                    <button
+                                        type="button"
+                                        onClick={() => setSourcingMode('assisted')}
+                                        className={`relative flex flex-col items-center gap-2 p-4 rounded-lg border-2 text-center transition-all cursor-pointer ${sourcingMode === 'assisted'
+                                                ? 'border-primary bg-primary/5 ring-1 ring-primary/20'
+                                                : 'border-border hover:border-muted-foreground/40 hover:bg-muted/30'
+                                            }`}
+                                    >
+                                        <ShoppingCart className={`h-5 w-5 ${sourcingMode === 'assisted' ? 'text-primary' : 'text-muted-foreground'}`} />
+                                        <span className={`text-sm font-semibold ${sourcingMode === 'assisted' ? 'text-primary' : 'text-foreground'}`}>Compra Assistida</span>
+                                        <span className="text-[11px] text-muted-foreground leading-tight">Cliente compra pelo link que você indica</span>
+                                    </button>
+
+                                    {/* Revenda */}
+                                    <button
+                                        type="button"
+                                        onClick={() => setSourcingMode('resale')}
+                                        className={`relative flex flex-col items-center gap-2 p-4 rounded-lg border-2 text-center transition-all cursor-pointer ${sourcingMode === 'resale'
+                                                ? 'border-emerald-600 bg-emerald-50/50 ring-1 ring-emerald-600/20'
+                                                : 'border-border hover:border-muted-foreground/40 hover:bg-muted/30'
+                                            }`}
+                                    >
+                                        <Briefcase className={`h-5 w-5 ${sourcingMode === 'resale' ? 'text-emerald-600' : 'text-muted-foreground'}`} />
+                                        <span className={`text-sm font-semibold ${sourcingMode === 'resale' ? 'text-emerald-600' : 'text-foreground'}`}>Revenda</span>
+                                        <span className="text-[11px] text-muted-foreground leading-tight">Você compra e revende (valor no orçamento)</span>
+                                    </button>
+
+                                    {/* Link de Parcelamento */}
+                                    <button
+                                        type="button"
+                                        onClick={() => setSourcingMode('payment_link')}
+                                        className={`relative flex flex-col items-center gap-2 p-4 rounded-lg border-2 text-center transition-all cursor-pointer ${sourcingMode === 'payment_link'
+                                                ? 'border-blue-600 bg-blue-50/50 ring-1 ring-blue-600/20'
+                                                : 'border-border hover:border-muted-foreground/40 hover:bg-muted/30'
+                                            }`}
+                                    >
+                                        <Link2 className={`h-5 w-5 ${sourcingMode === 'payment_link' ? 'text-blue-600' : 'text-muted-foreground'}`} />
+                                        <span className={`text-sm font-semibold ${sourcingMode === 'payment_link' ? 'text-blue-600' : 'text-foreground'}`}>Link Parcelamento</span>
+                                        <span className="text-[11px] text-muted-foreground leading-tight">Envia link para o cliente pagar/parcelar</span>
+                                    </button>
+                                </div>
+
+                                {/* Header de Peças */}
                                 <div className="flex items-center justify-between">
-                                    <Label>Peças Externas (Compra Assistida)</Label>
+                                    <Label>
+                                        {sourcingMode === 'assisted' && 'Peças Externas (Compra Assistida)'}
+                                        {sourcingMode === 'resale' && 'Peças para Revenda'}
+                                        {sourcingMode === 'payment_link' && 'Peças (Link de Parcelamento)'}
+                                    </Label>
                                     <Button
                                         type="button"
                                         variant="outline"
                                         size="sm"
-                                        onClick={() => append({ name: '', purchaseUrl: '' })}
+                                        onClick={() => append({ name: '', purchaseUrl: '', price: 0 })}
                                         disabled={isSubmitting}
                                     >
                                         <Plus className="mr-2 h-4 w-4" />
@@ -501,7 +559,7 @@ export default function BudgetModal({ orderId, displayId, open, onOpenChange, te
 
                                 {fields.length === 0 && (
                                     <p className="text-sm text-muted-foreground italic text-center py-4 border border-dashed rounded-lg">
-                                        Nenhuma peça adicionada. Clique em "Adicionar Peça" se necessário.
+                                        Nenhuma peça adicionada. Clique em &quot;Adicionar Peça&quot; se necessário.
                                     </p>
                                 )}
 
@@ -524,7 +582,8 @@ export default function BudgetModal({ orderId, displayId, open, onOpenChange, te
                                             </Button>
                                         </div>
 
-                                        <div className="grid gap-3 sm:grid-cols-2">
+                                        <div className={`grid gap-3 ${sourcingMode === 'payment_link' ? 'sm:grid-cols-3' : 'sm:grid-cols-2'}`}>
+                                            {/* Nome da Peça — sempre visível */}
                                             <div className="space-y-1">
                                                 <Label htmlFor={`part-name-${index}`}>Nome da Peça</Label>
                                                 <Input
@@ -540,25 +599,50 @@ export default function BudgetModal({ orderId, displayId, open, onOpenChange, te
                                                 )}
                                             </div>
 
-                                            <div className="space-y-1">
-                                                <Label htmlFor={`part-url-${index}`}>Link de Compra</Label>
-                                                <div className="relative">
-                                                    <Input
-                                                        id={`part-url-${index}`}
-                                                        type="url"
-                                                        placeholder="https://mercadolivre.com.br/..."
-                                                        className="pr-10"
-                                                        {...register(`externalParts.${index}.purchaseUrl`)}
-                                                        disabled={isSubmitting}
-                                                    />
-                                                    <ExternalLink className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                            {/* Preço — visível em Revenda e Link Parcelamento */}
+                                            {(sourcingMode === 'resale' || sourcingMode === 'payment_link') && (
+                                                <div className="space-y-1">
+                                                    <Label htmlFor={`part-price-${index}`}>Preço (R$)</Label>
+                                                    <div className="relative">
+                                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">R$</span>
+                                                        <Input
+                                                            id={`part-price-${index}`}
+                                                            type="number"
+                                                            step="0.01"
+                                                            min="0"
+                                                            placeholder="0,00"
+                                                            className="pl-10"
+                                                            {...register(`externalParts.${index}.price`, { valueAsNumber: true })}
+                                                            disabled={isSubmitting}
+                                                        />
+                                                    </div>
                                                 </div>
-                                                {errors.externalParts?.[index]?.purchaseUrl && (
-                                                    <p className="text-xs text-destructive">
-                                                        {errors.externalParts[index]?.purchaseUrl?.message}
-                                                    </p>
-                                                )}
-                                            </div>
+                                            )}
+
+                                            {/* URL — visível em Compra Assistida e Link Parcelamento */}
+                                            {(sourcingMode === 'assisted' || sourcingMode === 'payment_link') && (
+                                                <div className="space-y-1">
+                                                    <Label htmlFor={`part-url-${index}`}>
+                                                        {sourcingMode === 'assisted' ? 'Link de Compra' : 'Link de Pagamento'}
+                                                    </Label>
+                                                    <div className="relative">
+                                                        <Input
+                                                            id={`part-url-${index}`}
+                                                            type="url"
+                                                            placeholder={sourcingMode === 'assisted' ? 'https://mercadolivre.com.br/...' : 'https://pagseguro.com.br/...'}
+                                                            className="pr-10"
+                                                            {...register(`externalParts.${index}.purchaseUrl`)}
+                                                            disabled={isSubmitting}
+                                                        />
+                                                        <ExternalLink className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                                    </div>
+                                                    {errors.externalParts?.[index]?.purchaseUrl && (
+                                                        <p className="text-xs text-destructive">
+                                                            {errors.externalParts[index]?.purchaseUrl?.message}
+                                                        </p>
+                                                    )}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 ))}
@@ -566,21 +650,60 @@ export default function BudgetModal({ orderId, displayId, open, onOpenChange, te
 
                             {/* Resumo / Total */}
                             <div className="border-t pt-4">
-                                <div className="flex items-center justify-between text-lg font-semibold">
-                                    <span>Total (Mão de Obra):</span>
-                                    <div className="text-right">
-                                        {discountAmount > 0 && (
-                                            <div className="text-sm text-muted-foreground line-through">
-                                                {formatCurrency(laborCost)}
-                                            </div>
-                                        )}
-                                        <span className="text-primary text-xl">
-                                            {formatCurrency(laborCost - discountAmount)}
-                                        </span>
+                                <div className="space-y-2">
+                                    {/* Mão de Obra */}
+                                    <div className="flex items-center justify-between text-sm">
+                                        <span className="text-muted-foreground">Mão de Obra</span>
+                                        <span className="font-medium">{formatCurrency(laborCost)}</span>
+                                    </div>
+
+                                    {/* Peças (Revenda) */}
+                                    {sourcingMode === 'resale' && fields.length > 0 && (
+                                        <div className="flex items-center justify-between text-sm">
+                                            <span className="text-muted-foreground">Peças ({fields.length}x)</span>
+                                            <span className="font-medium">
+                                                {formatCurrency(
+                                                    (watch('externalParts') || []).reduce((sum, p) => sum + (p.price || 0), 0)
+                                                )}
+                                            </span>
+                                        </div>
+                                    )}
+
+                                    {/* Desconto */}
+                                    {discountAmount > 0 && (
+                                        <div className="flex items-center justify-between text-sm text-green-600">
+                                            <span>Desconto</span>
+                                            <span className="font-medium">- {formatCurrency(discountAmount)}</span>
+                                        </div>
+                                    )}
+
+                                    <hr className="my-1" />
+
+                                    {/* Total */}
+                                    <div className="flex items-center justify-between text-lg font-semibold">
+                                        <span>Total:</span>
+                                        <div className="text-right">
+                                            {discountAmount > 0 && (
+                                                <div className="text-sm text-muted-foreground line-through">
+                                                    {formatCurrency(
+                                                        laborCost + (sourcingMode === 'resale' ? (watch('externalParts') || []).reduce((sum, p) => sum + (p.price || 0), 0) : 0)
+                                                    )}
+                                                </div>
+                                            )}
+                                            <span className="text-primary text-xl">
+                                                {formatCurrency(
+                                                    laborCost
+                                                    + (sourcingMode === 'resale' ? (watch('externalParts') || []).reduce((sum, p) => sum + (p.price || 0), 0) : 0)
+                                                    - discountAmount
+                                                )}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                                 <p className="text-xs text-muted-foreground mt-1">
-                                    * O valor das peças será pago diretamente pelo cliente nos links indicados.
+                                    {sourcingMode === 'assisted' && '* O valor das peças será pago diretamente pelo cliente nos links indicados.'}
+                                    {sourcingMode === 'resale' && '* Valor total inclui mão de obra e peças fornecidas pelo técnico.'}
+                                    {sourcingMode === 'payment_link' && '* As peças serão pagas pelo cliente através dos links de pagamento enviados.'}
                                 </p>
                             </div>
 

@@ -291,6 +291,7 @@ export async function updateOrderStatus(
 interface ExternalPart {
     name: string
     purchaseUrl: string
+    price?: number
 }
 
 // ==================================================
@@ -302,7 +303,8 @@ export async function saveBudget(
     laborCost: number,
     parts: ExternalPart[],
     discountAmount?: number,
-    couponCode?: string | null
+    couponCode?: string | null,
+    partsSourcingMode?: string
 ): Promise<ActionResult> {
     console.log("🔧 Iniciando saveBudget", {
         orderId,
@@ -345,10 +347,17 @@ export async function saveBudget(
 
         // 4. Atualizar ordem com novo laudo, valor e status
         // IMPORTANTE: Removido filtro user_id para garantir que o update funcione
+        // Calcular custo total das peças (Revenda ou Link Parcelamento)
+        const mode = partsSourcingMode || 'assisted'
+        const totalPartsCost = (mode === 'resale' || mode === 'payment_link')
+            ? parts.reduce((sum, p) => sum + (p.price || 0), 0)
+            : 0
+
         const updatePayload = {
             diagnosis_text: diagnosisText,
             labor_cost: laborCost,
-            parts_cost_external: 0,
+            parts_cost_external: totalPartsCost,
+            parts_sourcing_mode: mode,
             status: 'waiting_approval' as const, // CRÍTICO: Forçar mudança de status
             discount_amount: discountAmount || 0,
             coupon_code: couponCode || null,
@@ -387,7 +396,7 @@ export async function saveBudget(
                 order_id: orderId,
                 title: part.name,
                 type: 'part_external',
-                price: 0,
+                price: part.price || 0,
                 external_url: part.purchaseUrl || null,
             }))
             console.log("📦 saveBudget: Inserindo peças:", orderItems)

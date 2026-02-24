@@ -49,7 +49,7 @@ const statusDescriptions: Record<OrderStatus, string> = {
     open: 'Seu equipamento está na fila para análise.',
     analyzing: 'O técnico está avaliando o problema.',
     waiting_approval: 'Revise o orçamento abaixo e aprove para iniciarmos o reparo.',
-    waiting_parts: 'Aguardando você comprar e entregar as peças.',
+    waiting_parts: 'Aguardando peças.',
     in_progress: 'Seu equipamento está sendo reparado.',
     ready: 'Seu equipamento está pronto! Entre em contato para retirada.',
     finished: 'Serviço concluído. Obrigado pela confiança!',
@@ -144,6 +144,7 @@ export default async function ClientOrderPage({ params }: PageProps) {
     ) || []
 
     const hasParts = externalParts.length > 0
+    const sourcingMode = (order.parts_sourcing_mode || 'assisted') as string
 
     // Buscar telefone do técnico (Tenant)
     const { data: tenant } = await supabase
@@ -361,32 +362,55 @@ export default async function ClientOrderPage({ params }: PageProps) {
                                 <CardHeader className="pb-3">
                                     <CardTitle className="flex items-center gap-2 text-base">
                                         <ShoppingCart className="h-5 w-5 text-primary" />
-                                        Peças Necessárias
+                                        {sourcingMode === 'assisted' && 'Peças Necessárias'}
+                                        {sourcingMode === 'resale' && 'Peças Inclusas no Serviço'}
+                                        {sourcingMode === 'payment_link' && 'Peças — Links de Pagamento'}
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent className="space-y-4">
-                                    {/* Aviso Compra Assistida */}
-                                    <Alert variant="warning" className="py-2">
-                                        <AlertTriangle className="h-4 w-4" />
-                                        <AlertDescription className="text-xs">
-                                            <strong>Atenção:</strong> A compra das peças é responsabilidade do cliente.
-                                            Após comprar, entre em contato para combinar a entrega.
-                                        </AlertDescription>
-                                    </Alert>
+                                    {/* Aviso conforme modalidade */}
+                                    {sourcingMode === 'assisted' && (
+                                        <Alert variant="warning" className="py-2">
+                                            <AlertTriangle className="h-4 w-4" />
+                                            <AlertDescription className="text-xs">
+                                                <strong>Atenção:</strong> A compra das peças é responsabilidade do cliente.
+                                                Após comprar, entre em contato para combinar a entrega.
+                                            </AlertDescription>
+                                        </Alert>
+                                    )}
+                                    {sourcingMode === 'resale' && (
+                                        <Alert className="py-2 border-emerald-200 bg-emerald-50/50">
+                                            <AlertDescription className="text-xs text-emerald-700">
+                                                As peças abaixo já estão inclusas no valor total do orçamento e serão fornecidas pelo técnico.
+                                            </AlertDescription>
+                                        </Alert>
+                                    )}
+                                    {sourcingMode === 'payment_link' && (
+                                        <Alert className="py-2 border-blue-200 bg-blue-50/50">
+                                            <AlertDescription className="text-xs text-blue-700">
+                                                Utilize os links abaixo para efetuar o pagamento das peças. Você pode parcelar no cartão.
+                                            </AlertDescription>
+                                        </Alert>
+                                    )}
 
                                     {/* Lista de Peças */}
                                     <div className="space-y-3">
-                                        {externalParts.map((part: { id: string; title: string; external_url: string | null }) => (
+                                        {externalParts.map((part: { id: string; title: string; external_url: string | null; price: number }) => (
                                             <div
                                                 key={part.id}
                                                 className="flex items-center justify-between p-3 bg-muted rounded-lg"
                                             >
-                                                <span className="text-sm font-medium flex-1 pr-2">{part.title}</span>
-                                                {part.external_url && (
+                                                <div className="flex-1 pr-2">
+                                                    <span className="text-sm font-medium block">{part.title}</span>
+                                                    {(sourcingMode === 'resale' || sourcingMode === 'payment_link') && part.price > 0 && (
+                                                        <span className="text-xs text-muted-foreground">{formatCurrency(part.price)}</span>
+                                                    )}
+                                                </div>
+                                                {(sourcingMode === 'assisted' || sourcingMode === 'payment_link') && part.external_url && (
                                                     <Button size="sm" variant="default" asChild className="shrink-0">
                                                         <Link href={part.external_url} target="_blank" rel="noopener noreferrer">
                                                             <ExternalLink className="mr-1 h-3 w-3" />
-                                                            Comprar
+                                                            {sourcingMode === 'assisted' ? 'Comprar' : 'Pagar'}
                                                         </Link>
                                                     </Button>
                                                 )}
@@ -457,9 +481,27 @@ export default async function ClientOrderPage({ params }: PageProps) {
                                     </div>
                                 )}
 
-                                {hasParts && (
+                                {hasParts && sourcingMode === 'assisted' && (
                                     <div className="flex justify-between text-sm">
                                         <span className="text-muted-foreground">Peças (você compra)</span>
+                                        <span className="text-muted-foreground italic text-xs">Ver links acima</span>
+                                    </div>
+                                )}
+
+                                {hasParts && sourcingMode === 'resale' && (
+                                    <div className="flex justify-between text-sm">
+                                        <span className="text-muted-foreground">Peças (inclusas)</span>
+                                        <span className="font-medium">
+                                            {formatCurrency(
+                                                externalParts.reduce((sum: number, p: { price: number }) => sum + (p.price || 0), 0)
+                                            )}
+                                        </span>
+                                    </div>
+                                )}
+
+                                {hasParts && sourcingMode === 'payment_link' && (
+                                    <div className="flex justify-between text-sm">
+                                        <span className="text-muted-foreground">Peças (pagar nos links)</span>
                                         <span className="text-muted-foreground italic text-xs">Ver links acima</span>
                                     </div>
                                 )}
@@ -469,13 +511,19 @@ export default async function ClientOrderPage({ params }: PageProps) {
                                 <div className="flex justify-between text-lg font-bold">
                                     <span>Total a Pagar</span>
                                     <span className="text-primary">
-                                        {formatCurrency((order.labor_cost || 0) - (order.discount_amount || 0))}
+                                        {formatCurrency(
+                                            (order.labor_cost || 0)
+                                            + (sourcingMode === 'resale' ? externalParts.reduce((sum: number, p: { price: number }) => sum + (p.price || 0), 0) : 0)
+                                            - (order.discount_amount || 0)
+                                        )}
                                     </span>
                                 </div>
 
                                 <p className="text-xs text-muted-foreground text-center pt-2">
-                                    * Este é o valor da mão de obra, pago diretamente ao técnico.
-                                    {hasParts && ' As peças são pagas separadamente nos links indicados.'}
+                                    {sourcingMode === 'assisted' && '* Este é o valor da mão de obra, pago diretamente ao técnico.'}
+                                    {sourcingMode === 'resale' && '* Valor total inclui mão de obra e peças fornecidas pelo técnico.'}
+                                    {sourcingMode === 'payment_link' && '* Este é o valor da mão de obra. As peças são pagas nos links indicados.'}
+                                    {hasParts && sourcingMode === 'assisted' && ' As peças são pagas separadamente nos links indicados.'}
                                 </p>
                             </CardContent>
                         </Card>
