@@ -7,7 +7,7 @@ import { redirect } from "next/navigation"
 
 export const metadata: Metadata = {
     title: 'WFIX Tech | Soluções Empresariais',
-    description: 'Gestão de TI completa para pequenos negócios. Sistemas, automação e suporte técnico especializado.',
+    description: 'Gestão de TI completa para pequenos negócios. Infraestrutura de rede, laboratório próprio e suporte técnico especializado.',
 }
 
 export default function B2BPage() {
@@ -48,7 +48,7 @@ export default function B2BPage() {
 
                             <div className="mt-12 flex items-center justify-center lg:justify-start gap-8 text-sm font-medium text-slate-500 animate-in fade-in duration-1000 delay-500">
                                 <div className="flex items-center gap-2">
-                                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" /> Suporte Ágil
+                                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" /> Manutenção Ágil
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" /> Infraestrutura
@@ -297,7 +297,7 @@ export default function B2BPage() {
                                         </div>
                                         <div>
                                             <h4 className="text-lg font-bold text-white mb-1">Garantia WFIX</h4>
-                                            <p className="text-sm text-slate-400">Suporte humanizado e garantia de satisfação em todos os serviços.</p>
+                                            <p className="text-sm text-slate-400">Atendimento humanizado e garantia técnica em todos os reparos.</p>
                                         </div>
                                     </div>
                                 </div>
