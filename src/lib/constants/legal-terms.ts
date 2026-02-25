@@ -2,7 +2,7 @@ export const APPROVAL_TERMS = [
     {
         id: 'warranty_split',
         title: '1. Garantia e Compra Assistida',
-        content: 'Declaro ciência de que estou contratando a MÃO DE OBRA técnica. A garantia legal de 90 dias (Art. 26 CDC) aplica-se exclusivamente ao serviço. Peças adquiridas externamente possuem garantia direta com o vendedor/fabricante. Caso a peça externa apresente defeito, uma nova taxa de montagem poderá ser cobrada.',
+        content: 'Declaro ciência de que estou contratando a MÃO DE OBRA técnica. A garantia de 180 dias aplica-se exclusivamente ao serviço. Peças adquiridas externamente possuem garantia direta com o vendedor/fabricante. Caso a peça externa apresente defeito, uma nova taxa de montagem poderá ser cobrada.',
         required: true,
         icon: 'wrench'
     },
