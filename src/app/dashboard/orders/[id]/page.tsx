@@ -197,6 +197,11 @@ export default async function OrderDetailPage({ params }: PageProps) {
         warranty_days_labor: 180
     })
 
+    // Sempre usar o valor atual de garantia do tenant (não do snapshot antigo)
+    if (tenant?.warranty_days) {
+        storeSettings.warranty_days_labor = tenant.warranty_days
+    }
+
     // Helper to get the correct customer report
     const getCustomerReport = () => {
         if (order.problem_description) return order.problem_description

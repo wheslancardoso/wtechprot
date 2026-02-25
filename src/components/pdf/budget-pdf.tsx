@@ -643,7 +643,7 @@ export default function BudgetPdfButton({ budgetData, storeSettings, className, 
             variant={variant}
             disabled={isGenerating}
             onClick={handleDownload}
-            className={`w-full ${icon ? 'p-0 h-full bg-transparent hover:bg-transparent' : ''} ${className || ''}`}
+            className={`w-full ${icon ? 'p-0 h-full' : ''} ${className || ''}`}
         >
             {isGenerating ? (
                 <>
