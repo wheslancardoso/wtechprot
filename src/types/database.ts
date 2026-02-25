@@ -44,6 +44,7 @@ export interface Equipment {
     brand: string | null
     model: string | null
     serial_number: string | null
+    photo_url: string | null
     remote_access_id: string | null
     remote_access_password: string | null
     notes: string | null
