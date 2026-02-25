@@ -30,7 +30,8 @@ import {
     AlertTriangle,
     Camera,
     Image as ImageIcon,
-    Link2
+    Link2,
+    CheckCircle
 } from 'lucide-react'
 import Image from 'next/image'
 
@@ -372,29 +373,43 @@ export default async function ClientOrderPage({ params }: PageProps) {
                                 <CardContent className="space-y-4">
                                     {/* Aviso conforme modalidade */}
                                     {sourcingMode === 'assisted' && (
-                                        <Alert className="py-2 border-amber-200 bg-amber-50/50">
-                                            <AlertTriangle className="h-4 w-4 text-amber-600" />
-                                            <AlertDescription className="text-xs text-amber-700">
-                                                <strong>Atenção:</strong> A compra das peças é responsabilidade do cliente.
-                                                Utilize os links abaixo para adquirir os itens necessários.
-                                            </AlertDescription>
-                                        </Alert>
+                                        <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800">
+                                            <div className="flex-shrink-0 mt-0.5 w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center">
+                                                <AlertTriangle className="h-4 w-4 text-amber-600" />
+                                            </div>
+                                            <div>
+                                                <p className="text-sm font-semibold text-amber-800 dark:text-amber-300">Compra por sua conta</p>
+                                                <p className="text-sm text-amber-700 dark:text-amber-400 mt-0.5">
+                                                    Utilize os links abaixo para adquirir as peças. Após a compra, entre em contato para combinar a entrega.
+                                                </p>
+                                            </div>
+                                        </div>
                                     )}
                                     {sourcingMode === 'resale' && (
-                                        <Alert className="py-2 border-emerald-200 bg-emerald-50/50">
-                                            <AlertDescription className="text-xs text-emerald-700">
-                                                As peças abaixo já estão inclusas no valor total do orçamento e serão fornecidas pelo técnico.
-                                            </AlertDescription>
-                                        </Alert>
+                                        <div className="flex items-start gap-3 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800">
+                                            <div className="flex-shrink-0 mt-0.5 w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center">
+                                                <CheckCircle className="h-4 w-4 text-emerald-600" />
+                                            </div>
+                                            <div>
+                                                <p className="text-sm font-semibold text-emerald-800 dark:text-emerald-300">Peças já inclusas no orçamento</p>
+                                                <p className="text-sm text-emerald-700 dark:text-emerald-400 mt-0.5">
+                                                    Não precisa se preocupar! As peças abaixo já estão no valor total e serão fornecidas pelo técnico.
+                                                </p>
+                                            </div>
+                                        </div>
                                     )}
                                     {sourcingMode === 'payment_link' && (
-                                        <Alert className="py-2 border-blue-200 bg-blue-50/50 text-blue-700">
-                                            <Link2 className="h-4 w-4 text-blue-600" />
-                                            <AlertDescription className="text-xs">
-                                                <strong>Pagamento Necessário:</strong> Utilize os links abaixo para pagar as peças.
-                                                Você pode parcelar o valor no cartão de crédito.
-                                            </AlertDescription>
-                                        </Alert>
+                                        <div className="flex items-start gap-3 p-4 rounded-xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800">
+                                            <div className="flex-shrink-0 mt-0.5 w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center">
+                                                <Link2 className="h-4 w-4 text-blue-600" />
+                                            </div>
+                                            <div>
+                                                <p className="text-sm font-semibold text-blue-800 dark:text-blue-300">Pagamento das peças</p>
+                                                <p className="text-sm text-blue-700 dark:text-blue-400 mt-0.5">
+                                                    Clique nos links abaixo para pagar as peças. Você pode parcelar no cartão de crédito.
+                                                </p>
+                                            </div>
+                                        </div>
                                     )}
 
                                     {/* Lista de Peças */}
