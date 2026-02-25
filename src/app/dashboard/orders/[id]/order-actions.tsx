@@ -66,6 +66,7 @@ interface OrderActionsProps {
     technicalReport?: TechnicalReport | null
     problemDescription?: string
     discountAmount?: number
+    sourcingMode?: string
 }
 
 export default function OrderActions({
@@ -78,7 +79,8 @@ export default function OrderActions({
     displayId,
     technicalReport,
     problemDescription,
-    discountAmount = 0
+    discountAmount = 0,
+    sourcingMode = 'assisted'
 }: OrderActionsProps) {
     const router = useRouter()
     const [isPending, setIsPending] = useState(false)
@@ -110,10 +112,6 @@ export default function OrderActions({
     }
 
     async function handleConfirmPartArrival() {
-        if (!window.confirm('Confirma que as peças chegaram? Isso moverá a OS para "Em Reparo".')) {
-            return
-        }
-
         setIsPending(true)
         setFeedback(null)
 
@@ -210,7 +208,11 @@ export default function OrderActions({
                 <Alert variant="info" className="border-blue-500/50 bg-blue-500/10 text-blue-500">
                     <Package className="h-5 w-5" />
                     <AlertTitle>Aguardando Peças</AlertTitle>
-                    <AlertDescription>O cliente precisa comprar e entregar as peças.</AlertDescription>
+                    <AlertDescription>
+                        {sourcingMode === 'resale'
+                            ? 'Você precisa adquirir as peças e confirmar o recebimento.'
+                            : 'O cliente precisa comprar e entregar as peças.'}
+                    </AlertDescription>
                 </Alert>
             )}
 
@@ -260,7 +262,7 @@ export default function OrderActions({
                             className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-base font-semibold"
                         >
                             {isPending ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <PackageCheck className="mr-2 h-5 w-5" />}
-                            Confirmar Chegada das Peças
+                            {sourcingMode === 'resale' ? 'Peças Recebidas — Iniciar Reparo' : 'Confirmar Chegada das Peças'}
                         </Button>
                     )}
 
@@ -316,6 +318,7 @@ WTECH`
                         displayId={displayId}
                         customerName={customerName}
                         storeName={storeSettings?.trade_name}
+                        currentStatus={currentStatus}
                         className="flex-1 sm:flex-none h-12 sm:w-12 p-0 flex items-center justify-center rounded-lg transition-colors shrink-0"
                         icon={<Share2 className="h-5 w-5" />}
                         variant="outline"

@@ -16,6 +16,9 @@ export type OrderStatus =
 // Enum de tipo de item da ordem
 export type OrderItemType = 'service' | 'part_external'
 
+// Modalidade de compra de peças
+export type PartsSourcingMode = 'assisted' | 'resale' | 'payment_link'
+
 // Enum de status de agendamento
 export type ScheduleStatus = 'pending' | 'confirmed' | 'canceled' | 'expired'
 
@@ -41,6 +44,7 @@ export interface Equipment {
     brand: string | null
     model: string | null
     serial_number: string | null
+    photo_url: string | null
     remote_access_id: string | null
     remote_access_password: string | null
     notes: string | null
@@ -81,6 +85,7 @@ export interface Order {
     equipment?: Pick<Equipment, 'type' | 'model' | 'serial_number'> | null
     discount_amount?: number
     coupon_code?: string | null
+    parts_sourcing_mode?: PartsSourcingMode
 }
 
 export interface NpsFeedback {
@@ -188,6 +193,7 @@ export interface OrderInsert {
     collected_by?: string | null
     discount_amount?: number
     coupon_code?: string | null
+    parts_sourcing_mode?: PartsSourcingMode
 }
 
 export interface NpsFeedbackInsert {

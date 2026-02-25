@@ -170,9 +170,11 @@ export default async function OrderDetailPage({ params }: PageProps) {
         diagnosisText: order.diagnosis_text,
         laborCost: order.labor_cost || 0,
         discountAmount: order.discount_amount || 0,
-        externalParts: (order.order_items || []).filter((item: { type: string }) => item.type === 'part_external').map((item: { name: string; purchase_url?: string }) => ({
-            name: item.name,
-            purchaseUrl: item.purchase_url,
+        partsSourcingMode: order.parts_sourcing_mode || 'assisted',
+        externalParts: (order.order_items || []).filter((item: { type: string }) => item.type === 'part_external').map((item: { title: string; external_url?: string; price?: number }) => ({
+            name: item.title,
+            purchaseUrl: item.external_url,
+            price: item.price || 0,
         })),
     } : undefined
 
@@ -194,6 +196,11 @@ export default async function OrderDetailPage({ params }: PageProps) {
         trade_name: 'Minha Assistência',
         warranty_days_labor: 180
     })
+
+    // Sempre usar o valor atual de garantia do tenant (não do snapshot antigo)
+    if (tenant?.warranty_days) {
+        storeSettings.warranty_days_labor = tenant.warranty_days
+    }
 
     // Helper to get the correct customer report
     const getCustomerReport = () => {
@@ -261,6 +268,7 @@ export default async function OrderDetailPage({ params }: PageProps) {
                         technicalReport={technicalReport}
                         problemDescription={customerReport || undefined}
                         discountAmount={order.discount_amount || 0}
+                        sourcingMode={order.parts_sourcing_mode || 'assisted'}
                     />
 
                     {order.custody_signature_url && (

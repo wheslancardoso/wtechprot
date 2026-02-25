@@ -70,7 +70,7 @@ export async function getSettings(): Promise<{
                 .insert({
                     id: user.id,
                     trade_name: 'Minha Assistência',
-                    warranty_days: 90,
+                    warranty_days: 180,
                 })
                 .select()
                 .single()

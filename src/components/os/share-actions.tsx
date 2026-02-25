@@ -21,6 +21,7 @@ interface ShareActionsProps {
     displayId: number | string
     customerName: string
     storeName?: string
+    currentStatus?: string
     className?: string
     variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
     icon?: React.ReactNode
@@ -34,6 +35,7 @@ export default function ShareActions({
     displayId,
     customerName,
     storeName = 'WTECH',
+    currentStatus,
     className,
     variant = "outline",
     icon
@@ -42,8 +44,9 @@ export default function ShareActions({
     const { toast } = useToast()
 
     const osNumber = String(displayId).padStart(4, '0')
-    // Usar displayId na URL para ser "amigável" (agora suportado pelo page.tsx)
-    const trackingUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/os/${displayId}`
+    const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
+    const isTracking = currentStatus === 'in_progress'
+    const trackingUrl = isTracking ? `${baseUrl}/os/${displayId}/track` : `${baseUrl}/os/${displayId}`
 
     // Copiar link
     async function handleCopyLink() {

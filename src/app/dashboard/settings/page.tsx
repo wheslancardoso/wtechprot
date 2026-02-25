@@ -8,6 +8,7 @@ import {
     getSettings,
     updateStoreInfo,
     updateFinancialSettings,
+    updateWarrantySettings,
     updateLogo,
     getSecurityLogs,
     type TenantSettings,
@@ -99,6 +100,8 @@ export default function SettingsPage() {
         formatted_date: string
     }>>([])
     const [uploadingLogo, setUploadingLogo] = useState(false)
+    const [warrantyDays, setWarrantyDays] = useState(180)
+    const [savingWarranty, setSavingWarranty] = useState(false)
 
     const supabase = createClient()
     const { refresh } = useSettings()
@@ -154,6 +157,9 @@ export default function SettingsPage() {
                     address_state: result.data.address?.state || '',
                     address_zip: result.data.address?.zip || '',
                 })
+
+                // Set warranty days
+                setWarrantyDays(result.data.warranty_days_labor || 180)
 
                 // Populate financial form
                 financialForm.reset({
@@ -449,6 +455,70 @@ export default function SettingsPage() {
                             </CardContent>
                         </Card>
                     </div>
+
+                    {/* Warranty Settings Card */}
+                    <Card className="mt-6">
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <Shield className="h-5 w-5" />
+                                Garantia
+                            </CardTitle>
+                            <CardDescription>
+                                Defina o prazo de garantia sobre a mão de obra para seus serviços
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="grid gap-3 sm:grid-cols-3">
+                                {[90, 120, 180].map((days) => (
+                                    <button
+                                        key={days}
+                                        type="button"
+                                        onClick={() => setWarrantyDays(days)}
+                                        className={`p-4 border rounded-lg text-left transition hover:border-primary ${warrantyDays === days ? 'border-primary bg-primary/10' : ''
+                                            }`}
+                                    >
+                                        <p className="font-bold text-lg">{days} dias</p>
+                                        <p className="text-sm text-muted-foreground">
+                                            {days === 90 && 'Padrão CDC'}
+                                            {days === 120 && 'Intermediário'}
+                                            {days === 180 && 'Premium ⭐'}
+                                        </p>
+                                    </button>
+                                ))}
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <Label htmlFor="custom_warranty">Personalizado:</Label>
+                                <Input
+                                    id="custom_warranty"
+                                    type="number"
+                                    className="w-28"
+                                    min={30}
+                                    max={365}
+                                    value={warrantyDays}
+                                    onChange={(e) => setWarrantyDays(Number(e.target.value))}
+                                />
+                                <span className="text-sm text-muted-foreground">dias</span>
+                            </div>
+                            <Button
+                                disabled={savingWarranty}
+                                onClick={async () => {
+                                    setSavingWarranty(true)
+                                    setFeedback(null)
+                                    const result = await updateWarrantySettings({ warranty_days_labor: warrantyDays })
+                                    setFeedback({ type: result.success ? 'success' : 'error', message: result.message })
+                                    setSavingWarranty(false)
+                                }}
+                                className="w-full sm:w-auto"
+                            >
+                                {savingWarranty ? (
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                ) : (
+                                    <Save className="mr-2 h-4 w-4" />
+                                )}
+                                Salvar Garantia
+                            </Button>
+                        </CardContent>
+                    </Card>
                 </TabsContent>
 
                 {/* Tab: Financeiro & Pix */}

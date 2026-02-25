@@ -297,7 +297,7 @@ export default async function ServicesPage() {
                         <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
                             <SpotlightCard className="p-6 rounded-2xl bg-slate-900/50 border-white/5">
                                 <h3 className="font-bold text-white mb-2">Quanto tempo demora?</h3>
-                                <p className="text-slate-400 text-sm">A maioria das baterias de testes em nosso laboratório (otimização térmica, manutenção física) tem SLA concluído entre 24h a 48h. E não se preocupe: oferecemos <strong>90 dias de garantia</strong> estrutural e técnica sobre a peça consertada.</p>
+                                <p className="text-slate-400 text-sm">A maioria das baterias de testes em nosso laboratório (otimização térmica, manutenção física) tem SLA concluído entre 24h a 48h. E não se preocupe: oferecemos <strong>180 dias de garantia</strong> estrutural e técnica sobre a peça consertada.</p>
                             </SpotlightCard>
                             <SpotlightCard className="p-6 rounded-2xl bg-slate-900/50 border-white/5">
                                 <h3 className="font-bold text-white mb-2">Vocês buscam o equipamento?</h3>

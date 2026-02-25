@@ -407,6 +407,7 @@ interface OrderData {
     custodyPhotos?: { url: string; label?: string }[]
     finishedAt: string
     externalParts: Array<{ name: string; price?: number }>
+    partsSourcingMode?: string
     signatureEvidence?: {
         ip_address?: string
         accepted_at: string
@@ -756,7 +757,7 @@ export default function WarrantyPdfButton({ orderData, storeSettings, className,
             variant={variant}
             disabled={isGenerating}
             onClick={handleDownload}
-            className={`w-full ${icon ? 'p-0 h-full bg-transparent hover:bg-transparent' : ''} ${className || ''}`}
+            className={`w-full ${icon ? 'p-0 h-full' : ''} ${className || ''}`}
         >
             {isGenerating ? (
                 <>

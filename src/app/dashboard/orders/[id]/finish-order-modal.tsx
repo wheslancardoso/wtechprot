@@ -249,7 +249,7 @@ conforme CDC.
 
                             <div className="border-t pt-2 mt-2">
                                 <p className="text-xs text-center text-muted-foreground">
-                                    <strong>GARANTIA:</strong> 90 dias sobre mão de obra.
+                                    <strong>GARANTIA:</strong> 180 dias sobre mão de obra.
                                     <br />
                                     Peças externas: garantia com o vendedor.
                                 </p>
@@ -403,7 +403,7 @@ conforme CDC.
                             <Alert>
                                 <AlertCircle className="h-4 w-4" />
                                 <AlertDescription className="text-xs">
-                                    <strong>Importante:</strong> O recibo gerado inclui termo de garantia de 90 dias
+                                    <strong>Importante:</strong> O recibo gerado inclui termo de garantia de 180 dias
                                     sobre a mão de obra. Peças externas têm garantia com o vendedor original.
                                 </AlertDescription>
                             </Alert>

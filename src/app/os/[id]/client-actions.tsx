@@ -50,6 +50,7 @@ interface ClientActionsProps {
     customerName: string
     techPhone?: string
     hasExistingFeedback?: boolean
+    sourcingMode?: string
 }
 
 type WizardStep = 'TERMS' | 'PROCESSING' | 'SUCCESS'
@@ -57,7 +58,7 @@ type WizardStep = 'TERMS' | 'PROCESSING' | 'SUCCESS'
 // Redirecionamento automático após aprovação (Fácil de alterar)
 const ENABLE_AUTO_REDIRECT = false
 
-export default function ClientActions({ orderId, displayId, hasParts, status, customerName, techPhone, hasExistingFeedback = false }: ClientActionsProps) {
+export default function ClientActions({ orderId, displayId, hasParts, status, customerName, techPhone, hasExistingFeedback = false, sourcingMode = 'assisted' }: ClientActionsProps) {
     const router = useRouter()
 
     // Use displayId if available for prettier URLs, otherwise fallback to orderId
@@ -200,6 +201,24 @@ export default function ClientActions({ orderId, displayId, hasParts, status, cu
 
     // 1. Aguardando Peças (Ação do Cliente)
     if (isWaitingParts) {
+        // Modo revenda: o técnico cuida das peças
+        if (sourcingMode === 'resale') {
+            return (
+                <div className="fixed bottom-0 left-0 right-0 bg-emerald-50 dark:bg-emerald-950/30 border-t border-emerald-200 dark:border-emerald-800 p-4 safe-area-bottom z-50">
+                    <div className="container mx-auto max-w-lg md:max-w-5xl space-y-3">
+                        <div className="flex items-center gap-3 text-emerald-800 dark:text-emerald-200">
+                            <Wrench className="h-6 w-6 shrink-0" />
+                            <div>
+                                <h4 className="font-semibold text-sm">Peças em providência pelo técnico</h4>
+                                <p className="text-xs opacity-90">Estamos adquirindo as peças. Você será notificado quando o serviço iniciar.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )
+        }
+
+        // Modo assistida ou link: o cliente cuida das peças
         return (
             <div className="fixed bottom-0 left-0 right-0 bg-yellow-50 dark:bg-yellow-950/30 border-t border-yellow-200 dark:border-yellow-800 p-4 safe-area-bottom z-50">
                 <div className="container mx-auto max-w-lg md:max-w-5xl space-y-3">

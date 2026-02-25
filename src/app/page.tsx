@@ -665,7 +665,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </summary>
                 <div className="px-6 pb-6 pt-2 text-slate-400 leading-relaxed border-t border-white/5 animate-in slide-in-from-top-2 fade-in duration-300">
                   <p>
-                    Qualquer reparo na bancada conta com garantia mínima de <b>90 dias</b> contra defeitos do serviço prestado. Emitimos os termos de garantia diretamente para você.
+                    Qualquer reparo na bancada conta com garantia mínima de <b>180 dias</b> contra defeitos do serviço prestado. Emitimos os termos de garantia diretamente para você.
                   </p>
                 </div>
               </details>

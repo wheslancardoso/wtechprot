@@ -22,9 +22,11 @@ import {
     Clock,
     CheckCircle2,
     MapPin,
-    Smartphone,
     Star,
 } from 'lucide-react'
+
+// Custom Components
+import EquipmentIcon from '@/components/os/equipment-icon'
 
 // Status config
 const statusLabels: Record<OrderStatus, string> = {
@@ -114,9 +116,12 @@ export default async function TrackingPage({ params }: PageProps) {
             <main className="container mx-auto px-4 py-6 space-y-6 max-w-lg">
                 {/* Cabeçalho do Equipamento */}
                 <div className="text-center space-y-2">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-muted rounded-full mb-2 border-2 border-background shadow-sm">
-                        <Smartphone className="h-8 w-8 text-muted-foreground" />
-                    </div>
+                    <EquipmentIcon
+                        type={equipment?.type}
+                        photoUrl={equipment?.photo_url}
+                        size="md"
+                        className="mb-2"
+                    />
                     <h1 className="text-2xl font-bold tracking-tight">
                         {equipment?.brand} {equipment?.model}
                     </h1>
