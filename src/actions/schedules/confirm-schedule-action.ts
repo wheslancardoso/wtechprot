@@ -90,8 +90,8 @@ export async function confirmSchedule(params: ConfirmParams): Promise<ConfirmSch
         const dateParsed = schedule.scheduled_date ? format(parseISO(schedule.scheduled_date), "dd/MM/yyyy", { locale: ptBR }) : ''
         const timeParsed = schedule.scheduled_time?.substring(0, 5) ?? ''
 
-        // Fire and forget (não seguramos a requisição do usuário esperando o email ser enviado)
-        void sendScheduleConfirmationAlert({
+        // Aguardar o envio do e-mail antes de encerrar o processo Serverless
+        await sendScheduleConfirmationAlert({
             customerName: schedule.customer_name ?? 'Cliente Anônimo',
             customerPhone: schedule.customer_phone ?? 'Não informado',
             scheduledDate: dateParsed,
