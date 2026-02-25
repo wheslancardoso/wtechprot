@@ -500,8 +500,8 @@ export default function BudgetModal({ orderId, displayId, open, onOpenChange, te
                                         type="button"
                                         onClick={() => setSourcingMode('assisted')}
                                         className={`relative flex flex-col items-center gap-2 p-4 rounded-lg border-2 text-center transition-all cursor-pointer ${sourcingMode === 'assisted'
-                                                ? 'border-primary bg-primary/5 ring-1 ring-primary/20'
-                                                : 'border-border hover:border-muted-foreground/40 hover:bg-muted/30'
+                                            ? 'border-primary bg-primary/5 ring-1 ring-primary/20'
+                                            : 'border-border hover:border-muted-foreground/40 hover:bg-muted/30'
                                             }`}
                                     >
                                         <ShoppingCart className={`h-5 w-5 ${sourcingMode === 'assisted' ? 'text-primary' : 'text-muted-foreground'}`} />
@@ -514,27 +514,27 @@ export default function BudgetModal({ orderId, displayId, open, onOpenChange, te
                                         type="button"
                                         onClick={() => setSourcingMode('resale')}
                                         className={`relative flex flex-col items-center gap-2 p-4 rounded-lg border-2 text-center transition-all cursor-pointer ${sourcingMode === 'resale'
-                                                ? 'border-emerald-600 bg-emerald-50/50 ring-1 ring-emerald-600/20'
-                                                : 'border-border hover:border-muted-foreground/40 hover:bg-muted/30'
+                                            ? 'border-primary bg-primary/5 ring-1 ring-primary/20'
+                                            : 'border-border hover:border-muted-foreground/40 hover:bg-muted/30'
                                             }`}
                                     >
-                                        <Briefcase className={`h-5 w-5 ${sourcingMode === 'resale' ? 'text-emerald-600' : 'text-muted-foreground'}`} />
-                                        <span className={`text-sm font-semibold ${sourcingMode === 'resale' ? 'text-emerald-600' : 'text-foreground'}`}>Revenda</span>
-                                        <span className="text-[11px] text-muted-foreground leading-tight">Você compra e revende (valor no orçamento)</span>
+                                        <Briefcase className={`h-5 w-5 ${sourcingMode === 'resale' ? 'text-primary' : 'text-muted-foreground'}`} />
+                                        <span className={`text-sm font-semibold ${sourcingMode === 'resale' ? 'text-primary' : 'text-foreground'}`}>Revenda</span>
+                                        <span className="text-[11px] text-muted-foreground leading-tight">Você fornece a peça (valor no orçamento)</span>
                                     </button>
 
-                                    {/* Link de Parcelamento */}
+                                    {/* Link de Pagamento da Peça */}
                                     <button
                                         type="button"
                                         onClick={() => setSourcingMode('payment_link')}
                                         className={`relative flex flex-col items-center gap-2 p-4 rounded-lg border-2 text-center transition-all cursor-pointer ${sourcingMode === 'payment_link'
-                                                ? 'border-blue-600 bg-blue-50/50 ring-1 ring-blue-600/20'
-                                                : 'border-border hover:border-muted-foreground/40 hover:bg-muted/30'
+                                            ? 'border-primary bg-primary/5 ring-1 ring-primary/20'
+                                            : 'border-border hover:border-muted-foreground/40 hover:bg-muted/30'
                                             }`}
                                     >
-                                        <Link2 className={`h-5 w-5 ${sourcingMode === 'payment_link' ? 'text-blue-600' : 'text-muted-foreground'}`} />
-                                        <span className={`text-sm font-semibold ${sourcingMode === 'payment_link' ? 'text-blue-600' : 'text-foreground'}`}>Link Parcelamento</span>
-                                        <span className="text-[11px] text-muted-foreground leading-tight">Envia link para o cliente pagar/parcelar</span>
+                                        <Link2 className={`h-5 w-5 ${sourcingMode === 'payment_link' ? 'text-primary' : 'text-muted-foreground'}`} />
+                                        <span className={`text-sm font-semibold ${sourcingMode === 'payment_link' ? 'text-primary' : 'text-foreground'}`}>Link Pagamento Peça</span>
+                                        <span className="text-[11px] text-muted-foreground leading-tight">Link seu para o cliente pagar/parcelar</span>
                                     </button>
                                 </div>
 
@@ -543,7 +543,7 @@ export default function BudgetModal({ orderId, displayId, open, onOpenChange, te
                                     <Label>
                                         {sourcingMode === 'assisted' && 'Peças Externas (Compra Assistida)'}
                                         {sourcingMode === 'resale' && 'Peças para Revenda'}
-                                        {sourcingMode === 'payment_link' && 'Peças (Link de Parcelamento)'}
+                                        {sourcingMode === 'payment_link' && 'Peças (Link de Pagamento)'}
                                     </Label>
                                     <Button
                                         type="button"
@@ -582,9 +582,9 @@ export default function BudgetModal({ orderId, displayId, open, onOpenChange, te
                                             </Button>
                                         </div>
 
-                                        <div className={`grid gap-3 ${sourcingMode === 'payment_link' ? 'sm:grid-cols-3' : 'sm:grid-cols-2'}`}>
+                                        <div className="grid gap-3 sm:grid-cols-12">
                                             {/* Nome da Peça — sempre visível */}
-                                            <div className="space-y-1">
+                                            <div className={(sourcingMode === 'assisted' || sourcingMode === 'resale') ? "sm:col-span-8" : "sm:col-span-5"}>
                                                 <Label htmlFor={`part-name-${index}`}>Nome da Peça</Label>
                                                 <Input
                                                     id={`part-name-${index}`}
@@ -599,9 +599,9 @@ export default function BudgetModal({ orderId, displayId, open, onOpenChange, te
                                                 )}
                                             </div>
 
-                                            {/* Preço — visível em Revenda e Link Parcelamento */}
+                                            {/* Preço — visível em Revenda e Link Pagamento */}
                                             {(sourcingMode === 'resale' || sourcingMode === 'payment_link') && (
-                                                <div className="space-y-1">
+                                                <div className={sourcingMode === 'resale' ? "sm:col-span-4" : "sm:col-span-3"}>
                                                     <Label htmlFor={`part-price-${index}`}>Preço (R$)</Label>
                                                     <div className="relative">
                                                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">R$</span>
@@ -619,9 +619,9 @@ export default function BudgetModal({ orderId, displayId, open, onOpenChange, te
                                                 </div>
                                             )}
 
-                                            {/* URL — visível em Compra Assistida e Link Parcelamento */}
+                                            {/* URL — visível em Compra Assistida e Link Pagamento */}
                                             {(sourcingMode === 'assisted' || sourcingMode === 'payment_link') && (
-                                                <div className="space-y-1">
+                                                <div className={sourcingMode === 'assisted' ? "sm:col-span-4" : "sm:col-span-4"}>
                                                     <Label htmlFor={`part-url-${index}`}>
                                                         {sourcingMode === 'assisted' ? 'Link de Compra' : 'Link de Pagamento'}
                                                     </Label>

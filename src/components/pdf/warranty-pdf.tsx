@@ -407,6 +407,7 @@ interface OrderData {
     custodyPhotos?: { url: string; label?: string }[]
     finishedAt: string
     externalParts: Array<{ name: string; price?: number }>
+    partsSourcingMode?: string
     signatureEvidence?: {
         ip_address?: string
         accepted_at: string

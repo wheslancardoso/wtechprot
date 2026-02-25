@@ -528,13 +528,11 @@ function BudgetDocument({ data, settings }: { data: BudgetData; settings: Budget
                     </View>
                 </View>
 
-                {/* ── PEÇAS EXTERNAS (Compra Assistida ou Link Parcelamento) ── */}
+                {/* ── PEÇAS EXTERNAS (Compra Assistida ou Link Pagamento Peça) ── */}
                 {data.externalParts.length > 0 && mode !== 'resale' && (
                     <View style={styles.section}>
                         <View style={styles.sectionHeader}>
-                            <Text style={styles.sectionTitle}>
-                                {mode === 'assisted' ? 'Peças — Compra Assistida' : 'Peças — Link de Parcelamento'}
-                            </Text>
+                            {mode === 'assisted' ? 'Peças — Compra Assistida' : 'Peças — Link de Pagamento da Peça'}
                         </View>
                         <View style={styles.table}>
                             <View style={styles.tableHeaderRow}>
@@ -580,7 +578,7 @@ function BudgetDocument({ data, settings }: { data: BudgetData; settings: Budget
                         <Text style={styles.observationsText}>• O valor total inclui peças fornecidas pelo técnico e mão de obra.</Text>
                     )}
                     {mode === 'payment_link' && (
-                        <Text style={styles.observationsText}>• As peças serão pagas separadamente pelo cliente através dos links de pagamento enviados.</Text>
+                        <Text style={styles.observationsText}>• As peças serão pagas separadamente pelo cliente através do link de pagamento enviado.</Text>
                     )}
                     <Text style={styles.observationsText}>• Garantia sobre a mão de obra: {warrantyDays} dias após a conclusão do serviço.</Text>
                 </View>

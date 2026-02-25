@@ -29,7 +29,8 @@ import {
     ExternalLink,
     AlertTriangle,
     Camera,
-    Image as ImageIcon
+    Image as ImageIcon,
+    Link2
 } from 'lucide-react'
 import Image from 'next/image'
 
@@ -193,7 +194,8 @@ export default async function ClientOrderPage({ params }: PageProps) {
         photosCheckout: order.photos_checkout || [],
         custodyPhotos: order.custody_photos || [],
         finishedAt: order.finished_at || new Date().toISOString(),
-        externalParts: [],
+        externalParts: externalParts.map((p: any) => ({ name: p.title, price: p.price })),
+        partsSourcingMode: sourcingMode,
         signatureEvidence: order.signature_evidence || null,
     }
 
@@ -364,17 +366,17 @@ export default async function ClientOrderPage({ params }: PageProps) {
                                         <ShoppingCart className="h-5 w-5 text-primary" />
                                         {sourcingMode === 'assisted' && 'Peças Necessárias'}
                                         {sourcingMode === 'resale' && 'Peças Inclusas no Serviço'}
-                                        {sourcingMode === 'payment_link' && 'Peças — Links de Pagamento'}
+                                        {sourcingMode === 'payment_link' && 'Peças — Link de Pagamento'}
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent className="space-y-4">
                                     {/* Aviso conforme modalidade */}
                                     {sourcingMode === 'assisted' && (
-                                        <Alert variant="warning" className="py-2">
-                                            <AlertTriangle className="h-4 w-4" />
-                                            <AlertDescription className="text-xs">
+                                        <Alert className="py-2 border-amber-200 bg-amber-50/50">
+                                            <AlertTriangle className="h-4 w-4 text-amber-600" />
+                                            <AlertDescription className="text-xs text-amber-700">
                                                 <strong>Atenção:</strong> A compra das peças é responsabilidade do cliente.
-                                                Após comprar, entre em contato para combinar a entrega.
+                                                Utilize os links abaixo para adquirir os itens necessários.
                                             </AlertDescription>
                                         </Alert>
                                     )}
@@ -386,9 +388,11 @@ export default async function ClientOrderPage({ params }: PageProps) {
                                         </Alert>
                                     )}
                                     {sourcingMode === 'payment_link' && (
-                                        <Alert className="py-2 border-blue-200 bg-blue-50/50">
-                                            <AlertDescription className="text-xs text-blue-700">
-                                                Utilize os links abaixo para efetuar o pagamento das peças. Você pode parcelar no cartão.
+                                        <Alert className="py-2 border-blue-200 bg-blue-50/50 text-blue-700">
+                                            <Link2 className="h-4 w-4 text-blue-600" />
+                                            <AlertDescription className="text-xs">
+                                                <strong>Pagamento Necessário:</strong> Utilize os links abaixo para pagar as peças.
+                                                Você pode parcelar o valor no cartão de crédito.
                                             </AlertDescription>
                                         </Alert>
                                     )}
@@ -410,7 +414,7 @@ export default async function ClientOrderPage({ params }: PageProps) {
                                                     <Button size="sm" variant="default" asChild className="shrink-0">
                                                         <Link href={part.external_url} target="_blank" rel="noopener noreferrer">
                                                             <ExternalLink className="mr-1 h-3 w-3" />
-                                                            {sourcingMode === 'assisted' ? 'Comprar' : 'Pagar'}
+                                                            {sourcingMode === 'assisted' ? 'Comprar' : 'Pagar Peça'}
                                                         </Link>
                                                     </Button>
                                                 )}
@@ -501,8 +505,8 @@ export default async function ClientOrderPage({ params }: PageProps) {
 
                                 {hasParts && sourcingMode === 'payment_link' && (
                                     <div className="flex justify-between text-sm">
-                                        <span className="text-muted-foreground">Peças (pagar nos links)</span>
-                                        <span className="text-muted-foreground italic text-xs">Ver links acima</span>
+                                        <span className="text-muted-foreground">Peças (pagas via link)</span>
+                                        <span className="text-muted-foreground font-medium italic">Pagas por você</span>
                                     </div>
                                 )}
 
