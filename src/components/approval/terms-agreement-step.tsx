@@ -100,6 +100,18 @@ export default function TermsAgreementStep({
             </div>
 
             <div className="px-1">
+                {/* Instrução para o visitante */}
+                {acceptedCount < totalTerms && (
+                    <div className="flex items-center gap-2.5 mb-3 px-1">
+                        <span className="relative flex h-2.5 w-2.5 shrink-0">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+                            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary" />
+                        </span>
+                        <p className="text-sm text-muted-foreground leading-none">
+                            <strong className="text-foreground">Toque em cada card</strong> abaixo para ler e aceitar os termos
+                        </p>
+                    </div>
+                )}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-2">
                     {terms.map(term => {
                         const isAccepted = acceptedIds.includes(term.id)

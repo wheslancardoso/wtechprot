@@ -559,6 +559,7 @@ export default async function ClientOrderPage({ params }: PageProps) {
                 customerName={order.customer?.name || 'Cliente'}
                 techPhone={tenant?.phone}
                 hasExistingFeedback={hasExistingFeedback}
+                sourcingMode={sourcingMode}
             />
         </div>
     )
