@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { randomBytes } from 'crypto'
 import { revalidatePath } from 'next/cache'
+import { formatPhoneForApi } from '@/lib/utils'
 
 export type GenerateLinkResult = {
     success: boolean
@@ -57,7 +58,7 @@ export async function generateScheduleLink(params: GenerateLinkParams): Promise<
                 token,
                 status: 'pending',
                 customer_name: params.customerName || null,
-                customer_phone: params.customerPhone || null,
+                customer_phone: formatPhoneForApi(params.customerPhone) || null,
                 notes: params.notes || null,
                 expires_at: expiresAt.toISOString(),
             })
