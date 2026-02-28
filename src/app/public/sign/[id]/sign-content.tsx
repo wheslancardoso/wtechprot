@@ -13,7 +13,7 @@ import { createClient } from '@/lib/supabase/client'
 import { signCustodyTerm } from '@/app/os/[id]/actions'
 import { ImageModal } from '@/components/ui/image-modal'
 import WithdrawalTermButton from '@/components/pdf/withdrawal-term-pdf'
-import { Loader2, MapPin, CheckCircle2, ShieldAlert, Package, ArrowRight, FileSignature, Home } from 'lucide-react'
+import { Loader2, MapPin, CheckCircle2, ShieldAlert, Package, ArrowRight, FileSignature, Home, FileDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 export default function PublicSignContent() {
@@ -41,7 +41,7 @@ export default function PublicSignContent() {
             let query = supabase
                 .from('orders')
                 .select(`
-                    id, display_id, status, 
+                    id, display_id, status, custody_signed_at,
                     equipment:equipments(type, brand, model, serial_number),
                     customer:customers(name, document_id),
                     custody_photos
@@ -60,10 +60,6 @@ export default function PublicSignContent() {
                 toast({ title: 'Erro', description: 'Pedido não encontrado.', variant: 'destructive' })
                 setLoading(false)
                 return
-            }
-
-            if (data.status !== 'open' && data.status !== 'analyzing') {
-                // If already signed, maybe show success state?
             }
 
             setOrder(data)
@@ -135,17 +131,38 @@ export default function PublicSignContent() {
         }
     }
 
-    if (success) {
+    if (loading) {
+        return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
+    }
+
+    if (!order) {
+        return <div className="min-h-screen flex items-center justify-center text-muted-foreground">Pedido não encontrado.</div>
+    }
+
+    const isAlreadySigned = !!order?.custody_signed_at;
+    const showSuccessView = success || isAlreadySigned;
+
+    if (showSuccessView) {
         return (
             <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 animate-in zoom-in-95 duration-500">
                 <div className="bg-green-100 text-green-600 w-20 h-20 rounded-full flex items-center justify-center mb-6 shadow-sm">
                     <CheckCircle2 className="h-10 w-10" />
                 </div>
-                <h1 className="text-2xl font-bold text-center mb-2">Tudo Certo!</h1>
+                <h1 className="text-2xl font-bold text-center mb-2">
+                    {isAlreadySigned && !success ? 'Termo já Assinado!' : 'Tudo Certo!'}
+                </h1>
                 <p className="text-muted-foreground text-center max-w-sm mb-8">
-                    O termo foi assinado e o equipamento já está registrado em nosso sistema.
+                    {isAlreadySigned && !success
+                        ? 'Este termo de retirada já foi assinado digitalmente e registrado em nosso sistema.'
+                        : 'O termo foi assinado e o equipamento já está registrado em nosso sistema.'}
                 </p>
                 <div className="flex flex-col gap-3 w-full max-w-xs">
+                    <Link href={`/os/${order.display_id}/checkin`} className="w-full">
+                        <Button className="w-full gap-2 h-12 text-base bg-primary hover:bg-primary/90">
+                            <FileDown className="h-4 w-4" />
+                            Ver Comprovante
+                        </Button>
+                    </Link>
                     <Link href="/" className="w-full">
                         <Button variant="outline" className="w-full gap-2 h-12 text-base">
                             <Home className="h-4 w-4" />
@@ -155,20 +172,6 @@ export default function PublicSignContent() {
                 </div>
             </div>
         )
-    }
-
-    if (loading) {
-        return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
-    }
-
-    if (!order) {
-        return <div className="min-h-screen flex items-center justify-center text-muted-foreground">Pedido não encontrado.</div>
-    }
-
-    // Check if already signed (Client-side protection)
-    if (order.status !== 'open' && order.status !== 'analyzing' && !success) {
-        // Optionally render "Already Signed" view here contextually
-        // But server protection is more important
     }
 
     return (
