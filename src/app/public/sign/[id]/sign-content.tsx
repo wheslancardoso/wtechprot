@@ -174,6 +174,7 @@ export default function PublicSignContent() {
                 <div className="flex flex-col gap-3 w-full max-w-xs">
                     {storeSettings && order && (
                         <WithdrawalTermButton
+                            variant="default"
                             className="w-full h-12 text-base"
                             settings={storeSettings}
                             data={{
