@@ -175,7 +175,7 @@ export default function PublicSignContent() {
                     {storeSettings && order && (
                         <WithdrawalTermButton
                             variant="default"
-                            className="w-full h-12 text-base"
+                            className="w-full h-12 text-base font-semibold bg-primary text-primary-foreground hover:bg-primary/90 border-transparent shadow-md transition-all hover:scale-[1.02] active:scale-95 cursor-pointer"
                             settings={storeSettings}
                             data={{
                                 orderDisplayId: order.display_id,
