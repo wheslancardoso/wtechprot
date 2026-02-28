@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -12,9 +13,13 @@ import { useToast } from '@/hooks/use-toast'
 import { createClient } from '@/lib/supabase/client'
 import { signCustodyTerm } from '@/app/os/[id]/actions'
 import { ImageModal } from '@/components/ui/image-modal'
-import WithdrawalTermButton from '@/components/pdf/withdrawal-term-pdf'
 import { Loader2, MapPin, CheckCircle2, ShieldAlert, Package, ArrowRight, FileSignature, Home, FileDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
+
+const WithdrawalTermButton = dynamic(
+    () => import('@/components/pdf/withdrawal-term-pdf'),
+    { ssr: false, loading: () => <Button className="w-full h-12 text-base" disabled><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Gerando PDF...</Button> }
+)
 
 export default function PublicSignContent() {
     const params = useParams()
@@ -26,6 +31,7 @@ export default function PublicSignContent() {
     const [loading, setLoading] = useState(true)
     const [submitting, setSubmitting] = useState(false)
     const [order, setOrder] = useState<any>(null)
+    const [storeSettings, setStoreSettings] = useState<any>(null)
     const [geolocation, setGeolocation] = useState<{ lat: number; lng: number } | null>(null)
     const [acceptedTerms, setAcceptedTerms] = useState(false)
     const [success, setSuccess] = useState(false)
@@ -41,10 +47,9 @@ export default function PublicSignContent() {
             let query = supabase
                 .from('orders')
                 .select(`
-                    id, display_id, status, custody_signed_at,
+                    *,
                     equipment:equipments(type, brand, model, serial_number),
-                    customer:customers(name, document_id),
-                    custody_photos
+                    customer:customers(name, document_id)
                 `)
 
             if (isUuid) {
@@ -61,6 +66,16 @@ export default function PublicSignContent() {
                 setLoading(false)
                 return
             }
+
+            const { data: tenant } = await supabase.from('tenants').select('*').eq('id', data.user_id).single()
+
+            setStoreSettings(tenant ? {
+                ...tenant,
+                logo_url: tenant.logo_url || `${window.location.origin}/logo.png`
+            } : {
+                trade_name: 'Minha Assistência',
+                logo_url: `${window.location.origin}/logo.png`
+            })
 
             setOrder(data)
             setLoading(false)
@@ -157,12 +172,29 @@ export default function PublicSignContent() {
                         : 'O termo foi assinado e o equipamento já está registrado em nosso sistema.'}
                 </p>
                 <div className="flex flex-col gap-3 w-full max-w-xs">
-                    <Link href={`/os/${order.display_id}/checkin`} className="w-full">
-                        <Button className="w-full gap-2 h-12 text-base bg-primary hover:bg-primary/90">
-                            <FileDown className="h-4 w-4" />
-                            Ver Comprovante
-                        </Button>
-                    </Link>
+                    {storeSettings && order && (
+                        <WithdrawalTermButton
+                            className="w-full h-12 text-base"
+                            settings={storeSettings}
+                            data={{
+                                orderDisplayId: order.display_id,
+                                customerName: order.customer?.name || 'Cliente',
+                                equipmentType: order.equipment?.type || '',
+                                equipmentBrand: order.equipment?.brand || '',
+                                equipmentModel: order.equipment?.model || '',
+                                equipmentSerial: order.equipment?.serial_number,
+                                accessories: order.accessories_received || [],
+                                conditionNotes: order.custody_conditions || '',
+                                signatureUrl: order.custody_signature_url,
+                                signedAt: order.custody_signed_at,
+                                integrityHash: order.custody_integrity_hash,
+                                geolocation: order.metadata?.geolocation,
+                                customerDocument: order.customer?.document_id,
+                                custodyIp: order.custody_ip,
+                                photos: (order.custody_photos as { label: string; url: string }[] | null) || []
+                            }}
+                        />
+                    )}
                     <Link href="/" className="w-full">
                         <Button variant="outline" className="w-full gap-2 h-12 text-base">
                             <Home className="h-4 w-4" />
