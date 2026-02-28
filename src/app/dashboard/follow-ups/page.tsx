@@ -21,10 +21,18 @@ export const dynamic = 'force-dynamic'
 
 // Type labels
 const typeLabels: Record<string, { label: string; color: string }> = {
-    post_delivery: { label: 'Pós-Entrega', color: 'bg-blue-500/10 text-blue-500' },
-    warranty_check: { label: 'Check Garantia', color: 'bg-purple-500/10 text-purple-500' },
-    warranty_expiring: { label: 'Garantia Vencendo', color: 'bg-orange-500/10 text-orange-500' },
-    manual: { label: 'Manual', color: 'bg-gray-500/10 text-gray-500' },
+    // Passos VDI 2.0
+    step1_blindage: { label: '🛡️ Passo 1: Entrega & Segurança', color: 'bg-blue-500/10 text-blue-500' },
+    step2_social_proof: { label: '⭐ Passo 2: Avaliação & Feedback', color: 'bg-indigo-500/10 text-indigo-500' },
+    step3_authority: { label: '🔍 Passo 3: Check-up de Rotina', color: 'bg-purple-500/10 text-purple-500' },
+    step4_new_sale: { label: '💎 Passo 4: Renovação de Ciclo', color: 'bg-orange-400/10 text-orange-500' },
+
+    // Tipos Legados (para OS antigas)
+    post_delivery: { label: 'Acompanhamento Pós-Entrega', color: 'bg-blue-500/10 text-blue-500' },
+    warranty_check: { label: 'Revisão de Garantia', color: 'bg-purple-500/10 text-purple-500' },
+    warranty_expiring: { label: 'Alerta de Fim de Garantia', color: 'bg-orange-500/10 text-orange-500' },
+
+    manual: { label: 'Registro Manual', color: 'bg-gray-500/10 text-gray-500' },
 }
 
 export default async function FollowUpsPage() {
@@ -226,8 +234,9 @@ export default async function FollowUpsPage() {
                                                             customerName={order.customer?.name || 'Cliente'}
                                                             customerPhone={order.customer?.phone}
                                                             deviceType={order.equipments?.model || null}
-                                                            type="warranty_expiring"
+                                                            type="step4_new_sale"
                                                             daysRemaining={daysRemaining}
+                                                            warrantyEndDate={order.warranty_end_date}
                                                         />
                                                     )}
                                                 </div>

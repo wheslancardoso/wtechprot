@@ -198,46 +198,56 @@ export function getTemplateByStatus(
 }
 
 // ==================================================
-// Template: Follow-up Pós-Entrega (7 dias depois)
+// Template: Passo 1 - A Entrega e a Blindagem (Hoje)
 // ==================================================
-export function templateFollowUpPosEntrega(
+export function templatePosVendaPasso1(
     customerName: string,
     displayId: number,
-    deviceType: string | null,
     settings: TenantSettings
 ): string {
     const osNumber = String(displayId).padStart(4, '0')
     const firstName = customerName.split(' ')[0]
-    const device = deviceType || 'equipamento'
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://seu-sistema.com'
+    const trackingLink = `${baseUrl}/os/${osNumber}`
 
-    let message = `Olá ${firstName}! 👋\n\n`
-    message += `Aqui é da *${settings.trade_name}*.\n\n`
-    message += `Passando para saber como está seu *${device}* após o reparo da OS #${osNumber}.\n\n`
-    message += `✅ Está tudo funcionando corretamente?\n\n`
-    message += `Se tiver qualquer dúvida ou problema, estamos à disposição! 😊`
-
-    return message
+    return `Serviço finalizado com sucesso, ${firstName}! A máquina já está pronta para uso e testada. 🚀\n\nPara a sua segurança, estou te enviando o link do meu Sistema WFIX: ${trackingLink}\nLá você tem acesso aos detalhes do Serviço e do Orçamento, que funciona como a sua Garantia Oficial de 6 meses.\n\n⚠️ *Aviso importante sobre a garantia:* Ela cobre 100% de qualquer falha no meu serviço ou na peça instalada. Porém, ela não se aplica em casos de mau uso (vírus, quedas, líquidos derramados ou desconfiguração pelo usuário).\n\nQualquer dúvida de uso, estou à disposição!`
 }
 
 // ==================================================
-// Template: Garantia Próxima do Vencimento
+// Template: Passo 2 - A Prova Social (24 a 48 horas depois)
 // ==================================================
-export function templateGarantiaVencendo(
-    customerName: string,
-    displayId: number,
-    deviceType: string | null,
-    daysRemaining: number,
-    settings: TenantSettings
+export function templatePosVendaPasso2(
+    customerName: string
 ): string {
-    const osNumber = String(displayId).padStart(4, '0')
     const firstName = customerName.split(' ')[0]
-    const device = deviceType || 'equipamento'
+    const googleLink = '[SEU LINK DO GOOGLE]'
 
-    let message = `Olá ${firstName}! 👋\n\n`
-    message += `Aqui é da *${settings.trade_name}*.\n\n`
-    message += `📋 Passando para informar que a garantia da OS #${osNumber} (${device}) vence em *${daysRemaining} dias*.\n\n`
-    message += `Está tudo funcionando bem? Se houver qualquer problema relacionado ao reparo, entre em contato conosco antes do vencimento!\n\n`
-    message += `Estamos à disposição! 🔧`
+    return `Olá, ${firstName}! Passando para confirmar se a máquina está funcionando perfeitamente hoje. Tudo certo por aí?\n\nAproveitando: espero que tenha gostado do meu atendimento! Se puder me dar uma força, deixa uma avaliação rápida lá no meu perfil do Google, me ajuda bastante: ${googleLink} ⭐`
+}
 
-    return message
+// ==================================================
+// Template: Passo 3 - O Check-up de Autoridade (30 dias depois)
+// ==================================================
+export function templatePosVendaPasso3(
+    customerName: string
+): string {
+    const firstName = customerName.split(' ')[0]
+
+    return `Bom dia, ${firstName}! Tudo bem? Como parte do meu protocolo de atendimento, faço esse acompanhamento de 30 dias após o serviço. O computador continua operando com o desempenho ideal?`
+}
+
+// ==================================================
+// Template: Passo 4 - A Nova Venda (5º ou 6º Mês)
+// ==================================================
+export function templatePosVendaPasso4(
+    customerName: string,
+    warrantyEndDate: string | Date
+): string {
+    const firstName = customerName.split(' ')[0]
+    let formattedDate = '[DATA]'
+    if (warrantyEndDate) {
+        formattedDate = new Date(warrantyEndDate).toLocaleDateString('pt-BR')
+    }
+
+    return `Bom dia, ${firstName}! Tudo bem? Verifiquei aqui no sistema que a garantia da sua máquina encerra no dia ${formattedDate}. Como padrão do meu atendimento, faço essa checagem final. Está tudo certo com o funcionamento da máquina?`
 }

@@ -324,8 +324,8 @@ export async function saveBudget(
         }
 
         if (!diagnosisText || diagnosisText.length < 20) {
-            console.log("❌ saveBudget: Laudo muito curto")
-            return { success: false, message: 'Laudo técnico deve ter pelo menos 20 caracteres' }
+            console.log("❌ saveBudget: Diagnóstico muito curto")
+            return { success: false, message: 'O detalhamento do serviço deve ter pelo menos 20 caracteres' }
         }
 
         if (laborCost < 0) {
@@ -345,7 +345,7 @@ export async function saveBudget(
         }
         console.log("✅ saveBudget: Usuário autenticado:", user.id)
 
-        // 4. Atualizar ordem com novo laudo, valor e status
+        // 4. Atualizar ordem com novo diagnóstico, valor e status
         // IMPORTANTE: Removido filtro user_id para garantir que o update funcione
         // Calcular custo total das peças (Revenda ou Link Parcelamento)
         const mode = partsSourcingMode || 'assisted'
@@ -579,25 +579,50 @@ export async function finishOrderWithPayment(
             .eq('id', orderId)
             .single()
 
-        // 6. Criar follow-ups automáticos
+        // 6. Criar follow-ups automáticos (Estratégia VDI 2.0)
         if (order?.customer_id) {
-            const postDeliveryDate = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000) // 7 dias depois
-            const warrantyExpiringDate = new Date(warrantyEndDate.getTime() - 7 * 24 * 60 * 60 * 1000) // 7 dias antes do fim
+            // Passo 1: Hoje
+            const step1Date = now
+
+            // Passo 2: +1 dia (24h)
+            const step2Date = new Date(now.getTime() + 1 * 24 * 60 * 60 * 1000)
+
+            // Passo 3: +30 dias
+            const step3Date = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000)
+
+            // Passo 4: -30 dias antes do fim da garantia (ou +5 meses se a garantia for 6 meses)
+            // Se a garantia for menor que 30 dias, agenda para o último dia.
+            const daysBeforeWarrantyEnds = warrantyDays > 30 ? 30 : 0
+            const step4Date = new Date(warrantyEndDate.getTime() - daysBeforeWarrantyEnds * 24 * 60 * 60 * 1000)
 
             await supabase.from('follow_ups').insert([
                 {
                     order_id: orderId,
                     customer_id: order.customer_id,
-                    type: 'post_delivery',
+                    type: 'step1_blindage',
                     status: 'pending',
-                    scheduled_for: postDeliveryDate.toISOString().split('T')[0]
+                    scheduled_for: step1Date.toISOString().split('T')[0]
                 },
                 {
                     order_id: orderId,
                     customer_id: order.customer_id,
-                    type: 'warranty_expiring',
+                    type: 'step2_social_proof',
                     status: 'pending',
-                    scheduled_for: warrantyExpiringDate.toISOString().split('T')[0]
+                    scheduled_for: step2Date.toISOString().split('T')[0]
+                },
+                {
+                    order_id: orderId,
+                    customer_id: order.customer_id,
+                    type: 'step3_authority',
+                    status: 'pending',
+                    scheduled_for: step3Date.toISOString().split('T')[0]
+                },
+                {
+                    order_id: orderId,
+                    customer_id: order.customer_id,
+                    type: 'step4_new_sale',
+                    status: 'pending',
+                    scheduled_for: step4Date.toISOString().split('T')[0]
                 }
             ])
         }

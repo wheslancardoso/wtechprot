@@ -50,7 +50,7 @@ import {
 // Zod Schema
 // ==================================================
 const budgetSchema = z.object({
-    technicalReport: z.string().min(20, 'Laudo deve ter pelo menos 20 caracteres'),
+    technicalReport: z.string().min(20, 'O detalhamento deve ter pelo menos 20 caracteres'),
     laborCost: z.number().min(0, 'Valor inválido'),
     externalParts: z.array(
         z.object({
@@ -221,7 +221,7 @@ export default function BudgetModal({ orderId, displayId, open, onOpenChange, te
         const textToAnalyze = (currentReport && currentReport.length > 20) ? currentReport : problemDescription
 
         if (!textToAnalyze || textToAnalyze.length < 10) {
-            setFeedback({ type: 'error', message: 'Nenhuma descrição (Relato do Cliente ou Laudo) disponível para análise.' })
+            setFeedback({ type: 'error', message: 'Nenhuma descrição (Relato do Cliente ou Diagnóstico) disponível para análise.' })
             return
         }
 
@@ -391,9 +391,9 @@ export default function BudgetModal({ orderId, displayId, open, onOpenChange, te
                         )}
 
                         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                            {/* Laudo Técnico */}
+                            {/* Detalhamento Técnico */}
                             <div className="space-y-2">
-                                <Label htmlFor="technicalReport">Laudo Técnico *</Label>
+                                <Label htmlFor="technicalReport">Detalhamento Técnico *</Label>
                                 <Textarea
                                     id="technicalReport"
                                     placeholder="Descreva detalhadamente o problema encontrado, a causa raiz e a solução proposta..."

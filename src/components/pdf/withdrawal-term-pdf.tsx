@@ -463,7 +463,9 @@ function WithdrawalTermDocument({ data, settings, integrityHash }: { data: Custo
                         {"\n"}
                         3. Confirmo que a lista de acessórios e as condições físicas relatadas conferem com a realidade do aparelho no momento da entrega.
                         {"\n"}
-                        4. Estou ciente de que a análise técnica pode exigir a desmontagem do equipamento, revelar defeitos ocultos pré-existentes.
+                        4. Estou ciente de que a análise técnica pode exigir a desmontagem do equipamento e que, em aparelhos que entram \"sem ligar\", não nos responsabilizamos por defeitos ocultos pré-existentes que só venham a ser detectados após o restabelecimento da energia.
+                        {"\n"}
+                        5. Havendo novos defeitos identificados nestas condições, um orçamento complementar será enviado para aprovação antes de qualquer reparo adicional.
                     </Text>
                 </View>
 

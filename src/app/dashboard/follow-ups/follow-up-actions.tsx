@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/dialog'
 import { Textarea } from '@/components/ui/textarea'
 import { completeFollowUp, skipFollowUp } from './actions'
-import { generateWhatsAppLink, templateFollowUpPosEntrega, templateGarantiaVencendo } from '@/lib/whatsapp-templates'
+import { generateWhatsAppLink, templatePosVendaPasso1, templatePosVendaPasso2, templatePosVendaPasso3, templatePosVendaPasso4 } from '@/lib/whatsapp-templates'
 import { useSettings } from '@/components/settings-provider'
 
 interface FollowUpActionsProps {
@@ -30,8 +30,9 @@ interface FollowUpActionsProps {
     customerName: string
     customerPhone: string
     deviceType: string | null
-    type: 'post_delivery' | 'warranty_check' | 'warranty_expiring' | 'manual'
+    type: 'step1_blindage' | 'step2_social_proof' | 'step3_authority' | 'step4_new_sale' | 'manual'
     daysRemaining?: number
+    warrantyEndDate?: string | null
 }
 
 export function FollowUpActions({
@@ -42,7 +43,8 @@ export function FollowUpActions({
     customerPhone,
     deviceType,
     type,
-    daysRemaining = 7
+    daysRemaining = 7,
+    warrantyEndDate
 }: FollowUpActionsProps) {
     const { settings } = useSettings()
     const [isCompleting, setIsCompleting] = useState(false)
@@ -50,16 +52,24 @@ export function FollowUpActions({
     const [notes, setNotes] = useState('')
     const [action, setAction] = useState<'complete' | 'skip'>('complete')
 
+
     // Generate WhatsApp message based on type
     function getWhatsAppLink() {
         if (!settings) return '#'
 
         let message = ''
 
-        if (type === 'warranty_expiring') {
-            message = templateGarantiaVencendo(customerName, displayId, deviceType, daysRemaining, settings)
+        if (type === 'step1_blindage') {
+            message = templatePosVendaPasso1(customerName, displayId, settings)
+        } else if (type === 'step2_social_proof') {
+            message = templatePosVendaPasso2(customerName)
+        } else if (type === 'step3_authority') {
+            message = templatePosVendaPasso3(customerName)
+        } else if (type === 'step4_new_sale') {
+            message = templatePosVendaPasso4(customerName, warrantyEndDate || new Date())
         } else {
-            message = templateFollowUpPosEntrega(customerName, displayId, deviceType, settings)
+            // Fallback
+            message = `Olá! Tudo bem?`
         }
 
         return generateWhatsAppLink(customerPhone, message)

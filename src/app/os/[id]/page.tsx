@@ -304,7 +304,7 @@ export default async function ClientOrderPage({ params }: PageProps) {
                                                     </div>
                                                     <div>
                                                         <h3 className="font-semibold text-sm">Pronto para Entrega</h3>
-                                                        <p className="text-xs text-muted-foreground">Fotos após o reparo / laudo</p>
+                                                        <p className="text-xs text-muted-foreground">Fotos após o reparo / diagnóstico</p>
                                                     </div>
                                                 </div>
                                                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -440,19 +440,19 @@ export default async function ClientOrderPage({ params }: PageProps) {
                             </Card>
                         )}
 
-                        {/* Card: Laudo Técnico (Se disponível) */}
+                        {/* Card: Detalhamento Técnico (Se disponível) */}
                         {technicalReport && (
                             <Card className="border-green-600/20 bg-green-50/10">
                                 <CardHeader className="pb-3">
                                     <CardTitle className="flex items-center gap-2 text-base">
                                         <FileText className="h-5 w-5 text-green-600" />
-                                        Laudo Técnico Pericial
+                                        Detalhamento Técnico Pericial
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent className="space-y-4">
                                     <Alert variant="default" className="bg-white/50">
                                         <AlertDescription className="text-sm">
-                                            Um laudo técnico detalhado foi emitido para este serviço.
+                                            Um detalhamento técnico foi emitido para este serviço.
                                             <br />
                                             <strong>Conclusão:</strong> {technicalReport.conclusion}
                                         </AlertDescription>
@@ -462,7 +462,7 @@ export default async function ClientOrderPage({ params }: PageProps) {
                                         report={technicalReport as TechnicalReport}
                                         orderData={orderData}
                                         storeSettings={storeSettings}
-                                        label="Baixar Laudo Técnico Completo (PDF)"
+                                        label="Baixar Detalhamento Técnico Completo (PDF)"
                                         variant="outline"
                                     />
                                 </CardContent>

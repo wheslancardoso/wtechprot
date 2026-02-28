@@ -425,7 +425,7 @@ export default async function OrderDetailPage({ params }: PageProps) {
 
                                     {/* Current Diagnosis Display */}
                                     <div className="pt-4 border-t">
-                                        <h4 className="text-sm font-medium mb-3 text-muted-foreground">Laudo Técnico Atual</h4>
+                                        <h4 className="text-sm font-medium mb-3 text-muted-foreground">Detalhamento Técnico Atual</h4>
                                         <div className="bg-muted/30 border rounded-lg p-4 min-h-[100px]">
                                             <p className="whitespace-pre-wrap text-sm">
                                                 {technicalDiagnosisDisplay || <span className="text-muted-foreground italic">Aguardando análise técnica...</span>}
@@ -463,7 +463,7 @@ export default async function OrderDetailPage({ params }: PageProps) {
                                         <Hammer className="h-12 w-12 text-muted-foreground/30 mb-4" />
                                         <h3 className="text-lg font-medium">Ordem em Aberto</h3>
                                         <p className="text-muted-foreground max-w-sm mt-2">
-                                            Inicie a análise da ordem para liberar o preenchimento do Laudo Técnico.
+                                            Inicie a análise da ordem para liberar o preenchimento do Detalhamento Técnico.
                                         </p>
                                     </CardContent>
                                 </Card>
