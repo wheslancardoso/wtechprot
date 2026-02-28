@@ -576,7 +576,7 @@ export default function WithdrawalTermButton({ data, settings, className, varian
 
     return (
         <Button
-            variant={"outline"}
+            variant={variant || "outline"}
             disabled={isGenerating}
             onClick={handleDownload}
             className={`w-full ${className || ''}`}
