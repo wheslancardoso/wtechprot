@@ -18,6 +18,7 @@ interface ConfirmParams {
     selectedTime: string
     customerName?: string
     customerPhone?: string
+    customerEmail?: string
 }
 
 /**
@@ -68,18 +69,24 @@ export async function confirmSchedule(params: ConfirmParams): Promise<ConfirmSch
         }
 
         // 3. Confirmar agendamento
+        // Formatar notas com e-mail se fornecido
+        let finalNotes = schedule.notes || ''
+        if (params.customerEmail) {
+            finalNotes = finalNotes
+                ? `${finalNotes}\n\nE-mail do cliente: ${params.customerEmail}`
+                : `E-mail do cliente: ${params.customerEmail}`
+        }
+
         const { error: updateError } = await supabase
             .from('schedules')
             .update({
                 scheduled_date: params.selectedDate,
                 scheduled_time: params.selectedTime,
                 customer_name: params.customerName || schedule.customer_name,
-                customer_phone: formatPhoneForApi(params.customerPhone) || schedule.customer_phone,
                 status: 'confirmed',
                 confirmed_at: new Date().toISOString(),
             })
             .eq('id', schedule.id)
-
         if (updateError) {
             console.error('Erro ao confirmar agendamento:', updateError)
             return { success: false, error: 'Erro ao processar confirmação. Tente contatar o técnico diretamente.' }

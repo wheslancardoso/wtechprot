@@ -14,12 +14,15 @@ import {
     Loader2,
     ChevronLeft,
     ChevronRight,
+    User,
+    Phone,
+    Mail,
 } from 'lucide-react'
 
 // ==================================================
 // Tipos locais
 // ==================================================
-type Step = 'loading' | 'selectDate' | 'selectTime' | 'confirm' | 'success' | 'error'
+type Step = 'loading' | 'identification' | 'selectDate' | 'selectTime' | 'confirm' | 'success' | 'error'
 
 // ==================================================
 // Página pública de Agendamento
@@ -42,6 +45,13 @@ export default function AgendarPage() {
     const [loadingSlots, setLoadingSlots] = useState(false)
     const [confirming, setConfirming] = useState(false)
 
+    // Estados do formulário de identificação
+    const [name, setName] = useState('')
+    const [phone, setPhone] = useState('')
+    const [email, setEmail] = useState('')
+    const [nameError, setNameError] = useState(false)
+    const [phoneError, setPhoneError] = useState(false)
+
     // Paginação do calendário (grupos de 14 datas)
     const [datePageIndex, setDatePageIndex] = useState(0)
     const DATES_PER_PAGE = 14
@@ -57,10 +67,39 @@ export default function AgendarPage() {
             }
             setAvailableDates(result.availableDates ?? [])
             setScheduleInfo(result.scheduleInfo ?? null)
-            setStep('selectDate')
+
+            // Se já tiver nome e telefone no agendamento, pula identificação ou pré-preenche
+            if (result.scheduleInfo?.customerName) {
+                setName(result.scheduleInfo.customerName)
+                setStep('selectDate')
+            } else {
+                setStep('identification')
+            }
         }
         load()
     }, [token])
+
+    // Validar e avançar da identificação
+    const handleStartScheduling = useCallback(() => {
+        let hasError = false
+        if (!name.trim()) {
+            setNameError(true)
+            hasError = true
+        } else {
+            setNameError(false)
+        }
+
+        if (!phone.trim() || phone.replace(/\D/g, '').length < 10) {
+            setPhoneError(true)
+            hasError = true
+        } else {
+            setPhoneError(false)
+        }
+
+        if (hasError) return
+
+        setStep('selectDate')
+    }, [name, phone])
 
     // Selecionar data e buscar horários
     const handleSelectDate = useCallback(async (date: string) => {
@@ -89,6 +128,11 @@ export default function AgendarPage() {
             token,
             selectedDate,
             selectedTime,
+            customerName: name,
+            customerPhone: phone,
+            customerEmail: email,
+            // Opcional: injetar email nas notas se desejar, 
+            // ou podemos manter assim por enquanto se o banco não tiver a coluna.
         })
 
         if (!result.success) {
@@ -100,7 +144,7 @@ export default function AgendarPage() {
 
         setStep('success')
         setConfirming(false)
-    }, [token, selectedDate, selectedTime])
+    }, [token, selectedDate, selectedTime, name, phone])
 
     // Datas paginadas
     const paginatedDates = availableDates.slice(
@@ -132,7 +176,7 @@ export default function AgendarPage() {
                                 </p>
                             </div>
                         </div>
-                        {scheduleInfo?.customerName && (
+                        {scheduleInfo?.customerName && step !== 'identification' && (
                             <p className="mt-3 text-sm text-gray-300">
                                 Olá, <span className="font-semibold text-emerald-400">{scheduleInfo.customerName.split(' ')[0]}</span>!
                             </p>
@@ -161,13 +205,88 @@ export default function AgendarPage() {
                             </div>
                         )}
 
+                        {/* ===== IDENTIFICAÇÃO ===== */}
+                        {step === 'identification' && (
+                            <div className="space-y-6">
+                                <div className="space-y-4">
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
+                                            <User className="w-4 h-4 text-emerald-400" />
+                                            Nome Completo
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={name}
+                                            onChange={(e) => {
+                                                setName(e.target.value)
+                                                if (nameError) setNameError(false)
+                                            }}
+                                            placeholder="Ex: João Silva"
+                                            className={`w-full bg-gray-800/50 border ${nameError ? 'border-red-500/50' : 'border-gray-700/50'} rounded-xl px-4 py-3 text-white placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500/50 transition-all`}
+                                        />
+                                        {nameError && <p className="text-xs text-red-400">Por favor, informe seu nome.</p>}
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
+                                            <Phone className="w-4 h-4 text-emerald-400" />
+                                            WhatsApp / Telefone
+                                        </label>
+                                        <input
+                                            type="tel"
+                                            value={phone}
+                                            onChange={(e) => {
+                                                setPhone(e.target.value)
+                                                if (phoneError) setPhoneError(false)
+                                            }}
+                                            placeholder="(00) 00000-0000"
+                                            className={`w-full bg-gray-800/50 border ${phoneError ? 'border-red-500/50' : 'border-gray-700/50'} rounded-xl px-4 py-3 text-white placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500/50 transition-all`}
+                                        />
+                                        {phoneError && <p className="text-xs text-red-400">Informe um telefone válido.</p>}
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
+                                            <Mail className="w-4 h-4 text-emerald-400" />
+                                            E-mail (Opcional)
+                                        </label>
+                                        <input
+                                            type="email"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            placeholder="seu@email.com"
+                                            className="w-full bg-gray-800/50 border border-gray-700/50 rounded-xl px-4 py-3 text-white placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500/50 transition-all"
+                                        />
+                                    </div>
+                                </div>
+
+                                <button
+                                    onClick={handleStartScheduling}
+                                    className="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 group"
+                                >
+                                    Continuar para Datas
+                                    <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                </button>
+                            </div>
+                        )}
+
                         {/* ===== SELECIONAR DATA ===== */}
                         {step === 'selectDate' && (
                             <div className="space-y-4">
                                 <div className="flex items-center justify-between">
-                                    <h2 className="text-sm font-medium text-gray-300 uppercase tracking-wider">
-                                        Selecione o dia
-                                    </h2>
+                                    <div className="flex items-center gap-2">
+                                        {!scheduleInfo?.customerName && (
+                                            <button
+                                                onClick={() => setStep('identification')}
+                                                className="p-1 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
+                                            >
+                                                <ChevronLeft className="w-4 h-4" />
+                                            </button>
+                                        )}
+                                        <h2 className="text-sm font-medium text-gray-300 uppercase tracking-wider">
+                                            Selecione o dia
+                                        </h2>
+                                    </div>
                                     {totalDatePages > 1 && (
                                         <div className="flex items-center gap-1">
                                             <button
