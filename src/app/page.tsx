@@ -845,7 +845,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div className="space-y-1">
               <p>© {new Date().getFullYear()} {brandName}. Todos os direitos reservados.</p>
               <p className="text-xs text-slate-600">CNPJ: 64.928.869/0001-83</p>
-              <p className="text-xs text-slate-600">Goiânia - GO | Atendimento com hora marcada</p>
+              <p className="text-[10px] text-slate-700 opacity-50">Rua 07, Irisville, Goiânia - GO | Atendimento com hora marcada</p>
             </div>
           </div>
         </div>
