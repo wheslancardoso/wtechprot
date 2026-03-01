@@ -463,7 +463,9 @@ function WithdrawalTermDocument({ data, settings, integrityHash }: { data: Custo
                         {"\n"}
                         3. Confirmo que a lista de acessórios e as condições físicas relatadas conferem com a realidade do aparelho no momento da entrega.
                         {"\n"}
-                        4. Estou ciente de que a análise técnica pode exigir a desmontagem do equipamento, revelar defeitos ocultos pré-existentes.
+                        4. Estou ciente de que a análise técnica pode exigir a desmontagem do equipamento e que, em aparelhos que entram \"sem ligar\", não nos responsabilizamos por defeitos ocultos pré-existentes que só venham a ser detectados após o restabelecimento da energia.
+                        {"\n"}
+                        5. Havendo novos defeitos identificados nestas condições, um orçamento complementar será enviado para aprovação antes de qualquer reparo adicional.
                     </Text>
                 </View>
 
@@ -507,9 +509,10 @@ interface WithdrawalTermButtonProps {
     data: CustodyData
     settings: StoreSettings
     className?: string
+    variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | null | undefined
 }
 
-export default function WithdrawalTermButton({ data, settings, className }: WithdrawalTermButtonProps) {
+export default function WithdrawalTermButton({ data, settings, className, variant }: WithdrawalTermButtonProps) {
     const [isGenerating, setIsGenerating] = useState(false)
     const osNumber = String(data.orderDisplayId).padStart(4, '0')
     const storeName = settings.trade_name.replace(/\s+/g, '_').toUpperCase()
@@ -573,7 +576,7 @@ export default function WithdrawalTermButton({ data, settings, className }: With
 
     return (
         <Button
-            variant="outline"
+            variant={variant || "outline"}
             disabled={isGenerating}
             onClick={handleDownload}
             className={`w-full ${className || ''}`}
@@ -586,7 +589,7 @@ export default function WithdrawalTermButton({ data, settings, className }: With
             ) : (
                 <>
                     <FileDown className="mr-2 h-4 w-4" />
-                    Baixar Termo de Retirada
+                    Baixar Comprovante
                 </>
             )}
         </Button>

@@ -627,6 +627,16 @@ function DeliveryReceiptDocument({ data, settings }: { data: OrderData; settings
                         </View>
                     )}
 
+                    {/* Cláusula de Defeitos Ocultos */}
+                    <View style={styles.warningBox}>
+                        <Text style={[styles.warningText, { fontWeight: 'bold', marginBottom: 3, textTransform: 'uppercase' }]}>
+                            Atenção: Defeitos Ocultos e Aparelhos "Mortos" (Não Ligam)
+                        </Text>
+                        <Text style={styles.warningText}>
+                            Em equipamentos que deram entrada "sem ligar" ou sem condições de teste completo de todos os periféricos no ato do check-in, a aprovação do serviço executado não cobre defeitos ocultos (ex: falhas em tela, teclado, alto-falantes ou bateria) que só puderam ser detectados após o restabelecimento da energia ou do sistema. Não nos responsabilizamos por defeitos ocultos pré-existentes identificados nessas condições, e um orçamento complementar será enviado para apreciação.
+                        </Text>
+                    </View>
+
                     <Text style={styles.warrantyText}>
                         TERMO DE ENTREGA: Declaro que recebi o equipamento listado acima nas condições descritas, com os serviços executados a contento e os acessórios pertinentes devolvidos.
                     </Text>

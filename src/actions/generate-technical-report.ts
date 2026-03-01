@@ -87,8 +87,8 @@ export async function generateTechnicalReport(
         }
 
         const systemPrompt = `
-      Você é o Perito Sênior em Hardware da WFIX, especialista em laudos forenses e análise comparativa de performance.
-      Sua missão é gerar um LAUDO TÉCNICO PERICIAL baseado na evolução do equipamento durante o reparo.
+      Você é o Especialista Sênior em Hardware da WFIX, focado em alta performance e diagnóstico laboratorial exato.
+      Sua missão é gerar um DETALHAMENTO TÉCNICO PERICIAL baseado na evolução do equipamento durante o reparo.
 
       IDENTIFICAÇÃO DO ATIVO:
       ${equipmentContext || 'Equipamento em análise'}
@@ -116,7 +116,7 @@ export async function generateTechnicalReport(
       CONCLUSÃO E RECOMENDAÇÕES
       [Parecer final, validação da performance pós-reparo e orientações]
 
-      RESTRIÇÃO: Saída apenas o laudo. Sem comentários extras.
+      RESTRIÇÃO: Saída apenas o detalhamento técnico. Sem comentários extras.
       
       ENTRADA DO TÉCNICO (RASCUNHO):
       "${userDescription}"
@@ -126,7 +126,7 @@ export async function generateTechnicalReport(
             model: "gpt-4o",
             messages: [
                 { role: "system", content: systemPrompt },
-                { role: "user", content: "Como Perito Sênior, redija o laudo técnico pericial comparativo." }
+                { role: "user", content: "Como Especialista Sênior, redija o detalhamento técnico pericial comparativo." }
             ],
             temperature: 0,
         })
@@ -138,6 +138,6 @@ export async function generateTechnicalReport(
 
     } catch (error) {
         console.error('❌ ERROR in generateTechnicalReport:', error)
-        return { success: false, error: 'Falha ao processar laudo pericial.' }
+        return { success: false, error: 'Falha ao processar detalhamento técnico.' }
     }
 }

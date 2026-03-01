@@ -7,7 +7,7 @@ export interface FollowUp {
     id: string
     order_id: string
     customer_id: string | null
-    type: 'post_delivery' | 'warranty_check' | 'warranty_expiring' | 'manual'
+    type: 'post_delivery' | 'warranty_check' | 'warranty_expiring' | 'manual' | 'step1_blindage' | 'step2_social_proof' | 'step3_authority' | 'step4_new_sale'
     status: 'pending' | 'completed' | 'skipped'
     scheduled_for: string
     completed_at: string | null

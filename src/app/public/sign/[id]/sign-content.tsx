@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -12,9 +13,13 @@ import { useToast } from '@/hooks/use-toast'
 import { createClient } from '@/lib/supabase/client'
 import { signCustodyTerm } from '@/app/os/[id]/actions'
 import { ImageModal } from '@/components/ui/image-modal'
-import WithdrawalTermButton from '@/components/pdf/withdrawal-term-pdf'
-import { Loader2, MapPin, CheckCircle2, ShieldAlert, Package, ArrowRight, FileSignature, Home } from 'lucide-react'
+import { Loader2, MapPin, CheckCircle2, ShieldAlert, Package, ArrowRight, FileSignature, Home, FileDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
+
+const WithdrawalTermButton = dynamic(
+    () => import('@/components/pdf/withdrawal-term-pdf'),
+    { ssr: false, loading: () => <Button className="w-full h-12 text-base" disabled><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Gerando PDF...</Button> }
+)
 
 export default function PublicSignContent() {
     const params = useParams()
@@ -26,6 +31,7 @@ export default function PublicSignContent() {
     const [loading, setLoading] = useState(true)
     const [submitting, setSubmitting] = useState(false)
     const [order, setOrder] = useState<any>(null)
+    const [storeSettings, setStoreSettings] = useState<any>(null)
     const [geolocation, setGeolocation] = useState<{ lat: number; lng: number } | null>(null)
     const [acceptedTerms, setAcceptedTerms] = useState(false)
     const [success, setSuccess] = useState(false)
@@ -41,10 +47,9 @@ export default function PublicSignContent() {
             let query = supabase
                 .from('orders')
                 .select(`
-                    id, display_id, status, 
+                    *,
                     equipment:equipments(type, brand, model, serial_number),
-                    customer:customers(name, document_id),
-                    custody_photos
+                    customer:customers(name, document_id)
                 `)
 
             if (isUuid) {
@@ -62,9 +67,15 @@ export default function PublicSignContent() {
                 return
             }
 
-            if (data.status !== 'open' && data.status !== 'analyzing') {
-                // If already signed, maybe show success state?
-            }
+            const { data: tenant } = await supabase.from('tenants').select('*').eq('id', data.user_id).single()
+
+            setStoreSettings(tenant ? {
+                ...tenant,
+                logo_url: tenant.logo_url || `${window.location.origin}/logo.png`
+            } : {
+                trade_name: 'Minha Assistência',
+                logo_url: `${window.location.origin}/logo.png`
+            })
 
             setOrder(data)
             setLoading(false)
@@ -135,17 +146,56 @@ export default function PublicSignContent() {
         }
     }
 
-    if (success) {
+    if (loading) {
+        return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
+    }
+
+    if (!order) {
+        return <div className="min-h-screen flex items-center justify-center text-muted-foreground">Pedido não encontrado.</div>
+    }
+
+    const isAlreadySigned = !!order?.custody_signed_at;
+    const showSuccessView = success || isAlreadySigned;
+
+    if (showSuccessView) {
         return (
             <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 animate-in zoom-in-95 duration-500">
                 <div className="bg-green-100 text-green-600 w-20 h-20 rounded-full flex items-center justify-center mb-6 shadow-sm">
                     <CheckCircle2 className="h-10 w-10" />
                 </div>
-                <h1 className="text-2xl font-bold text-center mb-2">Tudo Certo!</h1>
+                <h1 className="text-2xl font-bold text-center mb-2">
+                    {isAlreadySigned && !success ? 'Termo já Assinado!' : 'Tudo Certo!'}
+                </h1>
                 <p className="text-muted-foreground text-center max-w-sm mb-8">
-                    O termo foi assinado e o equipamento já está registrado em nosso sistema.
+                    {isAlreadySigned && !success
+                        ? 'Este termo de retirada já foi assinado digitalmente e registrado em nosso sistema.'
+                        : 'O termo foi assinado e o equipamento já está registrado em nosso sistema.'}
                 </p>
                 <div className="flex flex-col gap-3 w-full max-w-xs">
+                    {storeSettings && order && (
+                        <WithdrawalTermButton
+                            variant="default"
+                            className="w-full h-12 text-base font-semibold bg-primary text-primary-foreground hover:bg-primary/90 border-transparent shadow-md transition-all hover:scale-[1.02] active:scale-95 cursor-pointer"
+                            settings={storeSettings}
+                            data={{
+                                orderDisplayId: order.display_id,
+                                customerName: order.customer?.name || 'Cliente',
+                                equipmentType: order.equipment?.type || '',
+                                equipmentBrand: order.equipment?.brand || '',
+                                equipmentModel: order.equipment?.model || '',
+                                equipmentSerial: order.equipment?.serial_number,
+                                accessories: order.accessories_received || [],
+                                conditionNotes: order.custody_conditions || '',
+                                signatureUrl: order.custody_signature_url,
+                                signedAt: order.custody_signed_at,
+                                integrityHash: order.custody_integrity_hash,
+                                geolocation: order.metadata?.geolocation,
+                                customerDocument: order.customer?.document_id,
+                                custodyIp: order.custody_ip,
+                                photos: (order.custody_photos as { label: string; url: string }[] | null) || []
+                            }}
+                        />
+                    )}
                     <Link href="/" className="w-full">
                         <Button variant="outline" className="w-full gap-2 h-12 text-base">
                             <Home className="h-4 w-4" />
@@ -155,20 +205,6 @@ export default function PublicSignContent() {
                 </div>
             </div>
         )
-    }
-
-    if (loading) {
-        return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
-    }
-
-    if (!order) {
-        return <div className="min-h-screen flex items-center justify-center text-muted-foreground">Pedido não encontrado.</div>
-    }
-
-    // Check if already signed (Client-side protection)
-    if (order.status !== 'open' && order.status !== 'analyzing' && !success) {
-        // Optionally render "Already Signed" view here contextually
-        // But server protection is more important
     }
 
     return (

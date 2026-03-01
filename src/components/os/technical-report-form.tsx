@@ -105,7 +105,7 @@ export default function TechnicalReportForm({
             if (result.success && result.data) {
                 setAnalysis(result.data) // Directly set the text
                 toast({
-                    title: "Laudo Gerado!",
+                    title: "Detalhamento Gerado!",
                     description: "O texto técnico foi expandido com sucesso.",
                     variant: "default",
                     className: "bg-green-50 border-green-200 text-green-800"
@@ -113,7 +113,7 @@ export default function TechnicalReportForm({
             } else {
                 toast({
                     title: "Erro na IA",
-                    description: result.error || "Não foi possível gerar o laudo.",
+                    description: result.error || "Não foi possível gerar o detalhamento.",
                     variant: "destructive"
                 })
             }
@@ -190,14 +190,14 @@ export default function TechnicalReportForm({
 
             // Suggest status update if not already appropriate
             // Note: This logic might be better placed in a server action or trigger, but per requirements:
-            // "Ao salvar o Laudo, se a OS estiver em open ou analyzing, sugerir mudar o status"
+            // "Ao salvar o Detalhamento, se a OS estiver em open ou analyzing, sugerir mudar o status"
             // We just notify success for now, maybe trigger a refresh.
 
             router.refresh()
             setIsEditing(false)
         } catch (err) {
             console.error('Error saving report:', JSON.stringify(err, null, 2))
-            alert("Erro ao salvar laudo.")
+            alert("Erro ao salvar detalhamento.")
         } finally {
             setIsSaving(false)
         }
@@ -210,7 +210,7 @@ export default function TechnicalReportForm({
                     <div className="flex justify-between items-start">
                         <CardTitle className="flex items-center gap-2">
                             <FileText className="h-5 w-5 text-green-600" />
-                            Laudo Técnico Emitido
+                            Relatório Técnico Emitido
                         </CardTitle>
                         <Badge variant="outline" className="bg-green-100 text-green-700 border-green-200">
                             {format(new Date(existingReport.created_at), "dd/MM/yyyy HH:mm")}
@@ -249,7 +249,7 @@ export default function TechnicalReportForm({
                         onClick={() => {
                             const phone = orderData.customerPhone?.replace(/\D/g, '') || ''
                             const link = `${window.location.origin}/os/${orderData.displayId}`
-                            const message = `Olá, *${orderData.customerName}*!\nSeu equipamento já foi analisado.\nConfira o Laudo Técnico com o diagnóstico e as fotos do serviço no link seguro abaixo:\n${link}`
+                            const message = `Olá, *${orderData.customerName}*!\nSeu equipamento já foi analisado.\nConfira o Detalhamento Técnico com o diagnóstico e as fotos do serviço no link seguro abaixo:\n${link}`
 
                             const target = phone.length >= 10 ? `55${phone}` : ''
                             window.open(`https://api.whatsapp.com/send?phone=${target}&text=${encodeURIComponent(message)}`, '_blank')
@@ -259,7 +259,7 @@ export default function TechnicalReportForm({
                         Enviar via WhatsApp
                     </Button>
                     <Button variant="ghost" onClick={() => setIsEditing(true)}>
-                        Editar Laudo
+                        Editar Relatório
                     </Button>
                 </CardFooter>
             </Card>
@@ -271,7 +271,7 @@ export default function TechnicalReportForm({
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                     <FileText className="h-5 w-5" />
-                    Emissão de Laudo Técnico
+                    Emissão de Detalhamento Técnico
                 </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -466,7 +466,7 @@ export default function TechnicalReportForm({
                                 }}
                             />
                             <p className="text-xs text-muted-foreground mt-2">
-                                * As fotos enviadas aqui podem ser usadas no laudo. Lembre-se de selecioná-las abaixo se necessário.
+                                * As fotos enviadas aqui podem ser usadas no relatório. Lembre-se de selecioná-las abaixo se necessário.
                                 (O componente ImageUpload atual pode não refletir seleção automática).
                             </p>
                         </TabsContent>
@@ -523,7 +523,7 @@ export default function TechnicalReportForm({
                 )}
                 <Button onClick={handleSave} disabled={isSaving}>
                     {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    {isSaving ? 'Salvando...' : 'Salvar e Emitir Laudo'}
+                    {isSaving ? 'Salvando...' : 'Salvar e Emitir Relatório'}
                 </Button>
             </CardFooter>
         </Card>

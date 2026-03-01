@@ -184,7 +184,7 @@ export default function ImageUpload({
             description: 'Registre o estado do aparelho ao entregar',
         },
         technical_report: {
-            title: '📷 Evidências do Laudo',
+            title: '📷 Evidências do Detalhamento',
             description: 'Adicione fotos específicas do defeito ou testes',
         }
     }

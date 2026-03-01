@@ -247,7 +247,7 @@ export function BusinessLanding() {
                                     A <strong className="text-slate-100">WFIX Tech Solutions</strong> oferece consultoria técnica especializada em hardware.
                                     Atendemos demandas de <strong className="text-slate-100">sustentação e modernização</strong> para
                                     Pequenas Empresas e profissionais em regime de <strong className="text-slate-100">Home Office</strong>.
-                                    Todo serviço acompanha laudo técnico e garantia legal.
+                                    Todo serviço acompanha relatório técnico e garantia legal.
                                 </p>
                             </div>
                         </div>
@@ -283,9 +283,9 @@ export function BusinessLanding() {
                                 </div>
 
                                 <div className="p-6 rounded-xl bg-slate-950 border border-slate-800">
-                                    <h3 className="text-slate-100 font-semibold mb-2">Emitem Nota Fiscal e Laudo Técnico?</h3>
+                                    <h3 className="text-slate-100 font-semibold mb-2">Emitem Nota Fiscal e Relatório Técnico?</h3>
                                     <p className="text-slate-400 text-sm leading-relaxed">
-                                        Sim. Todos os serviços são faturados com Nota Fiscal de Serviço (NFS-e) e acompanham Laudo Técnico detalhado sobre os procedimentos realizados para fins de auditoria e compliance.
+                                        Sim. Todos os serviços são faturados com Nota Fiscal de Serviço (NFS-e) e acompanham Detalhamento Técnico completo sobre os procedimentos realizados para fins de auditoria e compliance.
                                     </p>
                                 </div>
 

@@ -248,7 +248,7 @@ function TechnicalReportDocument({
                     </View>
                 )}
 
-                <Text style={styles.title}>LAUDO TÉCNICO PERICIAL</Text>
+                <Text style={styles.title}>RELATÓRIO TÉCNICO DE SERVIÇO</Text>
                 <Text style={styles.subtitle}>Referente à Ordem de Serviço Nº {osNumber}</Text>
                 <Text style={[styles.subtitle, { marginBottom: 20 }]}>Data de Emissão: {reportDate}</Text>
 
@@ -333,7 +333,7 @@ function TechnicalReportDocument({
                             Documento gerado eletronicamente em {reportDate}
                         </Text>
                         <Text style={styles.footerText}>
-                            ID do Laudo: {report.id}
+                            ID do Relatório: {report.id}
                         </Text>
                         <Text style={styles.footerText}>
                             Integridade (Hash): {hash}
@@ -396,12 +396,12 @@ export default function TechnicalReportPdfButton({
     report,
     orderData,
     storeSettings,
-    label = "Baixar Laudo Técnico",
+    label = "Baixar Detalhamento do Serviço",
     variant = "outline"
 }: TechnicalReportPdfButtonProps) {
     const [isGenerating, setIsGenerating] = useState(false)
     const osNumber = String(orderData.displayId).padStart(4, '0')
-    const fileName = `Laudo_Tecnico_OS_${osNumber}.pdf`
+    const fileName = `Detalhamento_Servico_OS_${osNumber}.pdf`
 
     const handleDownload = useCallback(async () => {
         setIsGenerating(true)

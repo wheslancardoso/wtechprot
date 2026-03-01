@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache'
 import { sendScheduleConfirmationAlert } from '@/lib/email'
 import { format, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import { formatPhoneForApi } from '@/lib/utils'
 
 export type ConfirmScheduleResult = {
     success: boolean
@@ -82,8 +83,6 @@ export async function confirmSchedule(params: ConfirmParams): Promise<ConfirmSch
                 scheduled_date: params.selectedDate,
                 scheduled_time: params.selectedTime,
                 customer_name: params.customerName || schedule.customer_name,
-                customer_phone: params.customerPhone || schedule.customer_phone,
-                notes: finalNotes,
                 status: 'confirmed',
                 confirmed_at: new Date().toISOString(),
             })
