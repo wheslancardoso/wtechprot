@@ -108,7 +108,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             <AnimateIn delay={0.3}>
               <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed px-4">
-                Da manutenção do seu notebook pessoal à gestão de TI da sua empresa. Tecnologia que funciona para você.
+                Da manutenção de hardware de alta performance à gestão de TI especializada para sua empresa. Tecnologia que funciona para você.
               </p>
             </AnimateIn>
 
@@ -158,7 +158,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   em Tempo Real.
                 </h2>
                 <p className="text-lg text-slate-400 leading-relaxed max-w-xl mx-auto lg:mx-0">
-                  Nosso sistema de acompanhamento permite que você visualize cada etapa do reparo. Transparência total para sua segurança.
+                  Nosso sistema de acompanhamento permite que você visualize cada etapa da manutenção técnica. Transparência total para sua segurança.
                 </p>
 
                 <ul className="space-y-3 text-slate-300 max-w-sm mx-auto lg:mx-0 text-left">
@@ -344,7 +344,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   <Monitor className="w-7 h-7" />
                 </div>
                 <h3 className="font-bold text-lg text-slate-200 mb-3 group-hover:text-white transition-colors">Gestão e Manutenção de Hardware</h3>
-                <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Diagnóstico preciso, substituição de componentes defeituosos e upgrades de performance. Deixamos sua máquina nova de novo.</p>
+                <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">Diagnóstico preciso, substituição de componentes e upgrades de performance. Deixamos sua máquina com desempenho renovado.</p>
               </SpotlightCard>
 
               {/* 2. Desempenho (Notebooks) */}
@@ -637,7 +637,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </summary>
                 <div className="px-6 pb-6 pt-2 text-slate-400 leading-relaxed border-t border-white/5 animate-in slide-in-from-top-2 fade-in duration-300">
                   <p>
-                    Sim! Vamos até sua residência ou empresa caso não possa trazer a máquina ao nosso laboratório. Para serviços complexos, fazemos do recolhimento do seu aparelho em segurança.
+                    Sim! Oferecemos consultoria on-site para empresas e logística de coleta especializada para equipamentos que demandam análise aprofundada em nosso laboratório técnico.
                   </p>
                 </div>
               </details>
@@ -679,7 +679,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </summary>
                 <div className="px-6 pb-6 pt-2 text-slate-400 leading-relaxed border-t border-white/5 animate-in slide-in-from-top-2 fade-in duration-300">
                   <p>
-                    Basta chamar pelo WhatsApp. Se for de fácil solução e direto, cotamos na hora. Para computadores difíceis ou mortos, é necessária a análise física no nosso laboratório antes de enviar os valores precisos.
+                    Basta iniciar o contato via WhatsApp. Para manutenções preventivas ou upgrades diretos, fornecemos a estimativa técnica imediata. Casos de alta complexidade exigem análise detalhada em laboratório.
                   </p>
                 </div>
               </details>
